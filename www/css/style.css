@@ -1,0 +1,18 @@
+/* Empty. Add your own CSS if you like */
+.wrap {
+	text-overflow: wrap;
+	white-space: normal;
+}
+.padding {
+	padding: 10px;
+}
+.pull-right {
+	float: right;
+}
+.bold {
+	font-weight: bold;
+}
+.center {
+	vertical-align: middle!important;
+	text-align: center!important;
+}

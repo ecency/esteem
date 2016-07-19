@@ -1,0 +1,33 @@
+<ion-view view-title="Steemit">
+	<ion-nav-bar class="bar-royal">
+	    <ion-nav-buttons side="left">
+	      <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+	    </ion-nav-buttons>
+	    <ion-nav-buttons side="right">
+	      <button class="button button-icon button-clear ion-android-search" ng-click="getA()"></button>
+	      <button class="button button-icon button-clear ion-android-options" ng-click="showFilter()"></button>
+	      <button class="button button-icon button-clear ion-android-sync" ng-click="refresh()"></button>
+	    </ion-nav-buttons>
+	</ion-nav-bar>
+  <ion-content class="has-header">
+
+    <div class="list">
+    	<div ng-repeat="playlist in data">
+	    	<div class="item " ng-class="{'item-thumbnail-left':playlist.json_metadata.image[0]}">
+			    <img ng-src="{{playlist.json_metadata.image[0]}}" ng-if="playlist.json_metadata.image[0]">
+			    <div ng-click="open(playlist)">
+			    <div class="wrap bold h4">{{playlist.title}}</div>
+			    <div><i class="icon ion-android-time"></i> {{playlist.last_update|timeago}} by <i class="icon ion-android-person"></i> {{playlist.author}} in <i class="icon ion-pricetags"></i> {{playlist.category}}</div>
+			    </div>
+			    <p>
+			      <a href="#" class="subdued"><i class="icon ion-android-arrow-dropup-circle"></i> {{playlist.net_votes}}</a>
+			      <a href="#" class="subdued"><i class="icon ion-android-arrow-dropdown-circle"></i> {{playlist.active_votes.length-playlist.net_votes}}</a>
+			      <span class="pull-right"><a href="#" class="subdued"><i class="ion-social-usd"></i> {{playlist.total_pending_payout_value.slice(0,-4)|number}}</a>|
+			      <a href="#" class="subdued"><i class="icon ion-android-chat"></i> {{playlist.children}}</a></span>
+			    </p>
+		  	</div>
+		</div>
+	</div>
+	<ion-infinite-scroll on-infinite="loadMore()" distance="1%"></ion-infinite-scroll>
+  </ion-content>
+</ion-view>
