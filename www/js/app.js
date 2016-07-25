@@ -4,9 +4,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('steem', ['ionic', 'steem.controllers', 'steem.services', 'ngStorage', 'ngCordova'])
+angular.module('steem', ['ionic', 'steem.controllers', 'steem.services', 'ngStorage', 'ngCordova', 'ionic.contrib.ui.ionThread'])
 
-.run(function($ionicPlatform, $rootScope, $localStorage) {
+.run(function($ionicPlatform, $rootScope, $localStorage, MyService, $interval, $ionicPopup) {
   $rootScope.$storage = $localStorage;
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -20,32 +20,22 @@ angular.module('steem', ['ionic', 'steem.controllers', 'steem.services', 'ngStor
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-    /*var ws = new WebSocket('wss://this.piston.rocks');
-
-    ws.onopen = function () {
-        console.log('open');
-        this.send("{" +
-                                "\"jsonrpc\": \"2.0\", " +
-                                "\"method\": \"get_discussions_by_trending\", " +
-                                "\"params\": [{\"tag\": \"\", \"limit\": 20, " +
-                                "\"filter_tags\": []}], \"id\": 1" +
-                        "}");         // transmit "hello" after connecting
+    /*var reconnect = $interval(function() {
+      MyService.getStats().then(function(dd){
+        console.log(dd.head_block_number);
+      });
+    }, 5000);*/
+    $rootScope.showAlert = function(title, msg) {
+      var alertPopup = $ionicPopup.alert({
+        title: title,
+        template: msg
+      });
+      return alertPopup/*.then(function(res) {
+        console.log('Thank you ...');
+      });*/
     };
-
-    ws.onmessage = function (event) {
-        console.log(event.data);    // will be "hello"
-        $rootScope.posts = event.data;
-        this.close();
-    };
-
-    ws.onerror = function () {
-        console.log('error occurred!');
-    };
-
-    ws.onclose = function (event) {
-        console.log('close code=' + event.code);
-    };*/
   });
+
 })
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
@@ -58,32 +48,33 @@ angular.module('steem', ['ionic', 'steem.controllers', 'steem.services', 'ngStor
     controller: 'AppCtrl'
   })
 
-  .state('app.search', {
-    url: '/search',
+  .state('app.settings', {
+    url: '/settings',
     views: {
       'menuContent': {
-        templateUrl: 'templates/search.html'
+        templateUrl: 'templates/settings.html'
       }
     }
   })
 
-  .state('app.browse', {
-      url: '/browse',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/browse.html'
-        }
+  .state('app.profile', {
+    url: '/profile',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/profile.html'
       }
-    })
-    .state('app.posts', {
-      url: '/posts',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/posts.html',
-          controller: 'PostsCtrl'
-        }
+    }
+  })
+
+  .state('app.posts', {
+    url: '/posts',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/posts.html',
+        controller: 'PostsCtrl'
       }
-    })
+    }
+  })
 
   .state('app.single', {
     url: '/single',

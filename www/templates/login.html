@@ -1,15 +1,15 @@
 <ion-modal-view>
-  <!--<ion-header-bar>
+  <ion-header-bar class="bar bar-header bar-positive">
     <h1 class="title">Login</h1>
-    <button class="button button-icon button-clear ion-close-round" ng-click="closeLogin()"></i></button>
-  </ion-header-bar>-->
-  <ion-nav-bar class="bar-royal">
+    <button class="button button-clear button-primary button-icon ion-close-round" ng-click="closeLogin()"></button>
+  </ion-header-bar>
+  <!--<ion-nav-bar class="bar-royal">
       <ion-nav-title class="padding">Login</ion-nav-title>
       <ion-nav-buttons side="right">
         <button class="button button-icon button-clear ion-close-round" ng-click="closeLogin()"></i></button>
       </ion-nav-buttons>
-  </ion-nav-bar>
-  <ion-content class="has-header">
+  </ion-nav-bar>-->
+  <ion-content>
     <form ng-submit="doLogin()">
       <div class="list">
         <label class="item item-input">
@@ -20,6 +20,7 @@
           <span class="input-label">Password</span>
           <input type="password" ng-model="loginData.password">
         </label>
+        <p class="error padding">Note: Login is not functional yet, but you can give enter your Username to get some data.</p>
         <label class="item">
           <button class="button button-block button-positive" type="submit">Log in</button>
         </label>

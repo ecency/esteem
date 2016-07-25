@@ -1,0 +1,96 @@
+<ion-view view-title="Profile">
+  <div class="bar bar-subheader">
+    <h2 class="title capital">{{active}}</h2>
+  </div>
+  <ion-content class="has-footer has-subheader">
+        <div class="box blue" ng-if="active!='wallet'||active!='permissions'">
+          <ion-list>
+            <!--<div ng-repeat="(key, playlist) in profile" class="item wrap" ng-click="open(playlist)">
+            <h3 class="bold">{{playlist.root_title}}</h3>
+            <span ng-bind-html="playlist.body.substring(0,100)|parseUrl"></span>
+            </div>-->
+            <div ng-repeat="playlist in profile">
+              <div class="item">
+                <div ng-click="open(playlist)">
+                <div class="wrap">
+                  <span class="bold h4">{{playlist.root_title}}</span><span class="pull-right"><i class="icon ion-pricetags"></i> {{playlist.category}}</span>
+                </div><span ng-bind-html="playlist.body.substring(0,100)|parseUrl"></span>
+                <div class=""><i class="icon ion-android-time"></i> {{playlist.last_update|timeago}} by <i class="icon ion-android-person"></i> {{playlist.author}}</div>
+                </div>
+                <p>
+                  <a href="#" class="subdued"><i class="icon" ng-class="{'ion-android-arrow-dropup-circle':playlist.upvoted, 'ion-android-arrow-dropup':!playlist.upvoted}"></i> {{playlist.net_votes}}</a>
+                  <a href="#" class="subdued"><i class="icon" ng-class="{'ion-android-arrow-dropdown-circle':playlist.downvoted, 'ion-android-arrow-dropdown':!playlist.downvoted}"></i> {{playlist.active_votes.length-playlist.net_votes}}</a>
+                  <span class="pull-right"><a href="#" class="subdued"><i class="ion-social-usd"></i> {{playlist.total_pending_payout_value.slice(0,-4)|number}}</a>|
+                  <a href="#" class="subdued"><i class="icon ion-android-chat"></i> {{playlist.children}}</a></span>
+                </p>
+              </div>
+          </div>
+          </ion-list>
+        </div>
+      
+        <div class="padding" ng-if="active=='transfers'">
+          <p class="bold uppercase">
+            Balances
+          </p>
+          <div class="row">
+            <div class="col col-67">
+            STEEM <br><span class="gray wrap">Steem, tradeable tokens that may be transferred at anytime. Steem can be converted to Steem Power in a process called powering up</span>
+            </div>
+            <div class="col col-33">
+            {{accounts.balance}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-67">
+            STEEM POWER <br><span class="gray wrap">Steem Power, influence tokens that earn more power for holding long term and voting on posts. The more one holds the more one can influence other’s rewards and earn rewards for accurate voting.</span>
+            </div>
+            <div class="col col-33">
+            {{accounts.vesting_shares | sp}} SP
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-67">
+            STEEM DOLLARS <br><span class="gray wrap">Tokens worth about $1.00 of Steem.</span>
+            </div>
+            <div class="col col-33">
+            {{accounts.sbd_balance}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-67">
+            Estimated Value <br><span class="gray wrap">The estimated value is based on a 7 day average value of Steem.</span>
+            </div>
+            <div class="col col-33">
+            ${{accounts.vesting_shares | sd}}
+            </div>
+          </div>
+        <p class="bold">Transaction List <span class="italic">(coming soon)</span></p>
+        </div>
+      
+        <div class="box pink" ng-if="active=='permissions'">
+          <p><span class="bold">Posting:</span> <center>{{$root.$storage.user.posting.key_auths[0][0]}}</center></p>
+          <center><qrcode text="{{$root.$storage.user.posting.key_auths[0][0]}}"></qrcode></center>
+          <p>The posting key is used for posting and voting. It should be different from the active and owner keys.</p>
+          <p><span class="bold">Owner:</span> <center>{{$root.$storage.user.owner.key_auths[0][0]}}</center></p>
+          <center><qrcode text="{{$root.$storage.user.owner.key_auths[0][0]}}"></qrcode></center>
+          <p>The owner key is the master key for the account and is required to change the other keys. The private key or password for the owner key should be kept offline as much as possible.</p>
+          <p><span class="bold">Active:</span> <center>{{$root.$storage.user.active.key_auths[0][0]}}</center></p>
+          <center><qrcode text="{{$root.$storage.user.active.key_auths[0][0]}}"></qrcode></center>
+          <p>The active key is used to make transfers and place orders in the internal market.</p>
+          <p><span class="bold">Memo:</span> <center>{{$root.$storage.user.memo_key}}</center></p>
+          <center><qrcode text="{{$root.$storage.user.memo_key}}"></qrcode></center>
+          <p>The memo key is used to create and read memos.</p>
+        </div>
+        
+
+  </ion-content>
+  <div class="bar bar-footer">
+    <div class="button-bar">
+      <a class="button button-royal icon ion-compose" ng-class="{'active':active=='blog'}" ng-click="change('blog')"></a>
+      <a class="button button-royal icon ion-document-text" ng-class="{'active':active=='posts'}" ng-click="change('posts')"></a>
+      <a class="button button-royal icon ion-chatbubbles" ng-class="{'active':active=='recent-replies'}" ng-click="change('recent-replies')"></a>
+      <a class="button button-royal icon ion-card" ng-class="{'active':active=='transfers'}"  ng-click="change('transfers')"></a>
+      <a class="button button-royal icon ion-lock-combination" ng-class="{'active':active=='permissions'}" ng-click="change('permissions')"></a>
+    </div>
+  </div>
+</ion-view>

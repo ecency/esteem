@@ -21,65 +21,50 @@ angular.module('steem.services', [])
 		};
 	}])
 
-	.factory('MyService', ['$q', '$rootScope', function($q, $rootScope) {
+	.factory('MyService', ['$q', '$rootScope', '$localStorage', function($q, $rootScope, $localStorage) {
 	    // We return this object to anything injecting our service
 	    var Service = {};
 	    // Keep all pending requests here until they get responses
 	    var callbacks = {};
 	    // Create a unique callback ID to map requests to responses
-	    var currentCallbackId = 0;
-	    var ws;
-	    var wsPromise = $q(function(resolve,reject){
-			ws = $.gracefulWebSocket("wss://steemit.com/wstmp3"); 
-			//wrapper for WebSocket
-			//wss://steemit.com/wstmp3
-			//wss://this.piston.rocks
-			ws.onopen = function(){
-		        console.log("Socket has been opened!");  
-				resolve(ws); //this is important for our sendRequest functoin. We can only send request when socket is open
-			};
-			ws.onclose = function(){
-				ws=undefined;
-				console.log("Socket closed!");
-			};
-			ws.onmessage = function(message) {
-				listener(JSON.parse(message.data));
-			};
-		});
-
-
-	    // Create our websocket object with the address to the websocket
-	    /*var ws = new WebSocket("wss://this.piston.rocks");
-	    
-	    ws.onopen = function(){  
+	    /*var currentCallbackId = 0;
+	    $rootScope.$storage = $localStorage;
+	    if (!$rootScope.$storage.socket) {
+	    	$rootScope.$storage.socket = "wss://steemit.com/wstmp3";
+	    } else {
+	    	$rootScope.$storage.socket = "wss://this.piston.rocks";
+	    }
+	    var ws = new WebSocket($rootScope.$storage.socket); 
+		//wrapper for WebSocket
+		//wss://steemit.com/wstmp3 
+		//wss://this.piston.rocks
+		ws.onopen = function(){
 	        console.log("Socket has been opened!");  
-	    };
-	    
-	    ws.onmessage = function(message) {
-	        listener(JSON.parse(message.data));
-	    };
-		*/
+		};
+		ws.onclose = function(){
+			console.log("Socket closed!");
+		};
+		ws.onerror = function(){
+			console.log("Socket error!");
+		};
+		ws.onmessage = function(message) {
+			listener(JSON.parse(message.data));
+		};
+
+
 	    function sendRequest(request) {
-	    	//we attach a then callback when the wsPromise resolves
-			//we also return the newly created promise so we can chain
-			return wsPromise.then(function(){
-		      var defer = $q.defer();
-		      var callbackId = getCallbackId();
-		      callbacks[callbackId] = {
-		        time: new Date(),
-		        cb:defer
-		      };
-		      request.id = callbackId;
-		      console.log('Sending request', request);
-		      //setTimeout(function() {
-		      if (ws){
-		      	ws.send(JSON.stringify(request));	
-		      } else {
-				//sendRequest(request);
-		      }
-		      //}, 1000);
-		      return defer.promise;
-		  });
+	      var defer = $q.defer();
+	      var callbackId = getCallbackId();
+	      callbacks[callbackId] = {
+	        time: new Date(),
+	        cb:defer
+	      };
+	      request.id = callbackId;
+	      console.log('Sending request', request);
+	      if (ws){
+	      	ws.send(JSON.stringify(request));	
+	      }
+	      return defer.promise;
 	    }
 
 	    function listener(data) {
@@ -87,9 +72,7 @@ angular.module('steem.services', [])
 	      console.log("Received data from websocket: ", messageObj);
 	      // If an object exists with callback_id in our callbacks object, resolve it
 	      if(callbacks.hasOwnProperty(messageObj.id)) {
-	        console.log("Received obj1"+angular.toJson(callbacks));
 	        $rootScope.$apply(callbacks[messageObj.id].cb.resolve(messageObj.result));
-	        //console.log("Received obj2"+angular.toJson(messageObj));
 	        delete callbacks[messageObj.id];
 	      }
 	    }
@@ -100,38 +83,126 @@ angular.module('steem.services', [])
 	        currentCallbackId = 0;
 	      }
 	      return currentCallbackId;
-	    }
+	    }*/
 
-	    // Define a "getter" for getting customer data
-	    Service.getPosts = function(limit, type, tag) {
-	    	if (type == undefined) {
-	    		type = "trending";
-	    	}
-	    	if (!tag) {
-	    		tag = "";
-	    	}
+	     /*
+	     _self->register_api_factory< login_api >( "login_api" );
+         _self->register_api_factory< database_api >( "database_api" );
+         _self->register_api_factory< network_node_api >( "network_node_api" );
+         _self->register_api_factory< network_broadcast_api >( "network_broadcast_api" );*/
+
+         /*
+	    Service.getPostComments = function(parent_author, parent_link) {
 	      var request = {
 	        jsonrpc: "2.0", 
-	        method: "get_discussions_by_"+type, 
-	        params: [{tag: tag, limit: limit, filter_tags: []}], 
-	        id: 1
+	        method: "call", 
+	        params: ["database_api", "get_content_replies", [parent_author, parent_link]], 
+	        id: 2
 	      }
 	      // Storing in a variable for clarity on what sendRequest returns
 	      var promise = sendRequest(request); 
 	      return promise;
 	    }
-	    // Define a "getter" for getting customer data
 	    Service.getAccounts = function(handle) {
 	      var request = {
 	        jsonrpc: "2.0", 
 	        method: "call", 
-	        params: ["database_api", "get_accounts", [ "good-karma" ]],
+	        params: ["database_api", "get_accounts", [ [handle] ]],
 	        id: 3
 	      }
 	      // Storing in a variable for clarity on what sendRequest returns
 	      var promise = sendRequest(request); 
 	      return promise;
 	    }
+	    Service.getAccountVotes = function(handle) {
+	      var request = {
+	        jsonrpc: "2.0", 
+	        method: "call", 
+	        params: ["database_api", "get_account_votes", [ handle ]],
+	        id: 4
+	      }
+	      // Storing in a variable for clarity on what sendRequest returns
+	      var promise = sendRequest(request); 
+	      return promise;
+	    }
+	    Service.getStats = function() {
+	      var request = {
+	        jsonrpc: "2.0", 
+	        method: "call", 
+	        params: ["database_api", "get_dynamic_global_properties", [ ]],
+	        id: 4000
+	      }
+	      // Storing in a variable for clarity on what sendRequest returns
+	      var promise = sendRequest(request); 
+	      return promise;
+	    }
+	    Service.getState = function(handle) {
+	      var request = {
+	        jsonrpc: "2.0", 
+	        method: "call", 
+	        params: ["database_api", "get_state", [ handle ]],
+	        id: 7
+	      }
+	      // Storing in a variable for clarity on what sendRequest returns
+	      var promise = sendRequest(request); 
+	      return promise;
+	    }
+	   	Service.getKey = function(handle) {
+	      var request = {
+	        jsonrpc: "2.0", 
+	        method: "call", 
+	        params: ["database_api", "get_key_references", [ [handle] ]],
+	        id: 8
+	      }
+	      // Storing in a variable for clarity on what sendRequest returns
+	      var promise = sendRequest(request); 
+	      return promise;
+	    }
+	    Service.login = function(username, password) {
+	      var request = {
+	        jsonrpc: "2.0", 
+	        method: "call", 
+	        params: ["login_api", "login", [ username, password]],
+	        id: 5
+	      }
+	      // Storing in a variable for clarity on what sendRequest returns
+	      var promise = sendRequest(request); 
+	      return promise;
+	    }
+	    Service.broadcast = function(handle) {
+	      var request = {
+	        jsonrpc: "2.0", 
+	        method: "call", 
+	        params: ["network_broadcast_api", "broadcast_transaction", [ [handle] ]],
+	        id: 9
+	      }
+	      // Storing in a variable for clarity on what sendRequest returns
+	      var promise = sendRequest(request); 
+	      return promise;
+	    }
+	    Service.getMessage = function(username, password) {
+	      var request = {
+	        jsonrpc: "2.0", 
+	        method: "call", 
+	        params: ["hello_api_api", "get_message", []],
+	        id: 5
+	      }
+	      // Storing in a variable for clarity on what sendRequest returns
+	      var promise = sendRequest(request); 
+	      return promise;
+	    }
+	    
+	    Service.getActiveVotes = function(author, link) {
+	      var request = {
+	        jsonrpc: "2.0", 
+	        method: "call", 
+	        params: ["database_api", "get_active_votes", [author, link]],
+	        id: 6
+	      }
+	      // Storing in a variable for clarity on what sendRequest returns
+	      var promise = sendRequest(request); 
+	      return promise;
+	    }*/
 
 	    return Service;
 	}])
@@ -207,13 +278,13 @@ angular.module('steem.services', [])
     })
 
     .filter('parseUrl', function($sce) {
-	    var urls = /(\b(https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;-]*[-A-Z0-9+&@#\/%=~_|])/gim;
+	    /*var urls = /(\b(https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;-]*[-A-Z0-9+&@#\/%=~_|])/gim;
 	    var emails = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/gim;
 	 	//var imgs = /\.(jpeg|jpg|gif|png)$/;
 	 	var imgs = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/gim;
-
+		*/
 	    return function(text) {
-	    	if (text.match(imgs)) {
+	    	/*if (text.match(imgs)) {
         		text = text.replace(imgs, '<img src="$1" style="max-width:100%"/>');	
         	} else if (text.match(urls)) {
 	        	text = text.replace(urls, '<a href="$1">$1</a>');	
@@ -221,7 +292,62 @@ angular.module('steem.services', [])
 	        if(text.match(emails)) {
 	            text = text.replace(emails, '<a href=\"mailto:$1\">$1</a>');
 	        }
-	        return $sce.trustAsHtml(text);
+	        return $sce.trustAsHtml(text);*/
+	        var options = {
+	        	/*gfm: true,
+				tables: true,
+			    breaks: false,
+			    pedantic: false,
+			    sanitize: true,
+			    smartLists: true,
+			    smartypants: false*/
+			};
+	        return marked(text, options);
 	    };
-	});
+	})
+	.filter('sp', function($sce, $rootScope) {
+	    return function(text) {
+	    	if (text) {
+	    		return (Number(text.substring(0, text.length-6))/1e6*$rootScope.$storage.steem_per_mvests).toFixed(3);	
+	    	}
+	    };
+	})
+	.filter('sd', function($sce, $rootScope) {
+	    return function(text) {
+	    	if (text) {
+	    		return (Number(text.substring(0, text.length-6))/1e6*$rootScope.$storage.steem_per_mvests*$rootScope.$storage.base).toFixed(3);	
+	    	}
+	    };
+	})
+    
+
+.directive('qrcode', function($interpolate) {  
+	return {
+	    restrict: 'E',
+	    link: function($scope, $element, $attrs) {
+
+	      var options = {
+	        text: '',
+	        width: 128,
+	        height: 128,
+	        colorDark: '#000000',
+	        colorLight: '#ffffff',
+	        correctLevel: 'H'
+	      };
+
+	      Object.keys(options).forEach(function(key) {
+	        options[key] = $interpolate($attrs[key] || '')($scope) || options[key];
+	      });
+
+	      options.correctLevel = QRCode.CorrectLevel[options.correctLevel];
+
+	      new QRCode($element[0], options);
+
+	    }
+	}
+})
+	  
+
+
+
 	;

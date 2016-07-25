@@ -18,14 +18,20 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item menu-close ng-click="login()">
+        <ion-item menu-close href="#/app/posts">
+          Home
+        </ion-item>
+        <ion-item menu-close ng-click="login()" ng-if="!$root.$storage.user">
           Login
         </ion-item>
-        <ion-item menu-close href="#/app/search">
-          Search
+        <ion-item menu-close href="#/app/profile" ng-if="$root.$storage.user">
+          Profile
         </ion-item>
-        <ion-item menu-close href="#/app/posts">
-          Browse
+        <ion-item menu-close href="#/app/settings">
+          Settings
+        </ion-item>
+        <ion-item menu-close ng-click="logout()" ng-if="$root.$storage.user">
+          Logout @{{$root.$storage.user.username}}
         </ion-item>
       </ion-list>
     </ion-content>

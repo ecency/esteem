@@ -1,5 +1,57 @@
-<ion-view view-title="Search">
+<ion-modal-view>
+  <ion-header-bar>
+    <label class="item item-input" style="width: 60%;">
+      <i class="icon ion-search placeholder-icon"></i>
+      <input type="search" placeholder="Search" autofocus ng-model="data.search" ng-change="search()">
+    </label>
+    <label class="item item-input item-select">
+      <div class="input-label">&nbsp;</div>
+      <select ng-model="data.type" ng-change="typechange()">
+	      	<option value="tag">Tag</option>
+        	<option value="user">User</option>
+	    </select>
+    </label>
+    <div class="buttons">
+      <button class="button button-clear button-dark fbold" ng-click="closeSmodal()">Done</button>
+    </div>
+  </ion-header-bar>
   <ion-content>
-    <h1>Under development</h1>
+    <div class="list" ng-if="data.searchResult.length>0">
+      <div ng-if="data.type=='tag'">
+	      <a class="item" ng-repeat="x in data.searchResult" ng-click="openTag(x.tag)">
+	        <h2>Tag - {{x.tag}}</h2>
+	        <p>Posts - {{x.top_posts}}</p>
+	      </a>
+      </div>
+      <div ng-if="data.type=='user'">
+	      <a class="item" ng-repeat="x in data.searchResult" ng-click="openUser(x)">
+	        <h2>User - {{x}}</h2>
+	      </a>
+      </div>
+    </div>
   </ion-content>
-</ion-view>
+</ion-modal-view>
+<!--<div class="item row">
+      <div class="col">
+        <label class="item-input item-select">
+          <div class="input-label">
+            Lightsaber
+          </div>
+          <select>
+            <option>Blue</option>
+            <option selected>Green</option>
+            <option>Red</option>
+          </select>
+        </label>
+      </div>
+      <div class="col">
+        <div class="item-input-inset">
+          <label class="item-input-wrapper">
+            <input type="text" placeholder="Email">
+          </label>
+          <button class="button button-small">
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>-->

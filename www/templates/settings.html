@@ -1,0 +1,22 @@
+<ion-view view-cache="false" view-title="Settings">
+  <ion-content class="padding">
+    <div class="list">
+      <label class="item item-input">
+        <i class="icon ion-home placeholder-icon"></i>
+        <input type="text" placeholder="Server" autofocus ng-model="$root.$storage.socket">
+      </label>
+      <span class="item italic">
+        <span class="bold">Recommended:</span><br>
+        <span class="wrap">[Steemit.com] wss://steemit.com/wstmp3</span><br>
+        <span class="wrap">[Piston.rocks] wss://this.piston.rocks</span>
+      </span>
+      <label class="item item-input">
+        <i class="icon ion-person placeholder-icon"></i>
+        <input type="text" placeholder="User" ng-model="$root.$storage.user.username" disabled>
+      </label>
+      <label class="item">
+        <button class="button button-block button-positive" ng-click="save()">Save</button>
+      </label>
+    </div>
+  </ion-content>
+</ion-view>

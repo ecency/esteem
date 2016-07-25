@@ -1,7 +1,11 @@
 /* Empty. Add your own CSS if you like */
 .wrap {
-	text-overflow: wrap;
-	white-space: normal;
+	text-overflow: wrap!important;
+	white-space: normal!important;
+}
+.item .wrap {
+	text-overflow: wrap!important;
+	white-space: normal!important;	
 }
 .padding {
 	padding: 10px;
@@ -15,4 +19,31 @@
 .center {
 	vertical-align: middle!important;
 	text-align: center!important;
+}
+.footinfo {
+	font-size: 3.5vw;
+	width: 100%;
+}
+.pane img {
+	max-width: 100%;
+}
+.gray {
+	color: gray;
+}
+.item-select {
+	width: 30%;
+}
+.item-select select {
+	left: 0;
+	padding-right: 0;
+	margin-right: 0;
+}
+.italic {
+	font-style: italic;
+}
+.error {
+	color: red;
+}
+.capital {
+	text-transform: uppercase;
 }
