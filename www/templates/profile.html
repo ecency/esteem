@@ -9,6 +9,7 @@
             <h3 class="bold">{{playlist.root_title}}</h3>
             <span ng-bind-html="playlist.body.substring(0,100)|parseUrl"></span>
             </div>-->
+            <p class="padding" ng-if="nonexist">Nothing here</p>
             <div ng-repeat="playlist in profile">
               <div class="item">
                 <div ng-click="open(playlist)">
@@ -86,11 +87,11 @@
   </ion-content>
   <div class="bar bar-footer">
     <div class="button-bar">
-      <a class="button button-royal icon ion-compose" ng-class="{'active':active=='blog'}" ng-click="change('blog')"></a>
-      <a class="button button-royal icon ion-document-text" ng-class="{'active':active=='posts'}" ng-click="change('posts')"></a>
-      <a class="button button-royal icon ion-chatbubbles" ng-class="{'active':active=='recent-replies'}" ng-click="change('recent-replies')"></a>
-      <a class="button button-royal icon ion-card" ng-class="{'active':active=='transfers'}"  ng-click="change('transfers')"></a>
-      <a class="button button-royal icon ion-lock-combination" ng-class="{'active':active=='permissions'}" ng-click="change('permissions')"></a>
+      <a class="button button-large button-royal icon ion-compose" ng-class="{'active':active=='blog'}" ng-click="change('blog')"> Blog</a>
+      <a class="button button-royal icon ion-document-text" ng-class="{'active':active=='posts'}" ng-click="change('posts')">Posts</a>
+      <a class="button button-royal icon ion-chatbubbles" ng-class="{'active':active=='recent-replies'}" ng-click="change('recent-replies')">Replies</a>
+      <a class="button button-royal icon ion-card" ng-class="{'active':active=='transfers'}"  ng-click="change('transfers')">Wallet</a>
+      <a class="button button-royal icon ion-lock-combination" ng-class="{'active':active=='permissions'}" ng-click="change('permissions')">Keys</a>
     </div>
   </div>
 </ion-view>

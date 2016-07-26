@@ -1,12 +1,6 @@
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.controllers' is found in controllers.js
 angular.module('steem', ['ionic', 'steem.controllers', 'steem.services', 'ngStorage', 'ngCordova', 'ionic.contrib.ui.ionThread'])
 
-.run(function($ionicPlatform, $rootScope, $localStorage, MyService, $interval, $ionicPopup) {
+.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup) {
   $rootScope.$storage = $localStorage;
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -20,11 +14,7 @@ angular.module('steem', ['ionic', 'steem.controllers', 'steem.services', 'ngStor
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-    /*var reconnect = $interval(function() {
-      MyService.getStats().then(function(dd){
-        console.log(dd.head_block_number);
-      });
-    }, 5000);*/
+    $rootScope.$storage.socket = "wss://this.piston.rocks";
     $rootScope.showAlert = function(title, msg) {
       var alertPopup = $ionicPopup.alert({
         title: title,

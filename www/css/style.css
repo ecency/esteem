@@ -47,3 +47,27 @@
 .capital {
 	text-transform: uppercase;
 }
+.bar-footer .button-bar .button.icon {
+	display: block;
+	text-align: center;
+	font-size: 3.0vw;
+}
+.bar-footer .button-bar .button.icon:before {
+	display: block;
+	text-align: center;
+	margin: auto;
+	padding: auto;
+	margin-top: 3px;
+	font-size: 3.5vw;
+	width: 25px;
+	height: 25px;
+	line-height: 25px;
+}
+
+.bar-footer {
+	height: 60px;
+	padding: 0;
+}
+.has-footer {
+	bottom: 60px;
+}
