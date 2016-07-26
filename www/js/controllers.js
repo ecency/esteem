@@ -51,11 +51,11 @@ angular.module('steem.controllers', [])
       $scope.loginData.memo_key = dd.memo_key;
 
       $rootScope.$storage.user = $scope.loginData;
-      $state.go('app.posts', [], { reload: true });
+      $state.go('app.posts', {}, { reload: true });
 
       $timeout(function() {
         $scope.closeLogin();
-      }, 1000);
+      });
     });
     temp.login($scope.loginData.username, $scope.loginData.password, function(err, result){
       console.log(err)
@@ -542,7 +542,32 @@ angular.module('steem.controllers', [])
   });
   $scope.profileView = function(xx){
     $state.go('app.profile', {username: xx});
-  }
+  };
+  $scope.loadMore = function() {
+    if (!$scope.last) {
+      $scope.limit += 5
+      var temp = new Steem($rootScope.$storage.socket);
+      temp.getFollowers($rootScope.$storage.user.username, false, $scope.limit, function(e, r){
+        console.log(e)
+        console.log(r)
+        if (!$scope.$phase)
+          $scope.$apply();
+
+        if (r.length == $scope.followers.length) {
+          $scope.last = true;
+          $scope.$broadcast('scroll.infiniteScrollComplete');
+        }
+        $scope.followers = r;
+        $scope.$broadcast('scroll.infiniteScrollComplete');
+      });  
+    } else {
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+    }
+  };
+
+  $scope.$on('$stateChangeSuccess', function() {
+    $scope.loadMore();
+  });
 
 })
 
@@ -552,7 +577,7 @@ angular.module('steem.controllers', [])
     $scope.following = {};
     $scope.limit = 10;
     var temp = new Steem($rootScope.$storage.socket);
-    temp.getFollowing($rootScope.$storage.user.username, false, $scope.limit, function(e, r){
+    temp.getFollowing($rootScope.$storage.user.username, true, $scope.limit, function(e, r){
       console.log(e)
       console.log(r)
       $scope.following = r;
@@ -562,10 +587,35 @@ angular.module('steem.controllers', [])
   });
   $scope.profileUnfollow = function(xx){
     $rootScope.showAlert("Warning", "In Development, Stay tuned!");
-  }
+  };
   $scope.profileView = function(xx){
     $state.go('app.profile', {username: xx});
-  }
+  };
+  $scope.loadMore = function() {
+    if (!$scope.last) {
+      $scope.limit += 5
+      var temp = new Steem($rootScope.$storage.socket);
+      temp.getFollowing($rootScope.$storage.user.username, false, $scope.limit, function(e, r){
+        console.log(e)
+        console.log(r)
+        if (!$scope.$phase)
+          $scope.$apply();
+
+        if (r.length == $scope.following.length) {
+          $scope.last = true;
+          $scope.$broadcast('scroll.infiniteScrollComplete');
+        }
+        $scope.following = r;
+        $scope.$broadcast('scroll.infiniteScrollComplete');
+      });  
+    } else {
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+    }
+  };
+
+  $scope.$on('$stateChangeSuccess', function() {
+    $scope.loadMore();
+  });
 })
 
 .controller('ProfileCtrl', function($scope, $stateParams, $rootScope) {
