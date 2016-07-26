@@ -58,12 +58,17 @@
 	margin: auto;
 	padding: auto;
 	margin-top: 3px;
-	font-size: 3.5vw;
+	/*font-size: 3.5vw;*/
 	width: 25px;
 	height: 25px;
 	line-height: 25px;
 }
-
+.bar-footer .button-bar .button {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
 .bar-footer {
 	height: 60px;
 	padding: 0;

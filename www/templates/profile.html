@@ -9,7 +9,7 @@
             <h3 class="bold">{{playlist.root_title}}</h3>
             <span ng-bind-html="playlist.body.substring(0,100)|parseUrl"></span>
             </div>-->
-            <p class="padding" ng-if="nonexist">Nothing here</p>
+            <p class="padding" ng-if="nonexist">Nothing here, yet...</p>
             <div ng-repeat="playlist in profile">
               <div class="item">
                 <div ng-click="open(playlist)">
@@ -69,18 +69,48 @@
         </div>
       
         <div class="box pink" ng-if="active=='permissions'">
-          <p><span class="bold">Posting:</span> <center>{{$root.$storage.user.posting.key_auths[0][0]}}</center></p>
-          <center><qrcode text="{{$root.$storage.user.posting.key_auths[0][0]}}"></qrcode></center>
-          <p>The posting key is used for posting and voting. It should be different from the active and owner keys.</p>
-          <p><span class="bold">Owner:</span> <center>{{$root.$storage.user.owner.key_auths[0][0]}}</center></p>
-          <center><qrcode text="{{$root.$storage.user.owner.key_auths[0][0]}}"></qrcode></center>
-          <p>The owner key is the master key for the account and is required to change the other keys. The private key or password for the owner key should be kept offline as much as possible.</p>
-          <p><span class="bold">Active:</span> <center>{{$root.$storage.user.active.key_auths[0][0]}}</center></p>
-          <center><qrcode text="{{$root.$storage.user.active.key_auths[0][0]}}"></qrcode></center>
-          <p>The active key is used to make transfers and place orders in the internal market.</p>
-          <p><span class="bold">Memo:</span> <center>{{$root.$storage.user.memo_key}}</center></p>
-          <center><qrcode text="{{$root.$storage.user.memo_key}}"></qrcode></center>
-          <p>The memo key is used to create and read memos.</p>
+          <div class="list card">
+            <div class="item">
+              <h2><div class="bold">Posting</div></h2>
+              <p class="wrap">{{$root.$storage.user.posting.key_auths[0][0]}}</p>
+            </div>
+            <div class="item item-body">
+              <center><qrcode class="full-image" text="{{$root.$storage.user.posting.key_auths[0][0]}}"></qrcode></center>
+              <p>
+                The posting key is used for posting and voting. It should be different from the active and owner keys.
+              </p>
+            </div>
+            <div class="item">
+              <h2><div class="bold">Owner</div></h2>
+              <p class="wrap">{{$root.$storage.user.owner.key_auths[0][0]}}</p>
+            </div>
+            <div class="item item-body">
+              <center><qrcode class="full-image" text="{{$root.$storage.user.owner.key_auths[0][0]}}"></qrcode></center>
+              <p>
+                The owner key is the master key for the account and is required to change the other keys. The private key or password for the owner key should be kept offline as much as possible.
+              </p>
+            </div>
+            <div class="item">
+              <h2><div class="bold">Active</div></h2>
+              <p class="wrap">{{$root.$storage.user.active.key_auths[0][0]}}</p>
+            </div>
+            <div class="item item-body">
+              <center><qrcode class="full-image" text="{{$root.$storage.user.active.key_auths[0][0]}}"></qrcode></center>
+              <p>
+                The active key is used to make transfers and place orders in the internal market.
+              </p>
+            </div>
+            <div class="item">
+              <h2><div class="bold">Memo</div></h2>
+              <p class="wrap">{{$root.$storage.user.memo_key}}</p>
+            </div>
+            <div class="item item-body">
+              <center><qrcode class="full-image" text="{{$root.$storage.user.memo_key}}"></qrcode></center>
+              <p>
+                The memo key is used to create and read memos.
+              </p>
+            </div>
+          </div>
         </div>
         
 

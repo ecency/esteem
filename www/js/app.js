@@ -1,4 +1,4 @@
-angular.module('steem', ['ionic', 'steem.controllers', 'steem.services', 'ngStorage', 'ngCordova', 'ionic.contrib.ui.ionThread'])
+angular.module('steem', ['ionic', 'steem.controllers', 'steem.services', 'ngStorage', 'ngCordova', 'ionic.contrib.ui.ionThread', 'youtube-embed'])
 
 .run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup) {
   $rootScope.$storage = $localStorage;
@@ -14,7 +14,10 @@ angular.module('steem', ['ionic', 'steem.controllers', 'steem.services', 'ngStor
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-    $rootScope.$storage.socket = "wss://this.piston.rocks";
+    if (!$rootScope.$storage.socket) {
+      $rootScope.$storage.socket = "wss://steemit.com/wstmp3";  
+    }
+    
     $rootScope.showAlert = function(title, msg) {
       var alertPopup = $ionicPopup.alert({
         title: title,

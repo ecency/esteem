@@ -92,21 +92,15 @@ angular.module('steem.services', [])
     })
 
     .filter('parseUrl', function($sce) {
-	    /*var urls = /(\b(https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;-]*[-A-Z0-9+&@#\/%=~_|])/gim;
+	    var urls = /(\b(https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;-]*[-A-Z0-9+&@#\/%=~_|])/gim;
 	    var emails = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/gim;
 	 	//var imgs = /\.(jpeg|jpg|gif|png)$/;
 	 	var imgs = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/gim;
-		*/
+		var youtube = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+		var youtubeid = /(?:(?:youtube.com\/watch\?v=)|(?:youtu.be\/))([A-Za-z0-9\_\-]+)/i;
+
 	    return function(text) {
-	    	/*if (text.match(imgs)) {
-        		text = text.replace(imgs, '<img src="$1" style="max-width:100%"/>');	
-        	} else if (text.match(urls)) {
-	        	text = text.replace(urls, '<a href="$1">$1</a>');	
-	        }
-	        if(text.match(emails)) {
-	            text = text.replace(emails, '<a href=\"mailto:$1\">$1</a>');
-	        }
-	        return $sce.trustAsHtml(text);*/
+	    	
 	        var options = {
 	        	/*gfm: true,
 				tables: true,
@@ -116,7 +110,44 @@ angular.module('steem.services', [])
 			    smartLists: true,
 			    smartypants: false*/
 			};
-	        return marked(text, options);
+			if (text.match(imgs)) {
+				console.log()
+        		text = text.replace(imgs, '<img src="$1" style="max-width:100%"/>');	
+        	} else /*if(text.match(youtubeid)) {
+        		var o = text.match(youtubeid);
+        		if (o && o.length >= 2) {
+        			var x = "http://www.youtube.com/embed/"+o[1];
+        			console.log(x, o)
+	            	text = text.replace(youtube, '<iframe src="'+x+'" width="100%"></iframe>');
+	        	}
+	        } else*/ if (text.match(urls)) {
+	        	var link = text.match(urls);
+	        	console.log(link)
+	        	console.log(link[0].indexOf("youtu"));
+	        	if (link && link[0].indexOf("youtu")>-1) {
+	        		//text = text.replace(urls, '<youtube-video video-url="$1"></youtube-video>');	
+	        	} else {
+	        		text = text.replace(urls, '<a href="$1">$1</a>');		
+	        	}
+	        	
+	        }
+	        if(text.match(emails)) {
+	            text = text.replace(emails, '<a href=\"mailto:$1\">$1</a>');
+	        }
+	        
+			var textu = marked(text, options);
+	        	
+	        /*if (textu.match(urls)) {
+	        	var link = textu.match(urls);
+	        	console.log(link)
+	        	console.log(link[0].indexOf("youtu"));
+	        	if (link && link[0].indexOf("youtu")>-1) {
+	        		console.log("$1");
+	        		textu = textu.replace(urls, '<youtube-video video-url="$1"></youtube-video>');	
+	        	}
+        	}*/
+
+	        return textu;
 	    };
 	})
 	.filter('sp', function($sce, $rootScope) {
