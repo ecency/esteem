@@ -37,12 +37,11 @@ angular.module('steem.controllers', [])
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
-
-    (new Steem($rootScope.$storage.socket)).getAccounts([$scope.loginData.username], function(err, dd) {
+    var temp = new Steem($rootScope.$storage.socket);
+    temp.getAccounts([$scope.loginData.username], function(err, dd) {
       //console.log(angular.toJson(dd));
-      /*
-      [["STM6tGVJ7N7wSromsHMaxZsSaUsvA9NMzhKxpCVuFwECrfVpw1JTR",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["STM4z77fEao7nyLy8xMh74pUdNjBEjixGzBcXekZMEAQcpgJauYMd",1]]},"posting":{"weight_threshold":1,"account_auths":[],"key_auths":[["STM7CD5Sbw1ohoLsSVbChe8aWXuD7gmt9de758azbnQQftUoRtBSm",1]]},"memo_key":"STM82iAjMevvouyybmGZriZovfdtqajymt5VPU6GcmV7C3bDCike3","json_metadata":"","proxy":"","last_owner_update":"1970-01-01T00:00:00","created":"2016-07-07T08:15:00","mined":false,"owner_challenged":false,"active_challenged":false,"last_owner_proved":"1970-01-01T00:00:00","last_active_proved":"1970-01-01T00:00:00","recovery_account":"steem","comment_count":0,"lifetime_vote_count":0,"post_count":56,"voting_power":7347,"last_vote_time":"2016-07-20T10:48:21","balance":"0.000 STEEM","sbd_balance":"0.000 SBD","sbd_seconds":"7022657376","sbd_seconds_last_update":"2016-07-20T08:17:12","sbd_last_interest_payment":"2016-07-08T22:45:48","vesting_shares":"636649.594942 VESTS","vesting_withdraw_rate":"0.000000 VESTS","next_vesting_withdrawal":"1969-12-31T23:59:59","withdrawn":0,"to_withdraw":0,"withdraw_routes":0,"curation_rewards":42,"posting_rewards":242197,"proxied_vsf_votes":[0,0,0,0],"witnesses_voted_for":0,"average_bandwidth":310232493,"lifetime_bandwidth":"144194000000","last_bandwidth_update":"2016-07-20T10:48:21","average_market_bandwidth":129894320,"last_market_bandwidth_update":"2016-07-20T08:18:39","last_post":"2016-07-20T08:40:48","last_root_post":"2016-07-19T19:01:54","last_active":"2016-07-20T10:48:21","activity_shares":"512478414963327438","last_activity_payout":"1970-01-01T00:00:00","vesting_balance":"0.000 STEEM","transfer_history":[],"market_history":[],"post_history":[],"vote_history":[],"other_history":[],"witness_votes":[],"blog_category":{}}]
-      */
+      //[["STM6tGVJ7N7wSromsHMaxZsSaUsvA9NMzhKxpCVuFwECrfVpw1JTR",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["STM4z77fEao7nyLy8xMh74pUdNjBEjixGzBcXekZMEAQcpgJauYMd",1]]},"posting":{"weight_threshold":1,"account_auths":[],"key_auths":[["STM7CD5Sbw1ohoLsSVbChe8aWXuD7gmt9de758azbnQQftUoRtBSm",1]]},"memo_key":"STM82iAjMevvouyybmGZriZovfdtqajymt5VPU6GcmV7C3bDCike3","json_metadata":"","proxy":"","last_owner_update":"1970-01-01T00:00:00","created":"2016-07-07T08:15:00","mined":false,"owner_challenged":false,"active_challenged":false,"last_owner_proved":"1970-01-01T00:00:00","last_active_proved":"1970-01-01T00:00:00","recovery_account":"steem","comment_count":0,"lifetime_vote_count":0,"post_count":56,"voting_power":7347,"last_vote_time":"2016-07-20T10:48:21","balance":"0.000 STEEM","sbd_balance":"0.000 SBD","sbd_seconds":"7022657376","sbd_seconds_last_update":"2016-07-20T08:17:12","sbd_last_interest_payment":"2016-07-08T22:45:48","vesting_shares":"636649.594942 VESTS","vesting_withdraw_rate":"0.000000 VESTS","next_vesting_withdrawal":"1969-12-31T23:59:59","withdrawn":0,"to_withdraw":0,"withdraw_routes":0,"curation_rewards":42,"posting_rewards":242197,"proxied_vsf_votes":[0,0,0,0],"witnesses_voted_for":0,"average_bandwidth":310232493,"lifetime_bandwidth":"144194000000","last_bandwidth_update":"2016-07-20T10:48:21","average_market_bandwidth":129894320,"last_market_bandwidth_update":"2016-07-20T08:18:39","last_post":"2016-07-20T08:40:48","last_root_post":"2016-07-19T19:01:54","last_active":"2016-07-20T10:48:21","activity_shares":"512478414963327438","last_activity_payout":"1970-01-01T00:00:00","vesting_balance":"0.000 STEEM","transfer_history":[],"market_history":[],"post_history":[],"vote_history":[],"other_history":[],"witness_votes":[],"blog_category":{}}]
+      
       console.log(dd);
       dd = dd[0];
       $scope.loginData.id = dd.id;
@@ -58,8 +57,10 @@ angular.module('steem.controllers', [])
         $scope.closeLogin();
       }, 1000);
     });
-    
-    
+    temp.login($scope.loginData.username, $scope.loginData.password, function(err, result){
+      console.log(err)
+      console.log(result)
+    })
   };
   console.log($rootScope.$storage.user);
   $scope.options = {
@@ -76,69 +77,7 @@ angular.module('steem.controllers', [])
     });
   }, 10);
   
-  $scope.active = "blog";
-  $scope.change = function(type){
-    $scope.profile = [];
-    $scope.accounts = [];
-    $scope.active = type;
-    if (type != "blog") {
-      $scope.rest = "/"+type;
-    } else {
-      $scope.rest = "";
-    }
-    (new Steem($rootScope.$storage.socket)).getState("/@"+$rootScope.$storage.user.username+$scope.rest, function(err, res){
-      console.log(res);
-      console.log(type)
-      if (res.content) {
-        console.log(res.content)
-        for (var property in res.content) {
-          if (res.content.hasOwnProperty(property)) {
-            // do stuff
-            //console.log(res.content[property])
-            $scope.profile.push(res.content[property]);
-          }
-        }  
-      } 
-      if (type=="transfers" || type=="permissions") {
-        console.log(res.accounts)
-        for (var property in res.accounts) {
-          if (res.accounts.hasOwnProperty(property)) {
-            // do stuff
-            //console.log(res.accounts[property])
-            $scope.accounts = res.accounts[property];
-          }
-        }  
-        //console.log(res.accounts.$rootScope.$storage.user.username);
-        //$scope.profile = res.accounts[$rootScope.$storage.user.username];
-      }
-      
-      if(!$scope.$$phase){
-        $scope.$apply();
-      }
-    });
-  };
-  
-  $scope.profile = [];
-  $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-    if (toState.name == "app.profile") {
-      console.log('Profile change is beginning');
-      (new Steem($rootScope.$storage.socket)).getState("/@"+$rootScope.$storage.user.username, function(err, res){
-        $scope.profile = [];
-        console.log(res.content);
-        for (var property in res.content) {
-          if (res.content.hasOwnProperty(property)) {
-            // do stuff
-            //console.log(res.content[property])
-            $scope.profile.push(res.content[property]);
-          }
-        }
-        if(!$scope.$$phase){
-          $scope.$apply();
-        }
-      });  
-    }
-    
-  });
+ 
 
   $scope.$on("$ionicSlides.slideChangeEnd", function(event, data){
     // note: the indexes are 0-based
@@ -585,4 +524,119 @@ angular.module('steem.controllers', [])
       }*/
 
 
-});
+})
+
+.controller('FollowersCtrl', function($scope, $stateParams, $rootScope, $state) {
+
+  $scope.$on('$ionicView.beforeEnter', function(){
+    $scope.followers = {};
+    $scope.limit = 10;
+    var temp = new Steem($rootScope.$storage.socket);
+    temp.getFollowers($rootScope.$storage.user.username, false, $scope.limit, function(e, r){
+      console.log(e)
+      console.log(r)
+      $scope.followers = r;
+      if (!$scope.$phase)
+        $scope.$apply();
+    })
+  });
+  $scope.profileView = function(xx){
+    $state.go('app.profile', {username: xx});
+  }
+
+})
+
+.controller('FollowingCtrl', function($scope, $stateParams, $rootScope, $state) {
+
+ $scope.$on('$ionicView.beforeEnter', function(){
+    $scope.following = {};
+    $scope.limit = 10;
+    var temp = new Steem($rootScope.$storage.socket);
+    temp.getFollowing($rootScope.$storage.user.username, false, $scope.limit, function(e, r){
+      console.log(e)
+      console.log(r)
+      $scope.following = r;
+      if (!$scope.$phase)
+        $scope.$apply();
+    })
+  });
+  $scope.profileUnfollow = function(xx){
+    $rootScope.showAlert("Warning", "In Development, Stay tuned!");
+  }
+  $scope.profileView = function(xx){
+    $state.go('app.profile', {username: xx});
+  }
+})
+
+.controller('ProfileCtrl', function($scope, $stateParams, $rootScope) {
+  $scope.username = $stateParams.username;
+
+  $scope.$on('$ionicView.beforeEnter', function(){
+    $scope.active = "blog";
+    $scope.change = function(type){
+      $scope.profile = [];
+      $scope.accounts = [];
+      $scope.active = type;
+      if (type != "blog") {
+        $scope.rest = "/"+type;
+      } else {
+        $scope.rest = "";
+      }
+      (new Steem($rootScope.$storage.socket)).getState("/@"+$stateParams.username+$scope.rest, function(err, res){
+        console.log(res);
+        console.log(type)
+        if (res.content) {
+          console.log(res.content)
+          for (var property in res.content) {
+            if (res.content.hasOwnProperty(property)) {
+              // do stuff
+              //console.log(res.content[property])
+              $scope.profile.push(res.content[property]);
+            }
+          }  
+        } 
+        if (type=="transfers" || type=="permissions") {
+          console.log(res.accounts)
+          for (var property in res.accounts) {
+            if (res.accounts.hasOwnProperty(property)) {
+              // do stuff
+              //console.log(res.accounts[property])
+              $scope.accounts = res.accounts[property];
+            }
+          }  
+          //console.log(res.accounts.$rootScope.$storage.user.username);
+          //$scope.profile = res.accounts[$rootScope.$storage.user.username];
+        }
+        
+        if(!$scope.$$phase){
+          $scope.$apply();
+        }
+      });
+    };
+    
+    $scope.profile = [];
+    $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+      if (toState.name == "app.profile") {
+        console.log('Profile change is beginning');
+        (new Steem($rootScope.$storage.socket)).getState("/@"+$stateParams.username, function(err, res){
+          $scope.profile = [];
+          console.log(res.content);
+          for (var property in res.content) {
+            if (res.content.hasOwnProperty(property)) {
+              // do stuff
+              //console.log(res.content[property])
+              $scope.profile.push(res.content[property]);
+            }
+          }
+          if(!$scope.$$phase){
+            $scope.$apply();
+          }
+        });  
+      }
+      
+    });
+  });
+
+})
+
+;

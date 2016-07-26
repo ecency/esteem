@@ -57,11 +57,32 @@ angular.module('steem', ['ionic', 'steem.controllers', 'steem.services', 'ngStor
     }
   })
 
-  .state('app.profile', {
-    url: '/profile',
+  .state('app.followers', {
+    url: '/followers',
     views: {
       'menuContent': {
-        templateUrl: 'templates/profile.html'
+        templateUrl: 'templates/followers.html',
+        controller: 'FollowersCtrl'
+      }
+    }
+  })
+
+  .state('app.following', {
+    url: '/following',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/following.html',
+        controller: 'FollowingCtrl'
+      }
+    }
+  })
+
+  .state('app.profile', {
+    url: '/profile/:username',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/profile.html',
+        controller: "ProfileCtrl"
       }
     }
   })

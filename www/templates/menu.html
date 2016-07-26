@@ -24,8 +24,14 @@
         <ion-item menu-close ng-click="login()" ng-if="!$root.$storage.user">
           Login
         </ion-item>
-        <ion-item menu-close href="#/app/profile" ng-if="$root.$storage.user">
+        <ion-item menu-close href="#/app/profile/{{$root.$storage.user.username}}" ng-if="$root.$storage.user">
           Profile
+        </ion-item>
+        <ion-item menu-close href="#/app/following" ng-if="$root.$storage.user">
+          Following
+        </ion-item>
+        <ion-item menu-close href="#/app/followers" ng-if="$root.$storage.user">
+          Followers
         </ion-item>
         <ion-item menu-close href="#/app/settings">
           Settings

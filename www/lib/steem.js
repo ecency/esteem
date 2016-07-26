@@ -57,6 +57,27 @@ Steem.prototype.getApiByName = function(apiName, callback) {
 	});
 };
 
+// [follow_api]
+
+/* get_followers */
+Steem.prototype.getFollowers = function(following, startFollower, limit, callback) {
+	this.send('follow_api', {
+		'method': 'get_followers',
+		'params': [following, startFollower, limit]
+	}, function(err, result) {
+		callback(err, result);
+	});
+};
+
+/* get_followers */
+Steem.prototype.getFollowing = function(follower, startFollowing, limit, callback) {
+	this.send('follow_api', {
+		'method': 'get_following',
+		'params': [follower, startFollowing, limit]
+	}, function(err, result) {
+		callback(err, result);
+	});
+};
 
 // [database_api]
 
