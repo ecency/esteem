@@ -4,19 +4,10 @@ angular.module('steem.services', [])
 		
 		return {
 			login: function (data) {
-				return $http.post('http://wwwlogix.com/dev/ezine/services/app/ezine_login_check', data);
+				return $http.post('', data);
 			},
-			editcompany: function (data) {
-				return $http.post('http://wwwlogix.com/dev/ezine/services/app/ezine_edit_companyname', data );
-			},
-			getarticles: function () {
-				return $http.get('http://wwwlogix.com/dev/ezine/services/app/ezine_get_all_articles');
-			},
-			getarticleStatus: function(data) {
-				return $http.post('http://wwwlogix.com/dev/ezine/services/app/ezine_get_user_article_recording', data);
-			}, 
 			getconfig: function() {
-				return $http.get('http://wwwlogix.com/dev/ezine/services/app/ezine_get_config');
+				return $http.get('');
 			}
 		};
 	}])
@@ -110,44 +101,21 @@ angular.module('steem.services', [])
 			    smartLists: true,
 			    smartypants: false*/
 			};
-			if (text.match(imgs)) {
+			/*if (text.match(imgs)) {
 				console.log()
         		text = text.replace(imgs, '<img src="$1" style="max-width:100%"/>');	
-        	} else /*if(text.match(youtubeid)) {
-        		var o = text.match(youtubeid);
-        		if (o && o.length >= 2) {
-        			var x = "http://www.youtube.com/embed/"+o[1];
-        			console.log(x, o)
-	            	text = text.replace(youtube, '<iframe src="'+x+'" width="100%"></iframe>');
-	        	}
-	        } else*/ if (text.match(urls)) {
-	        	var link = text.match(urls);
-	        	console.log(link)
-	        	console.log(link[0].indexOf("youtu"));
-	        	if (link && link[0].indexOf("youtu")>-1) {
-	        		//text = text.replace(urls, '<youtube-video video-url="$1"></youtube-video>');	
-	        	} else {
-	        		text = text.replace(urls, '<a href="$1">$1</a>');		
-	        	}
+        	} else if (text.match(urls)) {
+	        	
+	        	text = text.replace(urls, '<a href="$1">$1</a>');		
 	        	
 	        }
 	        if(text.match(emails)) {
 	            text = text.replace(emails, '<a href=\"mailto:$1\">$1</a>');
-	        }
+	        }*/
 	        
 			var textu = marked(text, options);
-	        	
-	        /*if (textu.match(urls)) {
-	        	var link = textu.match(urls);
-	        	console.log(link)
-	        	console.log(link[0].indexOf("youtu"));
-	        	if (link && link[0].indexOf("youtu")>-1) {
-	        		console.log("$1");
-	        		textu = textu.replace(urls, '<youtube-video video-url="$1"></youtube-video>');	
-	        	}
-        	}*/
 
-	        return textu;
+	        return $sce.trustAsHtml(textu);
 	    };
 	})
 	.filter('sp', function($sce, $rootScope) {

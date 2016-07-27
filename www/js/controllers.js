@@ -152,7 +152,6 @@ angular.module('steem.controllers', [])
     });
     $state.go('app.posts');
   };
-
 })
 
 .controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup) {
