@@ -85,13 +85,11 @@ angular.module('steem.services', [])
     .filter('parseUrl', function($sce) {
 	    var urls = /(\b(https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;-]*[-A-Z0-9+&@#\/%=~_|])/gim;
 	    var emails = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/gim;
-	 	//var imgs = /\.(jpeg|jpg|gif|png)$/;
 	 	var imgs = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/gim;
 		var youtube = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
 		var youtubeid = /(?:(?:youtube.com\/watch\?v=)|(?:youtu.be\/))([A-Za-z0-9\_\-]+)/i;
-
-	    return function(text) {
-	    	
+		
+	    return function(textu) {
 	        var options = {
 	        	/*gfm: true,
 				tables: true,
@@ -101,21 +99,8 @@ angular.module('steem.services', [])
 			    smartLists: true,
 			    smartypants: false*/
 			};
-			/*if (text.match(imgs)) {
-				console.log()
-        		text = text.replace(imgs, '<img src="$1" style="max-width:100%"/>');	
-        	} else if (text.match(urls)) {
-	        	
-	        	text = text.replace(urls, '<a href="$1">$1</a>');		
-	        	
-	        }
-	        if(text.match(emails)) {
-	            text = text.replace(emails, '<a href=\"mailto:$1\">$1</a>');
-	        }*/
-	        
-			var textu = marked(text, options);
-
-	        return $sce.trustAsHtml(textu);
+			var textu = marked(textu, options);
+        	return $sce.trustAsHtml(textu);
 	    };
 	})
 	.filter('sp', function($sce, $rootScope) {

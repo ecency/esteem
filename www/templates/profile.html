@@ -15,7 +15,7 @@
                 <div ng-click="open(playlist)">
                 <div class="wrap">
                   <span class="bold h4">{{playlist.root_title}}</span><span class="pull-right"><i class="icon ion-pricetags"></i> {{playlist.category}}</span>
-                </div><span ng-bind-html="playlist.body.substring(0,100)|parseUrl"></span>
+                </div>
                 <div class=""><i class="icon ion-android-time"></i> {{playlist.last_update|timeago}} by <i class="icon ion-android-person"></i> {{playlist.author}}</div>
                 </div>
                 <p>
