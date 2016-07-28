@@ -27,6 +27,9 @@ angular.module('steem', ['ionic', 'steem.controllers', 'steem.services', 'ngStor
         console.log('Thank you ...');
       });*/
     };
+    if (!$rootScope.$storage.view) {
+      $rootScope.$storage.view = 'compact';
+    }
   });
 
 })

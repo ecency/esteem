@@ -1,0 +1,30 @@
+<ion-popover-view>
+<ion-content>
+  <div class="list">
+    <a class="item" href="#"  ng-click="refresh()">
+      <i class="icon ion-android-sync"></i>
+      Refresh content
+    </a>
+    <a class="item" href="#"  ng-click="showFilter()">
+      <i class="icon ion-levels"></i>
+      Sort by trends
+    </a>
+    <a class="item" href="#" ng-if="$root.$storage.view == 'compact'" ng-click="changeView('card')">
+    <i class="icon ion-navicon-round"></i>
+      Card view
+    </a>
+    <a class="item" href="#" ng-if="$root.$storage.view == 'card'" ng-click="changeView('compact')">
+    <i class="icon ion-navicon-round"></i>
+      Compact view
+    </a>
+    <a class="item" href="#"  ng-click="openSmodal()">
+      <i class="icon ion-android-search"></i>
+      Search
+    </a>
+    <a class="item" href="#"  ng-click="clearSearch()" ng-if="$root.$storage.tag">
+      <i class="icon ion-close-round"></i>
+      #{{$root.$storage.tag}}
+    </a>
+  </div>
+</ion-content>
+</ion-popover-view>

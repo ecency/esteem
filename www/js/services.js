@@ -89,7 +89,7 @@ angular.module('steem.services', [])
 		var youtube = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
 		var youtubeid = /(?:(?:youtube.com\/watch\?v=)|(?:youtu.be\/))([A-Za-z0-9\_\-]+)/i;
 		
-	    return function(textu) {
+	    return function(textu, subpart) {
 	        var options = {
 	        	/*gfm: true,
 				tables: true,
@@ -100,7 +100,11 @@ angular.module('steem.services', [])
 			    smartypants: false*/
 			};
 			var textu = marked(textu, options);
-        	return $sce.trustAsHtml(textu);
+			if (subpart) {
+				return $sce.trustAsHtml(textu); //.substring(0, textu.indexOf('.'))	
+			} else {
+				return $sce.trustAsHtml(textu);	
+			}
 	    };
 	})
 	.filter('sp', function($sce, $rootScope) {

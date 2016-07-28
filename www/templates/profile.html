@@ -10,7 +10,7 @@
             <span ng-bind-html="playlist.body.substring(0,100)|parseUrl"></span>
             </div>-->
             <p class="padding" ng-if="nonexist">Nothing here, yet...</p>
-            <div ng-repeat="playlist in profile">
+            <div ng-repeat="playlist in profile | orderBy:'-last_update'">
               <div class="item">
                 <div ng-click="open(playlist)">
                 <div class="wrap">

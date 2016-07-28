@@ -32,6 +32,7 @@ Steem.prototype.send = function(api, data, callback) {
 
 	ws.onerror = function(error){
 		callback(error, null);
+		console.log("error")
 	}
 };
 

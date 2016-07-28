@@ -62,8 +62,6 @@ angular.module('steem.controllers', [])
     });
   }, 10);
   
- 
-
   $scope.$on("$ionicSlides.slideChangeEnd", function(event, data){
     // note: the indexes are 0-based
     $scope.activeIndex = data.activeIndex;
@@ -91,43 +89,54 @@ angular.module('steem.controllers', [])
     $scope.data.type="tag";
     $scope.smodal.show();
   };
+  $scope.clearSearch = function() {
+    if ($rootScope.$storage.tag) {
+      $rootScope.$storage.tag = "";
+      $rootScope.$broadcast('close:popover');
+    }
+  }
 
   // Perform the login action when the user submits the login form
   $scope.search = function() {
     console.log('Doing search', $scope.data.search);
-    if ($scope.data.search.length > 3) {
-      $scope.steem = new Steem($rootScope.$storage.socket);
-      if ($scope.data.type == "tag"){
-        $scope.steem.getTrendingTags($scope.data.search, 10 , function(err, result) {
+    setTimeout(function() {
+      if ($scope.data.search.length > 1) {
+        $scope.steem = new Steem($rootScope.$storage.socket);
+        if ($scope.data.type == "tag"){
+          $scope.steem.getTrendingTags($scope.data.search, 10 , function(err, result) {
+            var ee = [];
+            if (result){
+              for (var i = result.length - 1; i >= 0; i--) {
+                if (result[i].tag.indexOf($scope.data.search) > -1){
+                  ee.push(result[i]);
+                }
+              }
+              $scope.data.searchResult = ee;
+            }
+            //console.log(result);
+            //console.log(err);
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }
+          });  
+        }
+        if ($scope.data.type == "user"){
           var ee = [];
-          if (result){
-            for (var i = result.length - 1; i >= 0; i--) {
-              if (result[i].tag.indexOf($scope.data.search) > -1){
-                ee.push(result[i]);
-              }
+          $scope.steem.lookupAccounts($scope.data.search, 10, function(err, result) {
+            if (result){
+              $scope.data.searchResult = result;
             }
-            $scope.data.searchResult = ee;
-          }
-          console.log(result);
-          console.log(err);
-        });  
-      }
-      if ($scope.data.type == "user"){
-        var ee = [];
-        $scope.steem.lookupAccounts($scope.data.search, 10, function(err, result) {
-          if (result){
-            for (var i = result.length - 1; i >= 0; i--) {
-              if (result[i].indexOf($scope.data.search) > -1){
-                ee.push(result[i]);
+              //console.log(result);
+              //console.log(err);  
+              if (!$scope.$$phase) {
+                $scope.$apply();
               }
-            }
-            $scope.data.searchResult = ee;
-          }
-            console.log(result);
-            console.log(err);  
-        });  
+          });  
+        }
+        
       }
-    }
+    }, 500);
+    
   };
   $scope.typechange = function() {
     $scope.data.searchResult = undefined;
@@ -137,11 +146,13 @@ angular.module('steem.controllers', [])
     console.log("opening tag "+xx);
     $rootScope.$storage.tag = xx;
     $scope.closeSmodal();
+    $rootScope.$broadcast('close:popover');
     $state.go("app.posts", {}, {reload:true});
   };
   $scope.openUser = function(xy) {
     console.log("opening user "+xy);
     $scope.closeSmodal();
+    $rootScope.$broadcast('close:popover');
     $state.go("app.profile", {username: xy});
   };
 
@@ -154,49 +165,49 @@ angular.module('steem.controllers', [])
   };
 })
 
-.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup) {
+.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover) {
+
+  $rootScope.$on('filter:change', function() {
+    console.log($rootScope.$storage.filter)
+    var type = $rootScope.$storage.filter || "trending";
+    var tag = $rootScope.$storage.tag || "";
+    $scope.fetchPosts(type, $scope.limit, tag);
+  });
 
   $scope.showFilter = function() {
-   $scope.fdata = {filter: $rootScope.$storage.filter || "trending"};
-   var myPopupF = $ionicPopup.show({
-     //template: '<ion-list><label class="item item-input item-select"><div class="input-label">Category</div><select ng-model="fdata.filter"><option>hot</option><option>trending</option><option value="cashout">payout time</option><option value="children">responses</option><option value="created">new</option><option>active</option><option value="votes">popular</option></select></label><label class="item item-input"><span class="input-label">Tag</span><input type="text" ng-model="fdata.tag" placeholder="tag e.g. steemit"></label></ion-list>',
-     template: '<ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="hot"><i class="icon" ng-class="{\'ion-flame gray\':fdata.filter!=\'hot\', \'ion-flame positive\': fdata.filter==\'hot\'}"></i> Hot</ion-radio><ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="created"><i class="icon" ng-class="{\'ion-star gray\':fdata.filter!=\'new\', \'ion-star positive\': fdata.filter==\'new\'}"></i> New</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="trending"><i class="icon" ng-class="{\'ion-podium gray\':fdata.filter!=\'trending\', \'ion-podium positive\': fdata.filter==\'trending\'}"></i> Trending</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="active"><i class="icon" ng-class="{\'ion-chatbubble-working gray\':fdata.filter!=\'active\', \'ion-chatbubble-working positive\': fdata.filter==\'active\'}"></i> Active</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="cashout"><i class="icon" ng-class="{\'ion-share gray\':fdata.filter!=\'cashout\', \'ion-share positive\': fdata.filter==\'cashout\'}"></i> Cashout</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="payout"><i class="icon" ng-class="{\'ion-cash gray\':fdata.filter!=\'payout\', \'ion-cash positive\': fdata.filter==\'payout\'}"></i> Payout</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="votes"><i class="icon" ng-class="{\'ion-person-stalker gray\':fdata.filter!=\'votes\', \'ion-person-stalker positive\': fdata.filter==\'votes\'}"></i> Votes</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="children"><i class="icon" ng-class="{\'ion-chatbubbles gray\':fdata.filter!=\'children\', \'ion-chatbubbles positive\': fdata.filter==\'children\'}"></i> Comments</ion-radio>',
-     
-     title: 'Sort by',
-     scope: $scope
-   });
-    $scope.filterchange = function(f){
-      console.log($scope.fdata.filter)
-      $rootScope.$storage.filter = $scope.fdata.filter;
-      myPopupF.close();
-      $rootScope.$broadcast('filter:change');
-    }
-    $rootScope.$on('filter:change', function() {
-      console.log($rootScope.$storage.filter)
-      var type = $rootScope.$storage.filter || "trending";
-      var tag = $rootScope.$storage.tag || "";
-      $scope.fetchPosts(type, $scope.limit, tag);
+    $scope.fdata = {filter: $rootScope.$storage.filter || "trending"};
+    var myPopupF = $ionicPopup.show({
+       //template: '<ion-list><label class="item item-input item-select"><div class="input-label">Category</div><select ng-model="fdata.filter"><option>hot</option><option>trending</option><option value="cashout">payout time</option><option value="children">responses</option><option value="created">new</option><option>active</option><option value="votes">popular</option></select></label><label class="item item-input"><span class="input-label">Tag</span><input type="text" ng-model="fdata.tag" placeholder="tag e.g. steemit"></label></ion-list>',
+       template: '<ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="hot"><i class="icon" ng-class="{\'ion-flame gray\':fdata.filter!=\'hot\', \'ion-flame positive\': fdata.filter==\'hot\'}"></i> Hot</ion-radio><ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="created"><i class="icon" ng-class="{\'ion-star gray\':fdata.filter!=\'new\', \'ion-star positive\': fdata.filter==\'new\'}"></i> New</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="trending"><i class="icon" ng-class="{\'ion-podium gray\':fdata.filter!=\'trending\', \'ion-podium positive\': fdata.filter==\'trending\'}"></i> Trending</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="active"><i class="icon" ng-class="{\'ion-chatbubble-working gray\':fdata.filter!=\'active\', \'ion-chatbubble-working positive\': fdata.filter==\'active\'}"></i> Active</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="cashout"><i class="icon" ng-class="{\'ion-share gray\':fdata.filter!=\'cashout\', \'ion-share positive\': fdata.filter==\'cashout\'}"></i> Cashout</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="payout"><i class="icon" ng-class="{\'ion-cash gray\':fdata.filter!=\'payout\', \'ion-cash positive\': fdata.filter==\'payout\'}"></i> Payout</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="votes"><i class="icon" ng-class="{\'ion-person-stalker gray\':fdata.filter!=\'votes\', \'ion-person-stalker positive\': fdata.filter==\'votes\'}"></i> Votes</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="children"><i class="icon" ng-class="{\'ion-chatbubbles gray\':fdata.filter!=\'children\', \'ion-chatbubbles positive\': fdata.filter==\'children\'}"></i> Comments</ion-radio>',   
+       title: 'Sort by',
+       scope: $scope
     });
     myPopupF.then(function(res) {
       if (res) {
         $scope.fetchPosts(res[0], null, res[1]);
       }
-   });
-  };
+    });
 
+    $scope.filterchange = function(f){
+      console.log($scope.fdata.filter)
+      $rootScope.$storage.filter = $scope.fdata.filter;
+      myPopupF.close();
+      $scope.closePopover();
+      $rootScope.$broadcast('filter:change');
+    }
+  };
   
   $scope.refresh = function(){
     $scope.fetchPosts();
+    $scope.closePopover();
     $rootScope.$broadcast('filter:change');
   };
   $scope.loadMore = function() {
     $scope.limit += 5
-    setTimeout(function() {
-      if (!$scope.error) {
-        $scope.fetchPosts(null, $scope.limit, null);  
-        $scope.$broadcast('scroll.infiniteScrollComplete');
-      }
-    }, 10);
+    if (!$scope.error) {
+      $scope.fetchPosts(null, $scope.limit, null);  
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+    }
   };
 
   $scope.$on('$stateChangeSuccess', function() {
@@ -210,12 +221,63 @@ angular.module('steem.controllers', [])
     $scope.steem.getAccounts(['ned', 'dan'], function(err, result) {
         console.log(err, result);
     });
-
-
-
   };
+  $scope.changeView = function(view) {
+    $rootScope.$storage.view = view; 
+    $scope.closePopover();
+    $scope.refresh();
+  }
+
+  $scope.$watch('data', function(newValue, oldValue){
+      //console.log('changed');
+      if (newValue) {
+        for (var i = 0; i < newValue.length; i++) {
+          if ($rootScope.$storage.user){
+            for (var j = newValue[i].active_votes.length - 1; j >= 0; j--) {
+              if (newValue[i].active_votes[j].voter == $rootScope.$storage.user.username) {
+                if (newValue[i].active_votes[j].percent > 0) {
+                  newValue[i].upvoted = true;  
+                } else {
+                  newValue[i].downvoted = true;  
+                }
+              }
+            }
+          }
+          if ($rootScope.$storage.view == 'card') {
+            newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata?newValue[i].json_metadata:[]);
+          }
+        }
+      }      
+      if (!$scope.$$phase){
+        $scope.$apply();
+      }
+  }, true);
+
+
+  $ionicPopover.fromTemplateUrl('templates/popover.html', {
+    scope: $scope,
+  }).then(function(popover) {
+    $scope.popover = popover;
+  });
+  
+  $scope.openPopover = function($event) {
+    $scope.popover.show($event);
+  };
+  $scope.closePopover = function() {
+    $scope.popover.hide();
+  };
+  $rootScope.$on('close:popover', function(){
+    $scope.closePopover();
+    $scope.refresh();
+  });
+  //Cleanup the popover when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.popover.remove();
+  });
+
   $scope.changed = function(newValue){
-    if (newValue) {
+    return newValue;
+    /*if (newValue) {
       for (var i = 0; i < newValue.length; i++) {
         newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata?newValue[i].json_metadata:[]);
         if ($rootScope.$storage.user){
@@ -233,13 +295,12 @@ angular.module('steem.controllers', [])
       return newValue;
     } else {
       return;
-    }
-    
+    }*/
   };
   $scope.fetchPosts = function(type, limit, tag) {
     type = type || $rootScope.$storage.filter || "trending";
     tag = tag || $rootScope.$storage.tag || "";
-    limit = limit || $scope.limit || 10;
+    limit = limit || $scope.limit || 5;
 
     var params = {tag: tag, limit: limit, filter_tags: []};
     console.log("fetching..."+type, limit, tag)
@@ -251,7 +312,8 @@ angular.module('steem.controllers', [])
           $scope.error = true;
           $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
         }
-        $scope.data = $scope.changed(dd);  
+        //console.log(dd);
+        $scope.data = dd;  
         if (!$scope.$$phase) {
           $scope.$apply();
         }
@@ -263,7 +325,7 @@ angular.module('steem.controllers', [])
           $scope.error = true;
           $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
         }
-        $scope.data = $scope.changed(dd);  
+        $scope.data = dd;  
         if (!$scope.$$phase) {
           $scope.$apply();
         }
@@ -275,7 +337,7 @@ angular.module('steem.controllers', [])
           $scope.error = true;
           $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
         }
-        $scope.data = $scope.changed(dd);  
+        $scope.data = dd;  
         if (!$scope.$$phase) {
           $scope.$apply();
         }
@@ -287,7 +349,7 @@ angular.module('steem.controllers', [])
           $scope.error = true;
           $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
         }
-        $scope.data = $scope.changed(dd);  
+        $scope.data = dd;  
         if (!$scope.$$phase) {
           $scope.$apply();
         }
@@ -299,7 +361,7 @@ angular.module('steem.controllers', [])
           $scope.error = true;
           $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
         }
-        $scope.data = $scope.changed(dd);  
+        $scope.data = dd;  
         if (!$scope.$$phase) {
           $scope.$apply();
         }
@@ -311,7 +373,7 @@ angular.module('steem.controllers', [])
           $scope.error = true;
           $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
         }
-        $scope.data = $scope.changed(dd);  
+        $scope.data = dd;  
         if (!$scope.$$phase) {
           $scope.$apply();
         }
@@ -323,7 +385,7 @@ angular.module('steem.controllers', [])
           $scope.error = true;
           $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
         }
-        $scope.data = $scope.changed(dd);  
+        $scope.data = dd;  
         if (!$scope.$$phase) {
           $scope.$apply();
         }
@@ -335,7 +397,7 @@ angular.module('steem.controllers', [])
           $scope.error = true;
           $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
         }
-        $scope.data = $scope.changed(dd);  
+        $scope.data = dd;  
         if (!$scope.$$phase) {
           $scope.$apply();
         }
@@ -343,12 +405,11 @@ angular.module('steem.controllers', [])
     }
   };
   $scope.$on('$ionicView.beforeEnter', function(){
-    $scope.limit = 10;
+    $scope.limit = 5;
     $scope.fetchPosts(null, $scope.limit, null);
   });
-  setTimeout(function() {
-    $scope.refresh();    
-  }, 2000);
+  
+  //$scope.refresh();    
 
   
   
@@ -360,7 +421,7 @@ angular.module('steem.controllers', [])
   $scope.$on('$ionicView.beforeEnter', function(){    
     (new Steem($rootScope.$storage.socket)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
       $scope.comments = result;
-      console.log(result);
+      //console.log(result);
       for (var i = 0; i < $scope.comments.length; i++) {
         $scope.comments[i].creplies = [];
         if ($scope.comments[i].children>0){
@@ -410,6 +471,7 @@ angular.module('steem.controllers', [])
     if (angular.isDefined(orderStuff)) {
       $interval.cancel(orderStuff);
       orderStuff = undefined;
+      $rootScope.$storage.sitem = undefined;
     }
   });
 })
@@ -473,7 +535,7 @@ angular.module('steem.controllers', [])
 
  $scope.$on('$ionicView.beforeEnter', function(){
     $scope.following = {};
-    $scope.limit = 10;
+    $scope.limit = 5;
     var temp = new Steem($rootScope.$storage.socket);
     temp.getFollowing($rootScope.$storage.user.username, true, $scope.limit, function(e, r){
       if (e)
