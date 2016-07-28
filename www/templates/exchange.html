@@ -1,0 +1,61 @@
+<ion-view view-cache="false" view-title="Exchange">
+  <ion-content class="padding has-footer exchange">
+    <div class="" ng-if="active=='buy'">
+      <div class="row header">
+        <div class="col">Price</div>
+        <div class="col">Amount</div>
+        <div class="col">Total</div>
+      </div>
+      <div class="row" ng-repeat="(key, f) in orders.bids">
+        <div class="col">{{f.real_price|number:4}}</div>
+        <div class="col">{{f.order_price.quote}}</div>
+        <div class="col">{{f.order_price.base}}</div>
+      </div>
+    </div>
+    <div class="" ng-if="active=='sell'">
+      <div class="row header">
+        <div class="col">Price</div>
+        <div class="col">Amount</div>
+        <div class="col">Total</div>
+      </div>
+      <div class="row" ng-repeat="(key, f) in orders.asks">
+        <div class="col">{{f.real_price|number:4}}</div>
+        <div class="col">{{f.order_price.quote}}</div>
+        <div class="col">{{f.order_price.base}}</div>
+      </div>
+    </div>
+    <div class="" ng-if="active=='open'">
+      <p class="padding" ng-if="!openorders">
+        No open orders for @{{username}}
+      </p>
+      <div ng-if="openorders.length>0">
+        <div class="row header">
+          <div class="col">Price</div>
+          <div class="col">Amount</div>
+          <div class="col">Total</div>
+          <div class="col">Type</div>
+        </div>
+        <div class="row" ng-repeat="(key, f) in openorders">
+          <div class="col">{{f.real_price|number:4}}</div>
+          <div class="col" ng-if="f.seller==$root.$storage.user.username">{{f.sell_price.quote}}</div>
+          <div class="col" ng-if="f.seller==$root.$storage.user.username">{{f.sell_price.base}}</div>
+          <div class="col" ng-if="f.seller==$root.$storage.user.username">Sell</div>
+          <div class="col" ng-if="f.buyer==$root.$storage.user.username">{{f.buy_price.quote}}</div>
+          <div class="col" ng-if="f.buyer==$root.$storage.user.username">{{f.buy_price.base}}</div>
+          <div class="col" ng-if="f.buyer==$root.$storage.user.username">Buy</div>
+        </div>
+      </div>
+    </div>
+    <div class="" ng-if="active=='history'">
+      <p class="padding">Nothing here, yet...</p>
+    </div>
+  </ion-content>
+  <div class="bar bar-footer">
+    <div class="button-bar">
+      <a class="button button-large button-royal icon ion-arrow-down-a" ng-class="{'active':active=='buy'}" ng-click="change('buy')"> Buy</a>
+      <a class="button button-royal icon ion-arrow-up-a" ng-class="{'active':active=='sell'}" ng-click="change('sell')"> Sell</a>
+      <a class="button button-royal icon ion-flag" ng-class="{'active':active=='open'}" ng-click="change('open')">Open</a>
+      <a class="button button-royal icon ion-ios-clock" ng-class="{'active':active=='history'}"  ng-click="change('history')">History</a>
+    </div>
+  </div>
+</ion-view>

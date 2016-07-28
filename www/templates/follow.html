@@ -1,0 +1,27 @@
+<ion-view view-cache="false" view-title="Follow">
+  <ion-content class="padding has-footer">
+    <div class="list" ng-if="active=='followers'">
+      <div class="item item-button-right" ng-repeat="f in followers" ng-click="profileView(f.follower)">
+        {{f.follower}}
+        <button class="button button-positive" ng-click="profileView(f.follower)">
+          <i class="icon ion-arrow-right-a"></i>
+        </button>
+      </div>
+    </div>
+    <div class="list" ng-if="active=='following'">
+      <div class="item item-button-right" ng-repeat="f in following" ng-click="profileView(f.following)">
+        {{f.following}}
+        <button class="button button-positive" ng-click="profileUnfollow(f.following)">
+          <i class="icon ion-close-round"></i>
+        </button>
+      </div>
+    </div>
+    <ion-infinite-scroll on-infinite="loadMore()" distance="20%"></ion-infinite-scroll>
+  </ion-content>
+  <div class="bar bar-footer">
+    <div class="button-bar">
+      <a class="button button-large button-royal icon ion-person-stalker" ng-class="{'active':active=='followers'}" ng-click="change('followers')"> Followers</a>
+      <a class="button button-royal icon ion-person-add" ng-class="{'active':active=='following'}" ng-click="change('following')"> Followings</a>
+    </div>
+  </div>
+</ion-view>

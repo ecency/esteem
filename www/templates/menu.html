@@ -27,11 +27,14 @@
         <ion-item menu-close href="#/app/profile/{{$root.$storage.user.username}}" ng-if="$root.$storage.user">
           Profile
         </ion-item>
-        <ion-item menu-close href="#/app/following" ng-if="$root.$storage.user">
-          Following
+        <ion-item menu-close href="#/app/follow" ng-if="$root.$storage.user">
+          Follow
         </ion-item>
-        <ion-item menu-close href="#/app/followers" ng-if="$root.$storage.user">
-          Followers
+        <!--<ion-item menu-close href="#/app/send" ng-if="$root.$storage.user">
+          Send
+        </ion-item>-->
+        <ion-item menu-close href="#/app/exchange/{{$root.$storage.user.username}}" ng-if="$root.$storage.user">
+          Exchange
         </ion-item>
         <ion-item menu-close href="#/app/settings">
           Settings

@@ -226,7 +226,10 @@ angular.module('steem.controllers', [])
     $scope.limit += 5
     if (!$scope.error) {
       $scope.fetchPosts(null, $scope.limit, null);  
-      $scope.$broadcast('scroll.infiniteScrollComplete');
+      $scope.$apply(function(){
+          $scope.$broadcast('scroll.infiniteScrollComplete');
+      });
+      //$scope.$broadcast('scroll.infiniteScrollComplete');
     }
   };
 
@@ -323,112 +326,120 @@ angular.module('steem.controllers', [])
     limit = limit || $scope.limit || 5;
 
     var params = {tag: tag, limit: limit, filter_tags: []};
-
-    if (!$scope.error || ($rootScope.$storage.taglimits && $rootScope.$storage.taglimits < limit)) {
-      console.log("fetching..."+type, limit, tag)
-      if (type == "trending"){
-         (new Steem($rootScope.$storage.socket)).getDiscussionsByTrending(params , function(err, dd) {
-          //console.log(dd)
-          if (err && err.code) {
-            $scope.error = true;
-            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-          }
-          //console.log(dd);
-          $scope.data = dd;  
-          if (!$scope.$$phase) {
-            $scope.$apply();
-          }
-        });
-      }
-      if (type == "created"){
-        (new Steem($rootScope.$storage.socket)).getDiscussionsByCreated(params , function(err, dd) {
-          if (err && err.code) {
-            $scope.error = true;
-            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-          }
-          $scope.data = dd;  
-          if (!$scope.$$phase) {
-            $scope.$apply();
-          }
-        });  
-      }
-      if (type == "active"){
-        (new Steem($rootScope.$storage.socket)).getDiscussionsByActive(params , function(err, dd) {
-          if (err && err.code) {
-            $scope.error = true;
-            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-          }
-          $scope.data = dd;  
-          if (!$scope.$$phase) {
-            $scope.$apply();
-          }
-        });  
-      }
-      if (type == "cashout"){
-        (new Steem($rootScope.$storage.socket)).getDiscussionsByCashout(params , function(err, dd) {
-          if (err && err.code) {
-            $scope.error = true;
-            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-          }
-          $scope.data = dd;  
-          if (!$scope.$$phase) {
-            $scope.$apply();
-          }
-        });  
-      }
-      if (type == "payout"){
-        (new Steem($rootScope.$storage.socket)).getDiscussionsByPayout(params , function(err, dd) {
-          if (err && err.code) {
-            $scope.error = true;
-            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-          }
-          $scope.data = dd;  
-          if (!$scope.$$phase) {
-            $scope.$apply();
-          }
-        });  
-      }
-      if (type == "votes"){
-        (new Steem($rootScope.$storage.socket)).getDiscussionsByVotes(params , function(err, dd) {
-          if (err && err.code) {
-            $scope.error = true;
-            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-          }
-          $scope.data = dd;  
-          if (!$scope.$$phase) {
-            $scope.$apply();
-          }
-        });  
-      }
-      if (type == "children"){
-        (new Steem($rootScope.$storage.socket)).getDiscussionsByChildren(params , function(err, dd) {
-          if (err && err.code) {
-            $scope.error = true;
-            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-          }
-          $scope.data = dd;  
-          if (!$scope.$$phase) {
-            $scope.$apply();
-          }
-        });  
-      }
-      if (type == "hot"){
-        (new Steem($rootScope.$storage.socket)).getDiscussionsByHot(params , function(err, dd) {
-          if (err && err.code) {
-            $scope.error = true;
-            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-          }
-          $scope.data = dd;  
-          if (!$scope.$$phase) {
-            $scope.$apply();
-          }
-        });  
+    if (!$scope.left) {
+      if (!$scope.error || ($rootScope.$storage.taglimits && $rootScope.$storage.taglimits < limit)) {
+        console.log("fetching..."+type, limit, tag)
+        if (type == "trending"){
+           (new Steem($rootScope.$storage.socket)).getDiscussionsByTrending(params , function(err, dd) {
+            //console.log(dd)
+            if (err && err.code) {
+              $scope.error = true;
+              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+            }
+            //console.log(dd);
+            $scope.data = dd;  
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }
+          });
+        }
+        if (type == "created"){
+          (new Steem($rootScope.$storage.socket)).getDiscussionsByCreated(params , function(err, dd) {
+            if (err && err.code) {
+              $scope.error = true;
+              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+            }
+            $scope.data = dd;  
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }
+          });  
+        }
+        if (type == "active"){
+          (new Steem($rootScope.$storage.socket)).getDiscussionsByActive(params , function(err, dd) {
+            if (err && err.code) {
+              $scope.error = true;
+              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+            }
+            $scope.data = dd;  
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }
+          });  
+        }
+        if (type == "cashout"){
+          (new Steem($rootScope.$storage.socket)).getDiscussionsByCashout(params , function(err, dd) {
+            if (err && err.code) {
+              $scope.error = true;
+              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+            }
+            $scope.data = dd;  
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }
+          });  
+        }
+        if (type == "payout"){
+          (new Steem($rootScope.$storage.socket)).getDiscussionsByPayout(params , function(err, dd) {
+            if (err && err.code) {
+              $scope.error = true;
+              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+            }
+            $scope.data = dd;  
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }
+          });  
+        }
+        if (type == "votes"){
+          (new Steem($rootScope.$storage.socket)).getDiscussionsByVotes(params , function(err, dd) {
+            if (err && err.code) {
+              $scope.error = true;
+              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+            }
+            $scope.data = dd;  
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }
+          });  
+        }
+        if (type == "children"){
+          (new Steem($rootScope.$storage.socket)).getDiscussionsByChildren(params , function(err, dd) {
+            if (err && err.code) {
+              $scope.error = true;
+              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+            }
+            $scope.data = dd;  
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }
+          });  
+        }
+        if (type == "hot"){
+          (new Steem($rootScope.$storage.socket)).getDiscussionsByHot(params , function(err, dd) {
+            if (err && err.code) {
+              $scope.error = true;
+              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+            }
+            $scope.data = dd;  
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }
+          });  
+        }
       }
     }
   };
   $scope.$on('$ionicView.beforeEnter', function(){
     $scope.limit = 5;
     $scope.fetchPosts(null, $scope.limit, null);
+  });
+  
+  $scope.$on('$ionicView.leave', function(){
+    $scope.left = true;
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
   });
   
   //$scope.refresh();    
@@ -498,116 +509,94 @@ angular.module('steem.controllers', [])
   });
 })
 
-.controller('FollowersCtrl', function($scope, $stateParams, $rootScope, $state) {
+.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state) {
 
   $scope.$on('$ionicView.beforeEnter', function(){
+    $scope.active = "followers";
     $scope.followers = {};
     $scope.limit = 10;
-    var temp = new Steem($rootScope.$storage.socket);
-    temp.getFollowers($rootScope.$storage.user.username, false, $scope.limit, function(e, r){
+    (new Steem($rootScope.$storage.socket)).getFollowers($rootScope.$storage.user.username, false, $scope.limit, function(e, r){
       if (e)
         console.log(e)
       //console.log(r)
       $scope.followers = r;
       if (!$scope.$phase)
         $scope.$apply();
-    })
+    });
   });
-  $scope.profileView = function(xx){
-    $state.go('app.profile', {username: xx});
-  };
+
+
   $scope.loadMore = function() {
     if (!$scope.error) {
       if (!$scope.last) {
         $scope.limit += 5
-        var temp = new Steem($rootScope.$storage.socket);
-        temp.getFollowers($rootScope.$storage.user.username, false, $scope.limit, function(e, r){
-          console.log(angular.toJson(e));
-          if (e && e.code) {
-            $scope.error = true;
-            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-          }
-          if (!$scope.$phase)
-            $scope.$apply();
-          if ($scope.followers) {
-            if (r.length == $scope.followers.length) {
-              $scope.last = true;
-              $scope.$broadcast('scroll.infiniteScrollComplete');
+        if ($scope.active == 'followers') {
+          (new Steem($rootScope.$storage.socket)).getFollowers($rootScope.$storage.user.username, false, $scope.limit, function(e, r){
+            console.log(angular.toJson(e));
+            if (e && e.code) {
+              $scope.error = true;
+              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+            }
+            if ($scope.followers) {
+              if (r.length == $scope.followers.length) {
+                $scope.last = true;
+                $scope.$broadcast('scroll.infiniteScrollComplete');
+              } else {
+                $scope.followers = r;
+              }
             } else {
               $scope.followers = r;
             }
-          } else {
-            $scope.followers = r;
-          }
-          $scope.$broadcast('scroll.infiniteScrollComplete');
-        });  
+            if (!$scope.$$phase){
+              $scope.$apply();
+            }
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+          });    
+        }
+        if ($scope.active == 'following') {
+          (new Steem($rootScope.$storage.socket)).getFollowing($rootScope.$storage.user.username, false, $scope.limit, function(e, r){
+            console.log(angular.toJson(e));
+            if (e && e.code){
+              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+              $scope.error = true;
+            }
+            //console.log(r)
+            
+            if ($scope.following){
+              if (r.length == $scope.following.length) {
+                $scope.last = true;
+                $scope.$broadcast('scroll.infiniteScrollComplete');
+              } else {
+                $scope.following = r;
+              }
+            } else {
+              $scope.following = r;
+            }
+            if (!$scope.$$phase){
+              $scope.$apply();
+            }
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+          });    
+        }
       } else {
         $scope.$broadcast('scroll.infiniteScrollComplete');
       }
     }
   };
-
-  $scope.$on('$stateChangeSuccess', function() {
+  $scope.change = function(type){
+    $scope.active = type;
     $scope.loadMore();
-  });
-
-})
-
-.controller('FollowingCtrl', function($scope, $stateParams, $rootScope, $state) {
-
- $scope.$on('$ionicView.beforeEnter', function(){
-    $scope.following = {};
-    $scope.limit = 5;
-    var temp = new Steem($rootScope.$storage.socket);
-    temp.getFollowing($rootScope.$storage.user.username, true, $scope.limit, function(e, r){
-      if (e)
-        console.log(e)
-      $scope.following = r;
-      if (!$scope.$phase)
-        $scope.$apply();
-    })
-  });
+  }
   $scope.profileUnfollow = function(xx){
     $rootScope.showAlert("Warning", "In Development, Stay tuned!");
   };
   $scope.profileView = function(xx){
     $state.go('app.profile', {username: xx});
   };
-  $scope.loadMore = function() {
-    if (!$scope.error) {
-      if (!$scope.last) {
-        $scope.limit += 5
-        var temp = new Steem($rootScope.$storage.socket);
-        temp.getFollowing($rootScope.$storage.user.username, false, $scope.limit, function(e, r){
-          console.log(angular.toJson(e));
-          if (e && e.code){
-            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-            $scope.error = true;
-          }
-          //console.log(r)
-          if (!$scope.$phase)
-            $scope.$apply();
-          if ($scope.following){
-            if (r.length == $scope.following.length) {
-              $scope.last = true;
-              $scope.$broadcast('scroll.infiniteScrollComplete');
-            } else {
-              $scope.following = r;
-            }
-          } else {
-            $scope.following = r;
-          }
-          $scope.$broadcast('scroll.infiniteScrollComplete');
-        });    
-      } else {
-        $scope.$broadcast('scroll.infiniteScrollComplete');
-      }
-    }
-  };
-
   $scope.$on('$stateChangeSuccess', function() {
     $scope.loadMore();
   });
+
 })
 
 .controller('ProfileCtrl', function($scope, $stateParams, $rootScope) {
@@ -616,49 +605,6 @@ angular.module('steem.controllers', [])
   $scope.$on('$ionicView.beforeEnter', function(){
     $scope.active = "blog";
     $scope.nonexist = false;
-    $scope.change = function(type){
-      $scope.profile = [];
-      $scope.accounts = [];
-      $scope.active = type;
-      if (type != "blog") {
-        $scope.rest = "/"+type;
-      } else {
-        $scope.rest = "";
-      }
-      (new Steem($rootScope.$storage.socket)).getState("/@"+$stateParams.username+$scope.rest, function(err, res){
-        //console.log(res);
-        //console.log(type)
-        if (res.content) {
-          //console.log(res.content)
-          if (Object.keys(res.content).length>0) {
-            for (var property in res.content) {
-              if (res.content.hasOwnProperty(property)) {
-                $scope.profile.push(res.content[property]);
-              }
-            }    
-            $scope.nonexist = false;
-          } else {
-            $scope.nonexist = true;
-          }
-        } 
-        if (type=="transfers" || type=="permissions") {
-          //console.log(res.accounts)
-          for (var property in res.accounts) {
-            if (res.accounts.hasOwnProperty(property)) {
-              $scope.accounts = res.accounts[property];
-              $scope.transfers = res.accounts[property].transfer_history;
-              $scope.nonexist = false;
-            }
-          } 
-          
-          console.log($scope.transfers);
-        }
-        
-        if(!$scope.$$phase){
-          $scope.$apply();
-        }
-      });
-    };
     
     (new Steem($rootScope.$storage.socket)).getState("/@"+$stateParams.username, function(err, res){
       $scope.profile = [];
@@ -679,6 +625,87 @@ angular.module('steem.controllers', [])
         $scope.nonexist = true;
       }
     });  
+  });
+   $scope.change = function(type){
+    $scope.profile = [];
+    $scope.accounts = [];
+    $scope.active = type;
+    if (type != "blog") {
+      $scope.rest = "/"+type;
+    } else {
+      $scope.rest = "";
+    }
+    (new Steem($rootScope.$storage.socket)).getState("/@"+$stateParams.username+$scope.rest, function(err, res){
+      //console.log(res);
+      //console.log(type)
+      if (res.content) {
+        //console.log(res.content)
+        if (Object.keys(res.content).length>0) {
+          for (var property in res.content) {
+            if (res.content.hasOwnProperty(property)) {
+              $scope.profile.push(res.content[property]);
+            }
+          }    
+          $scope.nonexist = false;
+        } else {
+          $scope.nonexist = true;
+        }
+      } 
+      if (type=="transfers" || type=="permissions") {
+        //console.log(res.accounts)
+        for (var property in res.accounts) {
+          if (res.accounts.hasOwnProperty(property)) {
+            $scope.accounts = res.accounts[property];
+            $scope.transfers = res.accounts[property].transfer_history;
+            $scope.nonexist = false;
+          }
+        } 
+        //console.log($scope.transfers);
+      }
+      
+      if(!$scope.$$phase){
+        $scope.$apply();
+      }
+    });
+  }
+
+})
+
+.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope) {
+  $scope.username = $stateParams.username;
+  
+  $scope.$on('$ionicView.beforeEnter', function(){
+    $scope.active = 'buy';
+    $scope.orders = [];
+    (new Steem($rootScope.$storage.socket)).getOrderBook(15, function(err, res){
+      console.log(err, res);
+      $scope.orders = res;
+      if (!$scope.$$phase) {
+        $scope.$apply();
+      }
+    });
+    $scope.change = function(type){
+      $scope.active = type;
+      if (type == "open"){
+        (new Steem($rootScope.$storage.socket)).getOpenOrders($stateParams.username, function(err, res){
+          console.log(err, res)
+          $scope.openorders = res;
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });
+      }
+      if (type == "history"){
+        $scope.history = [];
+        /*(new Steem($rootScope.$storage.socket)).getAccountHistory($stateParams.username, 20, 10, function(err, res){
+          console.log(err, res)
+          //$scope.openorders = res;
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });*/
+      }
+    };
   });
 
 })

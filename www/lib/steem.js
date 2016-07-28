@@ -476,7 +476,7 @@ Steem.prototype.getRecoveryRequest = function(account, callback) {
 /* get_order_book */
 Steem.prototype.getOrderBook = function(limit, callback) {
 	this.send('database_api', {
-		'method': 'getOrderBook',
+		'method': 'get_order_book',
 		'params': [limit]
 	}, function(err, result) {
 		callback(err, result);

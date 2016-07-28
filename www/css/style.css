@@ -76,3 +76,19 @@
 .has-footer {
 	bottom: 60px;
 }
+.exchange .header .col {
+    background-color:lightgrey;
+}
+.exchange .col {
+    border: solid 1px grey;
+    border-bottom-style: none;
+    border-right-style: none;
+}
+
+.exchange .col:last-child {
+    border-right: solid 1px grey;
+}
+
+.exchange .row:last-child .col {
+    border-bottom: solid 1px grey;
+}
