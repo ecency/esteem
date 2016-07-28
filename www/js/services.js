@@ -121,6 +121,20 @@ angular.module('steem.services', [])
 	    	}
 	    };
 	})
+	.filter('sbd', function($sce, $rootScope) {
+	    return function(text) {
+	    	if (text) {
+	    		return (Number(text.substring(0, text.length-4)).toFixed(3));	
+	    	}
+	    };
+	})
+	.filter('st', function($sce, $rootScope) {
+	    return function(text) {
+	    	if (text) {
+	    		return (Number(text.substring(0, text.length-6)).toFixed(3));	
+	    	}
+	    };
+	})
     
 
 	.directive('qrcode', function($interpolate) {  

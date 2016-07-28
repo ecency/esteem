@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.netsolutions.steemit" version="0.0.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.netsolutions.steemit" version="0.0.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Steem</name>
   <description>
         Steem Mobile app
     </description>
-  <author email="feruz@mbox.se" href="http://steemit.com/">
+  <author email="netsolutions-info@yandex.com" href="http://steem.io/">
       @good-karma
     </author>
   <content src="index.html"/>

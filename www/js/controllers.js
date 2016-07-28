@@ -1,6 +1,6 @@
 angular.module('steem.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing) {
 
   $scope.loginData = {};
 
@@ -12,6 +12,7 @@ angular.module('steem.controllers', [])
 
   $scope.open = function(item) {
     $rootScope.$storage.sitem = item;
+    //console.log(item);
     $state.go('app.single');
   };
 
@@ -22,6 +23,22 @@ angular.module('steem.controllers', [])
   $scope.login = function() {
     $scope.modal.show();
   };
+
+  $scope.share = function() {
+    var message = "Hey! Checkout blog post on Steemit.com";
+    var subject = "Via Steem Mobile";
+    var file = null;
+    var link = "http://steemit.com"+$rootScope.$storage.sitem?$rootScope.$storage.sitem.url:"";
+    $cordovaSocialSharing.share(message, subject, file, link) // Share via native share sheet
+    .then(function(result) {
+      // Success!
+      console.log("shared");
+    }, function(err) {
+      // An error occured. Show a message to the user
+      console.log("not shared");
+    });  
+  }
+  
 
   $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
@@ -92,18 +109,20 @@ angular.module('steem.controllers', [])
   $scope.clearSearch = function() {
     if ($rootScope.$storage.tag) {
       $rootScope.$storage.tag = "";
+      $rootScope.$storage.taglimits = undefined;
       $rootScope.$broadcast('close:popover');
     }
   }
 
   // Perform the login action when the user submits the login form
+  //$filter('lowercase')()
   $scope.search = function() {
     console.log('Doing search', $scope.data.search);
+    $scope.data.search = angular.lowercase($scope.data.search);
     setTimeout(function() {
       if ($scope.data.search.length > 1) {
-        $scope.steem = new Steem($rootScope.$storage.socket);
         if ($scope.data.type == "tag"){
-          $scope.steem.getTrendingTags($scope.data.search, 10 , function(err, result) {
+          (new Steem($rootScope.$storage.socket)).getTrendingTags($scope.data.search, 10 , function(err, result) {
             var ee = [];
             if (result){
               for (var i = result.length - 1; i >= 0; i--) {
@@ -122,7 +141,7 @@ angular.module('steem.controllers', [])
         }
         if ($scope.data.type == "user"){
           var ee = [];
-          $scope.steem.lookupAccounts($scope.data.search, 10, function(err, result) {
+          (new Steem($rootScope.$storage.socket)).lookupAccounts($scope.data.search, 10, function(err, result) {
             if (result){
               $scope.data.searchResult = result;
             }
@@ -142,9 +161,10 @@ angular.module('steem.controllers', [])
     $scope.data.searchResult = undefined;
     console.log("changing search type");
   }
-  $scope.openTag = function(xx) {
+  $scope.openTag = function(xx, yy) {
     console.log("opening tag "+xx);
     $rootScope.$storage.tag = xx;
+    $rootScope.$storage.taglimits = yy;
     $scope.closeSmodal();
     $rootScope.$broadcast('close:popover');
     $state.go("app.posts", {}, {reload:true});
@@ -303,105 +323,107 @@ angular.module('steem.controllers', [])
     limit = limit || $scope.limit || 5;
 
     var params = {tag: tag, limit: limit, filter_tags: []};
-    console.log("fetching..."+type, limit, tag)
 
-    if (type == "trending"){
-       (new Steem($rootScope.$storage.socket)).getDiscussionsByTrending(params , function(err, dd) {
-        //console.log(dd)
-        if (err && err.code) {
-          $scope.error = true;
-          $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-        }
-        //console.log(dd);
-        $scope.data = dd;  
-        if (!$scope.$$phase) {
-          $scope.$apply();
-        }
-      });
-    }
-    if (type == "created"){
-      (new Steem($rootScope.$storage.socket)).getDiscussionsByCreated(params , function(err, dd) {
-        if (err && err.code) {
-          $scope.error = true;
-          $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-        }
-        $scope.data = dd;  
-        if (!$scope.$$phase) {
-          $scope.$apply();
-        }
-      });  
-    }
-    if (type == "active"){
-      (new Steem($rootScope.$storage.socket)).getDiscussionsByActive(params , function(err, dd) {
-        if (err && err.code) {
-          $scope.error = true;
-          $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-        }
-        $scope.data = dd;  
-        if (!$scope.$$phase) {
-          $scope.$apply();
-        }
-      });  
-    }
-    if (type == "cashout"){
-      (new Steem($rootScope.$storage.socket)).getDiscussionsByCashout(params , function(err, dd) {
-        if (err && err.code) {
-          $scope.error = true;
-          $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-        }
-        $scope.data = dd;  
-        if (!$scope.$$phase) {
-          $scope.$apply();
-        }
-      });  
-    }
-    if (type == "payout"){
-      (new Steem($rootScope.$storage.socket)).getDiscussionsByPayout(params , function(err, dd) {
-        if (err && err.code) {
-          $scope.error = true;
-          $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-        }
-        $scope.data = dd;  
-        if (!$scope.$$phase) {
-          $scope.$apply();
-        }
-      });  
-    }
-    if (type == "votes"){
-      (new Steem($rootScope.$storage.socket)).getDiscussionsByVotes(params , function(err, dd) {
-        if (err && err.code) {
-          $scope.error = true;
-          $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-        }
-        $scope.data = dd;  
-        if (!$scope.$$phase) {
-          $scope.$apply();
-        }
-      });  
-    }
-    if (type == "children"){
-      (new Steem($rootScope.$storage.socket)).getDiscussionsByChildren(params , function(err, dd) {
-        if (err && err.code) {
-          $scope.error = true;
-          $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-        }
-        $scope.data = dd;  
-        if (!$scope.$$phase) {
-          $scope.$apply();
-        }
-      });  
-    }
-    if (type == "hot"){
-      (new Steem($rootScope.$storage.socket)).getDiscussionsByHot(params , function(err, dd) {
-        if (err && err.code) {
-          $scope.error = true;
-          $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-        }
-        $scope.data = dd;  
-        if (!$scope.$$phase) {
-          $scope.$apply();
-        }
-      });  
+    if (!$scope.error || ($rootScope.$storage.taglimits && $rootScope.$storage.taglimits < limit)) {
+      console.log("fetching..."+type, limit, tag)
+      if (type == "trending"){
+         (new Steem($rootScope.$storage.socket)).getDiscussionsByTrending(params , function(err, dd) {
+          //console.log(dd)
+          if (err && err.code) {
+            $scope.error = true;
+            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+          }
+          //console.log(dd);
+          $scope.data = dd;  
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });
+      }
+      if (type == "created"){
+        (new Steem($rootScope.$storage.socket)).getDiscussionsByCreated(params , function(err, dd) {
+          if (err && err.code) {
+            $scope.error = true;
+            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+          }
+          $scope.data = dd;  
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });  
+      }
+      if (type == "active"){
+        (new Steem($rootScope.$storage.socket)).getDiscussionsByActive(params , function(err, dd) {
+          if (err && err.code) {
+            $scope.error = true;
+            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+          }
+          $scope.data = dd;  
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });  
+      }
+      if (type == "cashout"){
+        (new Steem($rootScope.$storage.socket)).getDiscussionsByCashout(params , function(err, dd) {
+          if (err && err.code) {
+            $scope.error = true;
+            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+          }
+          $scope.data = dd;  
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });  
+      }
+      if (type == "payout"){
+        (new Steem($rootScope.$storage.socket)).getDiscussionsByPayout(params , function(err, dd) {
+          if (err && err.code) {
+            $scope.error = true;
+            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+          }
+          $scope.data = dd;  
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });  
+      }
+      if (type == "votes"){
+        (new Steem($rootScope.$storage.socket)).getDiscussionsByVotes(params , function(err, dd) {
+          if (err && err.code) {
+            $scope.error = true;
+            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+          }
+          $scope.data = dd;  
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });  
+      }
+      if (type == "children"){
+        (new Steem($rootScope.$storage.socket)).getDiscussionsByChildren(params , function(err, dd) {
+          if (err && err.code) {
+            $scope.error = true;
+            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+          }
+          $scope.data = dd;  
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });  
+      }
+      if (type == "hot"){
+        (new Steem($rootScope.$storage.socket)).getDiscussionsByHot(params , function(err, dd) {
+          if (err && err.code) {
+            $scope.error = true;
+            $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+          }
+          $scope.data = dd;  
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });  
+      }
     }
   };
   $scope.$on('$ionicView.beforeEnter', function(){
@@ -624,9 +646,12 @@ angular.module('steem.controllers', [])
           for (var property in res.accounts) {
             if (res.accounts.hasOwnProperty(property)) {
               $scope.accounts = res.accounts[property];
+              $scope.transfers = res.accounts[property].transfer_history;
               $scope.nonexist = false;
             }
-          }  
+          } 
+          
+          console.log($scope.transfers);
         }
         
         if(!$scope.$$phase){

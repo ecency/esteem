@@ -18,7 +18,7 @@
   <ion-content>
     <div class="list" ng-if="data.searchResult.length>0">
       <div ng-if="data.type=='tag'">
-	      <a class="item" ng-repeat="x in data.searchResult" ng-click="openTag(x.tag)">
+	      <a class="item" ng-repeat="x in data.searchResult" ng-click="openTag(x.tag, x.top_posts)">
 	        <h2>Tag - {{x.tag}}</h2>
 	        <p>Posts - {{x.top_posts}}</p>
 	      </a>
