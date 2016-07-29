@@ -223,19 +223,17 @@ angular.module('steem.controllers', [])
     $rootScope.$broadcast('filter:change');
   };
   $scope.loadMore = function() {
-    $scope.limit += 5
+    $rootScope.showLoading();
+    $scope.limit += 5;
     if (!$scope.error) {
       $scope.fetchPosts(null, $scope.limit, null);  
-      $scope.$apply(function(){
-          $scope.$broadcast('scroll.infiniteScrollComplete');
-      });
       //$scope.$broadcast('scroll.infiniteScrollComplete');
     }
   };
 
-  $scope.$on('$stateChangeSuccess', function() {
+  /*$scope.$on('$stateChangeSuccess', function() {
     $scope.loadMore();
-  });
+  });*/
 
   $scope.getA = function() {
    
@@ -248,12 +246,20 @@ angular.module('steem.controllers', [])
   $scope.changeView = function(view) {
     $rootScope.$storage.view = view; 
     $scope.closePopover();
-    $scope.refresh();
+    if (!$scope.$$phase){
+      //$scope.$broadcast('scroll.infiniteScrollComplete');
+      $scope.$apply();
+    }
+    //$scope.refresh();
   }
 
   $scope.$watch('data', function(newValue, oldValue){
       //console.log('changed');
       if (newValue) {
+        var length = newValue.length;
+        if (length < $scope.limit) {
+          $scope.noMoreItemsAvailable = true;
+        }
         for (var i = 0; i < newValue.length; i++) {
           if ($rootScope.$storage.user){
             for (var j = newValue[i].active_votes.length - 1; j >= 0; j--) {
@@ -272,6 +278,7 @@ angular.module('steem.controllers', [])
         }
       }      
       if (!$scope.$$phase){
+        //$scope.$broadcast('scroll.infiniteScrollComplete');
         $scope.$apply();
       }
   }, true);
@@ -291,142 +298,122 @@ angular.module('steem.controllers', [])
   };
   $rootScope.$on('close:popover', function(){
     $scope.closePopover();
-    $scope.refresh();
+    //$scope.refresh();
   });
   //Cleanup the popover when we're done with it!
   $scope.$on('$destroy', function() {
     $scope.popover.remove();
   });
 
-  $scope.changed = function(newValue){
-    return newValue;
-    /*if (newValue) {
-      for (var i = 0; i < newValue.length; i++) {
-        newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata?newValue[i].json_metadata:[]);
-        if ($rootScope.$storage.user){
-          for (var j = newValue[i].active_votes.length - 1; j >= 0; j--) {
-            if (newValue[i].active_votes[j].voter == $rootScope.$storage.user.username) {
-              if (newValue[i].active_votes[j].percent > 0) {
-                newValue[i].upvoted = true;  
-              } else {
-                newValue[i].downvoted = true;  
-              }
-            }
-          }
-        }
-      }  
-      return newValue;
-    } else {
-      return;
-    }*/
-  };
   $scope.fetchPosts = function(type, limit, tag) {
     type = type || $rootScope.$storage.filter || "trending";
     tag = tag || $rootScope.$storage.tag || "";
     limit = limit || $scope.limit || 5;
+    
+    //fetching and fetched type of checkpoints.
 
     var params = {tag: tag, limit: limit, filter_tags: []};
-    if (!$scope.left) {
-      if (!$scope.error || ($rootScope.$storage.taglimits && $rootScope.$storage.taglimits < limit)) {
-        console.log("fetching..."+type, limit, tag)
-        if (type == "trending"){
-           (new Steem($rootScope.$storage.socket)).getDiscussionsByTrending(params , function(err, dd) {
-            //console.log(dd)
-            if (err && err.code) {
-              $scope.error = true;
-              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-            }
-            //console.log(dd);
-            $scope.data = dd;  
-            if (!$scope.$$phase) {
-              $scope.$apply();
-            }
-          });
-        }
-        if (type == "created"){
-          (new Steem($rootScope.$storage.socket)).getDiscussionsByCreated(params , function(err, dd) {
-            if (err && err.code) {
-              $scope.error = true;
-              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-            }
-            $scope.data = dd;  
-            if (!$scope.$$phase) {
-              $scope.$apply();
-            }
-          });  
-        }
-        if (type == "active"){
-          (new Steem($rootScope.$storage.socket)).getDiscussionsByActive(params , function(err, dd) {
-            if (err && err.code) {
-              $scope.error = true;
-              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-            }
-            $scope.data = dd;  
-            if (!$scope.$$phase) {
-              $scope.$apply();
-            }
-          });  
-        }
-        if (type == "cashout"){
-          (new Steem($rootScope.$storage.socket)).getDiscussionsByCashout(params , function(err, dd) {
-            if (err && err.code) {
-              $scope.error = true;
-              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-            }
-            $scope.data = dd;  
-            if (!$scope.$$phase) {
-              $scope.$apply();
-            }
-          });  
-        }
-        if (type == "payout"){
-          (new Steem($rootScope.$storage.socket)).getDiscussionsByPayout(params , function(err, dd) {
-            if (err && err.code) {
-              $scope.error = true;
-              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-            }
-            $scope.data = dd;  
-            if (!$scope.$$phase) {
-              $scope.$apply();
-            }
-          });  
-        }
-        if (type == "votes"){
-          (new Steem($rootScope.$storage.socket)).getDiscussionsByVotes(params , function(err, dd) {
-            if (err && err.code) {
-              $scope.error = true;
-              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-            }
-            $scope.data = dd;  
-            if (!$scope.$$phase) {
-              $scope.$apply();
-            }
-          });  
-        }
-        if (type == "children"){
-          (new Steem($rootScope.$storage.socket)).getDiscussionsByChildren(params , function(err, dd) {
-            if (err && err.code) {
-              $scope.error = true;
-              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-            }
-            $scope.data = dd;  
-            if (!$scope.$$phase) {
-              $scope.$apply();
-            }
-          });  
-        }
-        if (type == "hot"){
-          (new Steem($rootScope.$storage.socket)).getDiscussionsByHot(params , function(err, dd) {
-            if (err && err.code) {
-              $scope.error = true;
-              $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
-            }
-            $scope.data = dd;  
-            if (!$scope.$$phase) {
-              $scope.$apply();
-            }
-          });  
-        }
+    if ($scope.error) {
+      $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+    } else {
+      console.log("fetching..."+type, limit, tag)
+      if (type == "trending"){
+         (new Steem($rootScope.$storage.socket)).getDiscussionsByTrending(params , function(err, dd) {
+          //console.log(dd)
+          if (err && err.code) {
+            $scope.error = true;
+          }
+          //console.log(dd);
+          $scope.data = dd; 
+          $rootScope.hideLoading(); 
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });
+      }
+      if (type == "created"){
+        (new Steem($rootScope.$storage.socket)).getDiscussionsByCreated(params , function(err, dd) {
+          if (err && err.code) {
+            $scope.error = true;
+          }
+          $scope.data = dd; 
+          $rootScope.hideLoading(); 
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });  
+      }
+      if (type == "active"){
+        (new Steem($rootScope.$storage.socket)).getDiscussionsByActive(params , function(err, dd) {
+          if (err && err.code) {
+            $scope.error = true;
+          }
+          $scope.data = dd; 
+          $rootScope.hideLoading(); 
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });  
+      }
+      if (type == "cashout"){
+        (new Steem($rootScope.$storage.socket)).getDiscussionsByCashout(params , function(err, dd) {
+          if (err && err.code) {
+            $scope.error = true;
+          }
+          $scope.data = dd;
+          $rootScope.hideLoading();
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });  
+      }
+      if (type == "payout"){
+        (new Steem($rootScope.$storage.socket)).getDiscussionsByPayout(params , function(err, dd) {
+          if (err && err.code) {
+            $scope.error = true;
+          }
+          $scope.data = dd;
+          $rootScope.hideLoading();
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });  
+      }
+      if (type == "votes"){
+        (new Steem($rootScope.$storage.socket)).getDiscussionsByVotes(params , function(err, dd) {
+          if (err && err.code) {
+            $scope.error = true;
+          }
+          $scope.data = dd;  
+          $rootScope.hideLoading();
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });  
+      }
+      if (type == "children"){
+        (new Steem($rootScope.$storage.socket)).getDiscussionsByChildren(params , function(err, dd) {
+          if (err && err.code) {
+            $scope.error = true;
+          }
+          $scope.data = dd;
+          $rootScope.hideLoading();  
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });  
+      }
+      if (type == "hot"){
+        (new Steem($rootScope.$storage.socket)).getDiscussionsByHot(params , function(err, dd) {
+          if (err && err.code) {
+            $scope.error = true;
+          }
+          $scope.data = dd;
+          $rootScope.hideLoading();  
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });  
       }
     }
   };
@@ -436,7 +423,6 @@ angular.module('steem.controllers', [])
   });
   
   $scope.$on('$ionicView.leave', function(){
-    $scope.left = true;
     if (!$scope.$$phase) {
       $scope.$apply();
     }

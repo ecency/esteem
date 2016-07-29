@@ -1,6 +1,6 @@
 angular.module('steem', ['ionic', 'steem.controllers', 'steem.services', 'ngStorage', 'ngCordova', 'ionic.contrib.ui.ionThread', 'youtube-embed'])
 
-.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup) {
+.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading) {
   $rootScope.$storage = $localStorage;
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -30,6 +30,18 @@ angular.module('steem', ['ionic', 'steem.controllers', 'steem.services', 'ngStor
     if (!$rootScope.$storage.view) {
       $rootScope.$storage.view = 'compact';
     }
+    $rootScope.showLoading = function() {
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner>'
+      }).then(function(){
+         console.log("The loading indicator is now displayed");
+      });
+    };
+    $rootScope.hideLoading = function(){
+      $ionicLoading.hide().then(function(){
+         console.log("The loading indicator is now hidden");
+      });
+    };
   });
 
 })
