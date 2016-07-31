@@ -3,12 +3,6 @@
     <h1 class="title">Login</h1>
     <button class="button button-clear button-primary button-icon ion-close-round" ng-click="closeLogin()"></button>
   </ion-header-bar>
-  <!--<ion-nav-bar class="bar-royal">
-      <ion-nav-title class="padding">Login</ion-nav-title>
-      <ion-nav-buttons side="right">
-        <button class="button button-icon button-clear ion-close-round" ng-click="closeLogin()"></i></button>
-      </ion-nav-buttons>
-  </ion-nav-bar>-->
   <ion-content>
     <form ng-submit="doLogin()">
       <div class="list">
@@ -16,11 +10,11 @@
           <span class="input-label">Username</span>
           <input type="text" ng-model="loginData.username">
         </label>
-        <!--<label class="item item-input">
+        <label class="item item-input">
           <span class="input-label">Password</span>
           <input type="password" ng-model="loginData.password">
-        </label>-->
-        <p class="error padding">Note: Login is not functional yet, but you can give enter your Username to get some data.</p>
+        </label>
+        <p class="error padding">Note: Username and Password are kept locally on the device, take security measures if you leave app while logged in. Logout will remove your credentials!</p>
         <label class="item">
           <button class="button button-block button-positive" type="submit">Log in</button>
         </label>

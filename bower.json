@@ -1,10 +1,34 @@
 {
-  "name": "HelloIonic",
+  "name": "SteemMobile",
   "private": "true",
   "devDependencies": {
-    "ionic": "driftyco/ionic-bower#1.3.1"
+    "ionic": "driftyco/ionic-bower#1.1.0",
+    "angular-resource": "1.4.3",
+    "platform.js": "platform#~1.3.0"
   },
   "dependencies": {
-    
+    "angular-local-storage": "~0.2.3",
+    "moment": "~2.10.6",
+    "underscore": "~1.8.3",
+    "angular-translate": "~2.8.1",
+    "async": "~1.4.2",
+    "angular-chart.js": "~0.8.8",
+    "Chart.js": "~1.0.2",
+    "openfb": "~0.5.0",
+    "videogular": "~1.4.0",
+    "videogular-themes-default": "~1.4.0",
+    "angular-sanitize": "~1.4.8",
+    "ngCordova": "~0.1.23-alpha",
+    "cordova-facebook-connect-plugin": "*",
+    "raven-js": "~2.0.5",
+    "angular-raven": "~0.6.2",
+    "angular-intro.js": "^2.0.0",
+    "ngstorage": "^0.3.10",
+    "ionic-threads": "^1.0.5",
+    "jquery": "^3.1.0"
+  },
+  "resolutions": {
+    "angular": "1.4.3",
+    "angular-sanitize": "1.4.3"
   }
 }

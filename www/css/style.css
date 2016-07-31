@@ -1,11 +1,22 @@
 /* Empty. Add your own CSS if you like */
+* {
+font-family: 'Gotham Rounded Book'!important;
+}
 .wrap {
 	text-overflow: wrap!important;
 	white-space: normal!important;
 }
+.twrap {
+	text-overflow: ellipsis;
+	word-wrap: break-word;
+	white-space: nowrap;
+}
 .item .wrap {
 	text-overflow: wrap!important;
 	white-space: normal!important;	
+}
+hr {
+	color: #ddd;
 }
 .padding {
 	padding: 10px;
@@ -91,4 +102,79 @@
 
 .exchange .row:last-child .col {
     border-bottom: solid 1px grey;
+}
+/***************************************/
+/*Comments                             */
+/***************************************/
+
+.ion-comment {
+  font-size: 12px;
+  padding: 6px 15px;
+  overflow: visible;
+  white-space: normal;
+  border: none;
+}
+.ion-comment .item-options .button {
+  background-color: #f8f8f8;
+}
+.ion-comment--text p {
+  overflow: visible;
+  white-space: normal;
+}
+.ion-comment .item-content,
+.ion-comment .item-content p {
+  padding: 0;
+  overflow: visible;
+  white-space: normal;
+  font-size: 13px;
+  color: #3f3f3f
+}
+.ion-comment--author {
+  color: #9494ff;
+  margin-bottom: 6px;
+}
+.ion-comment--op {
+  color: #8899a6;
+}
+.ion-comment--replies {
+  color: #8899a6;
+  text-align: right;
+}
+.ion-comment--score {
+  text-align: right;
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #8899a6;
+  -webkit-transition: color 0.3s;
+  transition: color 0.3s;
+}
+.ion-comment--container {
+  background-color: #f8f8f8;
+}
+.ion-comment--children {
+  margin-left: 10px;
+}
+.ion-android-arrow-dropup-circle {
+	font-size: 20px;
+}
+.ion-android-arrow-dropup {
+	font-size: 20px;
+}
+.ion-android-arrow-dropdown {
+	font-size: 20px;
+}
+.ion-android-arrow-dropdown-cirle {
+	font-size: 20px;
+}
+.tright {
+	text-align: right;
+}
+.item .row {
+	padding: 0;
+	margin: 0;
+}
+.item .row .col {
+	padding: 0;
+	margin: 0;
 }

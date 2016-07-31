@@ -8,7 +8,6 @@ var rename = require('gulp-rename');
 var sh = require('shelljs');
 var browserify = require('gulp-browserify');
 
-
 var paths = {
   sass: ['./scss/**/*.scss'],
   scripts: ['./src/**/*.js', './src/**/*.html']
@@ -17,20 +16,21 @@ var paths = {
 gulp.task('default', ['sass']);
 
 gulp.task('sass', function(done) {
-  gulp.src('./scss/ionic.app.scss')
-    .pipe(sass())
-    .on('error', sass.logError)
+  gulp.src('./scss/*.scss')
+    .pipe(sass({
+      errLogToConsole: true
+    }))
     .pipe(gulp.dest('./www/css/'))
     .pipe(minifyCss({
       keepSpecialComments: 0
     }))
-    .pipe(rename({ extname: '.min.css' }))
+    .pipe(rename({extname: '.min.css'}))
     .pipe(gulp.dest('./www/css/'))
     .on('end', done);
 });
 
 gulp.task('scripts', function() {
-  gulp.src(['./src/app.js','./src/controllers.js','./src/services.js'])
+  gulp.src('./src/app.js')
     .pipe(browserify({
       insertGlobals : true,
       debug : !gulp.env.production,
@@ -40,12 +40,27 @@ gulp.task('scripts', function() {
     .pipe(gulp.dest('./www/js'));
 
   gulp.src([
-    './src/lib/ionic/js/ionic-bundle.js',
-    './src/lib/jquery.js',
-    './src/lib/ngCordova.js',
-    './src/lib/ngStorage.js',
-    './node_modules/steemjs-lib/dist/index.js',
-    './node_modules/steem-rpc/build/steem-rpc.js'
+    './bower_components/ionic/js/ionic.bundle.js',
+    './bower_components/angular-resource/angular-resource.js',
+    './bower_components/ngstorage/ngStorage.js',
+    './bower_components/angular-translate/angular-translate.js',
+    './bower_components/ngCordova/dist/ng-cordova.js',
+    './bower_components/async/dist/async.js',
+    './bower_components/underscore/underscore.js',
+    './bower_components/moment/moment.js',
+    './bower_components/moment/locale/tr.js',
+    './bower_components/Chart.js/Chart.js',
+    './bower_components/openfb/ngopenfb.js',
+    './bower_components/angular-chart.js/dist/angular-chart.js',
+    './bower_components/openfb/openfb.js',
+    './bower_components/angular-sanitize/angular-sanitize.min.js',
+    './bower_components/raven-js/dist/raven.js',
+    './bower_components/angular-raven/angular-raven.js',
+    './bower_components/ionic-threads/ionic.threads.js',
+    //'./bower_components/jquery/dist/jquery.js',
+    './bower_components/intro.js/intro.js',
+    './bower_components/angular-intro.js/src/angular-intro.js'
+    //'./src/js/facebookconnectplugin.js',
     //'./bower_components/cordova-facebook-connect-plugin/lib/cordova-facebook-connect-plugin.js'
   ])
   .pipe(concat('lib.js'))
