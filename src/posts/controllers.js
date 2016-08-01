@@ -10,7 +10,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $scope.modal = modal;
   });
 
-
+  $scope.changeUsername = function(){
+    $scope.loginData.username = angular.lowercase($scope.loginData.username);
+  }
   $scope.open = function(item) {
     $rootScope.$storage.sitem = item;
     //console.log(item);
@@ -220,7 +222,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   };
 })
 
-app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover) {
+app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval) {
 
   $rootScope.$on('filter:change', function() {
     console.log($rootScope.$storage.filter)
@@ -569,6 +571,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     console.log(window.Api)
     window.Api.initPromise.then(function(response) {
       console.log("Api ready:", response);
+      
       window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
         console.log("get_dynamic_global_properties", response);
 
@@ -584,6 +587,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           );
           console.log(loginSuccess);
           //console.log($scope.mylogin)  
+
         }
         
       });
@@ -597,6 +601,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       window.navigator.splashscreen.hide();
     }
   });
+
+  var timeint = $interval(function(){
+    window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
+      console.log("get_dynamic_global_properties", response);
+    });
+  }, 10000);
+
   $scope.$on('$ionicView.leave', function(){
     if (!$scope.$$phase) {
       $scope.$apply();
