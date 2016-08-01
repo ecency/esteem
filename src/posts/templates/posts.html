@@ -19,7 +19,7 @@
 			    <div class="row twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.last_update|timeago}} by <b>{{d.author}}</b></div></div>
 			    </div>
 			    <div class="row">
-			    <div class="col">
+			    <div class="col"><!--ion-chatbubbles-->
 			      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><i class="icon" ng-class="{'ion-android-arrow-dropup-circle positive':d.upvoted, 'ion-android-arrow-dropup-circle':!d.upvoted}"></i> <i class="ion-social-usd"></i> {{d.total_pending_payout_value.slice(0,-4)|number}}</a>
 			      <a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><i class="icon" ng-class="{'ion-android-arrow-dropup-circle positive':d.upvoted, 'ion-android-arrow-dropup-cirle':!d.upvoted}"></i> <i class="ion-social-usd"></i> {{d.total_pending_payout_value.slice(0,-4)|number}}</a>
 			      </div>
@@ -27,7 +27,7 @@
 			      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i> {{d.net_votes}}</a>
 			      </div>
 			      <div class="col col-25 tright">
-			      <a href="#" class="subdued"><i class="icon ion-android-chat"></i> {{d.children}}</a>
+			      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i> {{d.children}}</a>
 			      </div>
 			      </div>
 		  	</div>
@@ -55,7 +55,7 @@
 			      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i> {{ds.net_votes}}</a>
 			      </div>
 			      <div class="col col-25 tright">
-			      <a href="#" class="subdued"><i class="icon ion-android-chat"></i> {{ds.children}}</a>
+			      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i> {{ds.children}}</a>
 			      </div>
 			      </div>
 			</div>

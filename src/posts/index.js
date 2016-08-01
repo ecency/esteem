@@ -124,17 +124,15 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     if (!$rootScope.$storage.view) {
       $rootScope.$storage.view = 'compact';
     }
-    $rootScope.showLoading = function() {
+    $rootScope.$on('show:loading', function(event, args){
+      console.log('show:loading');
       $ionicLoading.show({
         template: '<ion-spinner></ion-spinner>'
-      })/*.then(function(){
-         console.log("The loading indicator is now displayed");
-      });*/
-    };
-    $rootScope.hideLoading = function(){
-      $ionicLoading.hide()/*.then(function(){
-         console.log("The loading indicator is now hidden");
-      });*/
-    };
+      });
+    });
+    $rootScope.$on('hide:loading', function(event, args){
+      console.log('hide:loading');
+      $ionicLoading.hide();
+    });
   });
 });

@@ -19,10 +19,10 @@
                 <div class=""><i class="icon ion-android-time"></i> {{playlist.last_update|timeago}} by <i class="icon ion-android-person"></i> {{playlist.author}}</div>
                 </div>
                 <p>
-                  <a href="#" class="subdued"><i class="icon" ng-class="{'ion-android-arrow-dropup-circle':playlist.upvoted, 'ion-android-arrow-dropup':!playlist.upvoted}"></i> {{playlist.net_votes}}</a>
-                  <a href="#" class="subdued"><i class="icon" ng-class="{'ion-android-arrow-dropdown-circle':playlist.downvoted, 'ion-android-arrow-dropdown':!playlist.downvoted}"></i> {{playlist.active_votes.length-playlist.net_votes}}</a>
+                  <a href="#" class="subdued"><i class="icon" ng-class="{'ion-android-arrow-dropup-circle positive':playlist.upvoted, 'ion-android-arrow-dropup-circle':!playlist.upvoted}"></i> {{playlist.net_votes}}</a>
+                  <a href="#" class="subdued"><i class="icon" ng-class="{'ion-android-arrow-dropdown-circle positive':playlist.downvoted, 'ion-android-arrow-dropdown-circle':!playlist.downvoted}"></i> {{playlist.active_votes.length-playlist.net_votes}}</a>
                   <span class="pull-right"><a href="#" class="subdued"><i class="ion-social-usd"></i> {{playlist.total_pending_payout_value.slice(0,-4)|number}}</a>|
-                  <a href="#" class="subdued"><i class="icon ion-android-chat"></i> {{playlist.children}}</a></span>
+                  <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i> {{playlist.children}}</a></span>
                 </p>
               </div>
           </div>
