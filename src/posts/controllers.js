@@ -59,8 +59,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       console.log(Client)
       var Api = Client.get(null, true);
       console.log(Api)*/
-      window.Api.initPromise.then(function(response) {
-        console.log('Api ready:', response);
+        console.log('Api ready:');
         var login = new window.steemJS.Login();
         console.log(dd.posting.key_auths[0][0]);
         login.setRoles(["posting"]);
@@ -85,8 +84,6 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         }
       });
       $state.go('app.posts', {}, { reload: true });
-
-    });
 
     // First generate the private key using the Login class
 
@@ -236,8 +233,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $rootScope.$broadcast('show:loading');
     // Then create the transaction and sign it without broadcasting
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-      window.Api.initPromise.then(function(response) {
-        console.log('Api ready:', response);
+        console.log('Api ready:');
         $scope.mylogin = new window.steemJS.Login();
         $scope.mylogin.setRoles(["posting"]);
         var loginSuccess = $scope.mylogin.checkKeys({
@@ -258,10 +254,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           var my_pubkeys = $scope.mylogin.getPubKeys();
           //console.log(my_pubkeys);
           tr.process_transaction($scope.mylogin, null, true);
-          tr.broadcast(true);
+          //tr.broadcast(true);
           console.log("---------tx-------"+angular.toJson(tr));
         }
-      });
       $rootScope.$broadcast('hide:loading');
       setTimeout(function() {$scope.refresh()}, 100);
     } else {
@@ -274,8 +269,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $rootScope.$broadcast('show:loading');
     // Then create the transaction and sign it without broadcasting
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-      window.Api.initPromise.then(function(response) {
-        console.log('Api ready:', response);
+        console.log('Api ready:');
         $scope.mylogin = new window.steemJS.Login();
         $scope.mylogin.setRoles(["posting"]);
         var loginSuccess = $scope.mylogin.checkKeys({
@@ -298,7 +292,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           tr.process_transaction($scope.mylogin, null, true);
           //console.log(tr);  
         }
-      });
       $rootScope.$broadcast('hide:loading');
       setTimeout(function() {$scope.refresh()}, 100);
     } else {
@@ -311,8 +304,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $rootScope.$broadcast('show:loading');
     // Then create the transaction and sign it without broadcasting
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-      window.Api.initPromise.then(function(response) {
-        console.log('Api ready:',response);
+        console.log('Api ready:');
         $scope.mylogin = new window.steemJS.Login();
         $scope.mylogin.setRoles(["posting"]);
         var loginSuccess = $scope.mylogin.checkKeys({
@@ -332,7 +324,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           });
           tr.process_transaction($scope.mylogin, null, true);
         }
-      });
       $rootScope.$broadcast('hide:loading');
       //console.log(tr);
       setTimeout(function() {$scope.refresh()}, 100);  
@@ -670,8 +661,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval)
     $rootScope.$broadcast('show:loading');
     // Then create the transaction and sign it without broadcasting
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-      window.Api.initPromise.then(function(response) {
-        console.log('Api ready:', response)
+        console.log('Api ready:')
         $scope.mylogin = new window.steemJS.Login();
         $scope.mylogin.setRoles(["posting"]);
         var loginSuccess = $scope.mylogin.checkKeys({
@@ -693,7 +683,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval)
           //console.log(my_pubkeys);
           tr.process_transaction($scope.mylogin, null, true);
         } 
-      });
       $rootScope.$broadcast('hide:loading');
     } else {
       $rootScope.$broadcast('hide:loading');
@@ -704,8 +693,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval)
     $rootScope.$broadcast('show:loading');
     // Then create the transaction and sign it without broadcasting
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-      window.Api.initPromise.then(function(response) {
-        console.log('Api ready:',response);
+        console.log('Api ready:');
         $scope.mylogin = new window.steemJS.Login();
         $scope.mylogin.setRoles(["posting"]);
         var loginSuccess = $scope.mylogin.checkKeys({
@@ -726,7 +714,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval)
           var my_pubkeys = $scope.mylogin.getPubKeys();
           tr.process_transaction($scope.mylogin, null, true);
         }
-      });
+      
       $rootScope.$broadcast('hide:loading');
     } else {
       $rootScope.$broadcast('hide:loading');
@@ -737,8 +725,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval)
     $rootScope.$broadcast('show:loading');
     // Then create the transaction and sign it without broadcasting
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-      window.Api.initPromise.then(function(response) {
-        console.log('Api ready:',response);
+        console.log('Api ready:');
         $scope.mylogin = new window.steemJS.Login();
         $scope.mylogin.setRoles(["posting"]);
         var loginSuccess = $scope.mylogin.checkKeys({
@@ -759,7 +746,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval)
           var my_pubkeys = $scope.mylogin.getPubKeys();
           tr.process_transaction($scope.mylogin, null, true);
         }
-      });
       $rootScope.$broadcast('hide:loading');
     } else {
       $rootScope.$broadcast('hide:loading');
