@@ -258,6 +258,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           var my_pubkeys = $scope.mylogin.getPubKeys();
           //console.log(my_pubkeys);
           tr.process_transaction($scope.mylogin, null, true);
+          tr.broadcast(true);
           console.log("---------tx-------"+angular.toJson(tr));
         }
       });
