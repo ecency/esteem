@@ -1,5 +1,5 @@
 {
-  "name": "SteemMobile",
+  "name": "eSteem",
   "private": "true",
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.1.0",

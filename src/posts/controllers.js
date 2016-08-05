@@ -512,14 +512,22 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $scope.limit = 5;
     $rootScope.$broadcast('show:loading');
     console.log('enter ');
+    if (!$rootScope.$storage.socket) {
+      $rootScope.$storage.socket = "wss://steemit.com/wstmp3";  
+      window.socketUrl = $rootScope.$storage.socket;
+    }
+    if (!$rootScope.$storage.view) {
+      $rootScope.$storage.view = 'compact';
+    }
+    if (!$rootScope.$storage.filter) {
+      $rootScope.$storage.filter = "trending";
+    }
     //console.log(window.Api)
     //$scope.fetchPosts(null, $scope.limit, null);
     window.Api.initPromise.then(function(response) {
-      console.log("Api ready:", response);
-      
+      console.log("Api ready:", response);  
       window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
         console.log("get_dynamic_global_properties "+response.head_block_number);
-
         if ($rootScope.$storage.user) {
           $scope.mylogin = new window.steemJS.Login();
           $scope.mylogin.setRoles(["posting"]);
@@ -530,19 +538,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
                   posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
               }}
           );
-          console.log(loginSuccess);
-          //console.log($scope.mylogin)  
-          if (loginSuccess) {
-            $scope.fetchPosts(null, $scope.limit, null);
-          } else {
-            $scope.fetchPosts(null, $scope.limit, null);
-          }
-        }
-        
+          console.log("login "+loginSuccess);
+        }          
+        $scope.fetchPosts(null, $scope.limit, null);  
       });
-    });
-    //$scope.fetchPosts(null, $scope.limit, null);
+    });  
   });
+  
   $scope.$on('$ionicView.beforeEnter', function(){
     $rootScope.$broadcast('show:loading');
   })

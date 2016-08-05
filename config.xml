@@ -2,7 +2,7 @@
 <widget id="com.netsolutions.esteem" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>eSteem</name>
   <description>
-        eSteem
+        eSteem Mobile App
     </description>
   <author email="netsolutions-info@yandex.com" href="http://steem.io/">
       Feruz M
@@ -73,7 +73,7 @@
     <splash src="resources/ios/splash/Default@2x~iphone.png" width="640" height="960"/>
     <splash src="resources/ios/splash/Default~iphone.png" width="320" height="480"/>
   </platform>
-  <icon src="resources/android/icon/drawable-xhdpi-icon.png"/>
+  <icon src="resources/ios/icon/icon-small@3x.png"/>
   <plugin name="cordova-plugin-whitelist" spec="~1.2.2"/>
   <plugin name="cordova-plugin-console" spec="~1.0.3"/>
   <plugin name="cordova-plugin-device" spec="~1.1.2"/>
