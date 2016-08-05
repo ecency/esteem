@@ -153,6 +153,9 @@ hr {
   -webkit-transition: color 0.3s;
   transition: color 0.3s;
 }
+.positives {
+	background-color: #387ef5;
+}
 .ion-comment--container {
   background-color: #f8f8f8;
 }

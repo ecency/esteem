@@ -124,6 +124,12 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$storage.socket = "wss://steemit.com/wstmp3";  
       window.socketUrl = $rootScope.$storage.socket;
     }
+    if (!$rootScope.$storage.view) {
+      $rootScope.$storage.view = 'compact';
+    }
+    if (!$rootScope.$storage.filter) {
+      $rootScope.$storage.filter = "trending";
+    }
     
     $rootScope.showAlert = function(title, msg) {
       var alertPopup = $ionicPopup.alert({
@@ -134,9 +140,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         console.log('Thank you ...');
       });*/
     };
-    if (!$rootScope.$storage.view) {
-      $rootScope.$storage.view = 'compact';
-    }
+
     $rootScope.$on('show:loading', function(event, args){
       console.log('show:loading');
       $ionicLoading.show({

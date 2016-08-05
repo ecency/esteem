@@ -199,6 +199,44 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     });
     $state.go('app.posts');
   };
+
+  /*$scope.$on('$ionicView.loaded', function(){
+    $scope.limit = 5;
+    $rootScope.$broadcast('show:loading');
+    window.Api.initPromise.then(function(response) {
+      console.log("Api ready:", response);
+      window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
+        console.log("get_dynamic_global_properties "+response.head_block_number);
+
+        if ($rootScope.$storage.user) {
+          $scope.mylogin = new window.steemJS.Login();
+          $scope.mylogin.setRoles(["posting"]);
+          var loginSuccess = $scope.mylogin.checkKeys({
+              accountName: $rootScope.$storage.user.username,    
+              password: $rootScope.$storage.user.password,
+              auths: {
+                  posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
+              }}
+          );
+          console.log(loginSuccess);
+          //console.log($scope.mylogin)  
+          if (loginSuccess) {
+              $rootScope.$broadcast('hide:loading');
+              //$scope.fetchPosts(null, $scope.limit, null);
+          } else {
+            $rootScope.$broadcast('hide:loading');
+            //$scope.fetchPosts(null, $scope.limit, null);
+          }
+        }
+        
+      });
+    });
+    if (window.navigator.splashscreen) {
+      window.navigator.splashscreen.hide();
+    }
+  });*/
+
+
 })
 app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval) {
   $scope.data = {type: "steem", amount: 0.001};
@@ -206,16 +244,13 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   $scope.transfer = function () {
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
       $scope.mylogin = new window.steemJS.Login();
-      $scope.mylogin.setRoles(["active", "posting", "owner", "memo"]);
+      $scope.mylogin.setRoles(["active"]);
       console.log($rootScope.$storage.user.active.key_auths[0][0]);
       var loginSuccess = $scope.mylogin.checkKeys({
           accountName: $rootScope.$storage.user.username,    
           password: $rootScope.$storage.user.password,
           auths: {
-            active: $rootScope.$storage.user.active.key_auths,
-            posting: $rootScope.$storage.user.posting.key_auths,
-            owner: $rootScope.$storage.user.owner.key_auths,
-            memo: $rootScope.$storage.user.memo_key
+            active: $rootScope.$storage.user.active.key_auths
           }}
       );
       if (loginSuccess) {
@@ -228,7 +263,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
           tr.add_type_operation("transfer", {
             from: $rootScope.$storage.user.username,
             to: $scope.data.username,
-            amount: {amount:"1.000", symbol: $scope.data.type},//,
+            amount: tt,
             memo: $scope.data.memo
           });
           tr.process_transaction($scope.mylogin, null, true);  
@@ -477,7 +512,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $scope.limit = 5;
     $rootScope.$broadcast('show:loading');
     console.log('enter ');
-    console.log(window.Api)
+    //console.log(window.Api)
+    //$scope.fetchPosts(null, $scope.limit, null);
     window.Api.initPromise.then(function(response) {
       console.log("Api ready:", response);
       
@@ -505,19 +541,16 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         
       });
     });
-    if (window.navigator.splashscreen) {
-      window.navigator.splashscreen.hide();
-    }
     //$scope.fetchPosts(null, $scope.limit, null);
   });
   $scope.$on('$ionicView.beforeEnter', function(){
     $rootScope.$broadcast('show:loading');
   })
-  /*$scope.$on('$ionicView.enter', function(){
+  $scope.$on('$ionicView.loaded', function(){
     if (window.navigator.splashscreen) {
       window.navigator.splashscreen.hide();
     }
-  });*/
+  });
 
   var timeint = $interval(function(){
     window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
@@ -531,14 +564,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
   });
   
-  //$scope.refresh();    
-
-  
-  
+  //$scope.refresh();   
 })
 
 app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval) {
-  console.log($rootScope.$storage.sitem)
+  //console.log($rootScope.$storage.sitem)
+  $scope.post = $rootScope.$storage.sitem;
   $scope.data = {};
   $scope.replying = false;
   $scope.reply = function (xx) {
@@ -580,59 +611,20 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval)
   $scope.isreplying = function(xx) {
     $scope.replying = xx;
   }
-  $scope.$watch('comments', function(newValue, oldValue){
-      //console.log('changed');
-      if (newValue) {
-        for (var i = 0; i < newValue.length; i++) {
-          if ($rootScope.$storage.user){
-            for (var j = newValue[i].active_votes.length - 1; j >= 0; j--) {
-              if (newValue[i].active_votes[j].voter == $rootScope.$storage.user.username) {
-                if (newValue[i].active_votes[j].percent > 0) {
-                  newValue[i].upvoted = true;  
-                } else if (newValue[i].active_votes[j].percent < 0) {
-                  newValue[i].downvoted = true;  
-                }
-              }
-            }
-          }
-        }
-      }
-      console.log(newValue)      
-      if (!$scope.$$phase){
-        $scope.$apply();
-      }
-  }, true);
-  $scope.$on('$ionicView.enter', function(){    
+  
+  //$scope.post = {};
+  $scope.$on('$ionicView.enter', function(){   
+    //$scope.post = $rootScope.$storage.sitem;
+
     (new Steem($rootScope.$storage.socket)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
-    //window.Api.database_api().exec("get_content_replies", [$rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink]).then(function(result){
-      
+      //console.log(result);      
       $scope.comments = result;
-      //console.log(result);
-      /*for (var i = 0; i < $scope.comments.length; i++) {
-        $scope.comments[i].creplies = [];
-        if ($scope.comments[i].children>0){
-          (new Steem($rootScope.$storage.socket)).getContentReplies($scope.comments[i].author, $scope.comments[i].permlink, function(err, res1) {
-            $scope.comments1 = res1;
-            //console.log(res1);
-            $scope.deep1 = true;
-          });
-        }
-      }*/
+
       if (!$scope.$$phase) {
         $scope.$apply();
       }
     });
   });
-  $scope.fetchComment = function(key, value) {
-    (new Steem($rootScope.$storage.socket)).getContentReplies(value.author, value.permlink, function(err, result){
-      console.log(result)
-      $scope.comments[key].replies = result;
-      
-
-      if (!$scope.$$phase) {
-        $scope.$apply();
-      }
-  }
   
   $scope.upvotePost = function(post) {
     $rootScope.$broadcast('show:loading');
@@ -659,6 +651,13 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval)
           //var my_pubkeys = $scope.mylogin.getPubKeys();
           //console.log(my_pubkeys);
           tr.process_transaction($scope.mylogin, null, true);
+          if ($rootScope.$storage.sitem.upvoted) {
+            $rootScope.$storage.sitem.upvoted = false;
+            $rootScope.$storage.sitem.downvoted = false;  
+          } else {
+            $rootScope.$storage.sitem.upvoted = true;
+            $rootScope.$storage.sitem.downvoted = false;  
+          }
         } 
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -690,6 +689,13 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval)
           });
           //var my_pubkeys = $scope.mylogin.getPubKeys();
           tr.process_transaction($scope.mylogin, null, true);
+          if ($rootScope.$storage.sitem.downvoted) {
+            $rootScope.$storage.sitem.upvoted = false;
+            $rootScope.$storage.sitem.downvoted = false;  
+          } else {
+            $rootScope.$storage.sitem.upvoted = false;
+            $rootScope.$storage.sitem.downvoted = true;  
+          }
         }
       
       $rootScope.$broadcast('hide:loading');
@@ -722,6 +728,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval)
           });
           //var my_pubkeys = $scope.mylogin.getPubKeys();
           tr.process_transaction($scope.mylogin, null, true);
+          if ($rootScope.$storage.sitem.upvoted) {
+            $rootScope.$storage.sitem.upvoted = false;
+          }
+          if ($rootScope.$storage.sitem.downvoted) {
+            $rootScope.$storage.sitem.downvoted = false;
+          }
         }
       $rootScope.$broadcast('hide:loading');
     } else {

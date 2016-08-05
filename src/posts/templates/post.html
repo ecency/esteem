@@ -16,39 +16,20 @@
     <div ng-bind-html="$root.$storage.sitem.body | parseUrl">
     </div>
     <br>
-    <p>
-      <a href="#" class="subdued" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted"><i class="icon ion-android-arrow-dropup-circle"></i> {{$root.$storage.sitem.net_votes}}</a>
-      <a href="#" class="subdued" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted"><i class="icon ion-android-arrow-dropup-circle positve"></i> {{$root.$storage.sitem.net_votes}}</a>
-      <a href="#" class="subdued" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted"><i class="icon ion-android-arrow-dropdown-circle"></i> {{$root.$storage.sitem.active_votes.length-$root.$storage.sitem.net_votes}}</a>
-      <a href="#" class="subdued" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted"><i class="icon ion-android-arrow-dropdown-circle positive"></i> {{$root.$storage.sitem.active_votes.length-$root.$storage.sitem.net_votes}}</a>
+    
+    <div class="row gray">
+      <div class="col" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted"><i class="icon ion-android-arrow-dropup-circle"></i> {{$root.$storage.sitem.net_votes}}</div>
+      <div class="col" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted"><i class="icon ion-android-arrow-dropup-circle positive"></i> {{$root.$storage.sitem.net_votes}}</div>
+      <div class="col" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted"><i class="icon ion-android-arrow-dropdown-circle"></i> {{$root.$storage.sitem.active_votes.length-$root.$storage.sitem.net_votes}}</div>
+      <div class="col" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted"><i class="icon ion-android-arrow-dropdown-circle positive"></i> {{$root.$storage.sitem.active_votes.length-$root.$storage.sitem.net_votes}}</div>
 
-      <span class="pull-right"><a href="#" class="subdued"><i class="ion-social-usd"></i> {{$root.$storage.sitem.total_pending_payout_value.split(" ")[0]|number}}</a>|
-      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i> {{$root.$storage.sitem.children}}</a> | <a href="#" class="subdued" ng-click="isreplying(true)" ng-if="$root.$storage.user.username">Reply</a></span>
-    </p>
+      <div class="col"><i class="ion-social-usd"></i> {{$root.$storage.sitem.total_pending_payout_value.split(" ")[0]|number}}</div>
+      <div class="col"><i class="icon ion-chatbubbles"></i> {{$root.$storage.sitem.children}}</div> <div class="col" ng-click="isreplying(true)" ng-if="$root.$storage.user.username">Reply</div>
+    </div>
     <div ng-if="replying">
-      <textarea ng-model="data.comment" autofocus rows="3" class="boxsizingBorder"></textarea>
+      <textarea ng-model="data.comment" placeholder="write comment content here" autofocus rows="3" class="boxsizingBorder"></textarea>
       <div class="tcenter"><button class="button button-positive button-small" ng-click="reply($root.$storage.sitem)">Post</button> &nbsp; <button class="button button-small" ng-click="isreplying(false)">Cancel</button></div><br>
     </div>
     <ion-thread comments="comments"></ion-thread>
-      <!--<div class="list">
-        <div class="item comments" ng-repeat="(key, value) in comments | orderBy:'-net_votes'">
-          <h2>{{value.author}}</h2>
-          <div class="wrap" ng-bind-html="value.body|parseUrl"></div>
-          
-          <div class="row">
-            <div class="col subdued" ng-click="upvotePost(value)">
-              <div ng-if="!value.upvoted"><i class="icon ion-android-arrow-dropup-circle gray"></i> <i class="ion-social-usd"></i> {{value.total_pending_payout_value.split(" ")[0]|number}}</div>
-              <div ng-if="value.upvoted"><i class="icon ion-android-arrow-dropup-circle positve"></i> <i class="ion-social-usd"></i> {{value.total_pending_payout_value.split(" ")[0]|number}}</div>
-            </div>
-            <div class="col subdued">
-              <div>{{value.net_votes}} votes</div>
-            </div>
-            <div class="col subdued" ng-click="fetchComment(key, value)">
-              <i class="icon ion-chatbubbles"></i> {{value.children}}
-            </div>
-          </div>
-          
-        </div>
-      </div>-->
   </ion-content>
 </ion-view>
