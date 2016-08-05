@@ -29,8 +29,8 @@
       <textarea ng-model="data.comment" autofocus rows="3" class="boxsizingBorder"></textarea>
       <div class="tcenter"><button class="button button-positive button-small" ng-click="reply($root.$storage.sitem)">Post</button> &nbsp; <button class="button button-small" ng-click="isreplying(false)">Cancel</button></div><br>
     </div>
-    <!--<ion-thread comments="comments"></ion-thread>-->
-      <div class="list">
+    <ion-thread comments="comments"></ion-thread>
+      <!--<div class="list">
         <div class="item comments" ng-repeat="(key, value) in comments | orderBy:'-net_votes'">
           <h2>{{value.author}}</h2>
           <div class="wrap" ng-bind-html="value.body|parseUrl"></div>
@@ -43,13 +43,12 @@
             <div class="col subdued">
               <div>{{value.net_votes}} votes</div>
             </div>
-            <div class="col subdued" ng-click="getReplies(value)">
+            <div class="col subdued" ng-click="fetchComment(key, value)">
               <i class="icon ion-chatbubbles"></i> {{value.children}}
             </div>
           </div>
-          <!--<div ng-click="downvotePost(value)" ng-if="!value.downvoted"><i class="icon ion-android-arrow-dropdown-circle"></i> {{value.active_votes.length-value.net_votes}}</div>
-          <div ng-click="unvotePost(value)" ng-if="value.downvoted"><i class="icon ion-android-arrow-dropdown-circle positive"></i> {{value.active_votes.length-value.net_votes}}</div>-->
+          
         </div>
-      </div>
+      </div>-->
   </ion-content>
 </ion-view>

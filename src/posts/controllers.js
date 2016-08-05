@@ -623,27 +623,17 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval)
       }
     });
   });
-  /*$scope.$watch('comments1', function(newValue, oldValue){
-    //console.log('changed');
-    if (newValue) {
-      if ($scope.deep1) {
-        for (var i = 0; i < $scope.comments.length; i++) {
-          if ($scope.comments[i].creplies.length==0) {
-            for (var j = 0; j < $scope.comments1.length; j++) {
-              if ($scope.comments[i].author == $scope.comments1[j].parent_author) {
-                //console.log("found deep comments");
-                $scope.comments[i].creplies.push($scope.comments1[j]);
-              }
-            }  
-          }       
-          if (!$scope.$$phase) {
-            $scope.$apply();
-          }
-        }
-      }
-    }
-  });*/
+  $scope.fetchComment = function(key, value) {
+    (new Steem($rootScope.$storage.socket)).getContentReplies(value.author, value.permlink, function(err, result){
+      console.log(result)
+      $scope.comments[key].replies = result;
+      
 
+      if (!$scope.$$phase) {
+        $scope.$apply();
+      }
+  }
+  
   $scope.upvotePost = function(post) {
     $rootScope.$broadcast('show:loading');
     // Then create the transaction and sign it without broadcasting

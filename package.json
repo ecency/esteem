@@ -3,6 +3,7 @@
   "version": "1.1.1",
   "description": "Steem Mobile Application",
   "dependencies": {
+    "acorn": "^3.3.0",
     "brfs": "^1.4.2",
     "crypto": "0.0.3",
     "crypto-browserify": "^3.11.0",
