@@ -15,6 +15,10 @@ font-family: 'Gotham Rounded Book'!important;
 	text-overflow: wrap!important;
 	white-space: normal!important;	
 }
+.item.comments p {white-space: pre-wrap !important; }
+.item.comments .nowrap {white-space: nowrap!important;}
+.item.comments h5 {white-space: nowrap!important;}
+
 hr {
 	color: #ddd;
 }
@@ -41,10 +45,10 @@ hr {
 .gray {
 	color: gray;
 }
-.item-select {
+.search.item-select {
 	width: 30%;
 }
-.item-select select {
+.search.item-select select {
 	left: 0;
 	padding-right: 0;
 	margin-right: 0;
@@ -167,8 +171,23 @@ hr {
 .ion-android-arrow-dropdown-circle {
 	font-size: 20px;
 }
+.item .ion-android-arrow-dropup-circle {
+	font-size: 18px;
+}
+.item .ion-android-arrow-dropup {
+	font-size: 18px;
+}
+.item .ion-android-arrow-dropdown {
+	font-size: 18px;
+}
+.item .ion-android-arrow-dropdown-circle {
+	font-size: 18px;
+}
 .tright {
 	text-align: right;
+}
+.tcenter {
+	text-align: center;
 }
 .item .row {
 	padding: 0;
@@ -177,4 +196,10 @@ hr {
 .item .row .col {
 	padding: 0;
 	margin: 0;
+}
+.boxsizingBorder {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 100%;
 }

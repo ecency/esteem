@@ -1,0 +1,31 @@
+<ion-view view-cache="false" view-title="Send">
+  <ion-content class="padding">
+    <div class="list">
+      <label class="item item-input">
+        <span class="input-label">To</span>
+        <input type="text" ng-model="data.username" autofocus placeholder="username" ng-change="changeUsername()">
+      </label>
+      <label class="item item-input item-select">
+        <span class="input-label">Asset</span>
+        <select ng-model="data.type" ng-change="typechange()">
+            <option value="steem">STEEM</option>
+            <option value="sbd">SBD</option>
+            <option value="sp">SP</option>
+        </select>
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Amount</span>
+        <input type="number" placeholder="amount" step="0.001" ng-model="data.amount">
+      </label>
+      <label class="item item-input" ng-if="data.type != 'sp'">
+        <span class="input-label">Memo</span>
+        <textarea ng-model="data.memo" rows="3" placeholder="memo text"></textarea>
+      </label>
+      <br>
+      <center><button class="button button-positive" ng-click="transfer()">
+        SEND
+      </button></center>
+
+    </div>
+  </ion-content>
+</ion-view>

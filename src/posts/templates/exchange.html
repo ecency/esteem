@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="" ng-if="active=='open'">
-      <p class="padding" ng-if="!openorders">
+      <p class="padding" ng-if="openorders.length<1">
         No open orders for @{{username}}
       </p>
       <div ng-if="openorders.length>0">

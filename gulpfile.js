@@ -41,25 +41,25 @@ gulp.task('scripts', function() {
 
   gulp.src([
     './bower_components/ionic/js/ionic.bundle.js',
-    './bower_components/angular-resource/angular-resource.js',
+    //'./bower_components/angular-resource/angular-resource.js',
     './bower_components/ngstorage/ngStorage.js',
-    './bower_components/angular-translate/angular-translate.js',
+    //'./bower_components/angular-translate/angular-translate.js',
     './bower_components/ngCordova/dist/ng-cordova.js',
     './bower_components/async/dist/async.js',
-    './bower_components/underscore/underscore.js',
-    './bower_components/moment/moment.js',
-    './bower_components/moment/locale/tr.js',
-    './bower_components/Chart.js/Chart.js',
-    './bower_components/openfb/ngopenfb.js',
-    './bower_components/angular-chart.js/dist/angular-chart.js',
-    './bower_components/openfb/openfb.js',
-    './bower_components/angular-sanitize/angular-sanitize.min.js',
-    './bower_components/raven-js/dist/raven.js',
-    './bower_components/angular-raven/angular-raven.js',
-    './bower_components/ionic-threads/ionic.threads.js',
+    './bower_components/underscore/underscore.js'
+    //'./bower_components/moment/moment.js',
+    //'./bower_components/moment/locale/tr.js',
+    //'./bower_components/Chart.js/Chart.js',
+    //'./bower_components/openfb/ngopenfb.js',
+    //'./bower_components/angular-chart.js/dist/angular-chart.js',
+    //'./bower_components/openfb/openfb.js',
+    //'./bower_components/angular-sanitize/angular-sanitize.min.js',
+    //'./bower_components/raven-js/dist/raven.js',
+    //'./bower_components/angular-raven/angular-raven.js',
+    //'./bower_components/ionic-threads/ionic.threads.js',
     //'./bower_components/jquery/dist/jquery.js',
-    './bower_components/intro.js/intro.js',
-    './bower_components/angular-intro.js/src/angular-intro.js'
+    //'./bower_components/intro.js/intro.js',
+    //'./bower_components/angular-intro.js/src/angular-intro.js'
     //'./src/js/facebookconnectplugin.js',
     //'./bower_components/cordova-facebook-connect-plugin/lib/cordova-facebook-connect-plugin.js'
   ])

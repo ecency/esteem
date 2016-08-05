@@ -1,18 +1,17 @@
 <ion-view view-cache="false" view-title="Follow">
   <ion-content class="padding has-footer">
     <div class="list" ng-if="active=='followers'">
-      <div class="item item-button-right" ng-repeat="f in followers" ng-click="profileView(f.follower)">
-        {{f.follower}}
-        <button class="button button-positive" ng-click="profileView(f.follower)">
-          <i class="icon ion-arrow-right-a"></i>
+      <div class="item item-button-right" ng-repeat="f in followers">
+        <span ng-click="profileView(f.follower)">{{f.follower}}</span>
+        <button class="button button-positive button-outline" ng-click="followUser(f.follower)">
+          Follow
         </button>
       </div>
     </div>
     <div class="list" ng-if="active=='following'">
-      <div class="item item-button-right" ng-repeat="f in following" ng-click="profileView(f.following)">
-        {{f.following}}
-        <button class="button button-positive" ng-click="profileUnfollow(f.following)">
-          <i class="icon ion-close-round"></i>
+      <div class="item item-button-right" ng-repeat="f in following">
+        <span ng-click="profileView(f.following)">{{f.following}}</span>
+        <button class="button button-positive button-outline" ng-click="unfollowUser(f.following)">Unfollow
         </button>
       </div>
     </div>

@@ -102,7 +102,9 @@ module.exports = function (app) {
 			};
 			var textu = marked(textu, options);
 			if (subpart) {
-				return $sce.trustAsHtml(textu); //.substring(0, textu.indexOf('.'))	
+				var s = $sce.trustAsHtml(textu).toString();
+				var text = s.substring(s.indexOf("<p>"), s.indexOf("</p>"));
+				return text;
 			} else {
 				return $sce.trustAsHtml(textu);	
 			}

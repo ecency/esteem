@@ -1,4 +1,4 @@
-<ion-view view-title="Steem">
+<ion-view view-title="{{$root.$storage.filter}} | {{$root.$storage.tag}}">
 	<ion-nav-bar class="bar-positive">
 	    <ion-nav-buttons side="left">
 	      <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
@@ -14,14 +14,14 @@
 	    	<div class="item">
 			    <div ng-click="open(d)">
 			    <div class="wrap">
-			    	<span class="bold h4">{{d.title}}</span>
+			    	<span class="bold h5">{{d.title}}</span>
 			    </div>
 			    <div class="row twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.last_update|timeago}} by <b>{{d.author}}</b></div></div>
 			    </div>
 			    <div class="row">
-			    <div class="col"><!--ion-chatbubbles-->
-			      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><i class="icon" ng-class="{'ion-android-arrow-dropup-circle positive':d.upvoted, 'ion-android-arrow-dropup-circle':!d.upvoted}"></i> <i class="ion-social-usd"></i> {{d.total_pending_payout_value.slice(0,-4)|number}}</a>
-			      <a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><i class="icon" ng-class="{'ion-android-arrow-dropup-circle positive':d.upvoted, 'ion-android-arrow-dropup-cirle':!d.upvoted}"></i> <i class="ion-social-usd"></i> {{d.total_pending_payout_value.slice(0,-4)|number}}</a>
+			    <div class="col">
+			      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><i class="icon ion-android-arrow-dropup-circle"></i> <i class="ion-social-usd"></i> {{d.total_pending_payout_value.slice(0,-4)|number}}</a>
+			      <a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><i class="icon ion-android-arrow-dropup-circle positive"></i> <i class="ion-social-usd"></i> {{d.total_pending_payout_value.slice(0,-4)|number}}</a>
 			      </div>
 			      <div class="col col-25 tright">
 			      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i> {{d.net_votes}}</a>
@@ -42,14 +42,14 @@
 			    <h2>{{ds.title}}</h2>
 			    <div class="row twrap"><div class="col">{{ds.last_update|timeago}} by <i class="icon ion-android-person"></i> {{ds.author}}</div></div>
 			</div>
-			<div class="item item-body">
+			<div class="item-body">
 			    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" ng-click="open(ds)"/>
 			    <!--<p ng-bind-html="d.body.substring(0, 50)|parseUrl">
 			    </p>-->
 			    <div class="row">
 			    <div class="col">
-			      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><i class="icon" ng-class="{'ion-android-arrow-dropup-circle positive':ds.upvoted, 'ion-android-arrow-dropup-circle':!ds.upvoted}"></i> <i class="ion-social-usd"></i> {{ds.total_pending_payout_value.slice(0,-4)|number}}</a>
-			      <a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(ds)"><i class="icon" ng-class="{'ion-android-arrow-dropup-circle positive':ds.upvoted, 'ion-android-arrow-dropup-cirle':!ds.upvoted}"></i> <i class="ion-social-usd"></i> {{ds.total_pending_payout_value.slice(0,-4)|number}}</a>
+			      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><i class="icon ion-android-arrow-dropup-circle"></i> <i class="ion-social-usd"></i> {{ds.total_pending_payout_value.slice(0,-4)|number}}</a>
+			      <a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(ds)"><i class="icon ion-android-arrow-dropup-circle positive"></i> <i class="ion-social-usd"></i> {{ds.total_pending_payout_value.slice(0,-4)|number}}</a>
 			      </div>
 			      <div class="col col-25 tright">
 			      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i> {{ds.net_votes}}</a>
@@ -65,6 +65,5 @@
       Load More
     </button></center>
     <br>
-	<!--<ion-infinite-scroll on-infinite="loadMore()" distance="10%"></ion-infinite-scroll>-->
   </ion-content>
 </ion-view>

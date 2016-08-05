@@ -34,6 +34,18 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     }
   })
 
+  .state('app.send', {
+    url: '/send',
+    views: {
+      'menuContent': {
+        //templateUrl: 'templates/settings.html'
+        template: fs.readFileSync(__dirname + '/templates/send.html', 'utf8'),
+        controller: 'SendCtrl'
+
+      }
+    }
+  })
+
   .state('app.follow', {
     url: '/follow',
     views: {
@@ -110,6 +122,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     }
     if (!$rootScope.$storage.socket) {
       $rootScope.$storage.socket = "wss://steemit.com/wstmp3";  
+      window.socketUrl = $rootScope.$storage.socket;
     }
     
     $rootScope.showAlert = function(title, msg) {
