@@ -23,7 +23,7 @@
       <div class="col" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted"><i class="icon ion-android-arrow-dropdown-circle"></i> {{$root.$storage.sitem.active_votes.length-$root.$storage.sitem.net_votes}}</div>
       <div class="col" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted"><i class="icon ion-android-arrow-dropdown-circle positive"></i> {{$root.$storage.sitem.active_votes.length-$root.$storage.sitem.net_votes}}</div>
 
-      <div class="col"><i class="ion-social-usd"></i> {{$root.$storage.sitem.total_pending_payout_value.split(" ")[0]|number}}</div>
+      <div class="col col-33"><i class="ion-social-usd"></i> {{$root.$storage.sitem.total_pending_payout_value.split(" ")[0]|number}}</div>
       <div class="col"><i class="icon ion-chatbubbles"></i> {{$root.$storage.sitem.children}}</div> <div class="col" ng-click="isreplying(true)" ng-if="$root.$storage.user.username">Reply</div>
     </div>
     <div ng-if="replying">

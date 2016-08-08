@@ -7,7 +7,10 @@ var app = angular.module('steem', [
 	'ionic.contrib.ui.ionThread'
 ]);
 var steemRPC = require("steem-rpc");
-window.Api = steemRPC.Client.get(null, true);
+if (localStorage.getItem("socketUrl") === null) {
+  localStorage.setItem("socketUrl", "wss://steemit.com/wspa");
+}
+window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
 window.steemJS = require("steemjs-lib");
 
 require('./services')(app);
@@ -29,7 +32,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     views: {
       'menuContent': {
         //templateUrl: 'templates/settings.html'
-        template: fs.readFileSync(__dirname + '/templates/settings.html', 'utf8')
+        template: fs.readFileSync(__dirname + '/templates/settings.html', 'utf8'),
+        controller: 'SettingsCtrl'
       }
     }
   })
@@ -120,10 +124,14 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-    if (!$rootScope.$storage.socket) {
-      $rootScope.$storage.socket = "wss://steemit.com/wstmp3";  
-      window.socketUrl = $rootScope.$storage.socket;
-    }
+    setTimeout(function() {
+      (new Steem(localStorage.socketUrl)).getCurrentMedianHistoryPrice(function(e,r){
+        $rootScope.$storage.base = r.base.substring(r.base.length-4,-4);
+        (new Steem(localStorage.socketUrl)).getDynamicGlobalProperties(function(e,r){
+          $rootScope.$storage.steem_per_mvests = (Number(r.total_vesting_fund_steem.substring(0, r.total_vesting_fund_steem.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;
+        });
+      });
+    }, 10);
     if (!$rootScope.$storage.view) {
       $rootScope.$storage.view = 'compact';
     }

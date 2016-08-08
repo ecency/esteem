@@ -5,6 +5,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
   $scope.loginData = {};  
 
+
   $ionicModal.fromTemplateUrl('templates/login.html', {
     scope: $scope  }).then(function(modal) {
     $scope.modal = modal;
@@ -26,7 +27,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.login = function() {
     $scope.modal.show();
   };
-
+  
   $scope.share = function() {
     var message = "Hey! Checkout blog post on Steemit.com";
     var subject = "Via Steem Mobile";
@@ -44,7 +45,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   
   $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
-    var temp = new Steem($rootScope.$storage.socket);
+    var temp = new Steem(localStorage.socketUrl);
     temp.getAccounts([$scope.loginData.username], function(err, dd) {
       console.log(dd);
       dd = dd[0];
@@ -86,14 +87,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     effect: 'slide',
     speed: 500,
   }
-  setTimeout(function() {
-    (new Steem($rootScope.$storage.socket)).getCurrentMedianHistoryPrice(function(e,r){
-      $rootScope.$storage.base = r.base.substring(r.base.length-4,-4);
-      (new Steem($rootScope.$storage.socket)).getDynamicGlobalProperties(function(e,r){
-        $rootScope.$storage.steem_per_mvests = (Number(r.total_vesting_fund_steem.substring(0, r.total_vesting_fund_steem.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;
-      });
-    });
-  }, 10);
+  
   
 
   $scope.logout = function() {
@@ -137,7 +131,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     setTimeout(function() {
       if ($scope.data.search.length > 1) {
         if ($scope.data.type == "tag"){
-          (new Steem($rootScope.$storage.socket)).getTrendingTags($scope.data.search, 10 , function(err, result) {
+          (new Steem(localStorage.socketUrl)).getTrendingTags($scope.data.search, 10 , function(err, result) {
             var ee = [];
             if (result){
               for (var i = result.length - 1; i >= 0; i--) {
@@ -156,7 +150,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         }
         if ($scope.data.type == "user"){
           var ee = [];
-          (new Steem($rootScope.$storage.socket)).lookupAccounts($scope.data.search, 10, function(err, result) {
+          (new Steem(localStorage.socketUrl)).lookupAccounts($scope.data.search, 10, function(err, result) {
             if (result){
               $scope.data.searchResult = result;
             }
@@ -191,14 +185,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $state.go("app.profile", {username: xy});
   };
 
-  $scope.save = function(){
-    window.socketUrl = $rootScope.$storage.socket;
-    $rootScope.showAlert("Success", "Settings are updated!");
-    $ionicHistory.nextViewOptions({
-      disableBack: true
-    });
-    $state.go('app.posts');
-  };
+
 
   /*$scope.$on('$ionicView.loaded', function(){
     $scope.limit = 5;
@@ -513,8 +500,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $rootScope.$broadcast('show:loading');
     console.log('enter ');
     if (!$rootScope.$storage.socket) {
-      $rootScope.$storage.socket = "wss://steemit.com/wstmp3";  
-      window.socketUrl = $rootScope.$storage.socket;
+      $rootScope.$storage.socket = localStorage.socketUrl;
     }
     if (!$rootScope.$storage.view) {
       $rootScope.$storage.view = 'compact';
@@ -602,6 +588,15 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval)
         tr.process_transaction($scope.mylogin, null, true);
         $scope.data.comment = "";
         $scope.replying = false;
+        setTimeout(function() {
+          (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
+            //console.log(result);      
+            $scope.comments = result;
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }
+          });
+        }, 1000);
       } 
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -618,7 +613,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval)
   $scope.$on('$ionicView.enter', function(){   
     //$scope.post = $rootScope.$storage.sitem;
 
-    (new Steem($rootScope.$storage.socket)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
+    (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
       //console.log(result);      
       $scope.comments = result;
 
@@ -832,7 +827,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope) {
     $scope.active = "blog";
     $scope.nonexist = false;
     
-    (new Steem($rootScope.$storage.socket)).getState("/@"+$stateParams.username, function(err, res){
+    (new Steem(localStorage.socketUrl)).getState("/@"+$stateParams.username, function(err, res){
       $scope.profile = [];
       //console.log(res.content);
       if (Object.keys(res.content).length>0) {
@@ -861,7 +856,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope) {
     } else {
       $scope.rest = "";
     }
-    (new Steem($rootScope.$storage.socket)).getState("/@"+$stateParams.username+$scope.rest, function(err, res){
+    (new Steem(localStorage.socketUrl)).getState("/@"+$stateParams.username+$scope.rest, function(err, res){
       //console.log(res);
       //console.log(type)
       if (res.content) {
@@ -903,7 +898,7 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope) {
   $scope.$on('$ionicView.beforeEnter', function(){
     $scope.active = 'buy';
     $scope.orders = [];
-    (new Steem($rootScope.$storage.socket)).getOrderBook(15, function(err, res){
+    (new Steem(localStorage.socketUrl)).getOrderBook(15, function(err, res){
       console.log(err, res);
       $scope.orders = res;
       if (!$scope.$$phase) {
@@ -913,7 +908,7 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope) {
     $scope.change = function(type){
       $scope.active = type;
       if (type == "open"){
-        (new Steem($rootScope.$storage.socket)).getOpenOrders($stateParams.username, function(err, res){
+        (new Steem(localStorage.socketUrl)).getOpenOrders($stateParams.username, function(err, res){
           console.log(err, res)
           $scope.openorders = res;
           if (!$scope.$$phase) {
@@ -933,6 +928,23 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope) {
       }
     };
   });
+
+});
+
+app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionicHistory, $state) {
+  
+  $scope.$on('$ionicView.beforeEnter', function(){
+    $rootScope.$storage.socket = localStorage.socketUrl;
+  });
+
+  $scope.save = function(){
+    localStorage.socketUrl = $rootScope.$storage.socket;
+    $rootScope.showAlert("Success", "Settings are updated! Please, restart app for this to take effect!");
+    $ionicHistory.nextViewOptions({
+      disableBack: true
+    });
+    $state.go('app.posts');
+  };
 
 });
 }
