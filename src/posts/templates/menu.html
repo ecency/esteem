@@ -18,6 +18,12 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
+        <div class="item item-avatar" ng-if="$root.$storage.user">
+          <!--<img src="//ionicframework.com/img/docs/spengler.jpg">-->
+          <identicon username='$root.$storage.user.username' size='40'></identicon>
+          <h2>@{{$root.$storage.user.username}} <div class="reputation">{{$root.$storage.user.reputation|reputation|number:0}}</div></h2>
+          <p> <i class="icon ion-power pull-right dark" ng-click="logout()"></i></p>
+        </div>
         <ion-item menu-close href="#/app/posts">
           Home
         </ion-item>

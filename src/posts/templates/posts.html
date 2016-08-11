@@ -17,7 +17,7 @@
 			    	<span class="bold h4">{{d.title}}</span>
 			    </div>
 			    <br>
-			    <div class="row twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.last_update|timeago}} by <b>{{d.author}}</b></div></div>
+			    <div class="row twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.last_update|timeago}} by <b>{{d.author}} <div class="reputation">{{d.author_reputation|reputation|number:0}}</div></b></div></div>
 			    </div>
 			    <div class="row">
 			    <div class="col">

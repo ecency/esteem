@@ -52,6 +52,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       $scope.loginData.id = dd.id;
       $scope.loginData.owner = dd.owner;
       $scope.loginData.active = dd.active;
+      $scope.loginData.reputation = dd.reputation;
       $scope.loginData.posting = dd.posting;
       $scope.loginData.memo_key = dd.memo_key;
 
@@ -95,6 +96,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $rootScope.$storage.user = null;
     $rootScope.$storage.mylogin = undefined;
     $rootScope.$storage.mylogin = null;
+    $state.go("app.posts", {}, {reload:true});
     //make sure user credentials cleared.
   };
   $scope.data = {};
@@ -486,6 +488,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       console.log("fetching..."+type, limit, tag)
       window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
         $scope.data = response; 
+        console.log(response);
         $rootScope.$broadcast('hide:loading');
         if (!$scope.$$phase) {
           $scope.$apply();
