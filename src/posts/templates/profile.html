@@ -134,11 +134,12 @@
   </ion-content>
   <div class="bar bar-footer">
     <div class="button-bar">
+      <a class="button button-large button-royal icon ion-ios-heart" ng-class="{'active':active=='feed'}" ng-click="change('feed')"> Feeds</a>
       <a class="button button-large button-royal icon ion-compose" ng-class="{'active':active=='blog'}" ng-click="change('blog')"> Blog</a>
       <a class="button button-royal icon ion-document-text" ng-class="{'active':active=='posts'}" ng-click="change('posts')">Posts</a>
       <a class="button button-royal icon ion-chatbubbles" ng-class="{'active':active=='recent-replies'}" ng-click="change('recent-replies')">Replies</a>
       <a class="button button-royal icon ion-card" ng-class="{'active':active=='transfers'}"  ng-click="change('transfers')">Wallet</a>
-      <a class="button button-royal icon ion-lock-combination" ng-class="{'active':active=='permissions'}" ng-click="change('permissions')">Keys</a>
+      <!--<a class="button button-royal icon ion-lock-combination" ng-class="{'active':active=='permissions'}" ng-click="change('permissions')">Keys</a>-->
     </div>
   </div>
 </ion-view>

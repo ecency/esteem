@@ -81,7 +81,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       });
       $state.go('app.posts', {}, { reload: true });
   };
-  console.log($rootScope.$storage.user);
+  //console.log($rootScope.$storage.user);
   $scope.options = {
     loop: true,
     effect: 'slide',
@@ -282,7 +282,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     console.log($rootScope.$storage.filter)
     var type = $rootScope.$storage.filter || "trending";
     var tag = $rootScope.$storage.tag || "";
-    $scope.fetchPosts(type, $scope.limit, tag);
+    $scope.fetchPosts(type, $scope.limit, tag);  
   });
   
   $scope.votePost = function(post) {
@@ -824,7 +824,9 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope) {
   $scope.username = $stateParams.username;
 
   $scope.$on('$ionicView.beforeEnter', function(){
-    $scope.active = "blog";
+    if (!$scope.active) {
+      $scope.active = "blog";  
+    }
     $scope.nonexist = false;
     
     (new Steem(localStorage.socketUrl)).getState("/@"+$stateParams.username, function(err, res){

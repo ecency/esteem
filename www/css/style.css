@@ -1,7 +1,9 @@
 /* Empty. Add your own CSS if you like */
+/*
 * {
-font-family: 'Gotham Rounded Book'!important;
+font-family: 'Source Serif Pro', serif; //'Gotham Rounded Book'!important;
 }
+*/
 .wrap {
 	text-overflow: wrap!important;
 	white-space: normal!important;
