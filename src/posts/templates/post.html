@@ -11,7 +11,7 @@
 	</ion-nav-bar>
   <ion-content class="padding">
   	<p class="title h3">{{$root.$storage.sitem.title}}</p>
-  	<p><a href="#" class="subdued"><i class="icon ion-android-time"></i> {{$root.$storage.sitem.last_update|timeago}} by <i class="icon ion-android-person"></i> {{$root.$storage.sitem.author}} <div class="reputation">{{$root.$storage.sitem.author_reputation|reputation|number:0}}</div> in <i class="icon ion-pricetags"></i> {{$root.$storage.sitem.category}}</a></p>
+  	<p><a href="#" class="subdued"><i class="icon ion-android-time"></i> {{$root.$storage.sitem.last_update|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i> {{$root.$storage.sitem.author}}&nbsp;<div class="reputation">{{$root.$storage.sitem.author_reputation|reputation|number:0}}</div>&nbsp;in&nbsp;<i class="icon ion-pricetags"></i>&nbsp;{{$root.$storage.sitem.category}}</a></p>
   	<br>
     <div ng-bind-html="$root.$storage.sitem.body | parseUrl">
     </div>
@@ -21,8 +21,8 @@
       <div class="col col-33">
       <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted"></i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted"></i>&nbsp;{{$root.$storage.sitem.net_votes}}&nbsp;
        <i class="icon ion-android-arrow-dropdown-circle" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted"></i><i class="icon ion-android-arrow-dropdown-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted"></i></div>
-      <div class="col col-33"><i class="ion-social-usd"></i> {{$root.$storage.sitem.total_pending_payout_value.split(" ")[0]|number}}</div>
-      <div class="col"><i class="icon ion-chatbubbles"></i> {{$root.$storage.sitem.children}}</div>
+      <div class="col col-33"><i class="ion-social-usd"></i>&nbsp;{{$root.$storage.sitem.total_pending_payout_value.split(" ")[0]|number}}</div>
+      <div class="col"><i class="icon ion-chatbubbles"></i>&nbsp;{{$root.$storage.sitem.children}}</div>
       <div class="col" ng-click="isreplying(true)" ng-if="$root.$storage.user.username">Reply</div>
     </div>
     <div ng-if="replying">

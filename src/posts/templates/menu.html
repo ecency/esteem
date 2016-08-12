@@ -21,7 +21,7 @@
         <div class="item item-avatar" ng-if="$root.$storage.user">
           <!--<img src="//ionicframework.com/img/docs/spengler.jpg">-->
           <identicon username='$root.$storage.user.username' size='40'></identicon>
-          <h2>@{{$root.$storage.user.username}} <div class="reputation">{{$root.$storage.user.reputation|reputation|number:0}}</div></h2>
+          <h2>@{{$root.$storage.user.username}}&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation|number:0}}</div></h2>
           <p> <i class="icon ion-power pull-right dark" ng-click="logout()"></i></p>
         </div>
         <ion-item menu-close href="#/app/posts">
@@ -45,9 +45,9 @@
         <ion-item menu-close href="#/app/settings">
           Settings
         </ion-item>
-        <ion-item menu-close ng-click="logout()" ng-if="$root.$storage.user">
+        <!--<ion-item menu-close ng-click="logout()" ng-if="$root.$storage.user">
           Logout @{{$root.$storage.user.username}}
-        </ion-item>
+        </ion-item>-->
       </ion-list>
     </ion-content>
   </ion-side-menu>
