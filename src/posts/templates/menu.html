@@ -13,13 +13,12 @@
   </ion-side-menu-content>
 
   <ion-side-menu side="left">
-    <ion-header-bar class="bar-positive">
+    <ion-header-bar class="bar-positive" ng-if="!$root.$storage.user">
       <h1 class="title center">eSteem</h1>
     </ion-header-bar>
-    <ion-content>
+    <ion-content ng-class="{'has-header':!$root.$storage.user}">
       <ion-list>
         <div class="item item-avatar" ng-if="$root.$storage.user">
-          <!--<img src="//ionicframework.com/img/docs/spengler.jpg">-->
           <identicon username='$root.$storage.user.username' size='40'></identicon>
           <h2>@{{$root.$storage.user.username}}&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation|number:0}}</div></h2>
           <p><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}} <i class="icon ion-power pull-right dark" menu-close ng-click="logout()"></i></p>

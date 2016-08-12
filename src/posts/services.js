@@ -203,13 +203,18 @@ module.exports = function (app) {
                     var adjustmentValues = centerImage($scope.size, $scope.marginPx);
                     $scope.margin = adjustmentValues.margin;
                     $scope.naturalSize = adjustmentValues.naturalSize;
+                    $scope.options = {
+                        background: [56,126,245, 255],
+                        margin: $scope.margin,
+                        size: $scope.naturalSize
+                      };
                 }
 
                 init();
 
                 $scope.$watchGroup(['username', 'size', 'marginPx'], function(newVal) {
                     init();
-                    $scope.data = new Identicon(md5.createHash($scope.username || ''), $scope.naturalSize, $scope.margin).toString();
+                    $scope.data = new Identicon(md5.createHash($scope.username || ''), $scope.options).toString();
                 });
             }]
         };

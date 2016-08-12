@@ -5,7 +5,6 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
   $scope.loginData = {};  
 
-
   $ionicModal.fromTemplateUrl('templates/login.html', {
     scope: $scope  }).then(function(modal) {
     $scope.modal = modal;
@@ -59,30 +58,32 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       $scope.loginData.voting_power = dd.voting_power;
 
       $rootScope.$storage.user = $scope.loginData;
-        var login = new window.steemJS.Login();
-        console.log(dd.posting.key_auths[0][0]);
-        login.setRoles(["posting"]);
-        var loginSuccess = login.checkKeys({
-            accountName: $scope.loginData.username,    
-            password: $scope.loginData.password,
-            auths: {
-                posting: [[dd.posting.key_auths[0][0], 1]]
-            }}
-        );
+      var login = new window.steemJS.Login();
+      console.log(dd.posting.key_auths[0][0]);
+      login.setRoles(["posting"]);
+      var loginSuccess = login.checkKeys({
+          accountName: $scope.loginData.username,    
+          password: $scope.loginData.password,
+          auths: {
+              posting: [[dd.posting.key_auths[0][0], 1]]
+          }}
+      );
 
-        //console.log(loginSuccess);
-        //console.log(login)
+      //console.log(loginSuccess);
+      //console.log(login)
 
-        if (!loginSuccess) {
-            $rootScope.showAlert("Error","The password or account name was incorrect");
-        } else {
-          $rootScope.$storage.mylogin = login;
-          $timeout(function() {
-            $scope.closeLogin();
-          });
-        }
-      });
+      if (!loginSuccess) {
+          $rootScope.showAlert("Error","The password or account name was incorrect");
+      } else {
+        $rootScope.$storage.mylogin = login;
+        $timeout(function() {
+          $scope.closeLogin();
+        });
+      }
+    });
+    setTimeout(function() {
       $state.go('app.posts', {}, { reload: true });
+    }, 1000);
   };
 
   if ($rootScope.$storage.user && $rootScope.$storage.user.username) {
