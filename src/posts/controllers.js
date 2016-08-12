@@ -234,53 +234,63 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
 
   $scope.transfer = function () {
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-      $scope.mylogin = new window.steemJS.Login();
-      $scope.mylogin.setRoles(["active"]);
-      console.log($rootScope.$storage.user.active.key_auths[0][0]);
-      var loginSuccess = $scope.mylogin.checkKeys({
-          accountName: $rootScope.$storage.user.username,    
-          password: $rootScope.$storage.user.password,
-          auths: {
-            active: $rootScope.$storage.user.active.key_auths
-          }}
-      );
-      if (loginSuccess) {
-        console.log($scope.mylogin);
-        var tr = new window.steemJS.TransactionBuilder();
-        if ($scope.data.type !== 'sp') {
-          
-          var tt = $filter('number')($scope.data.amount) +" "+angular.uppercase($scope.data.type);
-          tr.add_type_operation("transfer", {
-            from: $rootScope.$storage.user.username,
-            to: $scope.data.username,
-            amount: tt,
-            memo: $scope.data.memo
-          });
-          tr.process_transaction($scope.mylogin, null, true);  
-          $rootScope.showAlert("Info", "Transaction broadcasted").then(function(){
-            $scope.data = {};
-          });
-        } else {
-          console.log($scope.data);
-          var tt = $filter('number')($scope.data.amount) +" STEEM";
-          tr.add_type_operation("transfer_to_vesting", {
-            from: $rootScope.$storage.user.username,
-            to: $scope.data.username,
-            amount: tt
-          });
-          tr.process_transaction($scope.mylogin, null, true);
-          $rootScope.showAlert("Info", "Transaction broadcasted").then(function(){
-            $scope.data = {};
-          });
-        }
-      }
-      $rootScope.$broadcast('hide:loading');
-      /*setTimeout(function() {
-        $scope.refresh()
-      }, 100);*/
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'Confirmation',
+        template: 'Are you sure you want to transfer?'
+      });
+
+      confirmPopup.then(function(res) {
+        if(res) {
+          console.log('You are sure');
+          $rootScope.$broadcast('show:loading');
+          $scope.mylogin = new window.steemJS.Login();
+          $scope.mylogin.setRoles(["active"]);
+          console.log($rootScope.$storage.user.active.key_auths[0][0]);
+          var loginSuccess = $scope.mylogin.checkKeys({
+              accountName: $rootScope.$storage.user.username,    
+              password: $rootScope.$storage.user.password,
+              auths: {
+                active: $rootScope.$storage.user.active.key_auths
+              }}
+          );
+          if (loginSuccess) {
+            console.log($scope.mylogin);
+            var tr = new window.steemJS.TransactionBuilder();
+            if ($scope.data.type !== 'sp') {
+
+              var tt = $filter('number')($scope.data.amount) +" "+angular.uppercase($scope.data.type);
+              tr.add_type_operation("transfer", {
+                from: $rootScope.$storage.user.username,
+                to: $scope.data.username,
+                amount: tt,
+                memo: $scope.data.memo
+              });
+              tr.process_transaction($scope.mylogin, null, true);  
+              $rootScope.showAlert("Info", "Transaction is broadcasted").then(function(){
+                $scope.data = {type: "steem", amount: 0.001};
+              });
+            } else {
+              console.log($scope.data);
+              var tt = $filter('number')($scope.data.amount) +" STEEM";
+              tr.add_type_operation("transfer_to_vesting", {
+                from: $rootScope.$storage.user.username,
+                to: $scope.data.username,
+                amount: tt
+              });
+              tr.process_transaction($scope.mylogin, null, true);
+              $rootScope.showAlert("Info", "Transaction is broadcasted").then(function(){
+                $scope.data = {type: "steem", amount: 0.001};
+              });
+            }
+          }
+          $rootScope.$broadcast('hide:loading');
+         } else {
+           console.log('You are not sure');
+         }
+       });
     } else {
       $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert("Warning", "Please, login to Vote");
+      $rootScope.showAlert("Warning", "Please, login to Transfer");
     }
   };
 
