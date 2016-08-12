@@ -22,7 +22,7 @@
           <!--<img src="//ionicframework.com/img/docs/spengler.jpg">-->
           <identicon username='$root.$storage.user.username' size='40'></identicon>
           <h2>@{{$root.$storage.user.username}}&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation|number:0}}</div></h2>
-          <p> <i class="icon ion-power pull-right dark" ng-click="logout()"></i></p>
+          <p><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}} <i class="icon ion-power pull-right dark" menu-close ng-click="logout()"></i></p>
         </div>
         <ion-item menu-close href="#/app/posts">
           Home

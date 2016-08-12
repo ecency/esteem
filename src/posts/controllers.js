@@ -55,6 +55,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       $scope.loginData.reputation = dd.reputation;
       $scope.loginData.posting = dd.posting;
       $scope.loginData.memo_key = dd.memo_key;
+      $scope.loginData.post_count = dd.post_count;
+      $scope.loginData.voting_power = dd.voting_power;
 
       $rootScope.$storage.user = $scope.loginData;
         var login = new window.steemJS.Login();
@@ -82,14 +84,14 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       });
       $state.go('app.posts', {}, { reload: true });
   };
-  //console.log($rootScope.$storage.user);
-  $scope.options = {
-    loop: true,
-    effect: 'slide',
-    speed: 500,
+
+  if ($rootScope.$storage.user && $rootScope.$storage.user.username) {
+    (new Steem(localStorage.socketUrl)).getAccounts([$rootScope.$storage.user.username], function(err, dd) {
+      console.log(dd);
+      dd = dd[0];
+      angular.merge($rootScope.$storage.user, dd);
+    });
   }
-  
-  
 
   $scope.logout = function() {
     $rootScope.$storage.user = undefined;
@@ -243,18 +245,32 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
           }}
       );
       if (loginSuccess) {
+        console.log($scope.mylogin);
         var tr = new window.steemJS.TransactionBuilder();
         if ($scope.data.type !== 'sp') {
-          console.log($scope.data);
-          var tt = {amount: $scope.data.amount*1000, symbol: angular.uppercase($scope.data.type)};
+          //console.log($scope.data);
+          var tt = {
+            amount: $scope.data.amount*1000, 
+            symbol: angular.uppercase($scope.data.type)
+          };
           //String($scope.data.amount)+" "+angular.uppercase($scope.data.type);
-          console.log(tt);
+          //console.log(tt);
           tr.add_type_operation("transfer", {
             from: $rootScope.$storage.user.username,
             to: $scope.data.username,
             amount: tt,
+            //asset: angular.uppercase($scope.data.type),
             memo: $scope.data.memo
           });
+          /*$scope.mylogin.signTransaction(tr);
+          console.log("signed")
+            tr.finalize().then(function() {
+              console.log("finalize")
+            tr.sign();
+            console.log("sign")
+            tr.broadcast();
+            console.log("broadcast")
+          });*/
           tr.process_transaction($scope.mylogin, null, true);  
         } else {
           console.log($scope.data);
@@ -310,7 +326,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           });
           tr.process_transaction($scope.mylogin, null, true);
           console.log("---------tx-------"+angular.toJson(tr));
-          setTimeout(function() {$scope.refresh()}, 3000);
+          setTimeout(function() {$scope.fetchPosts()}, 3000);
         }
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -341,7 +357,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
               weight: -10000
           });
           tr.process_transaction($scope.mylogin, null, true);
-          setTimeout(function() {$scope.refresh()}, 3000);
+          setTimeout(function() {$scope.fetchPosts()}, 3000);
         }
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -372,7 +388,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
               weight: 0
           });
           tr.process_transaction($scope.mylogin, null, true);
-          setTimeout(function() {$scope.refresh()}, 3000);  
+          setTimeout(function() {$scope.fetchPosts()}, 3000);  
         }
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -488,7 +504,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       console.log("fetching..."+type, limit, tag)
       window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
         $scope.data = response; 
-        console.log(response);
+        //console.log(response);
         $rootScope.$broadcast('hide:loading');
         if (!$scope.$$phase) {
           $scope.$apply();

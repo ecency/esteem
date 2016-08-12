@@ -11,7 +11,7 @@
 	</ion-nav-bar>
   <ion-content class="padding">
   	<p class="title h3">{{$root.$storage.sitem.title}}</p>
-  	<p><a href="#" class="subdued"><i class="icon ion-android-time"></i> {{$root.$storage.sitem.last_update|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i> {{$root.$storage.sitem.author}}&nbsp;<div class="reputation">{{$root.$storage.sitem.author_reputation|reputation|number:0}}</div>&nbsp;in&nbsp;<i class="icon ion-pricetags"></i>&nbsp;{{$root.$storage.sitem.category}}</a></p>
+  	<div class="stitle row gray"><div class="col"><i class="icon ion-android-time"></i> {{$root.$storage.sitem.last_update|timeago}} by <i class="icon ion-android-person"></i>&nbsp;<b>{{$root.$storage.sitem.author}}</b>&nbsp;<div class="reputation">{{$root.$storage.sitem.author_reputation|reputation|number:0}}</div> in&nbsp;<i class="icon ion-pricetags"></i>&nbsp;{{$root.$storage.sitem.category}}</div></div>
   	<br>
     <div ng-bind-html="$root.$storage.sitem.body | parseUrl">
     </div>

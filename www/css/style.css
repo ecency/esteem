@@ -221,3 +221,6 @@ hr {
   border: 1px solid #dadada;
   color: ##8a8a8a;
 }
+.stitle.row, .stitle.row .col {
+	padding: 0px;
+}
