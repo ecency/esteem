@@ -229,7 +229,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
 
 })
-app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval) {
+app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $filter) {
   $scope.data = {type: "steem", amount: 0.001};
 
   $scope.transfer = function () {
@@ -248,38 +248,30 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
         console.log($scope.mylogin);
         var tr = new window.steemJS.TransactionBuilder();
         if ($scope.data.type !== 'sp') {
-          //console.log($scope.data);
-          var tt = {
-            amount: $scope.data.amount*1000, 
-            symbol: angular.uppercase($scope.data.type)
-          };
-          //String($scope.data.amount)+" "+angular.uppercase($scope.data.type);
-          //console.log(tt);
+          
+          var tt = $filter('number')($scope.data.amount) +" "+angular.uppercase($scope.data.type);
           tr.add_type_operation("transfer", {
             from: $rootScope.$storage.user.username,
             to: $scope.data.username,
             amount: tt,
-            //asset: angular.uppercase($scope.data.type),
             memo: $scope.data.memo
           });
-          /*$scope.mylogin.signTransaction(tr);
-          console.log("signed")
-            tr.finalize().then(function() {
-              console.log("finalize")
-            tr.sign();
-            console.log("sign")
-            tr.broadcast();
-            console.log("broadcast")
-          });*/
           tr.process_transaction($scope.mylogin, null, true);  
+          $rootScope.showAlert("Info", "Transaction broadcasted").then(function(){
+            $scope.data = {};
+          });
         } else {
           console.log($scope.data);
+          var tt = $filter('number')($scope.data.amount) +" STEEM";
           tr.add_type_operation("transfer_to_vesting", {
             from: $rootScope.$storage.user.username,
             to: $scope.data.username,
-            amount: {amount: $scope.data.amount, symbol: angular.uppercase($scope.data.type)}
+            amount: tt
           });
           tr.process_transaction($scope.mylogin, null, true);
+          $rootScope.showAlert("Info", "Transaction broadcasted").then(function(){
+            $scope.data = {};
+          });
         }
       }
       $rootScope.$broadcast('hide:loading');
