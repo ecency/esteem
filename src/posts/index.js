@@ -3,8 +3,8 @@ var fs = require('fs');
 var app = angular.module('steem', [
 	'ionic', 
 	'ngStorage', 
-	'ngCordova', 
-	'ionic.contrib.ui.ionThread'
+	'ngCordova'
+	//'ionic.contrib.ui.ionThread'
 ]);
 var steemRPC = require("steem-rpc");
 if (localStorage.getItem("socketUrl") === null) {

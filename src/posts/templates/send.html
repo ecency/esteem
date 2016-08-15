@@ -1,9 +1,9 @@
-<ion-view view-cache="false" view-title="Send">
+<ion-view view-cache="false" view-title="Transfer">
   <ion-content class="padding">
     <div class="list">
       <label class="item item-input">
         <span class="input-label">To</span>
-        <input type="text" ng-model="data.username" autofocus placeholder="username" ng-change="changeUsername()">
+        <input type="text" ng-model="data.username" placeholder="username" ng-change="changeUsername()">
       </label>
       <label class="item item-input item-select">
         <span class="input-label">Asset</span>
@@ -21,6 +21,7 @@
         <span class="input-label">Memo</span>
         <textarea ng-model="data.memo" rows="3" placeholder="memo text"></textarea>
       </label>
+      <p class="item" ng-if="balance">Available: {{balance.balance}}, {{balance.sbd_balance}} <i class="icon ion-refresh pull-right" ng-click="refresh()"></i></p>
       <br>
       <center><button class="button button-positive" ng-click="transfer()">
         SEND

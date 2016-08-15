@@ -47,7 +47,21 @@
       </div>
     </div>
     <div class="" ng-if="active=='history'">
-      <p class="padding">Nothing here, yet...</p>
+      <!--<p class="padding">Nothing here, yet...</p>-->
+      <div ng-if="recent_trades.length>0">
+        <div class="row header">
+          <div class="col">Date</div>
+          <div class="col">Price</div>
+          <div class="col">Steem</div>
+          <div class="col">SD ($)</div>
+        </div>
+        <div class="row" ng-repeat="(key, f) in recent_trades">
+          <div class="col">{{f.date|timeago}}</div>
+          <div class="col">{{f.current_pays.split(" ")[0]/f.open_pays.split(" ")[0]|number:6}}</div>
+          <div class="col">{{f.current_pays.split(" ")[0]|number:3}}</div>
+          <div class="col">{{f.open_pays.split(" ")[0]|number:3}}</div>
+        </div>
+      </div>
     </div>
   </ion-content>
   <div class="bar bar-footer">

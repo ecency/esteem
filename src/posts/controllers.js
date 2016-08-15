@@ -86,13 +86,15 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     }, 1000);
   };
 
-  if ($rootScope.$storage.user && $rootScope.$storage.user.username) {
-    (new Steem(localStorage.socketUrl)).getAccounts([$rootScope.$storage.user.username], function(err, dd) {
-      console.log(dd);
-      dd = dd[0];
-      angular.merge($rootScope.$storage.user, dd);
-    });
-  }
+  $scope.$on("$ionicView.enter", function(){
+    if ($rootScope.$storage.user && $rootScope.$storage.user.username) {
+      (new Steem(localStorage.socketUrl)).getAccounts([$rootScope.$storage.user.username], function(err, dd) {
+        console.log(dd);
+        dd = dd[0];
+        angular.merge($rootScope.$storage.user, dd);
+      });
+    }
+  });
 
   $scope.logout = function() {
     $rootScope.$storage.user = undefined;
@@ -127,7 +129,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     }
   };
   $scope.submitStory = function(){
-    $rootScope.showAlert("Dev alert", "Not available, yet... (coming soon) ");
+    $rootScope.showAlert("Info", "In Development, coming soon!");
   };
   
   $scope.search = function() {
@@ -230,15 +232,44 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
 
 })
-app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $filter) {
+app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $filter, $q, $timeout) {
   $scope.data = {type: "steem", amount: 0.001};
+  $scope.changeUsername = function(typed) {
+    console.log('searching');
+    window.Api.database_api().exec("lookup_account_names", [[$scope.data.username]]).then(function(response){
+      $scope.users = response[0]; 
+      if (!$scope.$$phase) {
+        $scope.$apply();
+      }
+    });
+  }
 
   $scope.transfer = function () {
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-      var confirmPopup = $ionicPopup.confirm({
-        title: 'Confirmation',
-        template: 'Are you sure you want to transfer?'
-      });
+      if ($scope.data.type === 'sbd') {
+        if ($scope.data.amount > Number($scope.balance.sbd_balance.split(" ")[0])) {
+          $rootScope.showAlert("Warning", "Make sure you have enough balance for transaction!");          
+        } else {
+          $scope.okbalance = true;
+        }
+      }
+      if ($scope.data.type === 'sp' || $scope.data.type === 'steem') {
+        if ($scope.data.amount > Number($scope.balance.balance.split(" ")[0])) {
+          $rootScope.showAlert("Warning", "Make sure you have enough balance for transaction!");          
+        } else {
+          $scope.okbalance = true;
+        }
+      }
+      if (!$scope.users || $scope.users.name !== $scope.data.username) {
+        $rootScope.showAlert("Warning", "User you are trying to transfer fund, doesn't exist!");
+      } else {
+        $scope.okuser = true;
+      }
+      if ($scope.okbalance && $scope.okuser) {
+        var confirmPopup = $ionicPopup.confirm({
+          title: 'Confirmation',
+          template: 'Are you sure you want to transfer?'
+        });
 
       confirmPopup.then(function(res) {
         if(res) {
@@ -288,15 +319,26 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
          } else {
            console.log('You are not sure');
          }
-       });
+        });
+      }
     } else {
       $rootScope.$broadcast('hide:loading');
       $rootScope.showAlert("Warning", "Please, login to Transfer");
     }
   };
+  $scope.refresh = function() {
+    (new Steem(localStorage.socketUrl)).getAccounts([$rootScope.$storage.user.username], function(err, dd) {   
+      $scope.balance = dd[0];
+    });
+  }
+  $scope.$on('$ionicView.beforeEnter', function(){
+    (new Steem(localStorage.socketUrl)).getAccounts([$rootScope.$storage.user.username], function(err, dd) {   
+      $scope.balance = dd[0];
+    });
+  });
 
 });
-app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval) {
+app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate) {
 
   $rootScope.$on('filter:change', function() {
     $rootScope.$broadcast('show:loading');
@@ -328,7 +370,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
               weight: 10000
           });
           tr.process_transaction($scope.mylogin, null, true);
-          console.log("---------tx-------"+angular.toJson(tr));
+          //console.log("---------tx-------"+angular.toJson(tr));
           setTimeout(function() {$scope.fetchPosts()}, 3000);
         }
       $rootScope.$broadcast('hide:loading');
@@ -403,7 +445,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.showFilter = function() {
     $scope.fdata = {filter: $rootScope.$storage.filter || "trending"};
     var myPopupF = $ionicPopup.show({
-       template: '<ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="hot"><i class="icon" ng-class="{\'ion-flame gray\':fdata.filter!=\'hot\', \'ion-flame positive\': fdata.filter==\'hot\'}"></i> Hot</ion-radio><ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="created"><i class="icon" ng-class="{\'ion-star gray\':fdata.filter!=\'new\', \'ion-star positive\': fdata.filter==\'new\'}"></i> New</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="trending"><i class="icon" ng-class="{\'ion-podium gray\':fdata.filter!=\'trending\', \'ion-podium positive\': fdata.filter==\'trending\'}"></i> Trending</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="active"><i class="icon" ng-class="{\'ion-chatbubble-working gray\':fdata.filter!=\'active\', \'ion-chatbubble-working positive\': fdata.filter==\'active\'}"></i> Active</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="cashout"><i class="icon" ng-class="{\'ion-share gray\':fdata.filter!=\'cashout\', \'ion-share positive\': fdata.filter==\'cashout\'}"></i> Cashout</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="payout"><i class="icon" ng-class="{\'ion-cash gray\':fdata.filter!=\'payout\', \'ion-cash positive\': fdata.filter==\'payout\'}"></i> Payout</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="votes"><i class="icon" ng-class="{\'ion-person-stalker gray\':fdata.filter!=\'votes\', \'ion-person-stalker positive\': fdata.filter==\'votes\'}"></i> Votes</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="children"><i class="icon" ng-class="{\'ion-chatbubbles gray\':fdata.filter!=\'children\', \'ion-chatbubbles positive\': fdata.filter==\'children\'}"></i> Comments</ion-radio>',   
+       template: '<ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="hot"><i class="icon" ng-class="{\'ion-flame gray\':fdata.filter!=\'hot\', \'ion-flame positive\': fdata.filter==\'hot\'}"></i> Hot</ion-radio><ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="created"><i class="icon" ng-class="{\'ion-star gray\':fdata.filter!=\'new\', \'ion-star positive\': fdata.filter==\'new\'}"></i> New</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="trending"><i class="icon" ng-class="{\'ion-podium gray\':fdata.filter!=\'trending\', \'ion-podium positive\': fdata.filter==\'trending\'}"></i> Trending</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="trending30"><i class="icon" ng-class="{\'ion-connection-bars gray\':fdata.filter!=\'trending30\', \'ion-connection-bars positive\': fdata.filter==\'trending30\'}"></i> Trending (30 days)</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="active"><i class="icon" ng-class="{\'ion-chatbubble-working gray\':fdata.filter!=\'active\', \'ion-chatbubble-working positive\': fdata.filter==\'active\'}"></i> Active</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="cashout"><i class="icon" ng-class="{\'ion-share gray\':fdata.filter!=\'cashout\', \'ion-share positive\': fdata.filter==\'cashout\'}"></i> Cashout</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="votes"><i class="icon" ng-class="{\'ion-person-stalker gray\':fdata.filter!=\'votes\', \'ion-person-stalker positive\': fdata.filter==\'votes\'}"></i> Votes</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="children"><i class="icon" ng-class="{\'ion-chatbubbles gray\':fdata.filter!=\'children\', \'ion-chatbubbles positive\': fdata.filter==\'children\'}"></i> Comments</ion-radio>',   
        title: 'Sort by',
        scope: $scope
     });
@@ -444,7 +486,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $rootScope.$broadcast('show:loading');
     $scope.refresh();
   }
-
+  function arrayObjectIndexOf(myArray, searchTerm, property) {
+    for(var i = 0, len = myArray.length; i < len; i++) {
+        if (myArray[i][property] === searchTerm) return i;
+    }
+    return -1;
+  }
   $scope.$watch('data', function(newValue, oldValue){
       //console.log('changed');
       if (newValue) {
@@ -454,8 +501,16 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         }
         for (var i = 0; i < newValue.length; i++) {
           if ($rootScope.$storage.user){
+            /*var ind = arrayObjectIndexOf(newValue[i].active_votes, $rootScope.$storage.user.username, "voter");
+            if (ind > -1){
+              if (newValue[i].active_votes[ind].percent > 0) {
+                newValue[i].upvoted = true;  
+              } else if (newValue[i].active_votes[ind].percent < 0) {
+                newValue[i].downvoted = true;  
+              }
+            }*/
             for (var j = newValue[i].active_votes.length - 1; j >= 0; j--) {
-              if (newValue[i].active_votes[j].voter == $rootScope.$storage.user.username) {
+              if (newValue[i].active_votes[j].voter === $rootScope.$storage.user.username) {
                 if (newValue[i].active_votes[j].percent > 0) {
                   newValue[i].upvoted = true;  
                 } else if (newValue[i].active_votes[j].percent < 0) {
@@ -550,7 +605,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         }          
         $scope.fetchPosts(null, $scope.limit, null);  
       });
-    });  
+    });
+    $ionicScrollDelegate.scrollTop();  
   });
   
   $scope.$on('$ionicView.beforeEnter', function(){
@@ -783,45 +839,57 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state) 
       $scope.active = type;
     }
     if (!$scope.error) {
-      if (!$scope.last) {
         $scope.limit += 5
 
         if ($scope.active == 'followers') {
-          window.Api.follow_api().exec("get_followers", [$rootScope.$storage.user.username, false, "blog" , $scope.limit]).then(function(r){
-            if ($scope.followers) {
-              if (r.length == $scope.followers.length) {
-                $scope.last = true;
-                $scope.$broadcast('scroll.infiniteScrollComplete');
+          $scope.lastd = false;
+          if (!$scope.lastr) {
+            console.log('get follower')
+            window.Api.follow_api().exec("get_followers", [$rootScope.$storage.user.username, false, "blog" , $scope.limit]).then(function(r){
+              console.log(r);
+              if ($scope.followers) {
+                if (r.length == $scope.followers.length) {
+                  $scope.lastr = true;
+                  $scope.$broadcast('scroll.infiniteScrollComplete');
+                } else {
+                  $scope.followers = r;
+                }
               } else {
                 $scope.followers = r;
               }
-            } else {
-              $scope.followers = r;
-            }
-          });    
+            });    
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+          } else {
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+          }
         }
-        if ($scope.active == 'following') {
-          window.Api.follow_api().exec("get_following", [$rootScope.$storage.user.username, false, "blog" , $scope.limit]).then(function(r){
-            if ($scope.following) {
-              if (r.length == $scope.following.length) {
-                $scope.last = true;
-                $scope.$broadcast('scroll.infiniteScrollComplete');
+        if ($scope.active == 'followed') {
+          $scope.lastr = false;
+          if (!$scope.lastd) {
+            console.log('get followed')
+            window.Api.follow_api().exec("get_following", [$rootScope.$storage.user.username, false, "blog" , $scope.limit]).then(function(r){
+              console.log(r);
+              if ($scope.following) {
+                if (r.length == $scope.following.length) {
+                  $scope.lastd = true;
+                  $scope.$broadcast('scroll.infiniteScrollComplete');
+                } else {
+                  $scope.following = r;
+                }
               } else {
                 $scope.following = r;
               }
-            } else {
-              $scope.following = r;
-            }
-          });    
+            });   
+            $scope.$broadcast('scroll.infiniteScrollComplete'); 
+          } else {
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+          }
         }
-        $scope.$broadcast('scroll.infiniteScrollComplete');
-      } else {
-        $scope.$broadcast('scroll.infiniteScrollComplete');
-      }
     }
   };
   $scope.change = function(type){
     $scope.active = type;
+    console.log(type);
     if (!$scope.$$phase) {
       $scope.$apply();
     }
@@ -831,6 +899,35 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state) 
     $rootScope.showAlert("Info", "In Development, coming soon!");
   };
   $scope.followUser = function(xx){
+    /*$rootScope.$broadcast('show:loading');
+    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+        console.log('Api ready:');
+        $scope.mylogin = new window.steemJS.Login();
+        $scope.mylogin.setRoles(["posting"]);
+        var loginSuccess = $scope.mylogin.checkKeys({
+            accountName: $rootScope.$storage.user.username,    
+            password: $rootScope.$storage.user.password,
+            auths: {
+                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
+            }}
+        );
+        if (loginSuccess) {
+          var tr = new window.steemJS.TransactionBuilder();
+          var json = {follower:$rootScope.$storage.user.username, following:xx, what: "blog"}
+          tr.add_type_operation("custom_json", {
+            id: 'follow',
+            required_auths: $rootScope.$storage.user.username,
+            //required_posting_auths: JSON.stringify({posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]}),//[$rootScope.$storage.user.username],
+            json: JSON.stringify(json)
+          });
+          tr.process_transaction($scope.mylogin, null, true);
+          console.log("---------tx-------"+angular.toJson(tr));
+        }
+      $rootScope.$broadcast('hide:loading');
+    } else {
+      $rootScope.$broadcast('hide:loading');
+      $rootScope.showAlert("Warning", "Please, login to Follow");
+    }*/
     $rootScope.showAlert("Info", "In Development, coming soon!");
   };
   $scope.profileView = function(xx){
@@ -942,6 +1039,13 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope) {
       }
       if (type == "history"){
         $scope.history = [];
+        window.Api.market_history_api().exec("get_recent_trades", [15]).then(function(r){
+          //console.log(r);
+          $scope.recent_trades = r;
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });
         /*(new Steem($rootScope.$storage.socket)).getAccountHistory($stateParams.username, 20, 10, function(err, res){
           console.log(err, res)
           //$scope.openorders = res;
