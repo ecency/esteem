@@ -613,9 +613,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $rootScope.$broadcast('show:loading');
   })
   $scope.$on('$ionicView.loaded', function(){
-    if (window.navigator.splashscreen) {
-      window.navigator.splashscreen.hide();
-    }
+    
   });
 
   var timeint = $interval(function(){

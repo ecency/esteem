@@ -110,7 +110,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
   $ionicConfigProvider.navBar.alignTitle('left')
 });
 
-app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading) {
+app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen) {
   $rootScope.$storage = $localStorage;
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -138,7 +138,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     if (!$rootScope.$storage.filter) {
       $rootScope.$storage.filter = "trending";
     }
-    
+    if (navigator.splashscreen) {
+      navigator.splashscreen.hide();
+    }
+
     $rootScope.showAlert = function(title, msg) {
       var alertPopup = $ionicPopup.alert({
         title: title,

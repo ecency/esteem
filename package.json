@@ -34,7 +34,6 @@
   "cordovaPlugins": [
     "cordova-plugin-device",
     "cordova-plugin-whitelist",
-    "cordova-plugin-splashscreen",
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard",
     "cordova-plugin-inappbrowser",
@@ -47,7 +46,11 @@
       "id": "phonegap-plugin-barcodescanner"
     },
     "cordova-plugin-media",
-    "phonegap-plugin-push"
+    "phonegap-plugin-push",
+    {
+      "locator": "https://github.com/apache/cordova-plugin-splashscreen.git",
+      "id": "cordova-plugin-splashscreen"
+    }
   ],
   "cordovaPlatforms": [
     "android",
