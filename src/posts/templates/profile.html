@@ -1,7 +1,7 @@
 <ion-view view-title="Profile @{{username}}" hide-nav-bar="true">
   <div class="bar bar-subheader mysubheader bar-positive">
     <!--<button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>-->
-    <div ng-if="$root.$storage.user">
+    <p ng-if="$root.$storage.user">
       <center>
         <div class="item-myavatar" ng-if="$root.$storage.user" ng-click="show()">
           <ng-letter-avatar data="{{$root.$storage.user.username}}" ng-if="!$root.$storage.user.json_metadata.profilePicUrl"></ng-letter-avatar>
@@ -10,7 +10,7 @@
         <h4><span class="light">@{{$root.$storage.user.username}}</span>&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation|number:0}}</div></h4>
         <div ng-click="showMeExtra()" class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;posts&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}}&nbsp;voting power</div>
       </center>
-    </div>
+    </p>
   </div>
   <ion-content class="has-footer has-mysubheader" has-header="false">
         <div class="box blue" ng-if="active!='wallet'||active!='permissions'">

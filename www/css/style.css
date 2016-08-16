@@ -175,6 +175,10 @@ hr {
 .positives {
 	background-color: #387ef5;
 }
+.spinner svg {
+  width: 16px;
+  height: 16px; 
+}
 .ion-comment--container {
   background-color: #f8f8f8;
 }

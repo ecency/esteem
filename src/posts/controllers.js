@@ -361,6 +361,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   });
   
   $scope.votePost = function(post) {
+    post.invoting = true;
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
         console.log('Api ready:');
@@ -382,8 +383,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
               weight: 10000
           });
           tr.process_transaction($scope.mylogin, null, true);
+
           //console.log("---------tx-------"+angular.toJson(tr));
-          setTimeout(function() {$scope.fetchPosts()}, 3000);
+          setTimeout(function() {post.invoting=false; $scope.fetchPosts()}, 2000);
         }
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -393,6 +395,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   };
 
   $scope.downvotePost = function(post) {
+    post.invoting = true;
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
         console.log('Api ready:');
@@ -414,7 +417,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
               weight: -10000
           });
           tr.process_transaction($scope.mylogin, null, true);
-          setTimeout(function() {$scope.fetchPosts()}, 3000);
+          setTimeout(function() {post.invoting = false;$scope.fetchPosts();}, 2000);
         }
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -424,6 +427,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   };
 
   $scope.unvotePost = function(post) {
+    post.invoting = true;
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
         console.log('Api ready:');
@@ -445,7 +449,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
               weight: 0
           });
           tr.process_transaction($scope.mylogin, null, true);
-          setTimeout(function() {$scope.fetchPosts()}, 3000);  
+          setTimeout(function() {post.invoting = false;$scope.fetchPosts();}, 2000);  
         }
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -739,7 +743,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval)
           tr.process_transaction($scope.mylogin, null, true);
           if ($rootScope.$storage.sitem.upvoted) {
             $rootScope.$storage.sitem.upvoted = false;
-            $rootScope.$storage.sitem.downvoted = false;  
+            $rootScope.$storage.sitem.downvoted = false;
           } else {
             $rootScope.$storage.sitem.upvoted = true;
             $rootScope.$storage.sitem.downvoted = false;  

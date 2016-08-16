@@ -19,7 +19,7 @@
 			    </div>
 			    <div class="row">
 			    <div class="col">
-			      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d.total_pending_payout_value.split(" ")[0]|number}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><i class="icon ion-android-arrow-dropup-circle positive"></i> <i class="ion-social-usd"></i>&nbsp;{{d.total_pending_payout_value.split(" ")[0]|number}}</a>
+			      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><i class="icon ion-android-arrow-dropup-circle"></i><ion-spinner ng-if="d.invoting"></ion-spinner>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d.total_pending_payout_value.split(" ")[0]|number}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><i class="icon ion-android-arrow-dropup-circle positive"></i><ion-spinner ng-if="d.invoting"></ion-spinner>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d.total_pending_payout_value.split(" ")[0]|number}}</a>
 			      </div>
 			      <div class="col col-25 tright">
 			      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
@@ -44,8 +44,8 @@
 		    </p>-->
 		    <div class="row">
 		    <div class="col">
-		      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds.total_pending_payout_value.split(" ")[0]|number}}</a>
-		      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds.total_pending_payout_value.split(" ")[0]|number}}</a>
+		      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><i class="icon ion-android-arrow-dropup-circle"></i><ion-spinner ng-if="d.invoting"></ion-spinner>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds.total_pending_payout_value.split(" ")[0]|number}}</a>
+		      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><i class="icon ion-android-arrow-dropup-circle positive"></i><ion-spinner ng-if="d.invoting"></ion-spinner>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds.total_pending_payout_value.split(" ")[0]|number}}</a>
 		      </div>
 		      <div class="col col-25 tright">
 		      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
