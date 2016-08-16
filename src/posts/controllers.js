@@ -948,38 +948,159 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state) 
 app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope) {
   $scope.username = $stateParams.username;
 
-  $scope.$on('$ionicView.beforeEnter', function(){
-    if (!$scope.active) {
-      $scope.active = "blog";  
+  $scope.upvotePost = function(post) {
+    $rootScope.$broadcast('show:loading');
+    // Then create the transaction and sign it without broadcasting
+    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+        console.log('Api ready:')
+        $scope.mylogin = new window.steemJS.Login();
+        $scope.mylogin.setRoles(["posting"]);
+        var loginSuccess = $scope.mylogin.checkKeys({
+            accountName: $rootScope.$storage.user.username,    
+            password: $rootScope.$storage.user.password,
+            auths: {
+                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
+            }}
+        );
+        if (loginSuccess) {
+          var tr = new window.steemJS.TransactionBuilder();
+          tr.add_type_operation("vote", {
+              voter: $rootScope.$storage.user.username,
+              author: post.author,
+              permlink: post.permlink,
+              weight: 10000
+          });
+          //var my_pubkeys = $scope.mylogin.getPubKeys();
+          //console.log(my_pubkeys);
+          tr.process_transaction($scope.mylogin, null, true);
+        } 
+      $rootScope.$broadcast('hide:loading');
+      setTimeout(function() {$scope.refresh();}, 3000);
     } else {
+      $rootScope.$broadcast('hide:loading');
+      $rootScope.showAlert("Warning", "Please, login to Vote");
+    }
+  };
+  $scope.downvotePost = function(post) {
+    $rootScope.$broadcast('show:loading');
+    // Then create the transaction and sign it without broadcasting
+    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+        console.log('Api ready:');
+        $scope.mylogin = new window.steemJS.Login();
+        $scope.mylogin.setRoles(["posting"]);
+        var loginSuccess = $scope.mylogin.checkKeys({
+            accountName: $rootScope.$storage.user.username,    
+            password: $rootScope.$storage.user.password,
+            auths: {
+                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
+            }}
+        );
+        if (loginSuccess) {
+          var tr = new window.steemJS.TransactionBuilder();
+          tr.add_type_operation("vote", {
+              voter: $rootScope.$storage.user.username,
+              author: post.author,
+              permlink: post.permlink,
+              weight: -10000
+          });
+          //var my_pubkeys = $scope.mylogin.getPubKeys();
+          tr.process_transaction($scope.mylogin, null, true);
+        }
+      $rootScope.$broadcast('hide:loading');
+      setTimeout(function() {$scope.refresh();}, 3000);
+    } else {
+      $rootScope.$broadcast('hide:loading');
+      $rootScope.showAlert("Warning", "Please, login to Vote");
+    }
+  };
+  $scope.unvotePost = function(post) {
+    $rootScope.$broadcast('show:loading');
+    // Then create the transaction and sign it without broadcasting
+    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+        console.log('Api ready:');
+        $scope.mylogin = new window.steemJS.Login();
+        $scope.mylogin.setRoles(["posting"]);
+        var loginSuccess = $scope.mylogin.checkKeys({
+            accountName: $rootScope.$storage.user.username,    
+            password: $rootScope.$storage.user.password,
+            auths: {
+                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
+            }}
+        );
+        if (loginSuccess) {
+          var tr = new window.steemJS.TransactionBuilder();
+          tr.add_type_operation("vote", {
+              voter: $rootScope.$storage.user.username,
+              author: post.author,
+              permlink: post.permlink,
+              weight: 0
+          });
+          //var my_pubkeys = $scope.mylogin.getPubKeys();
+          tr.process_transaction($scope.mylogin, null, true);
+        }
+      $rootScope.$broadcast('hide:loading');
+      setTimeout(function() {$scope.refresh();}, 3000);
+    } else {
+      $rootScope.$broadcast('hide:loading');
+      $rootScope.showAlert("Warning", "Please, login to Vote");
+    }
+  };
+  $scope.$watch('profile', function(newValue, oldValue){
+      //console.log('changed');
+      if (newValue) {
+        for (var i = 0; i < newValue.length; i++) {
+          if ($rootScope.$storage.user){
+            for (var j = newValue[i].active_votes.length - 1; j >= 0; j--) {
+              if (newValue[i].active_votes[j].voter === $rootScope.$storage.user.username) {
+                if (newValue[i].active_votes[j].percent > 0) {
+                  newValue[i].upvoted = true;  
+                } else if (newValue[i].active_votes[j].percent < 0) {
+                  newValue[i].downvoted = true;  
+                }
+              }
+            }
+          }
+        }
+      }      
+      if (!$scope.$$phase){
+        $scope.$apply();
+      }
+  }, true);
+
+  $scope.$on('$ionicView.beforeEnter', function(){
+    $scope.refresh = function() {  
+      if (!$scope.active) {
+        $scope.active = "blog";  
+      }
       if ($scope.active != "blog") {
         $scope.rest = "/"+$scope.active;
       } else {
         $scope.rest = "";
       }  
-    }
-    
-    $scope.nonexist = false;
-    
-    (new Steem(localStorage.socketUrl)).getState("/@"+$stateParams.username+$scope.rest, function(err, res){
-      $scope.profile = [];
-      //console.log(res.content);
-      if (Object.keys(res.content).length>0) {
-        for (var property in res.content) {
-          if (res.content.hasOwnProperty(property)) {
-            // do stuff
-            //console.log(res.content[property])
-            $scope.profile.push(res.content[property]);
+      
+      $scope.nonexist = false;
+      
+      (new Steem(localStorage.socketUrl)).getState("/@"+$stateParams.username+$scope.rest, function(err, res){
+        $scope.profile = [];
+        //console.log(res.content);
+        if (Object.keys(res.content).length>0) {
+          for (var property in res.content) {
+            if (res.content.hasOwnProperty(property)) {
+              // do stuff
+              //console.log(res.content[property])
+              $scope.profile.push(res.content[property]);
+            }
           }
+          $scope.nonexist = false;
+          if(!$scope.$$phase){
+            $scope.$apply();
+          }
+        } else {
+          $scope.nonexist = true;
         }
-        $scope.nonexist = false;
-        if(!$scope.$$phase){
-          $scope.$apply();
-        }
-      } else {
-        $scope.nonexist = true;
-      }
-    });  
+      });
+    };  
+    $scope.refresh();
   });
    $scope.change = function(type){
     $scope.profile = [];
