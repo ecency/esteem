@@ -21,21 +21,21 @@
       <div ng-if="!$root.$storage.user">
         <center>
           <div class="item-myavater">
-            <img ng-src="img/logo.png" width="80">
+            <img ng-src="img/logo.png" width="80" />
           </div>
         </center>
       </div>
       <div ng-if="$root.$storage.user">
-      <center>
-        <div class="item-myavatar" ng-if="$root.$storage.user">
-          <identicon username='$root.$storage.user.username' size='80'></identicon>
-        </div>
-        <h4>@{{$root.$storage.user.username}}&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation|number:0}}</div></h4>
-        <p ng-click="showExtra = !showExtra" class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}} <i class="icon pull-right gray" ng-class="{'ion-arrow-down-b':!showExtra, 'ion-arrow-up-b':showExtra}"></i></p>
-      </center>
+        <center>
+          <div class="item-myavatar" ng-if="$root.$storage.user">
+            <identicon username='$root.$storage.user.username' size='80'></identicon>
+          </div>
+          <h4>@{{$root.$storage.user.username}}&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation|number:0}}</div></h4>
+          <div ng-click="showMeExtra()" class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}} <i class="icon pull-right gray" ng-class="{'ion-arrow-down-b':!showExtra, 'ion-arrow-up-b':showExtra}"></i></div>
+        </center>
       </div>
-      <div ng-if="showExtra && $root.$storage.user">
-        <ion-list class="">
+      <div ng-if="showExtra">
+        <ion-list>
           <ion-item menu-close href="#/app/profile/{{$root.$storage.user.username}}" class="item-icon-left" ng-if="$root.$storage.user">
             <i class="icon ion-person"></i>
             Profile
@@ -50,7 +50,6 @@
           </ion-item>
         </ion-list>
       </div>
-
       <ion-list>
         <ion-item menu-close ng-click="login()" class="item-icon-left" ng-if="!$root.$storage.user">
           <i class="icon ion-log-in"></i>
@@ -72,9 +71,6 @@
           <i class="icon ion-android-settings"></i>
           Settings
         </ion-item>
-        <!--<ion-item menu-close ng-click="logout()" ng-if="$root.$storage.user">
-          Logout @{{$root.$storage.user.username}}
-        </ion-item>-->
       </ion-list>
     </ion-content>
   </ion-side-menu>

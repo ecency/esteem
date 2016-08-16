@@ -130,9 +130,15 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   };
   $scope.submitStory = function(){
     $rootScope.showAlert("Info", "In Development, coming soon!");
-    
+
   };
-  
+  $scope.showMeExtra = function() {
+    if ($scope.showExtra) {
+      $scope.showExtra = false;
+    } else {
+      $scope.showExtra = true;
+    }
+  }
   $scope.search = function() {
     console.log('Doing search', $scope.data.search);
     $scope.data.search = angular.lowercase($scope.data.search);
@@ -945,10 +951,17 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope) {
   $scope.$on('$ionicView.beforeEnter', function(){
     if (!$scope.active) {
       $scope.active = "blog";  
+    } else {
+      if ($scope.active != "blog") {
+        $scope.rest = "/"+$scope.active;
+      } else {
+        $scope.rest = "";
+      }  
     }
+    
     $scope.nonexist = false;
     
-    (new Steem(localStorage.socketUrl)).getState("/@"+$stateParams.username, function(err, res){
+    (new Steem(localStorage.socketUrl)).getState("/@"+$stateParams.username+$scope.rest, function(err, res){
       $scope.profile = [];
       //console.log(res.content);
       if (Object.keys(res.content).length>0) {
