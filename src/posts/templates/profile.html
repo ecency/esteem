@@ -1,8 +1,18 @@
-<ion-view view-title="Profile @{{username}}">
-  <div class="bar bar-subheader">
-    <h2 class="title capital">{{active}}</h2>
+<ion-view view-title="Profile @{{username}}" hide-nav-bar="true">
+  <div class="bar bar-subheader mysubheader bar-positive">
+    <!--<button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>-->
+    <div ng-if="$root.$storage.user">
+      <center>
+        <div class="item-myavatar" ng-if="$root.$storage.user" ng-click="show()">
+          <ng-letter-avatar data="{{$root.$storage.user.username}}" ng-if="!$root.$storage.user.json_metadata.profilePicUrl"></ng-letter-avatar>
+          <img ng-src="{{$root.$storage.user.json_metadata.profilePicUrl}}" ng-if="$root.$storage.user.json_metadata.profilePicUrl" />
+        </div>
+        <h4><span class="light">@{{$root.$storage.user.username}}</span>&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation|number:0}}</div></h4>
+        <div ng-click="showMeExtra()" class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;posts&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}}&nbsp;voting power</div>
+      </center>
+    </div>
   </div>
-  <ion-content class="has-footer has-subheader">
+  <ion-content class="has-footer has-mysubheader" has-header="false">
         <div class="box blue" ng-if="active!='wallet'||active!='permissions'">
           <ion-list>
             <!--<div ng-repeat="(key, playlist) in profile" class="item wrap" ng-click="open(playlist)">
@@ -18,12 +28,6 @@
                 </div>
                 <div class="postdetails"><i class="icon ion-android-time"></i>&nbsp;{{playlist.last_update|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i>&nbsp;{{playlist.author}}&nbsp;<div class="reputation">{{playlist.author_reputation|reputation|number:0}}</div></div>
                 </div>
-                <!--<p>
-                  <a href="#" class="subdued"><i class="icon" ng-class="{'ion-android-arrow-dropup-circle positive':playlist.upvoted, 'ion-android-arrow-dropup-circle':!playlist.upvoted}"></i>&nbsp;{{playlist.net_votes}}</a>
-                  <a href="#" class="subdued"><i class="icon" ng-class="{'ion-android-arrow-dropdown-circle positive':playlist.downvoted, 'ion-android-arrow-dropdown-circle':!playlist.downvoted}"></i>&nbsp;{{playlist.active_votes.length-playlist.net_votes}}</a>
-                  <span class="pull-right"><a href="#" class="subdued"><i class="ion-social-usd"></i>&nbsp;{{playlist.total_pending_payout_value.slice(0,-4)|number}}</a>|
-                  <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{playlist.children}}</a></span>
-                </p>-->
                 <div class="row gray">
                   <div class="col col-33">
                   <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost(playlist)" ng-if="!playlist.upvoted"></i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost(playlist)" ng-if="playlist.upvoted"></i>&nbsp;{{playlist.net_votes}}&nbsp;
@@ -141,11 +145,11 @@
   </ion-content>
   <div class="bar bar-footer">
     <div class="button-bar">
-      <a class="button button-large button-royal icon ion-ios-heart" ng-class="{'active':active=='feed'}" ng-click="change('feed')">&nbsp;Feeds</a>
-      <a class="button button-large button-royal icon ion-compose" ng-class="{'active':active=='blog'}" ng-click="change('blog')">&nbsp;Blog</a>
-      <a class="button button-royal icon ion-document-text" ng-class="{'active':active=='posts'}" ng-click="change('posts')">&nbsp;Posts</a>
-      <a class="button button-royal icon ion-chatbubbles" ng-class="{'active':active=='recent-replies'}" ng-click="change('recent-replies')">&nbsp;Replies</a>
-      <a class="button button-royal icon ion-card" ng-class="{'active':active=='transfers'}"  ng-click="change('transfers')">&nbsp;Wallet</a>
+      <a class="button button-large button-positive icon ion-ios-heart" ng-class="{'active':active=='feed'}" ng-click="change('feed')">&nbsp;Feeds</a>
+      <a class="button button-large button-positive icon ion-compose" ng-class="{'active':active=='blog'}" ng-click="change('blog')">&nbsp;Blog</a>
+      <a class="button button-positive icon ion-document-text" ng-class="{'active':active=='posts'}" ng-click="change('posts')">&nbsp;Posts</a>
+      <a class="button button-positive icon ion-chatbubbles" ng-class="{'active':active=='recent-replies'}" ng-click="change('recent-replies')">&nbsp;Replies</a>
+      <a class="button button-positive icon ion-card" ng-class="{'active':active=='transfers'}"  ng-click="change('transfers')">&nbsp;Wallet</a>
       <!--<a class="button button-royal icon ion-lock-combination" ng-class="{'active':active=='permissions'}" ng-click="change('permissions')">Keys</a>-->
     </div>
   </div>

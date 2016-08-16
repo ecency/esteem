@@ -907,7 +907,7 @@ Renderer.prototype.link = function(href, title, text) {
 
   var out = ""
   if (href.match(imgs)){
-    out = href.replace(imgs, '<img src="$1" style="max-width:100%;height:auto;"/>');  
+    out = href.replace(imgs, '<img src="$1" style="max-width:100%;max-height:auto;"/>');  
   } else {
     if (href.match(youtube)) {
       var YouTube = mediaParseIdFromUrl('youtube', href);
