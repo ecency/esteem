@@ -13,35 +13,63 @@
   </ion-side-menu-content>
 
   <ion-side-menu side="left">
-    <ion-header-bar class="bar-positive" ng-if="!$root.$storage.user">
+    <!--<ion-header-bar class="bar-positive" ng-if="!$root.$storage.user">
       <h1 class="title center">eSteem</h1>
-    </ion-header-bar>
-    <ion-content ng-class="{'has-header':!$root.$storage.user}">
-      <ion-list>
-        <div class="item item-avatar" ng-if="$root.$storage.user">
-          <identicon username='$root.$storage.user.username' size='40'></identicon>
-          <h2>@{{$root.$storage.user.username}}&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation|number:0}}</div></h2>
-          <p><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}} <i class="icon ion-power pull-right dark" menu-close ng-click="logout()"></i></p>
+    </ion-header-bar>-->
+    <ion-content>
+      <br>
+      <div ng-if="!$root.$storage.user">
+        <center>
+          <div class="item-myavater">
+            <img ng-src="img/logo.png" width="80">
+          </div>
+        </center>
+      </div>
+      <div ng-if="$root.$storage.user">
+      <center>
+        <div class="item-myavatar" ng-if="$root.$storage.user">
+          <identicon username='$root.$storage.user.username' size='80'></identicon>
         </div>
-        <ion-item menu-close href="#/app/posts">
-          Home
-        </ion-item>
-        <ion-item menu-close ng-click="login()" ng-if="!$root.$storage.user">
+        <h4>@{{$root.$storage.user.username}}&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation|number:0}}</div></h4>
+        <p ng-click="showExtra = !showExtra" class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}} <i class="icon pull-right gray" ng-class="{'ion-arrow-down-b':!showExtra, 'ion-arrow-up-b':showExtra}"></i></p>
+      </center>
+      </div>
+      <div ng-if="showExtra && $root.$storage.user">
+        <ion-list class="">
+          <ion-item menu-close href="#/app/profile/{{$root.$storage.user.username}}" class="item-icon-left" ng-if="$root.$storage.user">
+            <i class="icon ion-person"></i>
+            Profile
+          </ion-item>
+          <ion-item menu-close href="#/app/follow" class="item-icon-left" ng-if="$root.$storage.user">
+            <i class="icon ion-person-stalker"></i>
+            Follow
+          </ion-item>
+          <ion-item menu-close ng-click="logout()" class="item-icon-left" ng-if="$root.$storage.user">
+            <i class="icon ion-log-out"></i>
+            Logout
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <ion-list>
+        <ion-item menu-close ng-click="login()" class="item-icon-left" ng-if="!$root.$storage.user">
+          <i class="icon ion-log-in"></i>
           Login
         </ion-item>
-        <ion-item menu-close href="#/app/profile/{{$root.$storage.user.username}}" ng-if="$root.$storage.user">
-          Profile
+        <ion-item menu-close href="#/app/posts" class="item-icon-left">
+          <i class="icon ion-home"></i>
+          Home
         </ion-item>
-        <ion-item menu-close href="#/app/follow" ng-if="$root.$storage.user">
-          Follow
-        </ion-item>
-        <ion-item menu-close href="#/app/send" ng-if="$root.$storage.user">
+        <ion-item menu-close href="#/app/send" class="item-icon-left" ng-if="$root.$storage.user">
+          <i class="icon ion-android-send"></i>
           Transfer
         </ion-item>
-        <ion-item menu-close href="#/app/exchange/{{$root.$storage.user.username}}" ng-if="$root.$storage.user">
+        <ion-item menu-close href="#/app/exchange/{{$root.$storage.user.username}}" class="item-icon-left" ng-if="$root.$storage.user">
+          <i class="icon ion-arrow-swap"></i>
           Market
         </ion-item>
-        <ion-item menu-close href="#/app/settings">
+        <ion-item menu-close href="#/app/settings" class="item-icon-left">
+          <i class="icon ion-android-settings"></i>
           Settings
         </ion-item>
         <!--<ion-item menu-close ng-click="logout()" ng-if="$root.$storage.user">

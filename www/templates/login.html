@@ -4,15 +4,16 @@
     <button class="button button-clear button-primary button-icon ion-close-round" ng-click="closeLogin()"></button>
   </ion-header-bar>
   <ion-content>
+    <center><img src="img/logo.png"></center>
     <form ng-submit="doLogin()">
       <div class="list">
         <label class="item item-input">
           <span class="input-label">Username</span>
-          <input type="text" ng-model="loginData.username" ng-change="changeUsername()">
+          <input type="text" ng-model="loginData.username" placeholder="username" ng-change="changeUsername()">
         </label>
         <label class="item item-input">
           <span class="input-label">Password</span>
-          <input type="password" ng-model="loginData.password">
+          <input type="password" placeholder="password" ng-model="loginData.password">
         </label>
         <p class="error padding">Note: Username and Password are kept locally on the device, take security measures if you leave app while logged in. Logout will remove your credentials!</p>
         <label class="item">

@@ -21,11 +21,18 @@ font-family: 'Source Serif Pro', serif; //'Gotham Rounded Book'!important;
 .item.comments .nowrap {white-space: nowrap!important;}
 .item.comments h5 {white-space: nowrap!important;}
 
+.item-icon-left i.icon {
+  font-size: 20px!important;
+}
 hr {
 	color: #ddd;
 }
 .padding {
 	padding: 10px;
+}
+.leftpadding {
+  padding-left: 10px;
+  margin-left: 10px;
 }
 .pull-right {
 	float: right;
@@ -40,6 +47,9 @@ hr {
 .footinfo {
 	font-size: 3.5vw;
 	width: 100%;
+}
+.postdetails {
+  font-size: 14px;
 }
 .pane img {
 	max-width: 100%;
@@ -192,7 +202,7 @@ hr {
 	text-align: right;
 }
 .tcenter {
-	text-align: center;
+	text-align: center!important;
 }
 .item .row {
 	padding: 0;
@@ -224,45 +234,10 @@ hr {
 .stitle.row, .stitle.row .col {
 	padding: 0px;
 }
-.item .ac-container {
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-  -ms-backface-visibility: hidden;
-  -o-backface-visibility: hidden;
-  backface-visibility: hidden;
-  -webkit-transform: translate3d(0, 0, 0);
-  -moz-transform: translate3d(0, 0, 0);
-  -ms-transform: translate3d(0, 0, 0);
-  -o-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
-  z-index: 1999!important;
-}
-.ac-container .ac-menu {
-  border: 1px solid #ccc;
-  list-style: none;
-  padding: 0;
-  background-color: white;
-  box-shadow: 0 3px 7px 0px rgba(0, 0, 0, 0.15);
-  margin: 0;
-}
-.ac-container .ac-menu .ac-menu-item {
-  border-bottom: 1px dotted #ccc;
-  line-height: 35px;
-  margin: 0;
-}
-.ac-container .ac-menu .ac-menu-item:last-child {
-  border-bottom: 0;
-}
-.ac-container .ac-menu .ac-menu-item:hover {
-  background-color: #e0eaff;
-}
-.ac-container .ac-menu a {
-  padding-left: 5px;
-  display: block;
-  color: inherit;
-  text-decoration: none;
-}
-.ac-container .ac-menu .ac-state-focus {
-  outline: none;
-  background-color: #e0eaff;
+.item-myavatar > img:first-child {
+  max-width: 80px;
+  max-height: 80px;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%; 
 }

@@ -13,11 +13,8 @@
     	<div ng-repeat="d in data">
 	    	<div class="item">
 			    <div ng-click="open(d)">
-			    <div class="wrap">
-			    	<span class="bold h4">{{d.title}}</span>
-			    </div>
-			    <br>
-			    <div class="row twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.last_update|timeago}}&nbsp;by&nbsp;<b>{{d.author}}&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div></b></div></div>
+			    <p><h2>{{d.title}}</h2></p>
+			    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.last_update|timeago}}&nbsp;by&nbsp;<b>{{d.author}}&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div></b></div></div>
 			    </div>
 			    <div class="row">
 			    <div class="col">
@@ -36,7 +33,6 @@
 	<div class="list card" ng-if="$root.$storage.view=='card' && data.length>0">
 		<!--Card View-->
 		<div ng-repeat="ds in data">
-			<hr>
 			<div class="item" ng-click="open(ds)"><!-- item-avatar">-->
 			    <!--<img src="mcfly.jpg">-->
 			    <h2>{{ds.title}}</h2>
@@ -58,6 +54,8 @@
 			      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{ds.children}}</a>
 			      </div>
 			      </div>
+			</div>
+			<div class="item-divider">
 			</div>
 		</div>
 	</div>

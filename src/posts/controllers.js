@@ -130,6 +130,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   };
   $scope.submitStory = function(){
     $rootScope.showAlert("Info", "In Development, coming soon!");
+    
   };
   
   $scope.search = function() {
@@ -485,6 +486,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
     $rootScope.$broadcast('show:loading');
     $scope.refresh();
+    $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
   }
   function arrayObjectIndexOf(myArray, searchTerm, property) {
     for(var i = 0, len = myArray.length; i < len; i++) {
@@ -573,7 +575,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   };
   
   $scope.$on('$ionicView.afterEnter', function(){
-    $scope.limit = 5;
+    $scope.limit = 7;
     $rootScope.$broadcast('show:loading');
     console.log('enter ');
     if (!$rootScope.$storage.socket) {
@@ -606,7 +608,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         $scope.fetchPosts(null, $scope.limit, null);  
       });
     });
-    $ionicScrollDelegate.scrollTop();  
+    $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop(); 
   });
   
   $scope.$on('$ionicView.beforeEnter', function(){
