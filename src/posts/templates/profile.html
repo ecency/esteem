@@ -29,7 +29,7 @@
                 <div class="postdetails"><i class="icon ion-android-time"></i>&nbsp;{{playlist.last_update|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i>&nbsp;{{playlist.author}}&nbsp;<div class="reputation">{{playlist.author_reputation|reputation|number:0}}</div></div>
                 </div>
                 <div class="row gray">
-                  <div class="col col-33">
+                  <div class="col col-33"><ion-spinner ng-if="playlist.invoting"></ion-spinner>
                   <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost(playlist)" ng-if="!playlist.upvoted"></i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost(playlist)" ng-if="playlist.upvoted"></i>&nbsp;{{playlist.net_votes}}&nbsp;
                    <i class="icon ion-android-arrow-dropdown-circle" ng-click="downvotePost(playlist)" ng-if="!playlist.downvoted"></i><i class="icon ion-android-arrow-dropdown-circle positive" ng-click="unvotePost(playlist)" ng-if="playlist.downvoted"></i></div>
                   <div class="col col-33"><i class="ion-social-usd"></i>&nbsp;{{playlist.total_pending_payout_value.split(" ")[0]|number}}</div>

@@ -1003,7 +1003,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 json_metadata: JSON.stringify(update)      
               });
               tr.process_transaction($scope.mylogin, null, true);
-              setTimeout(function() {$scope.refreshUserData()}, 1000);
+              setTimeout(function() {$scope.refreshUserData()}, 2000);
             }
             $rootScope.$broadcast('hide:loading');
           } else {
@@ -1076,7 +1076,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 json_metadata: JSON.stringify(update)      
               });
               tr.process_transaction($scope.mylogin, null, true);
-              setTimeout(function() {$scope.refreshUserData()}, 1000);
+              setTimeout(function() {$scope.refreshUserData()}, 2000);
             }
           $rootScope.$broadcast('hide:loading');
         } else {
@@ -1122,7 +1122,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 json_metadata: JSON.stringify(update)      
               });
               tr.process_transaction($scope.mylogin, null, true);
-              setTimeout(function() {$scope.refreshUserData()}, 1000);
+              setTimeout(function() {$scope.refreshUserData()}, 2000);
             }
             $rootScope.$broadcast('hide:loading');
           } else {
@@ -1136,6 +1136,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   };
 
   $scope.upvotePost = function(post) {
+    post.invoting = true;
     $rootScope.$broadcast('show:loading');
     // Then create the transaction and sign it without broadcasting
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
@@ -1162,13 +1163,14 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           tr.process_transaction($scope.mylogin, null, true);
         } 
       $rootScope.$broadcast('hide:loading');
-      setTimeout(function() {$scope.refresh();}, 3000);
+      setTimeout(function() {post.invoting = false;$scope.refresh();}, 2000);
     } else {
       $rootScope.$broadcast('hide:loading');
       $rootScope.showAlert("Warning", "Please, login to Vote");
     }
   };
   $scope.downvotePost = function(post) {
+    post.invoting = true;
     $rootScope.$broadcast('show:loading');
     // Then create the transaction and sign it without broadcasting
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
@@ -1194,13 +1196,14 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           tr.process_transaction($scope.mylogin, null, true);
         }
       $rootScope.$broadcast('hide:loading');
-      setTimeout(function() {$scope.refresh();}, 3000);
+      setTimeout(function() {post.invoting = false;$scope.refresh();}, 2000);
     } else {
       $rootScope.$broadcast('hide:loading');
       $rootScope.showAlert("Warning", "Please, login to Vote");
     }
   };
   $scope.unvotePost = function(post) {
+    post.invoting = true;
     $rootScope.$broadcast('show:loading');
     // Then create the transaction and sign it without broadcasting
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
@@ -1226,7 +1229,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           tr.process_transaction($scope.mylogin, null, true);
         }
       $rootScope.$broadcast('hide:loading');
-      setTimeout(function() {$scope.refresh();}, 3000);
+      setTimeout(function() {post.invoting = false;$scope.refresh();}, 2000);
     } else {
       $rootScope.$broadcast('hide:loading');
       $rootScope.showAlert("Warning", "Please, login to Vote");
