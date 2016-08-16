@@ -200,11 +200,13 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   };
 
   $scope.changeProfileInfo = function() {
-    $rootScope.showAlert("info", "In Development");
+    //$rootScope.showAlert("info", "In Development");
 
     var options = {
       quality: 50,
-      destinationType: Camera.DestinationType.DATA_URL,
+      //destinationType: Camera.DestinationType.DATA_URL,
+      //sourceType: Camera.PictureSourceType.CAMERA,
+      destinationType: Camera.DestinationType.FILE_URI,
       sourceType: Camera.PictureSourceType.CAMERA,
       allowEdit: true,
       encodingType: Camera.EncodingType.JPEG,
@@ -212,7 +214,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       targetHeight: 200,
       popoverOptions: CameraPopoverOptions,
       saveToPhotoAlbum: false,
-    correctOrientation:true
+      correctOrientation:true
     };
 
     $cordovaCamera.getPicture(options).then(function(imageData) {
@@ -586,7 +588,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $rootScope.$storage.socket = localStorage.socketUrl;
     }
     if (!$rootScope.$storage.view) {
-      $rootScope.$storage.view = 'compact';
+      $rootScope.$storage.view = 'card';
     }
     if (!$rootScope.$storage.filter) {
       $rootScope.$storage.filter = "trending";
