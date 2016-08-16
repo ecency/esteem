@@ -27,8 +27,8 @@
       </div>
       <div ng-if="$root.$storage.user">
         <center>
-          <div class="item-myavatar" ng-if="$root.$storage.user">
-            <identicon username='$root.$storage.user.username' size='80'></identicon>
+          <div class="item-myavatar" ng-if="$root.$storage.user" ng-click="changeProfileInfo()">
+            <identicon username='$root.$storage.user.username' ng-if="!$root.$storage.user.profilePhoto" size='80'></identicon>
           </div>
           <h4>@{{$root.$storage.user.username}}&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation|number:0}}</div></h4>
           <div ng-click="showMeExtra()" class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}} <i class="icon pull-right gray" ng-class="{'ion-arrow-down-b':!showExtra, 'ion-arrow-up-b':showExtra}"></i></div>

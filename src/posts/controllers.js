@@ -1,7 +1,7 @@
 module.exports = function (app) {
 //angular.module('steem.controllers', [])
 
-app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing) {
+app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera) {
 
   $scope.loginData = {};  
 
@@ -199,43 +199,41 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $state.go("app.profile", {username: xy});
   };
 
+  $scope.changeProfileInfo = function() {
+    $rootScope.showAlert("info", "In Development");
 
+    var options = {
+      quality: 50,
+      destinationType: Camera.DestinationType.DATA_URL,
+      sourceType: Camera.PictureSourceType.CAMERA,
+      allowEdit: true,
+      encodingType: Camera.EncodingType.JPEG,
+      targetWidth: 200,
+      targetHeight: 200,
+      popoverOptions: CameraPopoverOptions,
+      saveToPhotoAlbum: false,
+    correctOrientation:true
+    };
 
-  /*$scope.$on('$ionicView.loaded', function(){
-    $scope.limit = 5;
-    $rootScope.$broadcast('show:loading');
-    window.Api.initPromise.then(function(response) {
-      console.log("Api ready:", response);
-      window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
-        console.log("get_dynamic_global_properties "+response.head_block_number);
-
-        if ($rootScope.$storage.user) {
-          $scope.mylogin = new window.steemJS.Login();
-          $scope.mylogin.setRoles(["posting"]);
-          var loginSuccess = $scope.mylogin.checkKeys({
-              accountName: $rootScope.$storage.user.username,    
-              password: $rootScope.$storage.user.password,
-              auths: {
-                  posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-              }}
-          );
-          console.log(loginSuccess);
-          //console.log($scope.mylogin)  
-          if (loginSuccess) {
-              $rootScope.$broadcast('hide:loading');
-              //$scope.fetchPosts(null, $scope.limit, null);
-          } else {
-            $rootScope.$broadcast('hide:loading');
-            //$scope.fetchPosts(null, $scope.limit, null);
-          }
-        }
-        
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+      alert(imageData);
+      ImageUploadService.uploadImage(imageData).then(function(result) {
+        var url = result.secure_url || '';
+        var urlSmall;
+        if(result && result.eager[0]) urlSmall = result.eager[0].secure_url || '';
+        // Do something with the results here.
+        alert(url+" and "+urlSmall);
+        $cordovaCamera.cleanup();
+      },
+      function(err) {
+        // Do something with the error here
+        $cordovaCamera.cleanup();
       });
+    }, function(err) {
+      // error
+      alert('Camera Error');
     });
-    if (window.navigator.splashscreen) {
-      window.navigator.splashscreen.hide();
-    }
-  });*/
+  };
 
 
 })
