@@ -501,7 +501,10 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
     $rootScope.$broadcast('show:loading');
     $scope.refresh();
-    $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
+    setTimeout(function() {
+      $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
+    }, 10);
+    
   }
   function arrayObjectIndexOf(myArray, searchTerm, property) {
     for(var i = 0, len = myArray.length; i < len; i++) {
@@ -623,7 +626,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         $scope.fetchPosts(null, $scope.limit, null);  
       });
     });
-    $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop(); 
+    setTimeout(function() {
+      $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();   
+    }, 10);
   });
   
   $scope.$on('$ionicView.beforeEnter', function(){

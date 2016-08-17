@@ -171,7 +171,13 @@ module.exports = function (app) {
         return angular.element('<div>').append(tree).html(); //trick to have a string representation
       }
     })
-
+    app.filter('hrefToJS', function ($sce, $sanitize) {
+        return function (text) {
+            var regex = /href="([\S]+)"/g;
+            var newString = $sanitize(text).replace(regex, "href=\"#\" onClick=\"window.open('$1', '_blank', 'location=yes')\"");
+            return $sce.trustAsHtml(newString);
+        }
+    });
 	app.directive('qrcode', function($interpolate) {  
 		return {
 		    restrict: 'E',
@@ -210,7 +216,7 @@ module.exports = function (app) {
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
                         <div class="ion-comment--author">{{comment.author}}:</div>\
                         <div class="ion-comment--score"><span class="ion-android-arrow-dropup"></span> {{comment.net_votes || 0}}</div>\
-                        <div class="ion-comment--text" ng-bind-html="comment.body | parseUrl | addTargetBlank"></div>\
+                        <div class="ion-comment--text" ng-bind-html="comment.body | parseUrl | hrefToJS"></div>\
                         <div class="ion-comment--replies">{{comment.children || 0}} replies</div>\
                         <ion-option-button ng-click="upvotePost(comment)"><span class="ion-android-arrow-dropup" style="font-size:30px"></ion-option-button>\
                         <ion-option-button ng-click="downvotePost(comment)"><span class="ion-android-arrow-dropdown" style="font-size:30px"></ion-option-button>\
