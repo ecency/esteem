@@ -22,17 +22,6 @@
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
-    <script>
-        document.onclick = function (e) {
-            e = e ||  window.event;
-            var element = e.target || e.srcElement;
-
-            if (element.tagName == 'A') {
-                window.open(element.href, "_blank", "location=yes");
-                return false; // prevent default action and stop event propagation
-            }
-        };
-    </script>
   </head>
 
   <body ng-app="steem">

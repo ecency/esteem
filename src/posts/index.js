@@ -155,6 +155,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     $rootScope.$on('show:loading', function(event, args){
       console.log('show:loading');
       $ionicLoading.show({
+        noBackdrop : true,
         template: '<ion-spinner></ion-spinner>'
       });
     });

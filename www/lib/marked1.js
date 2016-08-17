@@ -913,7 +913,7 @@ Renderer.prototype.link = function(href, title, text) {
       var YouTube = mediaParseIdFromUrl('youtube', href);
       out = href.replace(youtube, '<iframe width="100%" height="280" src="http://www.youtube.com/embed/' + YouTube + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
     } else {
-      out = '<a href="' + href + '" target="_blank"';
+      out = '<a href="' + href + '"';
       if (title) {
         out += ' title="' + title + '"';
       }
