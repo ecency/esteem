@@ -16,18 +16,23 @@
 
     <script src="lib/steem.js"></script>
     <script src="lib/marked1.js"></script>
-    <script src="lib/qrcode.min.js"></script>
     <script src="js/lib.js"></script>
     <script src="lib/blockies.js"></script>
-    <!--<script src="lib/ionic.threads.js"></script>-->
     <script src="js/index.js"></script>
+
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
+    <script>
+        document.onclick = function (e) {
+            e = e ||  window.event;
+            var element = e.target || e.srcElement;
 
-    <!-- your app's js -->
-    <!--<script src="js/app.js"></script>
-    <script src="js/controllers.js"></script>
-    <script src="js/services.js"></script>-->
+            if (element.tagName == 'A') {
+                window.open(element.href, "_blank", "location=yes");
+                return false; // prevent default action and stop event propagation
+            }
+        };
+    </script>
   </head>
 
   <body ng-app="steem">

@@ -162,5 +162,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       console.log('hide:loading');
       $ionicLoading.hide();
     });
+
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
+      console.log(fromState, toState);
+    });
+
   });
 });

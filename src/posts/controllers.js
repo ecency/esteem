@@ -94,7 +94,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       console.log('refreshUserData');
       if ($rootScope.$storage.user && $rootScope.$storage.user.username) {
         (new Steem(localStorage.socketUrl)).getAccounts([$rootScope.$storage.user.username], function(err, dd) {
-          console.log(dd);
+          //console.log(dd);
           dd = dd[0];
           if (dd.json_metadata) {
             dd.json_metadata = angular.fromJson(dd.json_metadata);
@@ -648,7 +648,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   //$scope.refresh();   
 })
 
-app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval) {
+app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal) {
   //console.log($rootScope.$storage.sitem)
   $scope.post = $rootScope.$storage.sitem;
   $scope.data = {};
@@ -669,10 +669,10 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval)
       if (loginSuccess) {
         var tr = new window.steemJS.TransactionBuilder();
         tr.add_type_operation("comment", {
-          parent_author: xx.author,
-          parent_permlink: xx.permlink,
+          parent_author: $scope.chosen.author,
+          parent_permlink: $scope.chosen.permlink,
           author: $rootScope.$storage.user.username,
-          permlink: xx.permlink,
+          permlink: $scope.chosen.permlink,
           title: "",
           body: $scope.data.comment,
           json_metadata: ""
@@ -680,6 +680,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval)
         //console.log(my_pubkeys);
         tr.process_transaction($scope.mylogin, null, true);
         $scope.data.comment = "";
+        $scope.closeModal();
         $scope.replying = false;
         setTimeout(function() {
           (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
@@ -698,14 +699,34 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval)
     }
   }
 
-  $scope.isreplying = function(xx) {
+  $ionicModal.fromTemplateUrl('templates/reply.html', {
+    scope: $scope  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  $scope.openModal = function(item) {
+    $scope.modal.show();
+  };
+
+  $scope.closeModal = function() {
+    $scope.replying = false;
+    $scope.modal.hide();
+  };
+
+  $scope.isreplying = function(cho, xx) {
     $scope.replying = xx;
+    $scope.chosen = cho;
+    if (xx) {
+      $scope.openModal();
+    } else {
+      $scope.closeModal();
+    }
   }
   
   //$scope.post = {};
   $scope.$on('$ionicView.enter', function(){   
     //$scope.post = $rootScope.$storage.sitem;
-
+    $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
     (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
       //console.log(result);      
       $scope.comments = result;

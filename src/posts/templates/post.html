@@ -9,7 +9,7 @@
 	      <button class="button button-icon button-clear ion-android-share-alt" ng-click="share()"></button>
 	    </ion-nav-buttons>
 	</ion-nav-bar>
-  <ion-content class="padding">
+  <ion-content class="padding" delegate-handle="mainScroll">
   	<p class="title h3">{{$root.$storage.sitem.title}}</p>
   	<div class="stitle row gray"><div class="col"><i class="icon ion-android-time"></i> {{$root.$storage.sitem.last_update|timeago}} by <i class="icon ion-android-person"></i>&nbsp;<b>{{$root.$storage.sitem.author}}</b>&nbsp;<div class="reputation">{{$root.$storage.sitem.author_reputation|reputation|number:0}}</div> in&nbsp;<i class="icon ion-pricetags"></i>&nbsp;{{$root.$storage.sitem.category}}</div></div>
   	<br>
@@ -23,11 +23,7 @@
        <i class="icon ion-android-arrow-dropdown-circle" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted"></i><i class="icon ion-android-arrow-dropdown-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted"></i></div>
       <div class="col col-33"><i class="ion-social-usd"></i>&nbsp;{{$root.$storage.sitem.total_pending_payout_value.split(" ")[0]|number}}</div>
       <div class="col"><i class="icon ion-chatbubbles"></i>&nbsp;{{$root.$storage.sitem.children}}</div>
-      <div class="col" ng-click="isreplying(true)" ng-if="$root.$storage.user.username">Reply</div>
-    </div>
-    <div ng-if="replying">
-      <textarea ng-model="data.comment" placeholder="write comment content here" autofocus rows="3" class="boxsizingBorder"></textarea>
-      <div class="tcenter"><button class="button button-positive button-small" ng-click="reply($root.$storage.sitem)">Post</button> &nbsp; <button class="button button-small" ng-click="isreplying(false)">Cancel</button></div><br>
+      <div class="col" ng-click="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username">Reply</div>
     </div>
     <ion-thread comments="comments"></ion-thread>
   </ion-content>

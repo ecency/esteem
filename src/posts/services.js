@@ -476,8 +476,7 @@ module.exports = function (app) {
                         <ion-option-button ng-click="downvotePost(comment)"><span class="ion-android-arrow-dropdown" style="font-size:30px"></ion-option-button>\
                         <ion-option-button ng-click="replyToComment(comment)"><span class="ion-ios-chatbubble-outline" style="font-size:30px"></ion-option-button>\
                     </ion-item>',
-            controller: function($scope, $rootScope, $state) {
-                $scope.upvoteComment = function() {}
+            controller: function($scope, $rootScope, $state, $ionicModal) {
 
                 $scope.upvotePost = function(post) {
                     $rootScope.$broadcast('show:loading');
@@ -507,6 +506,7 @@ module.exports = function (app) {
                       $rootScope.showAlert("Warning", "Please, login to Vote");
                     }
                   };
+
                   $scope.downvotePost = function(post) {
                     $rootScope.$broadcast('show:loading');
                     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
@@ -535,6 +535,7 @@ module.exports = function (app) {
                       $rootScope.showAlert("Warning", "Please, login to Vote");
                     }
                   };
+
                   $scope.unvotePost = function(post) {
                     $rootScope.$broadcast('show:loading');
                     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
@@ -564,12 +565,79 @@ module.exports = function (app) {
                       $rootScope.showAlert("Warning", "Please, login to Vote");
                     }
                   };
+                  $scope.data={};
+                $ionicModal.fromTemplateUrl('templates/reply.html', {
+                    scope: $scope  }).then(function(modal) {
+                    $scope.cmodal = modal;
+                  });
 
+                  $scope.openModal = function(item) {
+                    $scope.cmodal.show();
+                  };
+
+                  $scope.closeModal = function() {
+                    $scope.replying = false;
+                    $scope.cmodal.hide();
+                  };
+
+                  $scope.isreplying = function(cho, xx) {
+                    $scope.replying = xx;
+                    $scope.chosen = cho;
+                    if (xx) {
+                      $scope.openModal();
+                    } else {
+                      $scope.closeModal();
+                    }
+                  }
+
+                  $scope.reply = function (xx) {
+                    $rootScope.$broadcast('show:loading');
+                    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+                      $scope.mylogin = new window.steemJS.Login();
+                      $scope.mylogin.setRoles(["posting"]);
+                      var loginSuccess = $scope.mylogin.checkKeys({
+                          accountName: $rootScope.$storage.user.username,    
+                          password: $rootScope.$storage.user.password,
+                          auths: {
+                              posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
+                          }}
+                      );
+                      if (loginSuccess) {
+                        var tr = new window.steemJS.TransactionBuilder();
+                        tr.add_type_operation("comment", {
+                          parent_author: $scope.chosen.author,
+                          parent_permlink: $scope.chosen.permlink,
+                          author: $rootScope.$storage.user.username,
+                          permlink: $scope.chosen.permlink,
+                          title: "",
+                          body: $scope.data.comment,
+                          json_metadata: ""
+                        });
+                        //console.log(my_pubkeys);
+                        tr.process_transaction($scope.mylogin, null, true);
+                        $scope.data.comment = "";
+                        $scope.closecModal();
+                        $scope.replying = false;
+                        setTimeout(function() {
+                          (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
+                            //console.log(result);      
+                            $scope.comments = result;
+                            if (!$scope.$$phase) {
+                              $scope.$apply();
+                            }
+                          });
+                        }, 1000);
+                      } 
+                      $rootScope.$broadcast('hide:loading');
+                    } else {
+                      $rootScope.$broadcast('hide:loading');
+                      $rootScope.showAlert("Warning", "Please, login to Comment");
+                    }
+                  }
                 $scope.replyToComment = function(comment) {
                     console.log('reply to comment')
-                    $rootScope.$storage.sitem = comment;
-                    //console.log(item);
-                    $state.go('app.single');
+                    //$rootScope.$storage.sitem = comment;
+                    $scope.isreplying(comment, true);
                 }
             }
         }

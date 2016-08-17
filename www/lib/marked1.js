@@ -907,13 +907,13 @@ Renderer.prototype.link = function(href, title, text) {
 
   var out = ""
   if (href.match(imgs)){
-    out = href.replace(imgs, '<img src="$1" style="max-width:100%;max-height:auto;"/>');  
+    out = href.replace(imgs, '<img src="$1" class="postimg" />');  
   } else {
     if (href.match(youtube)) {
       var YouTube = mediaParseIdFromUrl('youtube', href);
       out = href.replace(youtube, '<iframe width="100%" height="280" src="http://www.youtube.com/embed/' + YouTube + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
     } else {
-      out = '<a href="' + href + '"';
+      out = '<a href="' + href + '" target="_blank"';
       if (title) {
         out += ' title="' + title + '"';
       }
