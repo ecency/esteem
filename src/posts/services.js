@@ -321,7 +321,7 @@ module.exports = function (app) {
 
                   $scope.isreplying = function(cho, xx) {
                     $scope.replying = xx;
-                    $scope.chosen = cho;
+                    $scope.post = cho;
                     if (xx) {
                       $scope.openModal();
                     } else {
@@ -344,12 +344,12 @@ module.exports = function (app) {
                       if (loginSuccess) {
                         var tr = new window.steemJS.TransactionBuilder();
                         var timeformat = (new Date()).getFullYear()+(new Date()).getMonth()+(new Date()).getDate()+"t"+(new Date()).getHours()+(new Date()).getMinutes()+(new Date()).getSeconds()+(new Date()).getMilliseconds()+"z";
-                        var json = {tags: JSON.parse($scope.chosen.json_metadata).tags};
+                        var json = {tags: JSON.parse($scope.post.json_metadata).tags};
                         tr.add_type_operation("comment", {
-                          parent_author: $scope.chosen.author,
-                          parent_permlink: $scope.chosen.permlink,
+                          parent_author: $scope.post.author,
+                          parent_permlink: $scope.post.permlink,
                           author: $rootScope.$storage.user.username,
-                          permlink: "re-"+$scope.chosen.author+"-"+$scope.chosen.permlink+"-"+timeformat,
+                          permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink+"-"+timeformat,
                           title: "",
                           body: $scope.data.comment,
                           json_metadata: JSON.stringify(json)

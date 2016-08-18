@@ -1,13 +1,13 @@
 <ion-modal-view>
   <ion-header-bar class="bar bar-header bar-positive">
     <button class="button button-clear button-icon ion-arrow-left-c" ng-click="closeModal()"></button>
-    <h1 class="title">Reply to {{chosen.author}}</h1>
+    <h1 class="title">Reply to @{{post.author}}</h1>
     <button class="button button-positive button-primary" ng-click="reply()">POST</button>
   </ion-header-bar>
   <ion-content class="padding">
-
       <textarea ng-model="data.comment" placeholder="write comment content here" autofocus rows="3" class="boxsizingBorder"></textarea>
       <hr>
+      <p>Preview</p>
       <div ng-if="data.comment" ng-bind-html="data.comment|parseUrl">
 
       </div>
