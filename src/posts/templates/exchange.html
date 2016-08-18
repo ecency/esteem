@@ -33,16 +33,13 @@
           <div class="col">Price</div>
           <div class="col">Amount</div>
           <div class="col">Total</div>
-          <div class="col">Type</div>
         </div>
         <div class="row" ng-repeat="(key, f) in openorders">
           <div class="col">{{f.real_price|number:4}}</div>
           <div class="col" ng-if="f.seller==$root.$storage.user.username">{{f.sell_price.quote}}</div>
           <div class="col" ng-if="f.seller==$root.$storage.user.username">{{f.sell_price.base}}</div>
-          <div class="col" ng-if="f.seller==$root.$storage.user.username">Sell</div>
           <div class="col" ng-if="f.buyer==$root.$storage.user.username">{{f.buy_price.quote}}</div>
           <div class="col" ng-if="f.buyer==$root.$storage.user.username">{{f.buy_price.base}}</div>
-          <div class="col" ng-if="f.buyer==$root.$storage.user.username">Buy</div>
         </div>
       </div>
     </div>

@@ -166,7 +166,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
       console.log("from "+fromState.name+" to "+toState.name);
+      window.Api.initPromise.then(function(response) {
+        console.log("Api ready state change:", response);
+      });
     });
+
 
   });
 });

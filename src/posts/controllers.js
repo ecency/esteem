@@ -517,14 +517,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         }
         for (var i = 0; i < newValue.length; i++) {
           if ($rootScope.$storage.user){
-            /*var ind = arrayObjectIndexOf(newValue[i].active_votes, $rootScope.$storage.user.username, "voter");
-            if (ind > -1){
-              if (newValue[i].active_votes[ind].percent > 0) {
-                newValue[i].upvoted = true;  
-              } else if (newValue[i].active_votes[ind].percent < 0) {
-                newValue[i].downvoted = true;  
-              }
-            }*/
             for (var j = newValue[i].active_votes.length - 1; j >= 0; j--) {
               if (newValue[i].active_votes[j].voter === $rootScope.$storage.user.username) {
                 if (newValue[i].active_votes[j].percent > 0) {
