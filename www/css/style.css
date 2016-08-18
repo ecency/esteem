@@ -179,11 +179,22 @@ hr {
   width: 16px;
   height: 16px; 
 }
-img {
-  max-width: 100%;
-  display: block;
-  max-height: 50vh;
+
+@media only screen and (min-device-width:480px) { 
+  img {
+    max-width: 100%;
+    display: block;
+    max-height: 50vh;
+  }
 }
+@media only screen and (min-device-width:768px) { 
+  img {
+    max-width: 100%;
+    display: block;
+    max-height: 80vh;
+  }
+}
+
 .ion-comment--container {
   background-color: #f8f8f8;
 }

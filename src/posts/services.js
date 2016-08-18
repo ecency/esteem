@@ -164,17 +164,10 @@ module.exports = function (app) {
 		}
 	})
     
-    app.filter('addTargetBlank', function(){
-      return function(x) {
-        var tree = angular.element('<div>'+x+'</div>');//defensively wrap in a div to avoid 'invalid html' exception
-        tree.find('a').attr('target', '_system'); //manipulate the parse tree
-        return angular.element('<div>').append(tree).html(); //trick to have a string representation
-      }
-    })
     app.filter('hrefToJS', function ($sce, $sanitize) {
         return function (text) {
             var regex = /href="([\S]+)"/g;
-            var newString = $sanitize(text).replace(regex, "href=\"#\" onClick=\"window.open('$1', '_blank', 'location=yes')\"");
+            var newString = $sanitize(text).replace(regex, "href onClick=\"window.open('$1', '_blank', 'location=yes');return false;\"");
             return $sce.trustAsHtml(newString);
         }
     });
