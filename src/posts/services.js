@@ -357,7 +357,7 @@ module.exports = function (app) {
                         //console.log(my_pubkeys);
                         tr.process_transaction($scope.mylogin, null, true);
                         $scope.data.comment = "";
-                        $scope.closecModal();
+                        $scope.closeModal();
                         $scope.replying = false;
                         setTimeout(function() {
                           (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
