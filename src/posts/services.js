@@ -207,10 +207,10 @@ module.exports = function (app) {
                 comment: '='
             },
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
-                        <div class="ion-comment--author">{{comment.author}}:</div>\
-                        <div class="ion-comment--score"><span class="ion-android-arrow-dropup"></span> {{comment.net_votes || 0}}</div>\
+                        <div class="ion-comment--author">{{comment.author}}&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.last_update|timeago}}</div>\
+                        <div class="ion-comment--score"><i class="icon ion-social-usd"></i> {{comment.total_pending_payout_value.split(" ")[0]|number}}</div>\
                         <div class="ion-comment--text" ng-bind-html="comment.body | parseUrl | hrefToJS"></div>\
-                        <div class="ion-comment--replies">{{comment.children || 0}} replies</div>\
+                        <div class="ion-comment--replies">{{comment.net_votes || 0}} votes, {{comment.children || 0}} replies</div>\
                         <ion-option-button ng-click="upvotePost(comment)"><span class="ion-android-arrow-dropup" style="font-size:30px"></ion-option-button>\
                         <ion-option-button ng-click="downvotePost(comment)"><span class="ion-android-arrow-dropdown" style="font-size:30px"></ion-option-button>\
                         <ion-option-button ng-click="replyToComment(comment)"><span class="ion-ios-chatbubble-outline" style="font-size:30px"></ion-option-button>\
@@ -343,14 +343,16 @@ module.exports = function (app) {
                       );
                       if (loginSuccess) {
                         var tr = new window.steemJS.TransactionBuilder();
+                        var timeformat = (new Date()).getFullYear()+(new Date()).getMonth()+(new Date()).getDate()+"t"+(new Date()).getHours()+(new Date()).getMinutes()+(new Date()).getSeconds()+(new Date()).getMilliseconds()+"z";
+                        var json = {tags: JSON.parse($scope.chosen.json_metadata).tags};
                         tr.add_type_operation("comment", {
                           parent_author: $scope.chosen.author,
                           parent_permlink: $scope.chosen.permlink,
                           author: $rootScope.$storage.user.username,
-                          permlink: $scope.chosen.permlink,
+                          permlink: "re-"+$scope.chosen.author+"-"+$scope.chosen.permlink+"-"+timeformat,
                           title: "",
                           body: $scope.data.comment,
-                          json_metadata: ""
+                          json_metadata: JSON.stringify(json)
                         });
                         //console.log(my_pubkeys);
                         tr.process_transaction($scope.mylogin, null, true);
@@ -395,7 +397,7 @@ module.exports = function (app) {
                             </ion-comment>\
                             <div class="reddit-post--comment--container">\
                                  <ul ng-if="comment.showChildren" class="animate-if ion-comment--children">\
-                                    <li ng-repeat="comment in comment.replies track by $index | orderBy:\'-total_pending_payout_value\'">\
+                                    <li ng-repeat="comment in comment.replies | orderBy:\'-net_votes\' track by $index ">\
                                         <ng-include src="\'node.html\'"/>\
                                     </li>\
                                 </ul>\
@@ -403,7 +405,7 @@ module.exports = function (app) {
                         </script>\
                         <ion-list ng-if="comments && comments.length > 0">\
                           <ul>\
-                            <li ng-repeat="comment in comments track by $index | orderBy:\'-total_pending_payout_value\'">\
+                            <li ng-repeat="comment in comments | orderBy:\'-net_votes\' track by $index">\
                                 <ng-include src="\'node.html\'"/>\
                             </li>\
                           </ul>\

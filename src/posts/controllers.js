@@ -46,10 +46,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   }
   
   $scope.doLogin = function() {
-    console.log('Doing login', $scope.loginData);
-    var temp = new Steem(localStorage.socketUrl);
-    temp.getAccounts([$scope.loginData.username], function(err, dd) {
-      console.log(dd);
+    console.log('Doing login');
+    (new Steem(localStorage.socketUrl)).getAccounts([$scope.loginData.username], function(err, dd) {
+      //console.log(dd);
       dd = dd[0];
       $scope.loginData.id = dd.id;
       $scope.loginData.owner = dd.owner;
@@ -62,7 +61,6 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
       $rootScope.$storage.user = $scope.loginData;
       var login = new window.steemJS.Login();
-      console.log(dd.posting.key_auths[0][0]);
       login.setRoles(["posting"]);
       var loginSuccess = login.checkKeys({
           accountName: $scope.loginData.username,    
@@ -72,21 +70,16 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
           }}
       );
 
-      //console.log(loginSuccess);
-      //console.log(login)
-
       if (!loginSuccess) {
           $rootScope.showAlert("Error","The password or account name was incorrect");
       } else {
         $rootScope.$storage.mylogin = login;
-        $timeout(function() {
-          $scope.closeLogin();
-        });
       }
+      $timeout(function() {
+        $state.go('app.posts', {}, { reload: true });
+        $scope.closeLogin();
+      }, 1000);
     });
-    setTimeout(function() {
-      $state.go('app.posts', {}, { reload: true });
-    }, 1000);
   };
 
   $scope.$on("$ionicView.enter", function(){
@@ -362,6 +355,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   
   $scope.votePost = function(post) {
     post.invoting = true;
+    console.log('upvoting');
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
         console.log('Api ready:');
@@ -396,6 +390,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
   $scope.downvotePost = function(post) {
     post.invoting = true;
+    console.log('downvoting');
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
         console.log('Api ready:');
@@ -428,6 +423,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
   $scope.unvotePost = function(post) {
     post.invoting = true;
+    console.log('unvoting');
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
         console.log('Api ready:');
@@ -535,6 +531,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
                   newValue[i].upvoted = true;  
                 } else if (newValue[i].active_votes[j].percent < 0) {
                   newValue[i].downvoted = true;  
+                } else {
+                  newValue[i].downvoted = false;  
+                  newValue[i].upvoted = false;  
                 }
               }
             }
@@ -673,14 +672,16 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       );
       if (loginSuccess) {
         var tr = new window.steemJS.TransactionBuilder();
+        var timeformat = (new Date()).getFullYear()+(new Date()).getMonth()+(new Date()).getDate()+"t"+(new Date()).getHours()+(new Date()).getMinutes()+(new Date()).getSeconds()+(new Date()).getMilliseconds()+"z";
+        var json = {tags: JSON.parse($scope.post.json_metadata).tags};
         tr.add_type_operation("comment", {
-          parent_author: $scope.chosen.author,
-          parent_permlink: $scope.chosen.permlink,
+          parent_author: $scope.post.author,
+          parent_permlink: $scope.post.permlink,
           author: $rootScope.$storage.user.username,
-          permlink: $scope.chosen.permlink,
+          permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink+"-"+timeformat,
           title: "",
           body: $scope.data.comment,
-          json_metadata: ""
+          json_metadata: JSON.stringify(json)
         });
         //console.log(my_pubkeys);
         tr.process_transaction($scope.mylogin, null, true);
@@ -720,7 +721,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
   $scope.isreplying = function(cho, xx) {
     $scope.replying = xx;
-    $scope.chosen = cho;
+    $scope.post = cho;
     if (xx) {
       $scope.openModal();
     } else {
