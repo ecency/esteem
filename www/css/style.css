@@ -180,11 +180,11 @@ hr {
   height: 16px; 
 }
 
-@media only screen and (min-device-width:480px) { 
+@media only screen and (min-device-width:320px) { 
   img {
     max-width: 100%;
     display: block;
-    max-height: 50vh;
+    max-height: 40vh;
   }
 }
 @media only screen and (min-device-width:768px) { 

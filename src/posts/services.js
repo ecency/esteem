@@ -343,8 +343,10 @@ module.exports = function (app) {
                       );
                       if (loginSuccess) {
                         var tr = new window.steemJS.TransactionBuilder();
-                        var timeformat = (new Date()).getFullYear()+(new Date()).getMonth()+(new Date()).getDate()+"t"+(new Date()).getHours()+(new Date()).getMinutes()+(new Date()).getSeconds()+(new Date()).getMilliseconds()+"z";
-                        var json = {tags: JSON.parse($scope.post.json_metadata).tags};
+                        var t = new Date();
+                        var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
+                        
+                        var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ""};
                         tr.add_type_operation("comment", {
                           parent_author: $scope.post.author,
                           parent_permlink: $scope.post.permlink,
@@ -352,7 +354,7 @@ module.exports = function (app) {
                           permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink+"-"+timeformat,
                           title: "",
                           body: $scope.data.comment,
-                          json_metadata: JSON.stringify(json)
+                          json_metadata: angular.toJson(json)
                         });
                         //console.log(my_pubkeys);
                         tr.process_transaction($scope.mylogin, null, true);

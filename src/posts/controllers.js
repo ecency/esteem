@@ -203,35 +203,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $state.go("app.profile", {username: xy});
   };
   $scope.testfunction = function() {
-    var update = {profilePicUrl:"https://res.cloudinary.com/esteem/image/upload/v1471354542/image_xgrhqb.jpg"};
-    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-          $scope.mylogin = new window.steemJS.Login();
-          $scope.mylogin.setRoles(["owner", "active", "posting"]);
-          var loginSuccess = $scope.mylogin.checkKeys({
-              accountName: $rootScope.$storage.user.username,    
-              password: $rootScope.$storage.user.password,
-              auths: {
-                  owner: $rootScope.$storage.user.owner.key_auths,
-                  active: $rootScope.$storage.user.active.key_auths,
-                  posting: $rootScope.$storage.user.posting.key_auths
-              }}
-          );
-          console.log(loginSuccess)
-          if (loginSuccess) {
-            var tr = new window.steemJS.TransactionBuilder();
-            tr.add_type_operation("account_update", {
-              account: $rootScope.$storage.user.username,
-              memo_key: $rootScope.$storage.user.memo_key,
-              json_metadata: JSON.stringify(update)      
-            });
-            tr.process_transaction($scope.mylogin, null, true);
-            setTimeout(function() {$scope.refreshUserData}, 3000);
-          }
-        $rootScope.$broadcast('hide:loading');
-      } else {
-        $rootScope.$broadcast('hide:loading');
-        $rootScope.showAlert("Warning", "Please, login to Vote");
-      }
+    window.Api.database_api().exec("get_account_history", [$rootScope.$storage.user.username, -1, 25]).then(function(response){
+      console.log(response)
+    });
   }
   
 
@@ -664,8 +638,10 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       );
       if (loginSuccess) {
         var tr = new window.steemJS.TransactionBuilder();
-        var timeformat = (new Date()).getFullYear()+(new Date()).getMonth()+(new Date()).getDate()+"t"+(new Date()).getHours()+(new Date()).getMinutes()+(new Date()).getSeconds()+(new Date()).getMilliseconds()+"z";
-        var json = {tags: JSON.parse($scope.post.json_metadata).tags};
+        console.log(angular.fromJson($scope.post.json_metadata));
+        var t = new Date();
+        var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
+        var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ""};
         tr.add_type_operation("comment", {
           parent_author: $scope.post.author,
           parent_permlink: $scope.post.permlink,
@@ -673,7 +649,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink+"-"+timeformat,
           title: "",
           body: $scope.data.comment,
-          json_metadata: JSON.stringify(json)
+          json_metadata: angular.toJson(json)
         });
         //console.log(my_pubkeys);
         tr.process_transaction($scope.mylogin, null, true);
@@ -1014,6 +990,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   posting: $rootScope.$storage.user.posting.key_auths
                 }}
             );
+            //todo: if json_metadata already exist make sure to keep it.
             if (loginSuccess) {
               var tr = new window.steemJS.TransactionBuilder();
               tr.add_type_operation("account_update", {
