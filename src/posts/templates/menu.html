@@ -74,5 +74,8 @@
         </ion-item>
       </ion-list>
     </ion-content>
+    <ion-footer-bar class="bar-stable" ng-if="$root.$storage.appversion">
+        <ion-item nav-clear menu-close href="#" style="left:0;right:0;margin:0; width: 100%;position: fixed;">{{$root.$storage.appversion}}</ion-item>
+    </ion-footer-bar>
   </ion-side-menu>
 </ion-side-menus>

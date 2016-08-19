@@ -194,7 +194,9 @@ hr {
     max-height: 80vh;
   }
 }
-
+.selectable{
+  -webkit-user-select: auto;
+}
 .ion-comment--container {
   background-color: #f8f8f8;
 }

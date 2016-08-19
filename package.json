@@ -51,7 +51,8 @@
       "locator": "https://github.com/apache/cordova-plugin-splashscreen.git",
       "id": "cordova-plugin-splashscreen"
     },
-    "cordova-plugin-camera"
+    "cordova-plugin-camera",
+    "cordova-plugin-app-version"
   ],
   "cordovaPlatforms": [
     "android",

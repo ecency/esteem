@@ -1,7 +1,7 @@
 module.exports = function (app) {
 //angular.module('steem.controllers', [])
 
-app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate) {
+app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform) {
 
   $scope.loginData = {};  
 
@@ -97,6 +97,15 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       }  
     }
     $scope.refreshUserData();
+  });
+  
+  // get app version
+  $ionicPlatform.ready(function(){
+    if (cordova) {
+      cordova.getAppVersion.getVersionNumber(function (version) {
+        $rootScope.$storage.appversion = version;
+      });  
+    }
   });
 
   $scope.logout = function() {
