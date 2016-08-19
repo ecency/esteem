@@ -15,7 +15,7 @@
 	    	<div class="item">
 			    <div ng-click="open(d)">
 			    <p><h2>{{d.title}}</h2></p>
-			    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.last_update|timeago}}&nbsp;by&nbsp;<b>{{d.author}}&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div></b></div></div>
+			    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;by&nbsp;<b>{{d.author}}&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div></b></div></div>
 			    </div>
 			    <div class="row">
 			    <div class="col">
@@ -36,7 +36,7 @@
 		<div class="item" ng-click="open(ds)"><!-- item-avatar">-->
 		    <!--<img src="mcfly.jpg">-->
 		    <h2>{{ds.title}}</h2>
-		    <div class="row twrap"><div class="col">{{ds.last_update|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i>&nbsp;<b>{{ds.author}}&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div></b></div></div>
+		    <div class="row twrap"><div class="col">{{ds.created|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i>&nbsp;<b>{{ds.author}}&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div></b></div></div>
 		</div>
 		<div class="item-body">
 		    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" ng-click="open(ds)"/>

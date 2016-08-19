@@ -207,7 +207,7 @@ module.exports = function (app) {
                 comment: '='
             },
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
-                        <div class="ion-comment--author">{{comment.author}}&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.last_update|timeago}}</div>\
+                        <div class="ion-comment--author">{{comment.author}}&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
                         <div class="ion-comment--score"><i class="icon ion-social-usd"></i> {{comment.total_pending_payout_value.split(" ")[0]|number}}</div>\
                         <div class="ion-comment--text" ng-bind-html="comment.body | parseUrl | hrefToJS"></div>\
                         <div class="ion-comment--replies">{{comment.net_votes || 0}} votes, {{comment.children || 0}} replies</div>\
@@ -237,7 +237,22 @@ module.exports = function (app) {
                               permlink: post.permlink,
                               weight: 10000
                           });
+                          localStorage.error = 0;
                           tr.process_transaction($scope.mylogin, null, true);
+
+                          setTimeout(function() {
+                              if (localStorage.error == 1) {
+                                $rootScope.showAlert("Error", "Broadcast error, try again!")
+                              } else {
+                                  (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
+                                    //console.log(result);      
+                                    $scope.comments = result;
+                                    if (!$scope.$$phase) {
+                                      $scope.$apply();
+                                    }
+                                  });
+                              }
+                            }, 1000);
                         } 
                       $rootScope.$broadcast('hide:loading');
                     } else {
@@ -266,7 +281,21 @@ module.exports = function (app) {
                               permlink: post.permlink,
                               weight: -10000
                           });
+                          localStorage.error = 0;
                           tr.process_transaction($scope.mylogin, null, true);
+                           setTimeout(function() {
+                              if (localStorage.error == 1) {
+                                $rootScope.showAlert("Error", "Broadcast error, try again!")
+                              } else {
+                                  (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
+                                    //console.log(result);      
+                                    $scope.comments = result;
+                                    if (!$scope.$$phase) {
+                                      $scope.$apply();
+                                    }
+                                  });
+                              }
+                            }, 1000);
                         }
                       $rootScope.$broadcast('hide:loading');
                     } else {
@@ -296,7 +325,21 @@ module.exports = function (app) {
                               permlink: post.permlink,
                               weight: 0
                           });
+                          localStorage.error = 0;
                           tr.process_transaction($scope.mylogin, null, true);
+                           setTimeout(function() {
+                              if (localStorage.error == 1) {
+                                $rootScope.showAlert("Error", "Broadcast error, try again!")
+                              } else {
+                                  (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
+                                    //console.log(result);      
+                                    $scope.comments = result;
+                                    if (!$scope.$$phase) {
+                                      $scope.$apply();
+                                    }
+                                  });
+                              }
+                            }, 1000);
                         }
                       $rootScope.$broadcast('hide:loading');
                     } else {
@@ -357,18 +400,24 @@ module.exports = function (app) {
                           json_metadata: angular.toJson(json)
                         });
                         //console.log(my_pubkeys);
+                        localStorage.error = 0;
                         tr.process_transaction($scope.mylogin, null, true);
-                        $scope.data.comment = "";
+                        
                         $scope.closeModal();
                         $scope.replying = false;
                         setTimeout(function() {
-                          (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
-                            //console.log(result);      
-                            $scope.comments = result;
-                            if (!$scope.$$phase) {
-                              $scope.$apply();
-                            }
-                          });
+                          if (localStorage.error == 1) {
+                            $rootScope.showAlert("Error", "Broadcast error, try again!")
+                          } else {
+                            $scope.data.comment = "";
+                              (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
+                                //console.log(result);      
+                                $scope.comments = result;
+                                if (!$scope.$$phase) {
+                                  $scope.$apply();
+                                }
+                              });
+                          }
                         }, 1000);
                       } 
                       $rootScope.$broadcast('hide:loading');
