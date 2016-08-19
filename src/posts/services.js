@@ -92,9 +92,10 @@ module.exports = function (app) {
 		
 	    return function(textu, subpart) {
 	        var options = {
-	        	/*gfm: true,
+	        	gfm: true,
 				tables: true,
-			    breaks: false,
+                smartLists: true,
+			    /*breaks: false,
 			    pedantic: false,
 			    sanitize: true,
 			    smartLists: true,
@@ -160,7 +161,7 @@ module.exports = function (app) {
 				return 0;
 			}
 
-			return reputation_level;
+			return Math.floor(reputation_level);
 		}
 	})
     
@@ -214,8 +215,10 @@ module.exports = function (app) {
                         <ion-option-button ng-click="upvotePost(comment)"><span class="ion-android-arrow-dropup" style="font-size:30px"></ion-option-button>\
                         <ion-option-button ng-click="downvotePost(comment)"><span class="ion-android-arrow-dropdown" style="font-size:30px"></ion-option-button>\
                         <ion-option-button ng-click="replyToComment(comment)"><span class="ion-ios-chatbubble-outline" style="font-size:30px"></ion-option-button>\
+                        <ion-option-button ng-if="comment.author == $root.$storage.user.username" ng-click="editComment(comment)"><span class="ion-ios-compose-outline" style="font-size:30px"></ion-option-button>\
+                        <ion-option-button ng-if="comment.author == $root.$storage.user.username" ng-click="deleteComment(comment)"><span class="ion-ios-trash-outline" style="font-size:30px"></ion-option-button>\
                     </ion-item>',
-            controller: function($scope, $rootScope, $state, $ionicModal) {
+            controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopup) {
 
                 $scope.upvotePost = function(post) {
                     $rootScope.$broadcast('show:loading');
@@ -244,13 +247,7 @@ module.exports = function (app) {
                               if (localStorage.error == 1) {
                                 $rootScope.showAlert("Error", "Broadcast error, try again!")
                               } else {
-                                  (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
-                                    //console.log(result);      
-                                    $scope.comments = result;
-                                    if (!$scope.$$phase) {
-                                      $scope.$apply();
-                                    }
-                                  });
+                                $rootScope.$broadcast("update:content");
                               }
                             }, 1000);
                         } 
@@ -287,13 +284,7 @@ module.exports = function (app) {
                               if (localStorage.error == 1) {
                                 $rootScope.showAlert("Error", "Broadcast error, try again!")
                               } else {
-                                  (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
-                                    //console.log(result);      
-                                    $scope.comments = result;
-                                    if (!$scope.$$phase) {
-                                      $scope.$apply();
-                                    }
-                                  });
+                                $rootScope.$broadcast("update:content");
                               }
                             }, 1000);
                         }
@@ -331,13 +322,7 @@ module.exports = function (app) {
                               if (localStorage.error == 1) {
                                 $rootScope.showAlert("Error", "Broadcast error, try again!")
                               } else {
-                                  (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
-                                    //console.log(result);      
-                                    $scope.comments = result;
-                                    if (!$scope.$$phase) {
-                                      $scope.$apply();
-                                    }
-                                  });
+                                $rootScope.$broadcast("update:content");
                               }
                             }, 1000);
                         }
@@ -366,70 +351,169 @@ module.exports = function (app) {
                     $scope.replying = xx;
                     $scope.post = cho;
                     if (xx) {
-                      $scope.openModal();
+                        $scope.edit = false;
+                        $scope.openModal();
                     } else {
-                      $scope.closeModal();
+                        $scope.edit = true;
+                        $scope.data.comment = $scope.post.body;
+                        $scope.openModal();
                     }
                   }
 
-                  $scope.reply = function (xx) {
-                    $rootScope.$broadcast('show:loading');
-                    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-                      $scope.mylogin = new window.steemJS.Login();
-                      $scope.mylogin.setRoles(["posting"]);
-                      var loginSuccess = $scope.mylogin.checkKeys({
-                          accountName: $rootScope.$storage.user.username,    
-                          password: $rootScope.$storage.user.password,
-                          auths: {
-                              posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-                          }}
-                      );
-                      if (loginSuccess) {
-                        var tr = new window.steemJS.TransactionBuilder();
-                        var t = new Date();
-                        var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
-                        
-                        var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ""};
-                        tr.add_type_operation("comment", {
-                          parent_author: $scope.post.author,
-                          parent_permlink: $scope.post.permlink,
-                          author: $rootScope.$storage.user.username,
-                          permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink+"-"+timeformat,
-                          title: "",
-                          body: $scope.data.comment,
-                          json_metadata: angular.toJson(json)
-                        });
-                        //console.log(my_pubkeys);
-                        localStorage.error = 0;
-                        tr.process_transaction($scope.mylogin, null, true);
-                        
-                        $scope.closeModal();
-                        $scope.replying = false;
-                        setTimeout(function() {
-                          if (localStorage.error == 1) {
-                            $rootScope.showAlert("Error", "Broadcast error, try again!")
-                          } else {
-                            $scope.data.comment = "";
-                              (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
-                                //console.log(result);      
-                                $scope.comments = result;
-                                if (!$scope.$$phase) {
-                                  $scope.$apply();
-                                }
-                              });
-                          }
-                        }, 1000);
-                      } 
-                      $rootScope.$broadcast('hide:loading');
+                $scope.reply = function (xx) {
+                    if (!$scope.edit) {
+                        $rootScope.$broadcast('show:loading');
+                        if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+                          $scope.mylogin = new window.steemJS.Login();
+                          $scope.mylogin.setRoles(["posting"]);
+                          var loginSuccess = $scope.mylogin.checkKeys({
+                              accountName: $rootScope.$storage.user.username,    
+                              password: $rootScope.$storage.user.password,
+                              auths: {
+                                  posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
+                              }}
+                          );
+                          if (loginSuccess) {
+                            var tr = new window.steemJS.TransactionBuilder();
+                            var t = new Date();
+                            var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
+                            
+                            var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ""};
+                            tr.add_type_operation("comment", {
+                              parent_author: $scope.post.author,
+                              parent_permlink: $scope.post.permlink,
+                              author: $rootScope.$storage.user.username,
+                              permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink+"-"+timeformat,
+                              title: "",
+                              body: $scope.data.comment,
+                              json_metadata: angular.toJson(json)
+                            });
+                            //console.log(my_pubkeys);
+                            localStorage.error = 0;
+                            tr.process_transaction($scope.mylogin, null, true);
+                            
+                            $scope.closeModal();
+                            $scope.replying = false;
+                            setTimeout(function() {
+                              if (localStorage.error == 1) {
+                                $rootScope.showAlert("Error", "Broadcast error, try again!")
+                              } else {
+                                $scope.data.comment = "";
+                                $rootScope.$broadcast("update:content");
+                              }
+                            }, 1000);
+                          } 
+                          $rootScope.$broadcast('hide:loading');
+                        } else {
+                          $rootScope.$broadcast('hide:loading');
+                          $rootScope.showAlert("Warning", "Please, login to Comment");
+                        }
                     } else {
-                      $rootScope.$broadcast('hide:loading');
-                      $rootScope.showAlert("Warning", "Please, login to Comment");
+                        $rootScope.$broadcast('show:loading');
+                        if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+                          $scope.mylogin = new window.steemJS.Login();
+                          $scope.mylogin.setRoles(["posting"]);
+                          var loginSuccess = $scope.mylogin.checkKeys({
+                              accountName: $rootScope.$storage.user.username,    
+                              password: $rootScope.$storage.user.password,
+                              auths: {
+                                  posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
+                              }}
+                          );
+                          if (loginSuccess) {
+                            var tr = new window.steemJS.TransactionBuilder();
+                            
+                            var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ""};
+                            tr.add_type_operation("comment", {
+                              parent_author: $scope.post.parent_author,
+                              parent_permlink: $scope.post.parent_permlink,
+                              author: $scope.post.author,
+                              permlink: $scope.post.permlink,
+                              title: "",
+                              body: $scope.data.comment,
+                              json_metadata: $scope.post.json_metadata
+                            });
+                            //console.log(my_pubkeys);
+                            localStorage.error = 0;
+                            tr.process_transaction($scope.mylogin, null, true);
+                            
+                            $scope.closeModal();
+                            $scope.replying = false;
+                            setTimeout(function() {
+                              if (localStorage.error == 1) {
+                                $rootScope.showAlert("Error", "Broadcast error, try again!")
+                              } else {
+                                $scope.data.comment = "";
+                                $rootScope.$broadcast("update:content");
+                              }
+                            }, 1000);
+                          } 
+                          $rootScope.$broadcast('hide:loading');
+                        } else {
+                          $rootScope.$broadcast('hide:loading');
+                          $rootScope.showAlert("Warning", "Please, login to Comment");
+                        }
                     }
-                  }
+                    
+                }
                 $scope.replyToComment = function(comment) {
                     console.log('reply to comment')
                     //$rootScope.$storage.sitem = comment;
                     $scope.isreplying(comment, true);
+                }
+                $scope.editComment = function(comment) {
+                    console.log('edit to comment')
+                    //$rootScope.$storage.sitem = comment;
+                    $scope.isreplying(comment, false);
+                }
+                $scope.deleteComment = function(comment) {
+                    console.log('delete to comment', comment);
+                    var confirmPopup = $ionicPopup.confirm({
+                        title: 'Are you sure?',
+                        template: 'Deleting comments irreversible...'
+                    });
+                    confirmPopup.then(function(res) {
+                        if(res) {
+                            console.log('You are sure');
+                            $rootScope.$broadcast('show:loading');
+                            if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+                              $scope.mylogin = new window.steemJS.Login();
+                              $scope.mylogin.setRoles(["posting"]);
+                              var loginSuccess = $scope.mylogin.checkKeys({
+                                  accountName: $rootScope.$storage.user.username,    
+                                  password: $rootScope.$storage.user.password,
+                                  auths: {
+                                      posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
+                                  }}
+                              );
+                              if (loginSuccess) {
+                                var tr = new window.steemJS.TransactionBuilder();
+                                
+                                tr.add_type_operation("delete_comment", {
+                                  author: comment.author,
+                                  permlink: comment.permlink
+                                });
+                                //console.log(my_pubkeys);
+                                localStorage.error = 0;
+                                tr.process_transaction($scope.mylogin, null, true);
+                                
+                                setTimeout(function() {
+                                  if (localStorage.error == 1) {
+                                    $rootScope.showAlert("Error", "Broadcast error, try again!")
+                                  } else {
+                                    $rootScope.$broadcast("update:content");
+                                  }
+                                }, 1000);
+                              } 
+                              $rootScope.$broadcast('hide:loading');
+                            } else {
+                              $rootScope.$broadcast('hide:loading');
+                              $rootScope.showAlert("Warning", "Please, login to Delete Comment");
+                            }
+                        } else {
+                          console.log('You are not sure');
+                        }
+                    });
                 }
             }
         }

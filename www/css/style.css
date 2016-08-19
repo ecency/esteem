@@ -81,12 +81,12 @@ hr {
 .capital {
 	text-transform: uppercase;
 }
-.bar-footer .button-bar .button.icon {
+.profile.bar-footer .button-bar .button.icon {
 	display: block;
 	text-align: center;
 	font-size: 3.0vw;
 }
-.bar-footer .button-bar .button.icon:before {
+.profile.bar-footer .button-bar .button.icon:before {
 	display: block;
 	text-align: center;
 	margin: auto;
@@ -97,16 +97,20 @@ hr {
 	height: 25px;
 	line-height: 25px;
 }
-.bar-footer .button-bar .button {
+.profile.bar-footer .button-bar .button {
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 }
-.bar-footer {
+.profile.bar-footer {
 	height: 60px;
 	padding: 0;
-}
+}/*
+.button-small {
+  width: 30px;
+  height: 30px;
+}*/
 .has-footer {
 	bottom: 60px;
 }
@@ -125,6 +129,19 @@ hr {
 
 .exchange .row:last-child .col {
     border-bottom: solid 1px grey;
+}
+textarea.markdown-input {
+  width: 100%;
+  height: 20vh;
+}
+.bodytext ol {
+  list-style-type: decimal;
+}
+.bodytext ul {
+  list-style-type: disc;
+}
+.markdown-toolbar button {
+  width: 20px!important;
 }
 /***************************************/
 /*Comments                             */

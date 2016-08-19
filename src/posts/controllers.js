@@ -113,9 +113,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $rootScope.$storage.user = null;
     $rootScope.$storage.mylogin = undefined;
     $rootScope.$storage.mylogin = null;
-    $state.go("app.posts", {}, {reload:true});
     //make sure user credentials cleared.
     $ionicSideMenuDelegate.toggleLeft();
+    $rootScope.$broadcast("user:logout");
   };
   $scope.data = {};
   $ionicModal.fromTemplateUrl('templates/search.html', {
@@ -501,6 +501,11 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $scope.closePopover();
     $rootScope.$broadcast('filter:change');
   };
+  
+  $rootScope.$on("user:logout", function(){
+    $scope.refresh();
+  });
+
   $scope.loadMore = function() {
     $rootScope.$broadcast('show:loading');
     $scope.limit += 5;
@@ -724,7 +729,16 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       $rootScope.showAlert("Warning", "Please, login to Comment");
     }
   }
-
+  $rootScope.$on("update:content", function(){
+    console.log("update:content");
+    (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
+      //console.log(result);      
+      $scope.comments = result;
+      if (!$scope.$$phase) {
+        $scope.$apply();
+      }
+    });
+  });
   $ionicModal.fromTemplateUrl('templates/reply.html', {
     scope: $scope  }).then(function(modal) {
     $scope.modal = modal;

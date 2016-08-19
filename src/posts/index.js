@@ -3,7 +3,8 @@ var fs = require('fs');
 var app = angular.module('steem', [
 	'ionic', 
 	'ngStorage', 
-	'ngCordova'
+	'ngCordova',
+  'wiz.markdown'
 	//'ionic.contrib.ui.ionThread'
 ]);
 var steemRPC = require("steem-rpc");
