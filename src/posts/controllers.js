@@ -98,10 +98,10 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     }
     $scope.refreshUserData();
   });
-  
+
   // get app version
   $ionicPlatform.ready(function(){
-    if (cordova) {
+    if (window.cordova) {
       cordova.getAppVersion.getVersionNumber(function (version) {
         $rootScope.$storage.appversion = version;
       });  
