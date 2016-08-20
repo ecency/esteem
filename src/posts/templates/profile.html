@@ -3,12 +3,18 @@
     <!--<button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>-->
     <p ng-if="$root.$storage.user">
       <center>
-        <div class="item-myavatar" ng-if="$root.$storage.user" ng-click="show()">
+        <div class="item-myavatar" ng-if="$root.$storage.user && $root.$storage.user.username == user.username" ng-click="show()">
           <span class="item-myavatar" ng-if="!$root.$storage.user.json_metadata.profilePicUrl"><ng-letter-avatar data="{{$root.$storage.user.username}}" shape="round"></ng-letter-avatar></span>
           <img ng-src="{{$root.$storage.user.json_metadata.profilePicUrl}}" ng-if="$root.$storage.user.json_metadata.profilePicUrl" />
+          <h4><span class="light">@{{$root.$storage.user.username}}</span>&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation|number:0}}</div></h4>
+          <div class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;posts&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}}&nbsp;voting power</div>
         </div>
-        <h4><span class="light">@{{$root.$storage.user.username}}</span>&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation|number:0}}</div></h4>
-        <div ng-click="showMeExtra()" class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;posts&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}}&nbsp;voting power</div>
+        <div class="item-myavatar" ng-if="$root.$storage.user && $root.$storage.user.username != user.username"">
+          <span class="item-myavatar" ng-if="!user.json_metadata.profilePicUrl"><ng-letter-avatar data="{{user.username}}" shape="round"></ng-letter-avatar></span>
+          <img ng-src="{{user.json_metadata.profilePicUrl}}" ng-if="user.json_metadata.profilePicUrl" />
+          <h4><span class="light">@{{user.username}}</span>&nbsp;<div class="reputation">{{user.reputation|reputation|number:0}}</div></h4>
+          <div class="padding"><i class="icon ion-android-list"></i>&nbsp;{{user.post_count}}&nbsp;posts&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{user.voting_power/100|number:2}}&nbsp;voting power</div>
+        </div>
       </center>
     </p>
   </div>

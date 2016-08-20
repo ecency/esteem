@@ -83,8 +83,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   };
 
   $scope.$on("$ionicView.enter", function(){
-    $scope.refreshUserData = function() {
-      console.log('refreshUserData');
+    $scope.refreshLocalUserData = function() {
+      console.log('refreshLocalUserData');
       if ($rootScope.$storage.user && $rootScope.$storage.user.username) {
         (new Steem(localStorage.socketUrl)).getAccounts([$rootScope.$storage.user.username], function(err, dd) {
           //console.log(dd);
@@ -96,7 +96,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         });
       }  
     }
-    $scope.refreshUserData();
+    $scope.refreshLocalUserData();
   });
 
   // get app version
@@ -673,7 +673,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   //console.log($rootScope.$storage.sitem)
   $scope.post = $rootScope.$storage.sitem;
   $scope.data = {};
-  console.log($rootScope.$storage.sitem);
+  //console.log($rootScope.$storage.sitem);
   $scope.replying = false;
   $scope.reply = function (xx) {
     //console.log(xx);
@@ -1039,8 +1039,7 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state) 
 })
 
 app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicActionSheet, $cordovaCamera, ImageUploadService, $ionicPopup) {
-  $scope.username = $stateParams.username;
-
+  
   $scope.show = function() {
    var hideSheet = $ionicActionSheet.show({
      buttons: [
@@ -1093,7 +1092,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 if (localStorage.error == 1) {
                   $rootScope.showAlert("Error", "Broadcast error, try again!")
                 } else {
-                  $scope.refreshUserData();
+                  $scope.refreshLocalUserData();
                 }
               }, 1500);
             }
@@ -1174,7 +1173,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 if (localStorage.error == 1) {
                   $rootScope.showAlert("Error", "Broadcast error, try again!")
                 } else {
-                  $scope.refreshUserData();
+                  $scope.refreshLocalUserData();
                 }
               }, 1500);
             }
@@ -1227,7 +1226,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 if (localStorage.error == 1) {
                   $rootScope.showAlert("Error", "Broadcast error, try again!")
                 } else {
-                  $scope.refreshUserData();
+                  $scope.refreshLocalUserData();
                 }
               }, 1500);
             }
@@ -1420,8 +1419,29 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           $scope.nonexist = true;
         }
       });
-    };  
+    };
+    $scope.user = {username: $stateParams.username};
+    $scope.getOtherUsersData = function() {
+      console.log("getOtherUsersData");
+      (new Steem(localStorage.socketUrl)).getAccounts([$stateParams.username], function(err, dd) {
+        //console.log(dd);
+        dd = dd[0];
+        if (dd.json_metadata) {
+          dd.json_metadata = angular.fromJson(dd.json_metadata);
+        }
+        angular.merge($scope.user, dd);
+        if(!$scope.$$phase){
+          $scope.$apply();
+        }
+      });
+    };
+
     $scope.refresh();
+    if ($rootScope.$storage.user.username !== $stateParams.username) {
+      $scope.getOtherUsersData();  
+    } else {
+      $scope.refreshLocalUserData();
+    }
   });
    $scope.change = function(type){
     $scope.profile = [];
