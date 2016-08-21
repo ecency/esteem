@@ -1,6 +1,6 @@
-<ion-view view-title="Profile @{{username}}" hide-nav-bar="true">
-  <div class="bar bar-subheader mysubheader bar-positive">
-    <!--<button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>-->
+<ion-view view-title="" hide-nav-bar="true">
+    <div class="bar bar-subheader mysubheader bar-positive">
+    <button class="button button-icon button-clear ion-navicon profilebtn" ng-click="openMenu()"></button>
     <p ng-if="$root.$storage.user">
       <center>
         <div class="item-myavatar" ng-if="$root.$storage.user && $root.$storage.user.username == user.username" ng-click="show()">
@@ -18,7 +18,7 @@
       </center>
     </p>
   </div>
-  <ion-content class="has-footer has-mysubheader" has-header="false">
+  <ion-content class="has-footer has-mysubheader">
         <div class="box blue" ng-if="active!='wallet'||active!='permissions'">
           <ion-list>
             <!--<div ng-repeat="(key, playlist) in profile" class="item wrap" ng-click="open(playlist)">

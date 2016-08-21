@@ -1,16 +1,34 @@
 <ion-view view-cache="false" view-title="Settings">
   <ion-content class="padding">
     <div class="list">
+      <span class="item item-toggle">
+          Pin Code
+          <label class="toggle toggle-positive">
+           <input type="checkbox" ng-model="$root.$storage.pincode" ng-change="pinChange()">
+           <div class="track">
+             <div class="handle"></div>
+           </div>
+          </label>
+      </span>
+      <span class="item">
+        Vote weight
+        <div>
+          <rzslider rz-slider-model="slider.value" rz-slider-options="slider.options"></rzslider>
+        </div>
+      </span>
       <label class="item item-input">
         <i class="icon ion-home placeholder-icon"></i>
         <input type="text" placeholder="Server" ng-model="$root.$storage.socket">
       </label>
-      <span class="item italic">
+      <span class="item">
         <span class="bold">Recommended:</span><br>
         <span class="wrap">[steemit] wss://steemit.com/wspa</span><br>
         <span class="wrap">[steem.ws] wss://node.steem.ws</span><br>
         <span class="wrap">[piston] wss://this.piston.rocks</span>
       </span>
+      
+
+
       <!--<label class="item item-input">
         <i class="icon ion-person placeholder-icon"></i>
         <input type="text" placeholder="User" ng-model="$root.$storage.user.username" disabled>

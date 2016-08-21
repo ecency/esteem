@@ -4,7 +4,8 @@ var app = angular.module('steem', [
 	'ionic', 
 	'ngStorage', 
 	'ngCordova',
-  'wiz.markdown'
+  'wiz.markdown',
+  'rzModule'
 	//'ionic.contrib.ui.ionThread'
 ]);
 var steemRPC = require("steem-rpc");
