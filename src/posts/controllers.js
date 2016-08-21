@@ -341,7 +341,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   });
 
 });
-app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal) {
+app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter) {
 
   $rootScope.$on('filter:change', function() {
     $rootScope.$broadcast('show:loading');
@@ -369,11 +369,21 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       return permlink;
     }
   };
-  $scope.submitStory = function() {
+  $scope.submitStorys = function() {
     console.log(createPermlink($scope.spost.title));
+    console.log($filter("metadata")($rootScope.$storage.sitem.body));
   }
   $scope.spost = {};
-  $scope.submitStorys = function() {
+  $scope.tagsChange = function() {
+    console.log("tagsChange");
+    $scope.spost.category = $scope.spost.tags.split(" ");
+    if ($scope.spost.category.length > 5) {
+      $scope.disableBtn = true;
+    } else {
+      $scope.disableBtn = false;
+    }
+  }
+  $scope.submitStory = function() {
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
       $scope.mylogin = new window.steemJS.Login();
@@ -388,12 +398,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       if (loginSuccess) {
         var tr = new window.steemJS.TransactionBuilder();
         var permlink = createPermlink($scope.spost.title);
-
-        var json = {tags: angular.fromJson($scope.spost.json_metadata).tags[0] || ""};
+        var json = $filter("metadata")($scope.spost.body);
+        angular.merge(json, {tags: $scope.spost.category});
 
         tr.add_type_operation("comment", {
           parent_author: "",
-          parent_permlink: maincategory,
+          parent_permlink: $scope.spost.category[0],
           author: $rootScope.$storage.user.username,
           permlink: permlink,
           title: $scope.spost.title,
@@ -403,24 +413,18 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         //console.log(my_pubkeys);
         localStorage.error = 0;
         tr.process_transaction($scope.mylogin, null, true);
-        $scope.closeModal();
+        $scope.closePostModal();
         $scope.replying = false;
         setTimeout(function() {
+          $rootScope.$broadcast('hide:loading');
           if (localStorage.error == 1) {
             $rootScope.showAlert("Error", "Broadcast error, try again!")
           } else {
-            $scope.data.comment = "";  
-            (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
-              //console.log(result);      
-              $scope.comments = result;
-              if (!$scope.$$phase) {
-                $scope.$apply();
-              }
-            });
+            //$scope.spost.comment = "";  
+            $state.go("app.profile", {username: $rootScope.$storage.user.username});
           }
-        }, 1000);
+        }, 2000);
       } 
-      $rootScope.$broadcast('hide:loading');
     } else {
       $rootScope.$broadcast('hide:loading');
       $rootScope.showAlert("Warning", "Please, login to Comment");
@@ -459,7 +463,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
               voter: $rootScope.$storage.user.username,
               author: post.author,
               permlink: post.permlink,
-              weight: 10000
+              weight: $rootScope.$storage.voteWeight || 10000
           });
           localStorage.error = 0;
           tr.process_transaction($scope.mylogin, null, true);
@@ -756,11 +760,14 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   //$scope.refresh();   
 })
 
-app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal) {
+app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter) {
   $scope.post = $rootScope.$storage.sitem;
   $scope.data = {};
-  //console.log($rootScope.$storage.sitem);
+  
   $scope.replying = false;
+  
+
+
   $scope.reply = function (xx) {
     //console.log(xx);
     $rootScope.$broadcast('show:loading');
@@ -852,6 +859,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   //$scope.post = {};
   $scope.$on('$ionicView.enter', function(){   
     //$scope.post = $rootScope.$storage.sitem;
+    console.log($rootScope.$storage.sitem);
+    console.log($filter("metadata")($rootScope.$storage.sitem.body));
     $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
     (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
       //console.log(result);      
@@ -883,7 +892,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               voter: $rootScope.$storage.user.username,
               author: post.author,
               permlink: post.permlink,
-              weight: 10000
+              weight: $rootScope.$storage.voteWeight || 10000
           });
           //var my_pubkeys = $scope.mylogin.getPubKeys();
           //console.log(my_pubkeys);
@@ -1348,7 +1357,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               voter: $rootScope.$storage.user.username,
               author: post.author,
               permlink: post.permlink,
-              weight: 10000
+              weight: $rootScope.$storage.voteWeight || 10000
           });
           //var my_pubkeys = $scope.mylogin.getPubKeys();
           //console.log(my_pubkeys);

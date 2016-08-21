@@ -110,7 +110,50 @@ module.exports = function (app) {
 				return $sce.trustAsHtml(textu);	
 			}
 	    };
-	})
+	});
+
+    app.filter('metadata', function($sce) {
+        var urls = /(\b(https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;-]*[-A-Z0-9+&@#\/%=~_|])/gim;
+        var users = /(^|\s)(@[a-z][-\.a-z\d]+[a-z\d])/gim;
+        var imgs = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/gim;
+        var youtube = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+        var youtubeid = /(?:(?:youtube.com\/watch\?v=)|(?:youtu.be\/))([A-Za-z0-9\_\-]+)/i;
+        
+        return function(textu) {
+            var out = {};
+            var murls = textu.match(urls);
+            var musers = textu.match(users);
+            var mimgs = [];
+            var mlinks = [];
+            if (murls) {
+                for (var i = 0; i < murls.length; i++) {
+                    var ind = murls[i].match(imgs);
+                    if (ind) {
+                        mimgs.push(murls[i]);
+                    } else {
+                        mlinks.push(murls[i]);
+                    }
+                }
+                if (mlinks) {
+                    angular.merge(out, {links: mlinks});    
+                }
+                if (mimgs) {
+                    angular.merge(out, {image: mimgs});    
+                }
+            }
+            if (musers) {
+                for (var i = 0; i < musers.length; i++) {
+                    musers[i] = musers[i].trim().substring(1);
+                }
+                if (musers) {
+                    angular.merge(out, {users: musers});    
+                }
+            }
+            return out;
+        };
+    });
+    
+
 	app.filter('sp', function($sce, $rootScope) {
 	    return function(text) {
 	    	if (text) {
@@ -238,7 +281,7 @@ module.exports = function (app) {
                               voter: $rootScope.$storage.user.username,
                               author: post.author,
                               permlink: post.permlink,
-                              weight: 10000
+                              weight: $rootScope.$storage.voteWeight || 10000
                           });
                           localStorage.error = 0;
                           tr.process_transaction($scope.mylogin, null, true);
