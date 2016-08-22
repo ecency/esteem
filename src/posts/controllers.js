@@ -141,10 +141,6 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       $rootScope.$broadcast('close:popover');
     }
   };
-  /*$scope.submitStory = function(){
-    $rootScope.showAlert("Info", "In Development, coming soon!");
-
-  };*/
   $scope.showMeExtra = function() {
     if ($scope.showExtra) {
       $scope.showExtra = false;
@@ -421,6 +417,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
           } else {
             //$scope.spost.comment = "";  
+            $scope.closePopover();
             $state.go("app.profile", {username: $rootScope.$storage.user.username});
           }
         }, 2000);
@@ -744,12 +741,14 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.$on('$ionicView.loaded', function(){
     
   });
-
-  var timeint = $interval(function(){
-    window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
-      console.log("get_dynamic_global_properties", response.head_block_number);
-    });
-  }, 20000);
+  
+  if (!angular.isDefined($rootScope.timeint)) {
+    $rootScope.timeint = $interval(function(){
+      window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
+        console.log("get_dynamic_global_properties", response.head_block_number);
+      });
+    }, 20000);
+  }
 
   $scope.$on('$ionicView.leave', function(){
     if (!$scope.$$phase) {
@@ -1160,7 +1159,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         if(res) {
           var update = {profilePicUrl:""};
           angular.merge(update, $rootScope.$storage.user.json_metadata);
-          
+
           console.log('You are sure');
           if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
             $scope.mylogin = new window.steemJS.Login();
@@ -1637,6 +1636,9 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
   
   $scope.$on('$ionicView.beforeEnter', function(){
     $rootScope.$storage.socket = localStorage.socketUrl;
+    if (!$rootScope.$storage.voteWeight){
+      $rootScope.$storage.voteWeight = 10000;
+    }
     $scope.slider = {
       value: $rootScope.$storage.voteWeight/100 || 100,
       options: {
@@ -1644,9 +1646,6 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
         ceil: 100
       }
     };
-    if (!$rootScope.$storage.voteWeight){
-      $rootScope.$storage.voteWeight = 10000;
-    }
   });
   
   $scope.$watch('slider', function(newValue, oldValue){

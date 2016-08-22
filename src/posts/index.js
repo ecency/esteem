@@ -171,10 +171,25 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     });
     $ionicPlatform.on('resume', function(){
       console.log("app resume");
-      /*window.Api.initPromise.then(function(response) {
-        console.log("Api ready state change:", response);
-      });*/
+      if (!angular.isDefined($rootScope.timeint)) {
+        window.Api.initPromise.then(function(response) {
+          console.log("Api ready state change:", response);
+          $rootScope.timeint = $interval(function(){
+            window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
+              console.log("get_dynamic_global_properties", response.head_block_number);
+            });
+          }, 20000);
+        });
+      }
     });
+    $ionicPlatform.on('pause', function(){
+      console.log("app pause");
+      if (angular.isDefined($rootScope.timeint)) {
+        $interval.cancel($rootScope.timeint);
+        $rootScope.timeint = undefined;
+      }
+    });
+    
     $ionicPlatform.on('offline', function(){
       console.log("app offline");
     });
