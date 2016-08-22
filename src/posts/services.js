@@ -258,11 +258,21 @@ module.exports = function (app) {
                         <ion-option-button ng-click="upvotePost(comment)"><span class="ion-android-arrow-dropup" style="font-size:30px"></ion-option-button>\
                         <ion-option-button ng-click="downvotePost(comment)"><span class="ion-android-arrow-dropdown" style="font-size:30px"></ion-option-button>\
                         <ion-option-button ng-click="replyToComment(comment)"><span class="ion-ios-chatbubble-outline" style="font-size:30px"></ion-option-button>\
-                        <ion-option-button ng-if="comment.author == $root.$storage.user.username" ng-click="editComment(comment)"><span class="ion-ios-compose-outline" style="font-size:30px"></ion-option-button>\
+                        <ion-option-button ng-if="comment.author == $root.$storage.user.username && compateDate(comment)" ng-click="editComment(comment)"><span class="ion-ios-compose-outline" style="font-size:30px"></ion-option-button>\
                         <ion-option-button ng-if="comment.author == $root.$storage.user.username" ng-click="deleteComment(comment)"><span class="ion-ios-trash-outline" style="font-size:30px"></ion-option-button>\
                     </ion-item>',
             controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopup) {
-
+                $scope.compateDate = function(comment) {
+                    if (comment.last_payout == "1970-01-01T00:00:00") {
+                        return true;
+                    } else {
+                      if (comment.mode == "first_payout"){
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    }
+                }
                 $scope.upvotePost = function(post) {
                     $rootScope.$broadcast('show:loading');
                     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
@@ -288,7 +298,7 @@ module.exports = function (app) {
 
                           setTimeout(function() {
                               if (localStorage.error == 1) {
-                                $rootScope.showAlert("Error", "Broadcast error, try again!")
+                                $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                               } else {
                                 $rootScope.$broadcast("update:content");
                               }
@@ -325,7 +335,7 @@ module.exports = function (app) {
                           tr.process_transaction($scope.mylogin, null, true);
                            setTimeout(function() {
                               if (localStorage.error == 1) {
-                                $rootScope.showAlert("Error", "Broadcast error, try again!")
+                                $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                               } else {
                                 $rootScope.$broadcast("update:content");
                               }
@@ -363,7 +373,7 @@ module.exports = function (app) {
                           tr.process_transaction($scope.mylogin, null, true);
                            setTimeout(function() {
                               if (localStorage.error == 1) {
-                                $rootScope.showAlert("Error", "Broadcast error, try again!")
+                                $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                               } else {
                                 $rootScope.$broadcast("update:content");
                               }
@@ -439,7 +449,7 @@ module.exports = function (app) {
                             $scope.replying = false;
                             setTimeout(function() {
                               if (localStorage.error == 1) {
-                                $rootScope.showAlert("Error", "Broadcast error, try again!")
+                                $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                               } else {
                                 $scope.data.comment = "";
                                 $rootScope.$broadcast("update:content");
@@ -484,7 +494,7 @@ module.exports = function (app) {
                             $scope.replying = false;
                             setTimeout(function() {
                               if (localStorage.error == 1) {
-                                $rootScope.showAlert("Error", "Broadcast error, try again!")
+                                $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                               } else {
                                 $scope.data.comment = "";
                                 $rootScope.$broadcast("update:content");
@@ -542,7 +552,7 @@ module.exports = function (app) {
                                 
                                 setTimeout(function() {
                                   if (localStorage.error == 1) {
-                                    $rootScope.showAlert("Error", "Broadcast error, try again!")
+                                    $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                                   } else {
                                     $rootScope.$broadcast("update:content");
                                   }

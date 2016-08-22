@@ -265,7 +265,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
           $rootScope.$broadcast('show:loading');
           $scope.mylogin = new window.steemJS.Login();
           $scope.mylogin.setRoles(["active"]);
-          console.log($rootScope.$storage.user.active.key_auths[0][0]);
+          //console.log($rootScope.$storage.user.active.key_auths[0][0]);
           var loginSuccess = $scope.mylogin.checkKeys({
               accountName: $rootScope.$storage.user.username,    
               password: $rootScope.$storage.user.password,
@@ -274,7 +274,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
               }}
           );
           if (loginSuccess) {
-            console.log($scope.mylogin);
+            //console.log($scope.mylogin);
             var tr = new window.steemJS.TransactionBuilder();
             if ($scope.data.type !== 'sp') {
 
@@ -283,13 +283,13 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
                 from: $rootScope.$storage.user.username,
                 to: $scope.data.username,
                 amount: tt,
-                memo: $scope.data.memo
+                memo: $scope.data.memo || ""
               });
               localStorage.error = 0;
               tr.process_transaction($scope.mylogin, null, true);  
               setTimeout(function() {
                 if (localStorage.error == 1) {
-                  $rootScope.showAlert("Error", "Broadcast error, try again!")
+                  $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                 } else {
                   $rootScope.showAlert("Info", "Transaction is broadcasted").then(function(){
                     $scope.data = {type: "steem", amount: 0.001};
@@ -308,7 +308,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
               tr.process_transaction($scope.mylogin, null, true);
               setTimeout(function() {
                 if (localStorage.error == 1) {
-                  $rootScope.showAlert("Error", "Broadcast error, try again!")
+                  $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                 } else {
                   $rootScope.showAlert("Info", "Transaction is broadcasted").then(function(){
                     $scope.data = {type: "steem", amount: 0.001};
@@ -418,7 +418,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         setTimeout(function() {
           $rootScope.$broadcast('hide:loading');
           if (localStorage.error == 1) {
-            $rootScope.showAlert("Error", "Broadcast error, try again!")
+            $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
           } else {
             //$scope.spost.comment = "";  
             $state.go("app.profile", {username: $rootScope.$storage.user.username});
@@ -469,7 +469,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           tr.process_transaction($scope.mylogin, null, true);
           setTimeout(function() {
             if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!")
+              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
               post.invoting = false;
               $scope.fetchPosts();
@@ -510,7 +510,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           tr.process_transaction($scope.mylogin, null, true);
           setTimeout(function() {
             if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!")
+              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
               post.invoting = false;
               $scope.fetchPosts();
@@ -551,7 +551,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           tr.process_transaction($scope.mylogin, null, true);
           setTimeout(function() {
             if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!")
+              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
               post.invoting = false;
               $scope.fetchPosts();  
@@ -803,7 +803,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $scope.replying = false;
         setTimeout(function() {
           if (localStorage.error == 1) {
-            $rootScope.showAlert("Error", "Broadcast error, try again!")
+            $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
           } else {
             $scope.data.comment = "";  
             (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
@@ -860,7 +860,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.$on('$ionicView.enter', function(){   
     //$scope.post = $rootScope.$storage.sitem;
     console.log($rootScope.$storage.sitem);
-    console.log($filter("metadata")($rootScope.$storage.sitem.body));
     $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
     (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
       //console.log(result);      
@@ -901,7 +900,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           
           setTimeout(function() {
             if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!")
+              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
               if ($rootScope.$storage.sitem.upvoted) {
                 $rootScope.$storage.sitem.upvoted = false;
@@ -946,7 +945,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           tr.process_transaction($scope.mylogin, null, true);
           setTimeout(function() {
             if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!")
+              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
                if ($rootScope.$storage.sitem.downvoted) {
                 $rootScope.$storage.sitem.upvoted = false;
@@ -992,7 +991,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           tr.process_transaction($scope.mylogin, null, true);
           setTimeout(function() {
             if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!")
+              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
               if ($rootScope.$storage.sitem.upvoted) {
                 $rootScope.$storage.sitem.upvoted = false;
@@ -1160,6 +1159,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       confirmPopup.then(function(res) {
         if(res) {
           var update = {profilePicUrl:""};
+          angular.merge(update, $rootScope.$storage.user.json_metadata);
+          
           console.log('You are sure');
           if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
             $scope.mylogin = new window.steemJS.Login();
@@ -1185,7 +1186,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               tr.process_transaction($scope.mylogin, null, true);
               setTimeout(function() {
                 if (localStorage.error == 1) {
-                  $rootScope.showAlert("Error", "Broadcast error, try again!")
+                  $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                 } else {
                   $scope.refreshLocalUserData();
                 }
@@ -1266,7 +1267,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               tr.process_transaction($scope.mylogin, null, true);
               setTimeout(function() {
                 if (localStorage.error == 1) {
-                  $rootScope.showAlert("Error", "Broadcast error, try again!")
+                  $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                 } else {
                   $scope.refreshLocalUserData();
                 }
@@ -1319,7 +1320,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               tr.process_transaction($scope.mylogin, null, true);
               setTimeout(function() {
                 if (localStorage.error == 1) {
-                  $rootScope.showAlert("Error", "Broadcast error, try again!")
+                  $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                 } else {
                   $scope.refreshLocalUserData();
                 }
@@ -1341,7 +1342,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     $rootScope.$broadcast('show:loading');
     // Then create the transaction and sign it without broadcasting
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-        console.log('Api ready:')
+        
         $scope.mylogin = new window.steemJS.Login();
         $scope.mylogin.setRoles(["posting"]);
         var loginSuccess = $scope.mylogin.checkKeys({
@@ -1351,6 +1352,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
             }}
         );
+        console.log(loginSuccess);
         if (loginSuccess) {
           var tr = new window.steemJS.TransactionBuilder();
           tr.add_type_operation("vote", {
@@ -1365,7 +1367,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           tr.process_transaction($scope.mylogin, null, true);
           setTimeout(function() {
             if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!")
+              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
               post.invoting = false;
               $scope.refresh();
@@ -1406,7 +1408,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           tr.process_transaction($scope.mylogin, null, true);
           setTimeout(function() {
             if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!")
+              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
               post.invoting = false;
               $scope.refresh();
@@ -1447,7 +1449,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           tr.process_transaction($scope.mylogin, null, true);
           setTimeout(function() {
             if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!")
+              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
               post.invoting = false;
               $scope.refresh();
@@ -1636,7 +1638,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
   $scope.$on('$ionicView.beforeEnter', function(){
     $rootScope.$storage.socket = localStorage.socketUrl;
     $scope.slider = {
-      value: 100,
+      value: $rootScope.$storage.voteWeight/100 || 100,
       options: {
         floor: 1,
         ceil: 100
