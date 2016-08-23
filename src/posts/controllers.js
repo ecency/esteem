@@ -220,6 +220,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   $scope.data = {type: "steem", amount: 0.001};
   $scope.changeUsername = function(typed) {
     console.log('searching');
+    $scope.data.username = angular.lowercase($scope.data.username);
     window.Api.database_api().exec("lookup_account_names", [[$scope.data.username]]).then(function(response){
       $scope.users = response[0]; 
       if (!$scope.$$phase) {

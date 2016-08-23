@@ -3,7 +3,7 @@
     <div class="list">
       <label class="item item-input">
         <span class="input-label">To</span>
-        <input type="text" ng-model="data.username" placeholder="username" ng-change="changeUsername()">
+        <input type="text" ng-model="data.username" placeholder="User e.g. good-karma" ng-change="changeUsername()">
       </label>
       <label class="item item-input item-select">
         <span class="input-label">Asset</span>
@@ -19,7 +19,7 @@
       </label>
       <label class="item item-input" ng-if="data.type != 'sp'">
         <span class="input-label">Memo</span>
-        <textarea ng-model="data.memo" rows="3" placeholder="memo text"></textarea>
+        <textarea ng-model="data.memo" rows="3" placeholder="Public Memo"></textarea>
       </label>
       <p class="item" ng-if="balance">Available: {{balance.balance}}, {{balance.sbd_balance}} <i class="icon ion-refresh pull-right" ng-click="refresh()"></i></p>
       <br>
