@@ -469,12 +469,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           localStorage.error = 0;
           tr.process_transaction($scope.mylogin, null, true);
           setTimeout(function() {
+            post.invoting = false;
             if (localStorage.error == 1) {
               $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
-              post.invoting = false;
               $scope.fetchPosts();
             }
+            
           }, 2000);
         }
       $rootScope.$broadcast('hide:loading');
@@ -510,10 +511,10 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           localStorage.error = 0;
           tr.process_transaction($scope.mylogin, null, true);
           setTimeout(function() {
+            post.invoting = false;
             if (localStorage.error == 1) {
               $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
-              post.invoting = false;
               $scope.fetchPosts();
             }
           }, 2000);
@@ -551,12 +552,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           localStorage.error = 0;
           tr.process_transaction($scope.mylogin, null, true);
           setTimeout(function() {
+            post.invoting = false;
             if (localStorage.error == 1) {
               $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
-              post.invoting = false;
               $scope.fetchPosts();  
             }
+            
           }, 2000);  
         }
       $rootScope.$broadcast('hide:loading');
@@ -873,8 +875,65 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       }
     });
   });
-  
+
+  $scope.getContent = function() {
+    (new Steem(localStorage.socketUrl)).getContent($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
+      //console.log(err);
+      //console.log(result);
+      if (!err) {
+        for (var j = result.active_votes.length - 1; j >= 0; j--) {
+          if (result.active_votes[j].voter === $rootScope.$storage.user.username) {
+            if (result.active_votes[j].percent > 0) {
+              result.upvoted = true;  
+            } else if (result.active_votes[j].percent < 0) {
+              result.downvoted = true;  
+            } else {
+              result.downvoted = false;  
+              result.upvoted = false;  
+            }
+          }
+        }
+        $rootScope.$storage.sitem = result;
+      }
+      if (!$scope.$$phase) {
+        $scope.$apply();
+      }
+    });
+  };
+  $scope.$watch('data', function(newValue, oldValue){
+      //console.log('changed');
+      if (newValue) {
+        var length = newValue.length;
+        if (length < $scope.limit) {
+          $scope.noMoreItemsAvailable = true;
+        }
+        for (var i = 0; i < newValue.length; i++) {
+          if ($rootScope.$storage.user){
+            for (var j = newValue[i].active_votes.length - 1; j >= 0; j--) {
+              if (newValue[i].active_votes[j].voter === $rootScope.$storage.user.username) {
+                if (newValue[i].active_votes[j].percent > 0) {
+                  newValue[i].upvoted = true;  
+                } else if (newValue[i].active_votes[j].percent < 0) {
+                  newValue[i].downvoted = true;  
+                } else {
+                  newValue[i].downvoted = false;  
+                  newValue[i].upvoted = false;  
+                }
+              }
+            }
+          }
+          if ($rootScope.$storage.view == 'card') {
+            newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata?newValue[i].json_metadata:[]);
+          }
+        }
+      }      
+      if (!$scope.$$phase){
+        $scope.$apply();
+      }
+  }, true);
+
   $scope.upvotePost = function(post) {
+    post.invoting = true;
     $rootScope.$broadcast('show:loading');
     // Then create the transaction and sign it without broadcasting
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
@@ -902,17 +961,13 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           tr.process_transaction($scope.mylogin, null, true);
           
           setTimeout(function() {
+            post.invoting = false;
             if (localStorage.error == 1) {
               $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
-              if ($rootScope.$storage.sitem.upvoted) {
-                $rootScope.$storage.sitem.upvoted = false;
-                $rootScope.$storage.sitem.downvoted = false;
-              } else {
-                $rootScope.$storage.sitem.upvoted = true;
-                $rootScope.$storage.sitem.downvoted = false;  
-              }        
+              $scope.getContent();
             }
+            
           }, 2000);
         } 
       $rootScope.$broadcast('hide:loading');
@@ -922,6 +977,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     }
   };
   $scope.downvotePost = function(post) {
+    post.invoting = true;
     $rootScope.$broadcast('show:loading');
     // Then create the transaction and sign it without broadcasting
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
@@ -947,17 +1003,13 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           localStorage.error = 0;
           tr.process_transaction($scope.mylogin, null, true);
           setTimeout(function() {
+            post.invoting = false;
             if (localStorage.error == 1) {
               $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
-               if ($rootScope.$storage.sitem.downvoted) {
-                $rootScope.$storage.sitem.upvoted = false;
-                $rootScope.$storage.sitem.downvoted = false;  
-              } else {
-                $rootScope.$storage.sitem.upvoted = false;
-                $rootScope.$storage.sitem.downvoted = true;  
-              }   
+              $scope.getContent();   
             }
+            
           }, 2000);
         }
       
@@ -968,6 +1020,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     }
   };
   $scope.unvotePost = function(post) {
+    post.invoting = true;
     $rootScope.$broadcast('show:loading');
     // Then create the transaction and sign it without broadcasting
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
@@ -993,16 +1046,13 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           localStorage.error = 0;
           tr.process_transaction($scope.mylogin, null, true);
           setTimeout(function() {
+            post.invoting = false;
             if (localStorage.error == 1) {
               $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
-              if ($rootScope.$storage.sitem.upvoted) {
-                $rootScope.$storage.sitem.upvoted = false;
-              }
-              if ($rootScope.$storage.sitem.downvoted) {
-                $rootScope.$storage.sitem.downvoted = false;
-              }
+              $scope.getContent();
             }
+            
           }, 2000);
           
         }
@@ -1452,12 +1502,13 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           localStorage.error = 0;
           tr.process_transaction($scope.mylogin, null, true);
           setTimeout(function() {
+            post.invoting = false;
             if (localStorage.error == 1) {
               $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
-              post.invoting = false;
               $scope.refresh();
             }
+            
           }, 2000);
         } 
       $rootScope.$broadcast('hide:loading');
@@ -1493,12 +1544,13 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           localStorage.error = 0;
           tr.process_transaction($scope.mylogin, null, true);
           setTimeout(function() {
+            post.invoting = false;
             if (localStorage.error == 1) {
               $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
-              post.invoting = false;
               $scope.refresh();
             }
+            
           }, 2000);
         }
       $rootScope.$broadcast('hide:loading');
@@ -1534,12 +1586,13 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           localStorage.error = 0;
           tr.process_transaction($scope.mylogin, null, true);
           setTimeout(function() {
+            post.invoting = false;
             if (localStorage.error == 1) {
               $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
-              post.invoting = false;
               $scope.refresh();
             }
+            
           }, 2000);
         }
       $rootScope.$broadcast('hide:loading');

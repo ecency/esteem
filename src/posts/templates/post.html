@@ -18,7 +18,7 @@
     <br>
     
     <div class="row gray">
-      <div class="col col-33">
+      <div class="col col-33"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
       <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted"></i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted"></i>&nbsp;{{$root.$storage.sitem.net_votes}}&nbsp;
        <i class="icon ion-android-arrow-dropdown-circle" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted"></i><i class="icon ion-android-arrow-dropdown-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted"></i></div>
       <div class="col col-33"><i class="ion-social-usd"></i>&nbsp;{{$root.$storage.sitem.total_pending_payout_value.split(" ")[0]|number}}</div>
