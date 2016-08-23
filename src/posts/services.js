@@ -9,11 +9,16 @@ module.exports = function (app) {
 			},
 			getconfig: function() {
 				return $http.get('');
-			}
+			},
+      getFollowers: function(user, follower, what, limit) {
+        return window.Api.follow_api().exec("get_followers", [user, follower, what, limit]);
+      },
+      getFollowing: function(user, follower, what, limit) {
+        return window.Api.follow_api().exec("get_following", [user, follower, what, limit]);
+      }
 		};
 	}])
 
-	
 	app.filter('timeago', function() {
         return function(input, p_allowFuture) {
 		

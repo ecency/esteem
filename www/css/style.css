@@ -37,6 +37,7 @@ hr {
 .pull-right {
 	float: right;
 }
+
 .bold {
 	font-weight: bold;
 }
@@ -589,4 +590,21 @@ textarea.markdown-input {
   right: 12px;
   bottom: initial;
   left: initial;
+}
+
+.vcenter{
+    top: 30%;
+    overflow: auto;
+}
+.button-stretch {
+    width: 100%;
+}
+.col-offset-15 {
+    margin-left: 15%;
+}
+.settings i {
+  font-size: 18px!important;
+}
+.settings .row .slabel {
+  
 }

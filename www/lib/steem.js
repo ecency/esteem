@@ -61,20 +61,20 @@ Steem.prototype.getApiByName = function(apiName, callback) {
 // [follow_api]
 
 /* get_followers */
-Steem.prototype.getFollowers = function(following, startFollower, limit, callback) {
+Steem.prototype.getFollowers = function(following, startFollower, what, limit, callback) {
 	this.send('follow_api', {
 		'method': 'get_followers',
-		'params': [following, startFollower, limit]
+		'params': [following, startFollower, what, limit]
 	}, function(err, result) {
 		callback(err, result);
 	});
 };
 
 /* get_followers */
-Steem.prototype.getFollowing = function(follower, startFollowing, limit, callback) {
+Steem.prototype.getFollowing = function(follower, startFollowing, what, limit, callback) {
 	this.send('follow_api', {
 		'method': 'get_following',
-		'params': [follower, startFollowing, limit]
+		'params': [follower, startFollowing, what, limit]
 	}, function(err, result) {
 		callback(err, result);
 	});

@@ -112,7 +112,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
   $ionicConfigProvider.navBar.alignTitle('left')
 });
 
-app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen) {
+app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout) {
   $rootScope.$storage = $localStorage;
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -143,12 +143,22 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     if (navigator.splashscreen) {
       navigator.splashscreen.hide();
     }
-
+    console.log("app start ready");
+    setTimeout(function() {
+      if ($rootScope.$storage.pincode) {
+        $rootScope.$broadcast("pin:check");
+      }  
+    }, 1000);
     $rootScope.showAlert = function(title, msg) {
       var alertPopup = $ionicPopup.alert({
         title: title,
         template: msg
       });
+      if (msg.indexOf("error")>-1) {
+        window.Api.initPromise.then(function(response) {
+          console.log("broadcast error", response);
+        });
+      }
       return alertPopup/*.then(function(res) {
         console.log('Thank you ...');
       });*/
@@ -169,31 +179,135 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
       console.log("from "+fromState.name+" to "+toState.name);
     });
+
     $ionicPlatform.on('resume', function(){
       console.log("app resume");
-      if (!angular.isDefined($rootScope.timeint)) {
+      /*if (!angular.isDefined($rootScope.timeint)) {
         window.Api.initPromise.then(function(response) {
-          console.log("Api ready state change:", response);
+          console.log("Api ready state change: "+angular.toJson(response));
           $rootScope.timeint = $interval(function(){
             window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
               console.log("get_dynamic_global_properties", response.head_block_number);
             });
           }, 20000);
         });
+      }*/
+      if ($rootScope.$storage.pincode) {
+        $rootScope.$broadcast("pin:check");
       }
     });
     $ionicPlatform.on('pause', function(){
       console.log("app pause");
-      if (angular.isDefined($rootScope.timeint)) {
+      /*if (angular.isDefined($rootScope.timeint)) {
+        console.log("cancel interval");
         $interval.cancel($rootScope.timeint);
         $rootScope.timeint = undefined;
-      }
+      }*/
     });
     
     $ionicPlatform.on('offline', function(){
       console.log("app offline");
     });
 
+    $rootScope.init = function() {
+      $rootScope.passcode = "";
+      if (!$rootScope.$$phase) {
+        $rootScope.$apply();
+      }
+    };
+ 
+    $rootScope.add = function(value) {
+      $rootScope.pinerror = "";
+      if($rootScope.passcode.length < 4) {
+        $rootScope.passcode = $rootScope.passcode + value;
+        if($rootScope.passcode.length == 4) {
+          $timeout(function() {
+            console.log("PIN "+$rootScope.passcode);
+            if ($rootScope.pintype == 3) {
+              if ($rootScope.$storage.pincode == $rootScope.passcode) {
+                $rootScope.passcode = "";
+                $rootScope.closePin();
+              } else {
+                $rootScope.pintry += 1;
+                $rootScope.pinerror = "NOT MATCH"+"("+$rootScope.pintry+")"; 
+                if ($rootScope.pintry>3) {
+                  $rootScope.$storage.pincode = undefined;
+                  $rootScope.pintry = 0;
+                  $rootScope.$broadcast("pin:failed");
+                  $rootScope.closePin();  
+                }
+              }
+            }
+            if ($rootScope.pintype == 0) {
+              console.log("type 0: set pin");
+              if ($rootScope.$storage.pincode) {
+                $rootScope.$broadcast("pin:check");
+                $rootScope.closePin();
+              } else {
+                $rootScope.$storage.pincode = $rootScope.passcode;  
+                $rootScope.pinsubtitle = "Confirm PIN";
+                $rootScope.passcode = "";
+                $rootScope.pintype = 3;
+                $rootScope.pintry = 0;
+              }
+            }
+            if ($rootScope.pintype == 1) {
+              console.log("type 1: check pin");                  
+              if ($rootScope.$storage.pincode == $rootScope.passcode){
+                $rootScope.$broadcast('pin:correct');
+                $rootScope.passcode = "";
+                $rootScope.closePin();
+              } else {
+                $rootScope.pintry += 1;
+                $rootScope.pinerror = "INCORRECT"+"("+$rootScope.pintry+")"; 
+                if ($rootScope.pintry>3) {
+                  $rootScope.$storage.$reset();
+                  $rootScope.closePin();  
+                }
+              }
+            }
+            
+          }, 50);
+        }
+      }
+    };
+ 
+    $rootScope.delete = function() {
+      $rootScope.pinerror = "";
+      if($rootScope.passcode.length > 0) {
+        $rootScope.passcode = $rootScope.passcode.substring(0, $rootScope.passcode.length - 1);
+      }
+    }
+
+    $ionicModal.fromTemplateUrl('templates/pincode.html', {
+      scope: $rootScope
+    }).then(function(modal) {
+      $rootScope.pinmodal = modal;
+    });
+    $rootScope.closePin = function() {
+      $rootScope.pinmodal.hide();
+    };
+    $rootScope.openPin = function(type) {
+      $rootScope.passcode = "";
+      if (type == 0) {
+        $rootScope.pintype = 0;
+        $rootScope.pintitle = "Set PIN";
+        $rootScope.pinsubtitle = "Set PIN";
+      }
+      if (type == 1) {
+        $rootScope.pintype = 1;
+        $rootScope.pintry = 0;
+        $rootScope.pintitle = "Enter PIN";
+        $rootScope.pinsubtitle = "Enter PIN";
+      }
+      $rootScope.pinmodal.show();
+    };
+    $rootScope.$on("pin:new", function(){
+      $rootScope.openPin(0);
+    });
+    $rootScope.$on("pin:check", function(){
+      $rootScope.openPin(1);
+    });
 
   });
 });
