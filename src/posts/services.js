@@ -334,7 +334,7 @@ module.exports = function (app) {
                               voter: $rootScope.$storage.user.username,
                               author: post.author,
                               permlink: post.permlink,
-                              weight: -10000
+                              weight: $rootScope.$storage.voteWeight*-1 || -10000
                           });
                           localStorage.error = 0;
                           tr.process_transaction($scope.mylogin, null, true);

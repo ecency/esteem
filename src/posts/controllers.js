@@ -506,7 +506,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
               voter: $rootScope.$storage.user.username,
               author: post.author,
               permlink: post.permlink,
-              weight: -10000
+              weight: $rootScope.$storage.voteWeight*-1 || -10000
           });
           localStorage.error = 0;
           tr.process_transaction($scope.mylogin, null, true);
@@ -997,7 +997,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               voter: $rootScope.$storage.user.username,
               author: post.author,
               permlink: post.permlink,
-              weight: -10000
+              weight: $rootScope.$storage.voteWeight*-1 || -10000
           });
           //var my_pubkeys = $scope.mylogin.getPubKeys();
           localStorage.error = 0;
@@ -1538,7 +1538,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               voter: $rootScope.$storage.user.username,
               author: post.author,
               permlink: post.permlink,
-              weight: -10000
+              weight: $rootScope.$storage.voteWeight*-1 || -10000
           });
           //var my_pubkeys = $scope.mylogin.getPubKeys();
           localStorage.error = 0;
@@ -1828,6 +1828,11 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     } else {
       $scope.data = {pin: false};
     }
+
+    if (!$scope.$$phase){
+      $scope.$apply();
+    }
+
   });
   
   
