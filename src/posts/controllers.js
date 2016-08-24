@@ -115,6 +115,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $rootScope.$storage.mylogin = null;
     //make sure user credentials cleared.
     $ionicSideMenuDelegate.toggleLeft();
+    $state.go('app.posts', {}, {reload:true});
     $rootScope.$broadcast("user:logout");
   };
   $scope.data = {};
