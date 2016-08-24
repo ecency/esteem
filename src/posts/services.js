@@ -212,6 +212,12 @@ module.exports = function (app) {
 			return Math.floor(reputation_level);
 		}
 	})
+
+  app.filter("sumPostTotal", function(){
+    return function(value) {
+      return (parseFloat(value.total_payout_value.split(" ")[0])+parseFloat(value.total_pending_payout_value.split(" ")[0]));
+    }
+  });
     
     app.filter('hrefToJS', function ($sce, $sanitize) {
         return function (text) {

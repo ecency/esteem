@@ -1,7 +1,7 @@
 module.exports = function (app) {
 //angular.module('steem.controllers', [])
 
-app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform) {
+app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform, $filter) {
 
   $scope.loginData = {};  
 
@@ -789,7 +789,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       );
       if (loginSuccess) {
         var tr = new window.steemJS.TransactionBuilder();
-        console.log(angular.fromJson($scope.post.json_metadata));
+        //console.log(angular.fromJson($scope.post.json_metadata));
         var t = new Date();
         var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
         var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ""};
