@@ -91,9 +91,9 @@ module.exports = function (app) {
     app.filter('parseUrl', function($sce) {
 	    var urls = /(\b(https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;-]*[-A-Z0-9+&@#\/%=~_|])/gim;
 	    var emails = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/gim;
-	 	var imgs = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/gim;
-		var youtube = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
-		var youtubeid = /(?:(?:youtube.com\/watch\?v=)|(?:youtu.be\/))([A-Za-z0-9\_\-]+)/i;
+  	 	var imgs = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/gim;
+  		var youtube = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+  		var youtubeid = /(?:(?:youtube.com\/watch\?v=)|(?:youtu.be\/))([A-Za-z0-9\_\-]+)/i;
 		
 	    return function(textu, subpart) {
 	        var options = {
@@ -155,6 +155,20 @@ module.exports = function (app) {
                 }
             }
             return out;
+        };
+    });
+
+     app.filter('metadataUsers', function($sce) {
+        var users = /(^|\s)(@[a-z][-\.a-z\d]+[a-z\d])/gim;
+        return function(textu) {
+          if (textu) {
+            var out = {};
+            var musers = textu.match(users);
+            
+            console.log(musers);
+
+            return textu;            
+          }
         };
     });
     

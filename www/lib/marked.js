@@ -934,7 +934,17 @@ Renderer.prototype.image = function(href, title, text) {
 };
 
 Renderer.prototype.text = function(text) {
-  return text;
+  var users = /(^|\s)(@[a-z][-\.a-z\d]+[a-z\d])/gim;
+  var out = "";
+
+  if (text.match(users)){
+    var exist = text.match(users);
+    out = text.replace(users, '<a href="#/app/profile/'+exist[0].substring(1)+'">'+exist[0]+'</a>');  
+  } else {
+    out = text;
+  }
+
+  return out;
 };
 
 /**

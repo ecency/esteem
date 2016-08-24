@@ -1065,7 +1065,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   };
 
   $scope.$on('$ionicView.leave', function(){
-    $rootScope.$storage.sitem = undefined;
+    //$rootScope.$storage.sitem = undefined;
   });
 })
 
@@ -1263,8 +1263,16 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
   
 })
 
-app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicActionSheet, $cordovaCamera, ImageUploadService, $ionicPopup, $ionicSideMenuDelegate) {
+app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicActionSheet, $cordovaCamera, ImageUploadService, $ionicPopup, $ionicSideMenuDelegate, $ionicHistory) {
   
+  $scope.goBack = function() {
+    var viewHistory = $ionicHistory.viewHistory();
+    if (!viewHistory.backView) {
+      $scope.openMenu();
+    } else {
+      $ionicHistory.goBack();  
+    }
+  };
   $scope.show = function() {
    var hideSheet = $ionicActionSheet.show({
      buttons: [
@@ -1675,7 +1683,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     });
   };
   $scope.$on('$ionicView.beforeEnter', function(){
-    
+    console.log($ionicHistory.viewHistory());
+
     if ($rootScope.$storage.user.username !== $stateParams.username) {
       $scope.getOtherUsersData();  
     }/* else {
