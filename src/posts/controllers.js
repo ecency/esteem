@@ -1291,6 +1291,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         if(res) {
           var update = {profilePicUrl:""};
           angular.merge(update, $rootScope.$storage.user.json_metadata);
+          update.profilePicUrl = "";
 
           console.log('You are sure');
           if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
@@ -1372,8 +1373,10 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       $cordovaCamera.getPicture(options).then(function(imageData) {
         ImageUploadService.uploadImage(imageData).then(function(result) {
           var url = result.secure_url || '';
-          var update = { profilePicUrl:url };
+          var update = { profilePicUrl: "" };
           angular.merge(update, $rootScope.$storage.user.json_metadata);
+          update.profilePicUrl = url;
+          
 
           $rootScope.$broadcast('show:loading');
           if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
@@ -1431,8 +1434,9 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       }).then(function(res) {
         console.log('Your url is', res);
         if (res) {
-          var update = {profilePicUrl: res};
+          var update = { profilePicUrl: "" };
           angular.merge(update, $rootScope.$storage.user.json_metadata);
+          update.profilePicUrl = res;
 
           if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
             $scope.mylogin = new window.steemJS.Login();
