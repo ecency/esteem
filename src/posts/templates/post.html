@@ -13,7 +13,7 @@
   	<p class="title h3">{{$root.$storage.sitem.title}}</p>
   	<div class="stitle row gray"><div class="col"><i class="icon ion-android-time"></i> {{$root.$storage.sitem.created|timeago}} by <i class="icon ion-android-person"></i>&nbsp;<b>{{$root.$storage.sitem.author}}</b>&nbsp;<div class="reputation">{{$root.$storage.sitem.author_reputation|reputation|number:0}}</div> in&nbsp;<i class="icon ion-pricetags"></i>&nbsp;{{$root.$storage.sitem.category}}</div></div>
   	<br>
-    <div class="selectable bodytext" ng-bind-html="$root.$storage.sitem.body | parseUrl | hrefToJS">
+    <div class="selectable padding bodytext" ng-bind-html="$root.$storage.sitem.body | parseUrl | hrefToJS">
     </div>
     <br>
     
