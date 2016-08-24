@@ -309,5 +309,18 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.openPin(1);
     });
 
+    if (window.cordova) {
+      //FCMPlugin.getToken( successCallback(token), errorCallback(err) );
+      //Keep in mind the function will return null if the token has not been established yet.
+      FCMPlugin.getToken(
+        function(token){
+          alert(token);
+        },
+        function(err){
+          console.log('error retrieving token: ' + err);
+        }
+      );  
+    }
+
   });
 });

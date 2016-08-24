@@ -865,7 +865,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   //$scope.post = {};
   $scope.$on('$ionicView.enter', function(){   
     //$scope.post = $rootScope.$storage.sitem;
-    //console.log($rootScope.$storage.sitem);
+    console.log($rootScope.$storage.sitem);
     $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
     (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
       //console.log(result);      

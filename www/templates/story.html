@@ -26,7 +26,7 @@
       <input type="text" name="categories" placeholder="Tags" ng-model="spost.tags" ng-change="tagsChange()" style="width:100%;">
       <hr>
       <p>Preview</p>
-      <div ng-if="spost.body" class="padding bodytext" ng-bind-html="spost.body | parseUrl | hrefToJS"></div>
+      <div ng-if="spost.body" class="padding bodytext" ng-bind-html="spost.body | parseUrl "></div>
 
       <!--undo, redo, bold, italic, heading, code, ullist, ollist, indent, outdent, link, img, hr, h0, h1, h2, h3, h4, h5, h6, tab, untab-->
   </ion-content>

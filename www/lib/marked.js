@@ -910,10 +910,10 @@ Renderer.prototype.link = function(href, title, text) {
     out = href.replace(imgs, '<img src="$1" class="postimg" />');  
   } else {
     if (href.match(youtube)) {
-      var YouTube = mediaParseIdFromUrl('youtube', href);
-      out = href.replace(youtube, '<iframe width="100%" height="280" src="http://www.youtube.com/embed/' + YouTube + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
+      var YouTube1 = mediaParseIdFromUrl('youtube', href);
+      out = href.replace(youtube, '<iframe width="100%" height="280" src="http://www.youtube.com/embed/' + YouTube1 + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
     } else {
-      out = '<a href="' + href + '"';
+      out = '<a href onClick=\'window.open("' + href + '", \"_blank\", \"location=yes\");return false;\'';
       if (title) {
         out += ' title="' + title + '"';
       }

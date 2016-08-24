@@ -52,7 +52,11 @@
       "id": "cordova-plugin-splashscreen"
     },
     "cordova-plugin-camera",
-    "cordova-plugin-app-version"
+    "cordova-plugin-app-version",
+    {
+      "locator": "https://github.com/looklookson/cordova-plugin-fcm",
+      "id": "cordova-plugin-fcm"
+    }
   ],
   "cordovaPlatforms": [
     "android",
