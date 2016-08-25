@@ -115,7 +115,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $rootScope.$storage.mylogin = null;
     //make sure user credentials cleared.
     $ionicSideMenuDelegate.toggleLeft();
-    $state.go('app.posts', {}, {reload:true});
+    $state.go('app.posts', {tags:""}, {reload:true});
     $rootScope.$broadcast("user:logout");
   };
   $scope.data = {};
@@ -137,7 +137,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   };
   $scope.clearSearch = function() {
     if ($rootScope.$storage.tag) {
-      $rootScope.$storage.tag = "";
+      $rootScope.$storage.tag = undefined;
       $rootScope.$storage.taglimits = undefined;
       $rootScope.$broadcast('close:popover');
     }
@@ -200,7 +200,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $rootScope.$storage.taglimits = yy;
     $scope.closeSmodal();
     $rootScope.$broadcast('close:popover');
-    $state.go("app.posts", {}, {reload:true});
+    $state.go("app.posts", {tags: xx}, {reload:true});
   };
   $scope.openUser = function(xy) {
     console.log("opening user "+xy);
@@ -342,7 +342,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   });
 
 });
-app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter) {
+app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams) {
 
   $rootScope.$on('filter:change', function() {
     $rootScope.$broadcast('show:loading');
@@ -674,6 +674,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $scope.popover.hide();
   };
   $rootScope.$on('close:popover', function(){
+    $scope.fetchPosts();
     $scope.closePopover();
   });
   $scope.$on('$destroy', function() {
@@ -705,6 +706,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   
   $scope.$on('$ionicView.afterEnter', function(){
     $scope.limit = 7;
+    
     $rootScope.$broadcast('show:loading');
     console.log('enter ');
     if (!$rootScope.$storage.socket) {
@@ -743,6 +745,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   });
   
   $scope.$on('$ionicView.beforeEnter', function(){
+    if ($stateParams.tags) {
+      $rootScope.$storage.tag = $stateParams.tags;
+    }
     $rootScope.$broadcast('show:loading');
   })
   $scope.$on('$ionicView.loaded', function(){
@@ -806,7 +811,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       if (loginSuccess) {
         var tr = new window.steemJS.TransactionBuilder();
         var permlink = $scope.spost.permlink;
-        var json = angular.merge($scope.spost.json_metadata, {tags: $scope.spost.tags.split(" ")});
+        var json = angular.merge(angular.fromJson($scope.spost.json_metadata), {tags: $scope.spost.tags.split(" ")});
 
         tr.add_type_operation("comment", {
           parent_author: "",
@@ -827,8 +832,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           if (localStorage.error == 1) {
             $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
           } else {
-            //$scope.spost.comment = "";  
-            $scope.closePostPopover();
+            $scope.spost = {};  
+            //$scope.closePostPopover();
             //$state.go("app.profile", {username: $rootScope.$storage.user.username});
           }
         }, 2000);
@@ -1967,7 +1972,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     $ionicHistory.nextViewOptions({
       disableBack: true
     });
-    $state.go('app.posts');
+    $state.go('app.posts', {tags:""});
   };
 
 });

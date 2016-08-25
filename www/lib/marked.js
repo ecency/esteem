@@ -934,14 +934,21 @@ Renderer.prototype.image = function(href, title, text) {
 };
 
 Renderer.prototype.text = function(text) {
-  var users = /(^|\s)(@[a-z][-\.a-z\d]+[a-z\d])/gim;
+  var users = /(^|\s)(@)([a-z][-\.a-z\d]+[a-z\d])/gim;
+  var tags = /(^|\s)(#)([a-z][-\.a-z\d]+[a-z\d])/gim;
   var out = "";
 
   if (text.match(users)){
     var exist = text.match(users);
-    out = text.replace(users, '<a href="#/app/profile/'+exist[0].substring(1)+'">'+exist[0]+'</a>');  
+    //console.log(exist)
+    out = text.replace(users, '<a href="#/app/profile/$3">$&</a>');  
   } else {
     out = text;
+  }
+  var existt = out.match(tags);
+  if(existt) {
+    //console.log(existt);
+    out = out.replace(tags, '<a href="#/app/posts/$3">$&</a>');  
   }
 
   return out;

@@ -87,7 +87,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
   })
 
   .state('app.posts', {
-    url: '/posts',
+    url: '/posts/:tags',
     views: {
       'menuContent': {
         //templateUrl: 'templates/posts.html',
@@ -108,8 +108,9 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/posts');
+  $urlRouterProvider.otherwise('/app/posts/');
   $ionicConfigProvider.navBar.alignTitle('left')
+  $ionicConfigProvider.backButton.text('').icon('ion-ios-arrow-back');
 });
 
 app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout) {

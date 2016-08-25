@@ -138,11 +138,11 @@ textarea.markdown-input {
 }
 .bodytext ol {
   list-style-type: decimal!important;
-  padding-left: 10px;
+  padding-left: 15px;
 }
 .bodytext ul {
   list-style-type: disc!important;
-  padding-left: 10px;
+  padding-left: 15px;
 }
 .markdown-toolbar button {
   width: 20px!important;
