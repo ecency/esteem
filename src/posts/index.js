@@ -183,7 +183,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     $ionicPlatform.on('resume', function(){
       console.log("app resume");
-      /*if (!angular.isDefined($rootScope.timeint)) {
+      if (!angular.isDefined($rootScope.timeint)) {
         window.Api.initPromise.then(function(response) {
           console.log("Api ready state change: "+angular.toJson(response));
           $rootScope.timeint = $interval(function(){
@@ -192,18 +192,18 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             });
           }, 20000);
         });
-      }*/
+      }
       if ($rootScope.$storage.pincode) {
         $rootScope.$broadcast("pin:check");
       }
     });
     $ionicPlatform.on('pause', function(){
       console.log("app pause");
-      /*if (angular.isDefined($rootScope.timeint)) {
+      if (angular.isDefined($rootScope.timeint)) {
         console.log("cancel interval");
         $interval.cancel($rootScope.timeint);
         $rootScope.timeint = undefined;
-      }*/
+      }
     });
     
     $ionicPlatform.on('offline', function(){
@@ -315,7 +315,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       //Keep in mind the function will return null if the token has not been established yet.
       FCMPlugin.getToken(
         function(token){
-          alert(token);
+          console.log("device "+token);
         },
         function(err){
           console.log('error retrieving token: ' + err);
@@ -329,15 +329,32 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         function(data){
           if(data.wasTapped){
             //Notification was received on device tray and tapped by the user.
-            alert( JSON.stringify(data) );
+            //alert( JSON.stringify(data) );
+            var alertPopup = $ionicPopup.alert({
+              title: data.title,
+              template: data.message
+            });
+            alertPopup.then(function(res) {
+              console.log('Thank you for seeing alert from tray');
+            });
+
           }else{
             //Notification was received in foreground. Maybe the user needs to be notified.
-            alert( JSON.stringify(data) );
+            //alert( JSON.stringify(data) );
+            
+            var alertPopup = $ionicPopup.alert({
+              title: data.title,
+              template: data.message
+            });
+            alertPopup.then(function(res) {
+              console.log('Thank you for seeing alert');
+            });
+            
           }
         },
         function(msg){
           console.log('onNotification callback successfully registered: ' + msg);
-          alert("msg "+JSON.stringify(msg));
+          //alert("msg "+JSON.stringify(msg));
         },
         function(err){
           console.log('Error registering onNotification callback: ' + err);

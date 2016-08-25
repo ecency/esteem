@@ -1455,46 +1455,47 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           var update = { profilePicUrl: "" };
           angular.merge(update, $rootScope.$storage.user.json_metadata);
           update.profilePicUrl = url;
+          setTimeout(function() {
+            $rootScope.$broadcast('show:loading');
+            if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+              $scope.mylogin = new window.steemJS.Login();
+              $scope.mylogin.setRoles(["owner","active","posting"]);
+              var loginSuccess = $scope.mylogin.checkKeys({
+                  accountName: $rootScope.$storage.user.username,    
+                  password: $rootScope.$storage.user.password,
+                  auths: {
+                    owner: $rootScope.$storage.user.owner.key_auths,
+                    active: $rootScope.$storage.user.active.key_auths,
+                    posting: $rootScope.$storage.user.posting.key_auths
+                  }}
+              );
+              if (loginSuccess) {
+                var tr = new window.steemJS.TransactionBuilder();
+                tr.add_type_operation("account_update", {
+                  account: $rootScope.$storage.user.username,
+                  memo_key: $rootScope.$storage.user.memo_key,
+                  json_metadata: JSON.stringify(update)      
+                });
+                
+                localStorage.error = 0;
+
+                tr.process_transaction($scope.mylogin, null, true);
+
+                setTimeout(function() {
+                  if (localStorage.error == 1) {
+                    $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage);
+                  } else {
+                    $scope.refreshLocalUserData();
+                  }
+                }, 2000);
+              }
+            $rootScope.$broadcast('hide:loading');
+          } else {
+            $rootScope.$broadcast('hide:loading');
+            $rootScope.showAlert("Warning", "Please, login to Update");
+          }
+          }, 2000);
           
-
-          $rootScope.$broadcast('show:loading');
-          if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-            $scope.mylogin = new window.steemJS.Login();
-            $scope.mylogin.setRoles(["owner","active","posting"]);
-            var loginSuccess = $scope.mylogin.checkKeys({
-                accountName: $rootScope.$storage.user.username,    
-                password: $rootScope.$storage.user.password,
-                auths: {
-                  owner: $rootScope.$storage.user.owner.key_auths,
-                  active: $rootScope.$storage.user.active.key_auths,
-                  posting: $rootScope.$storage.user.posting.key_auths
-                }}
-            );
-            if (loginSuccess) {
-              var tr = new window.steemJS.TransactionBuilder();
-              tr.add_type_operation("account_update", {
-                account: $rootScope.$storage.user.username,
-                memo_key: $rootScope.$storage.user.memo_key,
-                json_metadata: JSON.stringify(update)      
-              });
-              
-              localStorage.error = 0;
-
-              tr.process_transaction($scope.mylogin, null, true);
-
-              setTimeout(function() {
-                if (localStorage.error == 1) {
-                  $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage);
-                } else {
-                  $scope.refreshLocalUserData();
-                }
-              }, 2000);
-            }
-          $rootScope.$broadcast('hide:loading');
-        } else {
-          $rootScope.$broadcast('hide:loading');
-          $rootScope.showAlert("Warning", "Please, login to Update");
-        }
           $cordovaCamera.cleanup();
         },
         function(err) {
@@ -1516,41 +1517,43 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           var update = { profilePicUrl: "" };
           angular.merge(update, $rootScope.$storage.user.json_metadata);
           update.profilePicUrl = res;
-
-          if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-            $scope.mylogin = new window.steemJS.Login();
-            $scope.mylogin.setRoles(["owner","active","posting"]);
-            var loginSuccess = $scope.mylogin.checkKeys({
-                accountName: $rootScope.$storage.user.username,    
-                password: $rootScope.$storage.user.password,
-                auths: {
-                  owner: $rootScope.$storage.user.owner.key_auths,
-                  active: $rootScope.$storage.user.active.key_auths,
-                  posting: $rootScope.$storage.user.posting.key_auths
-                }}
-            );
-            if (loginSuccess) {
-              var tr = new window.steemJS.TransactionBuilder();
-              tr.add_type_operation("account_update", {
-                account: $rootScope.$storage.user.username,
-                memo_key: $rootScope.$storage.user.memo_key,
-                json_metadata: JSON.stringify(update)      
-              });
-              localStorage.error = 0;
-              tr.process_transaction($scope.mylogin, null, true);
-              setTimeout(function() {
-                if (localStorage.error == 1) {
-                  $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-                } else {
-                  $scope.refreshLocalUserData();
-                }
-              }, 2000);
+          setTimeout(function() {
+            if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+              $scope.mylogin = new window.steemJS.Login();
+              $scope.mylogin.setRoles(["owner","active","posting"]);
+              var loginSuccess = $scope.mylogin.checkKeys({
+                  accountName: $rootScope.$storage.user.username,    
+                  password: $rootScope.$storage.user.password,
+                  auths: {
+                    owner: $rootScope.$storage.user.owner.key_auths,
+                    active: $rootScope.$storage.user.active.key_auths,
+                    posting: $rootScope.$storage.user.posting.key_auths
+                  }}
+              );
+              if (loginSuccess) {
+                var tr = new window.steemJS.TransactionBuilder();
+                tr.add_type_operation("account_update", {
+                  account: $rootScope.$storage.user.username,
+                  memo_key: $rootScope.$storage.user.memo_key,
+                  json_metadata: JSON.stringify(update)      
+                });
+                localStorage.error = 0;
+                tr.process_transaction($scope.mylogin, null, true);
+                setTimeout(function() {
+                  if (localStorage.error == 1) {
+                    $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                  } else {
+                    $scope.refreshLocalUserData();
+                  }
+                }, 2000);
+              }
+              $rootScope.$broadcast('hide:loading');
+            } else {
+              $rootScope.$broadcast('hide:loading');
+              $rootScope.showAlert("Warning", "Please, login to Update");
             }
-            $rootScope.$broadcast('hide:loading');
-          } else {
-            $rootScope.$broadcast('hide:loading');
-            $rootScope.showAlert("Warning", "Please, login to Update");
-          }
+          }, 2000);
+          
         }
       });
     }
