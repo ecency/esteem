@@ -758,6 +758,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   }
 
   $scope.$on('$ionicView.leave', function(){
+
     if (!$scope.$$phase) {
       $scope.$apply();
     }
@@ -769,9 +770,74 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter) {
   $scope.post = $rootScope.$storage.sitem;
   $scope.data = {};
-  
+  $scope.spost = {};  
   $scope.replying = false;
+
+  $ionicModal.fromTemplateUrl('templates/story.html', {
+    scope: $scope  }).then(function(modal) {
+    $scope.pmodal = modal;
+  });
+  $scope.openPostModal = function() {
+    $scope.pmodal.show();
+  };
+  $scope.closePostModal = function() {
+    $scope.pmodal.hide();
+  };
+  $scope.editPost = function(xx) {
+    $scope.edit = true;
+    $scope.spost = xx;
+    $scope.spost.tags = angular.fromJson(xx.json_metadata).tags.join().replace(/\,/g,' ');
+    console.log(xx);
+    $scope.openPostModal();  
+  }
   
+  $scope.submitStory = function() {
+    $rootScope.$broadcast('show:loading');
+    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+      $scope.mylogin = new window.steemJS.Login();
+      $scope.mylogin.setRoles(["posting"]);
+      var loginSuccess = $scope.mylogin.checkKeys({
+          accountName: $rootScope.$storage.user.username,    
+          password: $rootScope.$storage.user.password,
+          auths: {
+              posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
+          }}
+      );
+      if (loginSuccess) {
+        var tr = new window.steemJS.TransactionBuilder();
+        var permlink = $scope.spost.permlink;
+        var json = angular.merge($scope.spost.json_metadata, {tags: $scope.spost.tags.split(" ")});
+
+        tr.add_type_operation("comment", {
+          parent_author: "",
+          parent_permlink: $scope.spost.parent_permlink,
+          author: $rootScope.$storage.user.username,
+          permlink: $scope.spost.permlink,
+          title: $scope.spost.title,
+          body: $scope.spost.body,
+          json_metadata: angular.toJson(json)
+        });
+        //console.log(my_pubkeys);
+        localStorage.error = 0;
+        tr.process_transaction($scope.mylogin, null, true);
+        $scope.closePostModal();
+        $scope.replying = false;
+        setTimeout(function() {
+          $rootScope.$broadcast('hide:loading');
+          if (localStorage.error == 1) {
+            $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+          } else {
+            //$scope.spost.comment = "";  
+            $scope.closePostPopover();
+            //$state.go("app.profile", {username: $rootScope.$storage.user.username});
+          }
+        }, 2000);
+      } 
+    } else {
+      $rootScope.$broadcast('hide:loading');
+      $rootScope.showAlert("Warning", "Please, login to Comment");
+    }
+  }
 
 
   $scope.reply = function (xx) {
