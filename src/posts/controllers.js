@@ -132,6 +132,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
   // Open the login modal
   $scope.openSmodal = function() {
+    $rootScope.$broadcast('close:popover');
     $scope.data.type="tag";
     $scope.smodal.show();
   };
@@ -438,6 +439,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $scope.modal = modal;
   });
   $scope.openPostModal = function() {
+    $rootScope.$broadcast('close:popover');
     $scope.modal.show();
   };
   $scope.closePostModal = function() {
@@ -570,9 +572,10 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   };
 
   $scope.showFilter = function() {
+    $rootScope.$broadcast('close:popover');
     $scope.fdata = {filter: $rootScope.$storage.filter || "trending"};
     var myPopupF = $ionicPopup.show({
-       template: '<ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="hot"><i class="icon" ng-class="{\'ion-flame gray\':fdata.filter!=\'hot\', \'ion-flame positive\': fdata.filter==\'hot\'}"></i> Hot</ion-radio><ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="created"><i class="icon" ng-class="{\'ion-star gray\':fdata.filter!=\'new\', \'ion-star positive\': fdata.filter==\'new\'}"></i> New</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="trending"><i class="icon" ng-class="{\'ion-podium gray\':fdata.filter!=\'trending\', \'ion-podium positive\': fdata.filter==\'trending\'}"></i> Trending</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="trending30"><i class="icon" ng-class="{\'ion-connection-bars gray\':fdata.filter!=\'trending30\', \'ion-connection-bars positive\': fdata.filter==\'trending30\'}"></i> Trending (30 days)</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="active"><i class="icon" ng-class="{\'ion-chatbubble-working gray\':fdata.filter!=\'active\', \'ion-chatbubble-working positive\': fdata.filter==\'active\'}"></i> Active</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="cashout"><i class="icon" ng-class="{\'ion-share gray\':fdata.filter!=\'cashout\', \'ion-share positive\': fdata.filter==\'cashout\'}"></i> Cashout</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="votes"><i class="icon" ng-class="{\'ion-person-stalker gray\':fdata.filter!=\'votes\', \'ion-person-stalker positive\': fdata.filter==\'votes\'}"></i> Votes</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="children"><i class="icon" ng-class="{\'ion-chatbubbles gray\':fdata.filter!=\'children\', \'ion-chatbubbles positive\': fdata.filter==\'children\'}"></i> Comments</ion-radio>',   
+       template: '<ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="hot"><i class="icon" ng-class="{\'ion-flame gray\':fdata.filter!=\'hot\', \'ion-flame positive\': fdata.filter==\'hot\'}"></i> Hot</ion-radio><ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="created"><i class="icon" ng-class="{\'ion-star gray\':fdata.filter!=\'new\', \'ion-star positive\': fdata.filter==\'new\'}"></i> New</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="trending"><i class="icon" ng-class="{\'ion-podium gray\':fdata.filter!=\'trending\', \'ion-podium positive\': fdata.filter==\'trending\'}"></i> Trending</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="trending30"><i class="icon" ng-class="{\'ion-connection-bars gray\':fdata.filter!=\'trending30\', \'ion-connection-bars positive\': fdata.filter==\'trending30\'}"></i> Trending (30 days)</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="active"><i class="icon" ng-class="{\'ion-chatbubble-working gray\':fdata.filter!=\'active\', \'ion-chatbubble-working positive\': fdata.filter==\'active\'}"></i> Active</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="cashout"><i class="icon" ng-class="{\'ion-share gray\':fdata.filter!=\'cashout\', \'ion-share positive\': fdata.filter==\'cashout\'}"></i> Cashout</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="votes"><i class="icon" ng-class="{\'ion-person-stalker gray\':fdata.filter!=\'votes\', \'ion-person-stalker positive\': fdata.filter==\'votes\'}"></i> Votes</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="children"><i class="icon" ng-class="{\'ion-chatbubbles gray\':fdata.filter!=\'children\', \'ion-chatbubbles positive\': fdata.filter==\'children\'}"></i> Comments</ion-radio><button class="button button-block button-positive" ng-click="cancelFilter()">Cancel</button>',   
        title: 'Sort by',
        scope: $scope
     });
@@ -581,6 +584,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         $scope.fetchPosts(res[0], null, res[1]);
       }
     });
+    $scope.cancelFilter = function() {
+      myPopupF.close();
+    };
 
     $scope.filterchange = function(f){
       console.log($scope.fdata.filter)
@@ -720,25 +726,29 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
     //console.log(window.Api)
     //$scope.fetchPosts(null, $scope.limit, null);
-    window.Api.initPromise.then(function(response) {
-      console.log("Api ready:", response);  
-      window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
-        console.log("get_dynamic_global_properties "+response.head_block_number);
-        if ($rootScope.$storage.user) {
-          $scope.mylogin = new window.steemJS.Login();
-          $scope.mylogin.setRoles(["posting"]);
-          var loginSuccess = $scope.mylogin.checkKeys({
-              accountName: $rootScope.$storage.user.username,    
-              password: $rootScope.$storage.user.password,
-              auths: {
-                  posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-              }}
-          );
-          console.log("login "+loginSuccess);
-        }          
-        $scope.fetchPosts(null, $scope.limit, null);  
+    if (!angular.isDefined($rootScope.timeint)) {
+      window.Api.initPromise.then(function(response) {
+        console.log("Api ready:", response);  
+        window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
+          console.log("get_dynamic_global_properties "+response.head_block_number);
+          if ($rootScope.$storage.user) {
+            $scope.mylogin = new window.steemJS.Login();
+            $scope.mylogin.setRoles(["posting"]);
+            var loginSuccess = $scope.mylogin.checkKeys({
+                accountName: $rootScope.$storage.user.username,    
+                password: $rootScope.$storage.user.password,
+                auths: {
+                    posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
+                }}
+            );
+            console.log("login "+loginSuccess);
+          }          
+          $scope.fetchPosts(null, $scope.limit, null);  
+        });
       });
-    });
+    } else {
+      $scope.fetchPosts(null, $scope.limit, null);  
+    }
     setTimeout(function() {
       $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();   
     }, 10);
@@ -936,7 +946,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   //$scope.post = {};
   $scope.$on('$ionicView.enter', function(){   
     //$scope.post = $rootScope.$storage.sitem;
-    console.log($rootScope.$storage.sitem);
+    //console.log($rootScope.$storage.sitem);
     $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
     (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
       //console.log(result);      
@@ -946,6 +956,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $scope.$apply();
       }
     });
+    $rootScope.$broadcast('hide:loading');
   });
 
   $scope.getContent = function() {
@@ -971,6 +982,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $scope.$apply();
       }
     });
+    $rootScope.$broadcast('hide:loading');
   };
   $scope.$watch('data', function(newValue, oldValue){
       //console.log('changed');

@@ -18,7 +18,7 @@ window.steemJS = require("steemjs-lib");
 require('./services')(app);
 require('./controllers')(app);
 
-app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $sceDelegateProvider) {
   $stateProvider
 
   .state('app', {
@@ -111,6 +111,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
   $urlRouterProvider.otherwise('/app/posts/');
   $ionicConfigProvider.navBar.alignTitle('left')
   $ionicConfigProvider.backButton.text('').icon('ion-ios-arrow-back');
+  $sceDelegateProvider.resourceUrlWhitelist(['self', new RegExp('^(http[s]?):\/\/(w{3}.)?youtube\.com/.+$')]);
 });
 
 app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout) {

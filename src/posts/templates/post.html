@@ -9,11 +9,11 @@
 	      <button class="button button-icon button-clear ion-android-share-alt" ng-click="share()"></button>
 	    </ion-nav-buttons>
 	</ion-nav-bar>
-  <ion-content class="padding" delegate-handle="mainScroll" overflow-scroll="true">
+  <ion-content class="padding" delegate-handle="mainScroll"><!--overflow-scroll="true"-->
   	<p class="title h3">{{$root.$storage.sitem.title}}</p>
   	<div class="stitle row gray"><div class="col"><i class="icon ion-android-time"></i> {{$root.$storage.sitem.created|timeago}} by <i class="icon ion-android-person"></i>&nbsp;<b>{{$root.$storage.sitem.author}}</b>&nbsp;<div class="reputation">{{$root.$storage.sitem.author_reputation|reputation|number:0}}</div> in&nbsp;<i class="icon ion-pricetags"></i>&nbsp;{{$root.$storage.sitem.category}}</div></div>
   	<br>
-    <div class="selectable bodytext" ng-bind-html="$root.$storage.sitem.body | parseUrl ">
+    <div class="bodytext" ng-bind-html="$root.$storage.sitem.body | parseUrl "><!--selectable-->
     </div>
     <br>
     
@@ -24,7 +24,7 @@
       <div class="col col-33"><i class="ion-social-usd"></i>&nbsp;{{$root.$storage.sitem | sumPostTotal | number}}</div>
       <div class="col"><i class="icon ion-chatbubbles"></i>&nbsp;{{$root.$storage.sitem.children}}</div>
       <div class="col" ng-click="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username">Reply</div>
-      <div class="col" ng-click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode=='first_payout'">Edit</div>
+      <div class="col" ng-click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode=='first_payout' && $root.$storage.sitem.author==$root.$storage.user.username">Edit</div>
     </div>
     <ion-thread comments="comments"></ion-thread>
   </ion-content>
