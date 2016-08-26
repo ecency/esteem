@@ -311,55 +311,58 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     });
 
     if (window.cordova) {
-      //FCMPlugin.getToken( successCallback(token), errorCallback(err) );
-      //Keep in mind the function will return null if the token has not been established yet.
-      FCMPlugin.getToken(
-        function(token){
-          console.log("device "+token);
-        },
-        function(err){
-          console.log('error retrieving token: ' + err);
-        }
-      );
-
-
-      //FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
-      //Here you define your application behaviour based on the notification data.
-      FCMPlugin.onNotification(
-        function(data){
-          if(data.wasTapped){
-            //Notification was received on device tray and tapped by the user.
-            //alert( JSON.stringify(data) );
-            var alertPopup = $ionicPopup.alert({
-              title: data.title,
-              template: data.message
-            });
-            alertPopup.then(function(res) {
-              console.log('Thank you for seeing alert from tray');
-            });
-
-          }else{
-            //Notification was received in foreground. Maybe the user needs to be notified.
-            //alert( JSON.stringify(data) );
-            
-            var alertPopup = $ionicPopup.alert({
-              title: data.title,
-              template: data.message
-            });
-            alertPopup.then(function(res) {
-              console.log('Thank you for seeing alert');
-            });
-            
+      if (ionic.Platform.isAndroid()) {
+        //FCMPlugin.getToken( successCallback(token), errorCallback(err) );
+        //Keep in mind the function will return null if the token has not been established yet.
+        FCMPlugin.getToken(
+          function(token){
+            console.log("device "+token);
+          },
+          function(err){
+            console.log('error retrieving token: ' + err);
           }
-        },
-        function(msg){
-          console.log('onNotification callback successfully registered: ' + msg);
-          //alert("msg "+JSON.stringify(msg));
-        },
-        function(err){
-          console.log('Error registering onNotification callback: ' + err);
-        }
-      );  
+        );
+
+
+        //FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
+        //Here you define your application behaviour based on the notification data.
+        FCMPlugin.onNotification(
+          function(data){
+            if(data.wasTapped){
+              //Notification was received on device tray and tapped by the user.
+              //alert( JSON.stringify(data) );
+              var alertPopup = $ionicPopup.alert({
+                title: data.title,
+                template: data.message
+              });
+              alertPopup.then(function(res) {
+                console.log('Thank you for seeing alert from tray');
+              });
+
+            }else{
+              //Notification was received in foreground. Maybe the user needs to be notified.
+              //alert( JSON.stringify(data) );
+              
+              var alertPopup = $ionicPopup.alert({
+                title: data.title,
+                template: data.message
+              });
+              alertPopup.then(function(res) {
+                console.log('Thank you for seeing alert');
+              });
+              
+            }
+          },
+          function(msg){
+            console.log('onNotification callback successfully registered: ' + msg);
+            //alert("msg "+JSON.stringify(msg));
+          },
+          function(err){
+            console.log('Error registering onNotification callback: ' + err);
+          }
+        );  
+      }
+      
     }
 
   });
