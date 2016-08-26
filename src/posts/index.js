@@ -143,7 +143,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$storage.filter = "trending";
     }
     if (navigator.splashscreen) {
-      navigator.splashscreen.hide();
+      setTimeout(function() {
+        navigator.splashscreen.hide();  
+      }, 1000);
     }
     console.log("app start ready");
     setTimeout(function() {
@@ -157,9 +159,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         template: msg
       });
       if (msg.indexOf("error")>-1) {
-        window.Api.initPromise.then(function(response) {
-          console.log("broadcast error", response);
-        });
+        //window.Api.initPromise.then(function(response) {
+        console.log("broadcast error");
+        //});
       }
       return alertPopup/*.then(function(res) {
         console.log('Thank you ...');
@@ -191,7 +193,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
               console.log("get_dynamic_global_properties", response.head_block_number);
             });
-          }, 20000);
+          }, 15000);
         });
       }
       if ($rootScope.$storage.pincode) {

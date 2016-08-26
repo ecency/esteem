@@ -329,9 +329,15 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
     }
   };
   $scope.refresh = function() {
-    (new Steem(localStorage.socketUrl)).getAccounts([$rootScope.$storage.user.username], function(err, dd) {   
+    $rootScope.$broadcast('show:loading');
+    (new Steem(localStorage.socketUrl)).getAccounts([$rootScope.$storage.user.username], function(err, dd) {
       $scope.balance = dd[0];
+      $rootScope.$broadcast('hide:loading');
+      if (!$scope.$$phase){
+        $scope.$apply();
+      }
     });
+    $rootScope.$broadcast('hide:loading');
   }
   $scope.$on('$ionicView.beforeEnter', function(){
     (new Steem(localStorage.socketUrl)).getAccounts([$rootScope.$storage.user.username], function(err, dd) {   
@@ -744,9 +750,11 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
               );
               console.log("login "+loginSuccess);
             }          
-            $scope.fetchPosts(null, $scope.limit, null);  
           });
         }, 15000);
+        setTimeout(function() {
+          $scope.fetchPosts(null, $scope.limit, null);  
+        }, 10);
       });
     } else {
       setTimeout(function() {
