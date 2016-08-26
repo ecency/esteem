@@ -27,7 +27,7 @@
             <span ng-bind-html="playlist.body.substring(0,100)|parseUrl"></span>
             </div>-->
             <p class="padding" ng-if="nonexist">Nothing here, yet...</p>
-            <div ng-repeat="playlist in profile | orderBy:'-created'">
+            <div ng-repeat="playlist in profile | orderBy:'-created' | limitTo:25">
               <div class="item">
                 <div ng-click="open(playlist)">
                 <div class="wrap">

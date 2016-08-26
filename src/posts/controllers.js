@@ -728,30 +728,34 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     //$scope.fetchPosts(null, $scope.limit, null);
     if (!angular.isDefined($rootScope.timeint)) {
       window.Api.initPromise.then(function(response) {
-        console.log("Api ready:", response);  
-        window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
-          console.log("get_dynamic_global_properties "+response.head_block_number);
-          if ($rootScope.$storage.user) {
-            $scope.mylogin = new window.steemJS.Login();
-            $scope.mylogin.setRoles(["posting"]);
-            var loginSuccess = $scope.mylogin.checkKeys({
-                accountName: $rootScope.$storage.user.username,    
-                password: $rootScope.$storage.user.password,
-                auths: {
-                    posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-                }}
-            );
-            console.log("login "+loginSuccess);
-          }          
-          $scope.fetchPosts(null, $scope.limit, null);  
-        });
+        console.log("Api ready:", response);
+        $rootScope.timeint = $interval(function(){  
+          window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
+            console.log("get_dynamic_global_properties "+response.head_block_number);
+            if ($rootScope.$storage.user) {
+              $scope.mylogin = new window.steemJS.Login();
+              $scope.mylogin.setRoles(["posting"]);
+              var loginSuccess = $scope.mylogin.checkKeys({
+                  accountName: $rootScope.$storage.user.username,    
+                  password: $rootScope.$storage.user.password,
+                  auths: {
+                      posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
+                  }}
+              );
+              console.log("login "+loginSuccess);
+            }          
+            $scope.fetchPosts(null, $scope.limit, null);  
+          });
+        }, 15000);
       });
     } else {
-      $scope.fetchPosts(null, $scope.limit, null);  
+      setTimeout(function() {
+        $scope.fetchPosts(null, $scope.limit, null);    
+      }, 10);
     }
     setTimeout(function() {
       $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();   
-    }, 10);
+    }, 100);
   });
   
   $scope.$on('$ionicView.beforeEnter', function(){
@@ -764,13 +768,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     
   });
 
-  if (!angular.isDefined($rootScope.timeint)) {
+  /*if (!angular.isDefined($rootScope.timeint)) {
     $rootScope.timeint = $interval(function(){
       window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
         console.log("get_dynamic_global_properties", response.head_block_number);
       });
     }, 20000);
-  }
+  }*/
 
   $scope.$on('$ionicView.leave', function(){
 
