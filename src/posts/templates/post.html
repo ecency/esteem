@@ -6,6 +6,7 @@
 	      <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
 	    </ion-nav-buttons>
 	    <ion-nav-buttons side="right">
+        <button class="button button-icon button-clear ion-bookmark" ng-click="bookmark()"></button>
 	      <button class="button button-icon button-clear ion-android-share-alt" ng-click="share()"></button>
 	    </ion-nav-buttons>
 	</ion-nav-bar>
@@ -22,7 +23,7 @@
       <div class="col col-33"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
       <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted"></i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted"></i>&nbsp;{{$root.$storage.sitem.net_votes}}&nbsp;
        <i class="icon ion-android-arrow-dropdown-circle" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted"></i><i class="icon ion-android-arrow-dropdown-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted"></i></div>
-      <div class="col"><i class="ion-social-usd"></i>{{$root.$storage.sitem | sumPostTotal | number}}</div>
+      <div class="col col-33"><i class="ion-social-usd"></i>{{$root.$storage.sitem | sumPostTotal | number}}</div>
       <div class="col"><i class="icon ion-chatbubbles"></i>{{$root.$storage.sitem.children}}</div>
       <div class="col" ng-click="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username">Reply</div>
       <div class="col" ng-click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode=='first_payout' && $root.$storage.sitem.author==$root.$storage.user.username">Edit</div>

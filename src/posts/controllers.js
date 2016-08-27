@@ -971,8 +971,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     $rootScope.$broadcast('hide:loading');
   });
 
-  $scope.getContent = function() {
-    (new Steem(localStorage.socketUrl)).getContent($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
+  $scope.getContent = function(author, permlink) {
+    (new Steem(localStorage.socketUrl)).getContent(author, permlink, function(err, result){
       //console.log(err);
       //console.log(result);
       if (!err) {
@@ -1061,7 +1061,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             if (localStorage.error == 1) {
               $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
-              $scope.getContent();
+              $scope.getContent($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink);
             }
             
           }, 2000);
@@ -1103,7 +1103,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             if (localStorage.error == 1) {
               $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
-              $scope.getContent();   
+              $scope.getContent($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink);   
             }
             
           }, 2000);
@@ -1146,7 +1146,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             if (localStorage.error == 1) {
               $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
             } else {
-              $scope.getContent();
+              $scope.getContent($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink);
             }
             
           }, 2000);
