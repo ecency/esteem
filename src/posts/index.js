@@ -111,6 +111,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $urlRouterProvider.otherwise('/app/posts/');
   $ionicConfigProvider.navBar.alignTitle('left')
   $ionicConfigProvider.backButton.text('').icon('ion-ios-arrow-back');
+  $ionicConfigProvider.views.swipeBackEnabled(false);
   //$sceDelegateProvider.resourceUrlWhitelist(['self', new RegExp('^(http[s]?):\/\/(w{3}.)?youtube\.com/.+$')]);
 });
 

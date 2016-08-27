@@ -627,7 +627,7 @@ module.exports = function (app) {
                 $scope.toggleComment = function(comment) {
                     //console.log('toggleComment ',comment)
                     if (comment.children > 0){
-                      (new Steem($rootScope.$storage.socket)).getContentReplies(comment.author, comment.permlink, function(err, res1) {
+                      (new Steem(localStorage.socketUrl)).getContentReplies(comment.author, comment.permlink, function(err, res1) {
                       //window.Api.database_api().exec("get_content_replies", [comments[i].author, comments[i].permlink]).then(function(res1){
                         comment.replies = res1;
                         //console.log('result',res1);
@@ -640,7 +640,7 @@ module.exports = function (app) {
                           $scope.$apply();
                         }
                       });
-                      $rootScope.$broadcast('hide:loading');
+                      //$rootScope.$broadcast('hide:loading');
                     }
                 }           
             }
