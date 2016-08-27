@@ -639,9 +639,9 @@ module.exports = function (app) {
                         } else {
                             comment.showChildren = true;
                         }
-                        /*if (!$scope.$$phase) {
+                        if (!$scope.$$phase) {
                           $scope.$apply();
-                        }*/
+                        }
                       });
                       //$rootScope.$broadcast('hide:loading');
                     }
