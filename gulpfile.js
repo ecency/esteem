@@ -44,6 +44,9 @@ gulp.task('scripts', function() {
     './bower_components/ionic/js/ionic.bundle.js',
     './bower_components/ngstorage/ngStorage.js',
     './bower_components/ngCordova/dist/ng-cordova.js',
+    //'./bower_components/textAngular/dist/textAngular-rangy.min.js',
+    //'./bower_components/textAngular/dist/textAngular-sanitize.min.js',
+    //'./bower_components/textAngular/dist/textAngular.min.js',
     //'./bower_components/async/dist/async.js',
     './bower_components/jquery/dist/jquery.js'
     //'./bower_components/underscore/underscore.js'

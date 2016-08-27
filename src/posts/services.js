@@ -97,9 +97,9 @@ module.exports = function (app) {
 		
 	    return function(textu, subpart) {
 	        var options = {
-	        	gfm: true,
-				tables: true,
-                smartLists: true,
+	        	//gfm: true,
+				    tables: true,
+            smartLists: true,
 			    /*breaks: false,
 			    pedantic: false,
 			    sanitize: true,

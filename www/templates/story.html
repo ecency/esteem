@@ -5,29 +5,32 @@
     <button class="button button-positive button-primary" ng-disabled="disableBtn" ng-click="submitStory()">POST</button>
   </ion-header-bar>
   <ion-content class="padding">
-      <input type="text" name="title" placeholder="Title" ng-model="spost.title" style="width:100%;">
-      <br/>
-      <wiz-markdown-editor content="spost.body">
+    <input type="text" name="title" placeholder="Title" ng-model="spost.title" style="width:100%;">
+    <br/>
+    <wiz-markdown-editor content="spost.body">
         <wiz-toolbar-button command="bold" class="button button-small"><b>B</b></wiz-toolbar-button>
         <wiz-toolbar-button command="italic" class="button button-small"><i>I</i></wiz-toolbar-button>
-        <wiz-toolbar-button command="heading" class="button button-small">H</wiz-toolbar-button>
         <wiz-toolbar-button command="code" class="button button-small"><i class="icon ion-code"></i></wiz-toolbar-button>
         <wiz-toolbar-button command="ullist" class="button button-small"><img src="img/ullist.png"/></wiz-toolbar-button>
         <wiz-toolbar-button command="ollist" class="button button-small"><img src="img/ollist.png"/></wiz-toolbar-button>
         <wiz-toolbar-button command="link" class="button button-small"><i class="icon ion-link"></i></wiz-toolbar-button>
         <wiz-toolbar-button command="img" class="button button-small"><i class="icon ion-image"></i></wiz-toolbar-button>
         <wiz-toolbar-button command="hr" class="button button-small">HR</wiz-toolbar-button>
-        <wiz-toolbar-button command="h1" class="button button-small">H1</wiz-toolbar-button>
-        <wiz-toolbar-button command="h2" class="button button-small">H2</wiz-toolbar-button>
-        <wiz-toolbar-button command="h3" class="button button-small">H3</wiz-toolbar-button>
-        <wiz-toolbar-button command="h4" class="button button-small">H4</wiz-toolbar-button>
+        <wiz-toolbar-button command="heading" class="button button-small">H</wiz-toolbar-button>
       </wiz-markdown-editor>
 
       <input type="text" name="categories" placeholder="Tags" ng-model="spost.tags" ng-change="tagsChange()" style="width:100%;">
+
       <hr>
       <p>Preview</p>
       <div ng-if="spost.body" class="padding bodytext" ng-bind-html="spost.body | parseUrl "></div>
 
       <!--undo, redo, bold, italic, heading, code, ullist, ollist, indent, outdent, link, img, hr, h0, h1, h2, h3, h4, h5, h6, tab, untab-->
+
+      <!--<text-angular ng-model="spost.body" placeholder="Post content"></text-angular>-->
+
+
+      <br/>
+      
   </ion-content>
 </ion-modal-view>

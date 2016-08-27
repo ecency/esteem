@@ -37,7 +37,6 @@ hr {
 .pull-right {
 	float: right;
 }
-
 .bold {
 	font-weight: bold;
 }
@@ -144,6 +143,12 @@ textarea.markdown-input {
   list-style-type: disc!important;
   padding-left: 15px;
 }
+.bodytext em {
+  font-style: italic!important;
+}
+.bodytext i {
+  font-style: italic!important;
+}
 .markdown-toolbar button {
   width: 20px!important;
 }
@@ -207,15 +212,17 @@ textarea.markdown-input {
 @media only screen and (min-device-width:320px) { 
   img {
     max-width: 100%;
+    height: auto;
     display: block;
-    max-height: 40vh;
+    /*max-height: 35vh!important;*/
   }
 }
 @media only screen and (min-device-width:768px) { 
   img {
     max-width: 100%;
     display: block;
-    max-height: 80vh;
+    height: auto;
+    /*max-height: 50vh!important;*/
   }
 }
 .selectable{

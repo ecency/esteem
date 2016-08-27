@@ -429,7 +429,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
           } else {
             //$scope.spost.comment = "";  
-            $scope.closePopover();
+            $scope.closeMenuPopover();
             $state.go("app.profile", {username: $rootScope.$storage.user.username});
           }
         }, 2000);
@@ -598,14 +598,14 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       console.log($scope.fdata.filter)
       $rootScope.$storage.filter = $scope.fdata.filter;
       myPopupF.close();
-      $scope.closePopover();
+      $scope.closeMenuPopover();
       $rootScope.$broadcast('filter:change');
     }
   };
   
   $scope.refresh = function(){
     $scope.fetchPosts();
-    $scope.closePopover();
+    $scope.closeMenuPopover();
     $rootScope.$broadcast('filter:change');
   };
   
@@ -623,7 +623,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
   $scope.changeView = function(view) {
     $rootScope.$storage.view = view; 
-    $scope.closePopover();
+    $scope.closeMenuPopover();
     if (!$scope.$$phase){
       $scope.$apply();
     }
@@ -676,21 +676,21 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $ionicPopover.fromTemplateUrl('templates/popover.html', {
     scope: $scope,
   }).then(function(popover) {
-    $scope.popover = popover;
+    $scope.menupopover = popover;
   });
   
-  $scope.openPopover = function($event) {
-    $scope.popover.show($event);
+  $scope.openMenuPopover = function($event) {
+    $scope.menupopover.show($event);
   };
-  $scope.closePopover = function() {
-    $scope.popover.hide();
+  $scope.closeMenuPopover = function() {
+    $scope.menupopover.hide();
   };
   $rootScope.$on('close:popover', function(){
     $scope.fetchPosts();
-    $scope.closePopover();
+    $scope.closeMenuPopover();
   });
   $scope.$on('$destroy', function() {
-    $scope.popover.remove();
+    $scope.menupopover.remove();
   });
 
   $scope.fetchPosts = function(type, limit, tag) {
