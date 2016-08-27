@@ -278,7 +278,7 @@ module.exports = function (app) {
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
                         <div class="ion-comment--author">{{comment.author}}&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
                         <div class="ion-comment--score"><i class="icon ion-social-usd"></i> {{comment.total_pending_payout_value.split(" ")[0]|number}}</div>\
-                        <div class="ion-comment--text bodytext" ng-bind-html="comment.body | parseUrl "></div>\
+                        <div class="ion-comment--text bodytext selectable" ng-bind-html="comment.body | parseUrl "></div>\
                         <div class="ion-comment--replies">{{comment.net_votes || 0}} votes, {{comment.children || 0}} replies</div>\
                         <ion-option-button ng-click="upvotePost(comment)"><span class="ion-android-arrow-dropup" style="font-size:30px"></ion-option-button>\
                         <ion-option-button ng-click="downvotePost(comment)"><span class="ion-android-arrow-dropdown" style="font-size:30px"></ion-option-button>\
@@ -624,11 +624,14 @@ module.exports = function (app) {
                           </ul>\
                         </ion-list>',
             controller: function($scope, $rootScope) {
+                
                 $scope.toggleComment = function(comment) {
-                    //console.log('toggleComment ',comment)
+                    
+                    console.log('toggleComment');
+
                     if (comment.children > 0){
-                      (new Steem(localStorage.socketUrl)).getContentReplies(comment.author, comment.permlink, function(err, res1) {
-                      //window.Api.database_api().exec("get_content_replies", [comments[i].author, comments[i].permlink]).then(function(res1){
+                      //(new Steem(localStorage.socketUrl)).getContentReplies(comment.author, comment.permlink, function(err, res1) {
+                      window.Api.database_api().exec("get_content_replies", [comment.author, comment.permlink]).then(function(res1){
                         comment.replies = res1;
                         //console.log('result',res1);
                         if (comment.showChildren) {
@@ -636,13 +639,13 @@ module.exports = function (app) {
                         } else {
                             comment.showChildren = true;
                         }
-                        if (!$scope.$$phase) {
+                        /*if (!$scope.$$phase) {
                           $scope.$apply();
-                        }
+                        }*/
                       });
                       //$rootScope.$broadcast('hide:loading');
                     }
-                }           
+                };           
             }
         }
     }
