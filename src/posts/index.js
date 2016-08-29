@@ -126,7 +126,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   //$sceDelegateProvider.resourceUrlWhitelist(['self', new RegExp('^(http[s]?):\/\/(w{3}.)?youtube\.com/.+$')]);
 });
 
-app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast) {
+app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs) {
   $rootScope.$storage = $localStorage;
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -215,7 +215,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           console.log("Api ready state change: "+angular.toJson(response));
           $rootScope.timeint = $interval(function(){
             window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
-              console.log("get_dynamic_global_properties", response);
+              console.log("get_dynamic_global_properties " + response.head_block_number);
             });
           }, 15000);
         });
@@ -344,6 +344,15 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         FCMPlugin.getToken(
           function(token){
             console.log("device "+token);
+            if ($rootScope.$storage.user) {
+              APIs.saveDevice(token, $rootScope.$storage.user.username, "").then(function(res){
+                console.log(angular.toJson(res));
+              });
+            } else {
+              APIs.saveDevice(token, "", "").then(function(res){
+                console.log(angular.toJson(res));
+              });
+            }
           },
           function(err){
             console.log('error retrieving token: ' + err);

@@ -737,10 +737,10 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         console.log("Api ready:", response);
         $rootScope.timeint = $interval(function(){  
           window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
-            console.log("get_dynamic_global_properties ", response.head_block_number);
-            window.Api.database_api().exec("get_block", [response.head_block_number]).then(function(res){
+            console.log("get_dynamic_global_properties "+ response.head_block_number);
+            /*window.Api.database_api().exec("get_block", [response.head_block_number]).then(function(res){
               console.log(res);
-            });
+            });*/
             if ($rootScope.$storage.user) {
               $scope.mylogin = new window.steemJS.Login();
               $scope.mylogin.setRoles(["posting"]);
