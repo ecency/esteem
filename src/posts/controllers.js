@@ -803,9 +803,11 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.spost = {};  
   $scope.replying = false;
   $scope.isBookmarked = function() {
-    for (var i = 0; i < $rootScope.$storage.bookmark.length; i++) {
-      if ($rootScope.$storage.bookmark[i] && $rootScope.$storage.bookmark[i].permlink == $rootScope.$storage.sitem.permlink) {
-        return true;
+    if ($rootScope.$storage.bookmark) {
+      for (var i = 0; i < $rootScope.$storage.bookmark.length; i++) {
+        if ($rootScope.$storage.bookmark[i] && $rootScope.$storage.bookmark[i].permlink == $rootScope.$storage.sitem.permlink) {
+          return true;
+        }
       }
     }
   };

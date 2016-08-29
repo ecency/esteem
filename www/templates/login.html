@@ -1,24 +1,31 @@
 <ion-modal-view>
-  <ion-header-bar class="bar bar-header bar-positive">
+  <!--<ion-header-bar class="bar bar-header bar-positive">
     <h1 class="title">Login</h1>
     <button class="button button-clear button-primary button-icon ion-close-round" ng-click="closeLogin()"></button>
-  </ion-header-bar>
+  </ion-header-bar>-->
   <ion-content>
-    <center><img ng-src="img/logo.png" width="150" /></center>
+    <br>
+    <center><img ng-src="img/logo.png" width="130" /></center>
+    <center><h1>Welcome back!</h1></center>
+    <center><p class="gray fsmaller">Sign in with your username to continue.</p></center>
+    <br/>
     <form ng-submit="doLogin()">
       <div class="list">
         <label class="item item-input">
-          <span class="input-label">Username</span>
-          <input type="text" ng-model="loginData.username" placeholder="username" ng-change="changeUsername()">
+          <!--<span class="input-label">Username</span>-->
+          <input type="text" ng-model="loginData.username" placeholder="Username" ng-change="changeUsername()">
         </label>
+        <!--<i class="icon ion-ios-information-outline gray" ng-click="openTooltip($event,'Enter your username without @')"></i>-->
         <label class="item item-input">
-          <span class="input-label">Password</span>
-          <input type="password" placeholder="password" ng-model="loginData.password">
+          <!--<span class="input-label">Password</span>-->
+          <input type="password" placeholder="Password" ng-model="loginData.password">
         </label>
-        <p class="error padding tcenter">Note: User credentials are kept locally on the device. Upon Logout credentials are removed!</p>
-        <label class="item">
-          <button class="button button-block button-positive" type="submit">Log in</button>
-        </label>
+        <!--<i class="icon ion-ios-information-outline gray" ng-click="openTooltip($event,'Enter your master password you have from signup process on Steemit.com or on app')"></i>-->
+        <p class="gray padding tcenter">Note: User credentials are kept locally on the device. Upon Logout credentials are removed!</p>
+
+        <button class="button button-block button-positive" ng-click="doLogin()">Log in</button>
+        <button class="button button-block button-light" ng-click="closeLogin()">Cancel</button>
+        
       </div>
     </form>
   </ion-content>
