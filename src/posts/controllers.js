@@ -1224,6 +1224,11 @@ app.controller('BookmarkCtrl', function($scope, $stateParams, $rootScope, $state
     $rootScope.$broadcast('hide:loading');
   };
 
+  $scope.removeBookmark = function(index) {
+    if ($rootScope.$storage.bookmark) {
+      $rootScope.$storage.bookmark.splice(index,1);
+    }
+  };
 
 
 
