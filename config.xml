@@ -10,7 +10,6 @@
     <content src="index.html" />
     <access origin="*" />
     <allow-navigation href="*" />
-    
     <preference name="webviewbounce" value="false" />
     <preference name="UIWebViewBounce" value="false" />
     <preference name="DisallowOverscroll" value="true" />
@@ -89,5 +88,5 @@
     <plugin name="cordova-plugin-file" spec="~4.1.1" />
     <plugin name="cordova-plugin-file-transfer" spec="~1.5.1" />
     <plugin name="cordova-plugin-app-version" spec="~0.1.8" />
-    <!--<plugin name="cordova-plugin-fcm" spec="https://github.com/looklookson/cordova-plugin-fcm" />-->
+    <plugin name="cordova-plugin-x-toast" spec="https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git" />
 </widget>

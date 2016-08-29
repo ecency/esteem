@@ -1,0 +1,25 @@
+<ion-view view-title="Bookmarks">
+  <ion-content class="has-header">
+    <div class="list" ng-if="$root.$storage.bookmark">
+    	<div ng-repeat="d in $root.$storage.bookmark">
+	    	<div class="item" ng-click="getContentAndOpen(d.author, d.permlink)">
+			    <div>
+			    <p><h2>{{d.title}}</h2></p>
+			    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;by&nbsp;<b>{{d.author}}&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div></b></div></div>
+			    </div>
+			    <!--<div class="row">
+			    <div class="col">
+			      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a>
+			      </div>
+			      <div class="col col-25 tright">
+			      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
+			      </div>
+			      <div class="col col-25 tright">
+			      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{d.children}}</a>
+			      </div>
+			    </div>
+		  	</div>-->
+		</div>
+	</div>
+  </ion-content>
+</ion-view>

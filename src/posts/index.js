@@ -96,6 +96,17 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
       }
     }
   })
+  
+  .state('app.bookmark', {
+    url: '/bookmark',
+    views: {
+      'menuContent': {
+        //templateUrl: 'templates/post.html',
+        template: fs.readFileSync(__dirname + '/templates/bookmarks.html', 'utf8'),
+        controller: 'BookmarkCtrl'
+      }
+    }
+  })
 
   .state('app.single', {
     url: '/single',
@@ -115,7 +126,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   //$sceDelegateProvider.resourceUrlWhitelist(['self', new RegExp('^(http[s]?):\/\/(w{3}.)?youtube\.com/.+$')]);
 });
 
-app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout) {
+app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast) {
   $rootScope.$storage = $localStorage;
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -168,7 +179,19 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         console.log('Thank you ...');
       });*/
     };
-
+    $rootScope.showMessage = function(title, msg) {
+      if (window.cordova) {
+        $cordovaToast.showShortBottom(msg).then(function(success) {
+          // success
+          console.log("toast"+success);
+        }, function (error) {
+          // error
+          console.log("toast"+error);
+        });  
+      } else {
+        $rootScope.showAlert(title, msg);
+      }
+    };
     $rootScope.$on('show:loading', function(event, args){
       console.log('show:loading');
       $ionicLoading.show({
@@ -192,7 +215,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           console.log("Api ready state change: "+angular.toJson(response));
           $rootScope.timeint = $interval(function(){
             window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
-              console.log("get_dynamic_global_properties", response.head_block_number);
+              console.log("get_dynamic_global_properties", response);
             });
           }, 15000);
         });
