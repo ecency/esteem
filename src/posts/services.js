@@ -16,8 +16,14 @@ module.exports = function (app) {
       getFollowing: function(user, follower, what, limit) {
         return window.Api.follow_api().exec("get_following", [user, follower, what, limit]);
       },
-      saveDevice: function(deviceid, username, operations) {
-        return $http.post("http://192.158.29.1:8080/api/devices", {deviceid: deviceid, username: username, subscription: operations});
+      saveSubscription: function(deviceid, username, subscription) {
+        return $http.post("http://192.158.29.1:8080/api/devices", {deviceid: deviceid, username: username, subscription: subscription});
+      },
+      updateSubscription: function(deviceid, username, subscription) {
+        return $http.put("http://192.158.29.1:8080/api/devices", {deviceid: deviceid, username: username, subscription: subscription});
+      },
+      getSubscriptions: function(deviceid) {
+        return $http.get("http://192.158.29.1:8080/api/devices/"+deviceid);
       }
 		};
 	}])

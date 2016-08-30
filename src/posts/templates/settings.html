@@ -1,6 +1,9 @@
 <ion-view view-cache="false" view-title="Settings">
   <ion-content class="padding has-header settings">
     <br/>
+    <div class="item item-divider">
+      Security
+    </div>
     <div class="row">
       <div class="col col-33">
       <span class="slabel" ng-click="openTooltip($event,'PIN code helps you to secure app and your data. <br/><br/><b>Note:</b> Once enabled, you have max 4 tries to unlock, if you forgot pin or fail, app will remove logged in user data. You can re-login and continue using app.')"><i class="icon ion-ios-information-outline gray"></i> Pin Code</span>
@@ -13,6 +16,53 @@
          </div>
         </label>
       </div>
+    </div>
+    <div ng-if="$root.$storage.user">
+    <div class="item item-divider">
+      Notifications
+    </div>
+    <div class="row">
+      <div class="col col-33">
+      <span class="slabel" ng-click="openTooltip($event,'PIN code helps you to secure app and your data. <br/><br/><b>Note:</b> Once enabled, you have max 4 tries to unlock, if you forgot pin or fail, app will remove logged in user data. You can re-login and continue using app.')"><i class="icon ion-ios-information-outline gray"></i> Vote</span>
+      </div>
+      <div class="col pull-right tright">
+        <label class="toggle toggle-positive">
+         <input type="checkbox" ng-model="data.vote" ng-change="notificationChange()">
+         <div class="track">
+           <div class="handle"></div>
+         </div>
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-33">
+      <span class="slabel" ng-click="openTooltip($event,'PIN code helps you to secure app and your data. <br/><br/><b>Note:</b> Once enabled, you have max 4 tries to unlock, if you forgot pin or fail, app will remove logged in user data. You can re-login and continue using app.')"><i class="icon ion-ios-information-outline gray"></i> Comment</span>
+      </div>
+      <div class="col pull-right tright">
+        <label class="toggle toggle-positive">
+         <input type="checkbox" ng-model="data.comment" ng-change="notificationChange()">
+         <div class="track">
+           <div class="handle"></div>
+         </div>
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-33">
+      <span class="slabel" ng-click="openTooltip($event,'PIN code helps you to secure app and your data. <br/><br/><b>Note:</b> Once enabled, you have max 4 tries to unlock, if you forgot pin or fail, app will remove logged in user data. You can re-login and continue using app.')"><i class="icon ion-ios-information-outline gray"></i> Follow</span>
+      </div>
+      <div class="col pull-right tright">
+        <label class="toggle toggle-positive">
+         <input type="checkbox" ng-model="data.follow" ng-change="notificationChange()">
+         <div class="track">
+           <div class="handle"></div>
+         </div>
+        </label>
+      </div>
+    </div>
+    </div>
+    <div class="item item-divider">
+      Configurations
     </div>
     <div class="row">
       <div class="col col-33">

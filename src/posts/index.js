@@ -126,7 +126,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   //$sceDelegateProvider.resourceUrlWhitelist(['self', new RegExp('^(http[s]?):\/\/(w{3}.)?youtube\.com/.+$')]);
 });
 
-app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs) {
+app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state) {
   $rootScope.$storage = $localStorage;
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -337,6 +337,34 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.openPin(1);
     });
 
+
+    $rootScope.getContentAndOpen = function(author, permlink) {
+    (new Steem(localStorage.socketUrl)).getContent(author, permlink, function(err, result){
+      //console.log(err);
+      //console.log(result);
+      if (!err) {
+        for (var j = result.active_votes.length - 1; j >= 0; j--) {
+          if (result.active_votes[j].voter === $rootScope.$storage.user.username) {
+            if (result.active_votes[j].percent > 0) {
+              result.upvoted = true;  
+            } else if (result.active_votes[j].percent < 0) {
+              result.downvoted = true;  
+            } else {
+              result.downvoted = false;  
+              result.upvoted = false;  
+            }
+          }
+        }
+        $rootScope.$storage.sitem = result;
+        $state.go('app.single');
+      }
+      if (!$rootScope.$$phase) {
+        $rootScope.$apply();
+      }
+    });
+    $rootScope.$broadcast('hide:loading');
+  };
+
     if (window.cordova) {
       if (ionic.Platform.isAndroid()) {
         //FCMPlugin.getToken( successCallback(token), errorCallback(err) );
@@ -344,12 +372,13 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         FCMPlugin.getToken(
           function(token){
             console.log("device "+token);
+            $rootScope.$storage.deviceid = token;
             if ($rootScope.$storage.user) {
-              APIs.saveDevice(token, $rootScope.$storage.user.username, "").then(function(res){
+              APIs.saveSubscription(token, $rootScope.$storage.user.username, "").then(function(res){
                 console.log(angular.toJson(res));
               });
             } else {
-              APIs.saveDevice(token, "", "").then(function(res){
+              APIs.saveSubscription(token, "", "").then(function(res){
                 console.log(angular.toJson(res));
               });
             }
@@ -369,10 +398,13 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               //alert( JSON.stringify(data) );
               var alertPopup = $ionicPopup.alert({
                 title: data.title,
-                template: data.message
+                template: data.body
               });
               alertPopup.then(function(res) {
                 console.log('Thank you for seeing alert from tray');
+                if (data.author && data.permlink) {
+                  $rootScope.getContentAndOpen(data.author, data.permlink);
+                }
               });
 
             }else{
@@ -381,7 +413,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               
               var alertPopup = $ionicPopup.alert({
                 title: data.title,
-                template: data.message
+                template: data.body
               });
               alertPopup.then(function(res) {
                 console.log('Thank you for seeing alert');

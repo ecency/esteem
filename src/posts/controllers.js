@@ -1,7 +1,7 @@
 module.exports = function (app) {
 //angular.module('steem.controllers', [])
 
-app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform, $filter) {
+app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform, $filter, APIs) {
 
   $scope.loginData = {};  
 
@@ -60,6 +60,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       $scope.loginData.voting_power = dd.voting_power;
 
       $rootScope.$storage.user = $scope.loginData;
+
       var login = new window.steemJS.Login();
       login.setRoles(["posting"]);
       var loginSuccess = login.checkKeys({
@@ -74,6 +75,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
           $rootScope.showAlert("Error","The password or account name was incorrect");
       } else {
         $rootScope.$storage.mylogin = login;
+        APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, "").then(function(res){
+          console.log(angular.toJson(res));
+        });
       }
       $timeout(function() {
         $state.go('app.posts', {}, { reload: true });
@@ -738,9 +742,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         $rootScope.timeint = $interval(function(){  
           window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
             console.log("get_dynamic_global_properties "+ response.head_block_number);
-            /*window.Api.database_api().exec("get_block", [response.head_block_number]).then(function(res){
+            window.Api.database_api().exec("get_block", [response.head_block_number]).then(function(res){
               console.log(res);
-            });*/
+            });
             if ($rootScope.$storage.user) {
               $scope.mylogin = new window.steemJS.Login();
               $scope.mylogin.setRoles(["posting"]);
@@ -1367,6 +1371,7 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
           });
           localStorage.error = 0;
           tr.process_transaction($scope.mylogin, null, true);
+
           setTimeout(function() {
             if (localStorage.error == 1) {
               $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
@@ -1956,7 +1961,7 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope) {
 
 });
 
-app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionicHistory, $state, $ionicPopover, $ionicPopup) {
+app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionicHistory, $state, $ionicPopover, $ionicPopup, APIs) {
    
    $ionicPopover.fromTemplateUrl('popover.html', {
       scope: $scope
@@ -2016,9 +2021,27 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     if (!$scope.$$phase){
       $scope.$apply();
     }
-
+    if ($rootScope.$storage.user && $rootScope.$storage.deviceid) {
+      APIs.getSubscriptions($rootScope.$storage.deviceid).then(function(res){
+        console.log(res)
+        $scope.data.vote = res.subscription.vote;
+        $scope.data.follow = res.subscription.follow;
+        $scope.data.comment = res.subscription.comment;
+      });  
+    }
   });
   
+  $scope.notificationChange = function() {
+    $rootScope.$storage.subscription = {
+      vote: $scope.data.vote,
+      comment: $scope.data.comment,
+      follow: $scope.data.follow
+    }
+    APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, $rootScope.$storage.subscription).then(function(res){
+      console.log(angular.toJson(res));
+    });
+    
+  }
   
   $scope.$watch('slider', function(newValue, oldValue){
     if (newValue.value) {
