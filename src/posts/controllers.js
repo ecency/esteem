@@ -439,7 +439,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             $scope.closeMenuPopover();
             $state.go("app.profile", {username: $rootScope.$storage.user.username});
           }
-        }, 2000);
+        }, 3000);
       } 
     } else {
       $rootScope.$broadcast('hide:loading');
@@ -492,7 +492,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
               $scope.fetchPosts();
             }
             
-          }, 2000);
+          }, 3000);
         }
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -533,7 +533,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             } else {
               $scope.fetchPosts();
             }
-          }, 2000);
+          }, 3000);
         }
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -575,7 +575,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
               $scope.fetchPosts();  
             }
             
-          }, 2000);  
+          }, 3000);  
         }
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -896,7 +896,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             //$scope.closePostPopover();
             //$state.go("app.profile", {username: $rootScope.$storage.user.username});
           }
-        }, 2000);
+        }, 3000);
       } 
     } else {
       $rootScope.$broadcast('hide:loading');
@@ -951,7 +951,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               }
             });
           }
-        }, 2000);
+        }, 3000);
       } 
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -1104,7 +1104,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               $scope.getContent($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink);
             }
             
-          }, 2000);
+          }, 3000);
         } 
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -1146,7 +1146,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               $scope.getContent($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink);   
             }
             
-          }, 2000);
+          }, 3000);
         }
       
       $rootScope.$broadcast('hide:loading');
@@ -1189,7 +1189,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               $scope.getContent($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink);
             }
             
-          }, 2000);
+          }, 3000);
           
         }
       $rootScope.$broadcast('hide:loading');
@@ -1705,7 +1705,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               $scope.refresh();
             }
             
-          }, 2000);
+          }, 3000);
         } 
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -1747,7 +1747,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               $scope.refresh();
             }
             
-          }, 2000);
+          }, 3000);
         }
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -1789,7 +1789,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               $scope.refresh();
             }
             
-          }, 2000);
+          }, 3000);
         }
       $rootScope.$broadcast('hide:loading');
     } else {

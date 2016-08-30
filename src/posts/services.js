@@ -336,7 +336,7 @@ module.exports = function (app) {
                               } else {
                                 $rootScope.$broadcast("update:content");
                               }
-                            }, 1000);
+                            }, 3000);
                         } 
                       $rootScope.$broadcast('hide:loading');
                     } else {
@@ -373,7 +373,7 @@ module.exports = function (app) {
                               } else {
                                 $rootScope.$broadcast("update:content");
                               }
-                            }, 1000);
+                            }, 3000);
                         }
                       $rootScope.$broadcast('hide:loading');
                     } else {
@@ -411,7 +411,7 @@ module.exports = function (app) {
                               } else {
                                 $rootScope.$broadcast("update:content");
                               }
-                            }, 1000);
+                            }, 3000);
                         }
                       $rootScope.$broadcast('hide:loading');
                     } else {
@@ -488,7 +488,7 @@ module.exports = function (app) {
                                 $scope.data.comment = "";
                                 $rootScope.$broadcast("update:content");
                               }
-                            }, 1000);
+                            }, 3000);
                           } 
                           $rootScope.$broadcast('hide:loading');
                         } else {
@@ -533,7 +533,7 @@ module.exports = function (app) {
                                 $scope.data.comment = "";
                                 $rootScope.$broadcast("update:content");
                               }
-                            }, 1000);
+                            }, 3000);
                           } 
                           $rootScope.$broadcast('hide:loading');
                         } else {
@@ -590,7 +590,7 @@ module.exports = function (app) {
                                   } else {
                                     $rootScope.$broadcast("update:content");
                                   }
-                                }, 1000);
+                                }, 3000);
                               } 
                               $rootScope.$broadcast('hide:loading');
                             } else {
