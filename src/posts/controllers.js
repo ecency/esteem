@@ -2021,16 +2021,20 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       $scope.data = {pin: false};
     }
 
-    if (!$scope.$$phase){
-      $scope.$apply();
-    }
     if ($rootScope.$storage.user && $rootScope.$storage.deviceid) {
       APIs.getSubscriptions($rootScope.$storage.deviceid).then(function(res){
         console.log(res)
         $scope.data.vote = res.subscription.vote;
         $scope.data.follow = res.subscription.follow;
         $scope.data.comment = res.subscription.comment;
+        if (!$scope.$$phase){
+          $scope.$apply();
+        }
       });  
+    }
+    
+    if (!$scope.$$phase){
+      $scope.$apply();
     }
   });
   
