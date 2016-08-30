@@ -585,7 +585,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $rootScope.$broadcast('close:popover');
     $scope.fdata = {filter: $rootScope.$storage.filter || "trending"};
     var myPopupF = $ionicPopup.show({
-       template: '<ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="hot"><i class="icon" ng-class="{\'ion-flame gray\':fdata.filter!=\'hot\', \'ion-flame positive\': fdata.filter==\'hot\'}"></i> Hot</ion-radio><ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="created"><i class="icon" ng-class="{\'ion-star gray\':fdata.filter!=\'new\', \'ion-star positive\': fdata.filter==\'new\'}"></i> New</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="trending"><i class="icon" ng-class="{\'ion-podium gray\':fdata.filter!=\'trending\', \'ion-podium positive\': fdata.filter==\'trending\'}"></i> Trending</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="trending30"><i class="icon" ng-class="{\'ion-connection-bars gray\':fdata.filter!=\'trending30\', \'ion-connection-bars positive\': fdata.filter==\'trending30\'}"></i> Trending (30 days)</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="active"><i class="icon" ng-class="{\'ion-chatbubble-working gray\':fdata.filter!=\'active\', \'ion-chatbubble-working positive\': fdata.filter==\'active\'}"></i> Active</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="cashout"><i class="icon" ng-class="{\'ion-share gray\':fdata.filter!=\'cashout\', \'ion-share positive\': fdata.filter==\'cashout\'}"></i> Cashout</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="votes"><i class="icon" ng-class="{\'ion-person-stalker gray\':fdata.filter!=\'votes\', \'ion-person-stalker positive\': fdata.filter==\'votes\'}"></i> Votes</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="children"><i class="icon" ng-class="{\'ion-chatbubbles gray\':fdata.filter!=\'children\', \'ion-chatbubbles positive\': fdata.filter==\'children\'}"></i> Comments</ion-radio><button class="button button-block button-positive" ng-click="cancelFilter()">Cancel</button>',   
+       template: '<ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="created"><i class="icon" ng-class="{\'ion-star gray\':fdata.filter!=\'new\', \'ion-star positive\': fdata.filter==\'new\'}"></i> New</ion-radio><ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="hot"><i class="icon" ng-class="{\'ion-flame gray\':fdata.filter!=\'hot\', \'ion-flame positive\': fdata.filter==\'hot\'}"></i> Hot</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="trending"><i class="icon" ng-class="{\'ion-podium gray\':fdata.filter!=\'trending\', \'ion-podium positive\': fdata.filter==\'trending\'}"></i> Trending</ion-radio><ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="promoted"><i class="icon" ng-class="{\'ion-paper-airplane gray\':fdata.filter!=\'promoted\', \'ion-paper-airplane positive\': fdata.filter==\'promoted\'}"></i> Promoted</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="trending30"><i class="icon" ng-class="{\'ion-connection-bars gray\':fdata.filter!=\'trending30\', \'ion-connection-bars positive\': fdata.filter==\'trending30\'}"></i> Trending (30 days)</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="active"><i class="icon" ng-class="{\'ion-chatbubble-working gray\':fdata.filter!=\'active\', \'ion-chatbubble-working positive\': fdata.filter==\'active\'}"></i> Active</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="cashout"><i class="icon" ng-class="{\'ion-share gray\':fdata.filter!=\'cashout\', \'ion-share positive\': fdata.filter==\'cashout\'}"></i> Cashout</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="votes"><i class="icon" ng-class="{\'ion-person-stalker gray\':fdata.filter!=\'votes\', \'ion-person-stalker positive\': fdata.filter==\'votes\'}"></i> Votes</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="children"><i class="icon" ng-class="{\'ion-chatbubbles gray\':fdata.filter!=\'children\', \'ion-chatbubbles positive\': fdata.filter==\'children\'}"></i> Comments</ion-radio><button class="button button-block button-positive" ng-click="cancelFilter()">Cancel</button>',   
        title: 'Sort by',
        scope: $scope
     });
@@ -715,8 +715,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         if (!$scope.$$phase) {
           $scope.$apply();
         }
-      });
-         
+      });  
     }
   };
   
@@ -742,9 +741,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         $rootScope.timeint = $interval(function(){  
           window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
             console.log("get_dynamic_global_properties "+ response.head_block_number);
-            window.Api.database_api().exec("get_block", [response.head_block_number]).then(function(res){
+            /*window.Api.database_api().exec("get_block", [response.head_block_number]).then(function(res){
               console.log(res);
-            });
+            });*/
             if ($rootScope.$storage.user) {
               $scope.mylogin = new window.steemJS.Login();
               $scope.mylogin.setRoles(["posting"]);
@@ -1471,6 +1470,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         if(res) {
           var update = {profile: {profile_image:""} };
           angular.merge(update, $rootScope.$storage.user.json_metadata);
+          if (update.profilePicUrl) {delete update.profilePicUrl;}
+
           update.profile.profile_image = "";
 
           console.log('You are sure');
@@ -1555,6 +1556,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           var url = result.secure_url || '';
           var update = { profile: { profile_image: "" } };
           angular.merge(update, $rootScope.$storage.user.json_metadata);
+          if (update.profilePicUrl) {delete update.profilePicUrl;}
           update.profile.profile_image = url;
           setTimeout(function() {
             $rootScope.$broadcast('show:loading');
@@ -1617,6 +1619,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         if (res) {
           var update = { profile: { profile_image: "" } };
           angular.merge(update, $rootScope.$storage.user.json_metadata);
+          if (update.profilePicUrl) {delete update.profilePicUrl;}
           update.profile.profile_image = res;
           setTimeout(function() {
             if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
