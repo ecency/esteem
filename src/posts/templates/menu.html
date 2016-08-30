@@ -28,8 +28,8 @@
       <div ng-if="$root.$storage.user">
         <center>
           <a menu-close href="#/app/profile/{{$root.$storage.user.username}}" class="item-myavatar" ng-if="$root.$storage.user">
-            <span class="item-myavatar" ng-if="!$root.$storage.user.json_metadata.profilePicUrl"><ng-letter-avatar data="{{$root.$storage.user.username}}" shape="round"></ng-letter-avatar></span>
-            <img ng-src="{{$root.$storage.user.json_metadata.profilePicUrl}}" ng-if="$root.$storage.user.json_metadata.profilePicUrl" />
+            <span class="item-myavatar" ng-if="!$root.$storage.user.json_metadata.profilePicUrl || !$root.$storage.user.json_metadata.profile.profile_image"><ng-letter-avatar data="{{$root.$storage.user.username}}" shape="round"></ng-letter-avatar></span>
+            <img ng-src="{{$root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image}}" ng-if="$root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image" />
           </a>
           <h4>@{{$root.$storage.user.username}}&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation|number:0}}</div></h4>
           <div ng-click="showMeExtra()" class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}} <i class="icon pull-right gray" ng-class="{'ion-arrow-down-b':!showExtra, 'ion-arrow-up-b':showExtra}"></i></div>
