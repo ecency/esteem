@@ -118,6 +118,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $rootScope.$storage.mylogin = undefined;
     $rootScope.$storage.mylogin = null;
     //make sure user credentials cleared.
+    APIs.updateSubscription($rootScope.$storage.deviceid, "", "").then(function(res){
+      console.log(angular.toJson(res));
+    });
     $ionicSideMenuDelegate.toggleLeft();
     $state.go('app.posts', {tags:""}, {reload:true});
     $rootScope.$broadcast("user:logout");
@@ -432,7 +435,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           if (localStorage.error == 1) {
             $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
           } else {
-            //$scope.spost.comment = "";  
+            $scope.spost = {};  
             $scope.closeMenuPopover();
             $state.go("app.profile", {username: $rootScope.$storage.user.username});
           }
@@ -845,7 +848,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   };
   $scope.editPost = function(xx) {
     $scope.edit = true;
-    $scope.spost = xx;
+    if (!$scope.spost.body) {
+      $scope.spost = xx;  
+    }
     $scope.spost.tags = angular.fromJson(xx.json_metadata).tags.join().replace(/\,/g,' ');
     console.log(xx);
     $scope.openPostModal();  
@@ -1998,6 +2003,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
 
   $scope.$on('$ionicView.beforeEnter', function(){
     $rootScope.$storage.socket = localStorage.socketUrl;
+    $scope.data = {};
     if (!$rootScope.$storage.voteWeight){
       $rootScope.$storage.voteWeight = 10000;
       $scope.vvalue = 100;
@@ -2023,16 +2029,14 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
 
     if ($rootScope.$storage.user && $rootScope.$storage.deviceid) {
       APIs.getSubscriptions($rootScope.$storage.deviceid).then(function(res){
-        console.log(res)
-        $scope.data.vote = res.subscription.vote;
-        $scope.data.follow = res.subscription.follow;
-        $scope.data.comment = res.subscription.comment;
+        console.log(angular.toJson(res.data))
+        angular.merge($scope.data, {vote: res.data[0].subscription.vote, follow: res.data[0].subscription.follow, comment: res.data[0].subscription.comment});
         if (!$scope.$$phase){
           $scope.$apply();
         }
       });  
     }
-    
+
     if (!$scope.$$phase){
       $scope.$apply();
     }
