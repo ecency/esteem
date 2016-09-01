@@ -181,7 +181,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     };
     $rootScope.showMessage = function(title, msg) {
       if (window.cordova) {
-        $cordovaToast.showShortBottom(title+": "+msg).then(function(success) {
+        $cordovaToast.showLongBottom(title+": "+msg).then(function(success) {
           // success
           console.log("toast"+success);
         }, function (error) {
