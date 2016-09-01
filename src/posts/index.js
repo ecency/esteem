@@ -399,7 +399,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               if (data.author && data.permlink) {
                 var alertPopup = $ionicPopup.alert({
                   title: data.title,
-                  template: data.body
+                  template: data.body + ", opening post"
                 });
                 alertPopup.then(function(res) {
                   console.log('Thank you for seeing alert from tray');
@@ -411,14 +411,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               //Notification was received in foreground. Maybe the user needs to be notified.
               //alert( JSON.stringify(data) );
               if (data.author && data.permlink) {
-                var alertPopup = $ionicPopup.alert({
-                  title: data.title,
-                  template: data.body
-                });
-                alertPopup.then(function(res) {
-                  console.log('Thank you for seeing alert from tray');
-                  //$rootScope.getContentAndOpen(data.author, data.permlink);
-                });
+                $rootScope.showMessage(data.title, data.body+" "+data.permlink);
               } else {
                 $rootScope.showMessage(data.title, data.body);
               }
