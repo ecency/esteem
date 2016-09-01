@@ -181,7 +181,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     };
     $rootScope.showMessage = function(title, msg) {
       if (window.cordova) {
-        $cordovaToast.showShortBottom(msg).then(function(success) {
+        $cordovaToast.showShortBottom(title+": "+msg).then(function(success) {
           // success
           console.log("toast"+success);
         }, function (error) {
@@ -396,29 +396,32 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             if(data.wasTapped){
               //Notification was received on device tray and tapped by the user.
               //alert( JSON.stringify(data) );
-              var alertPopup = $ionicPopup.alert({
-                title: data.title,
-                template: data.body
-              });
-              alertPopup.then(function(res) {
-                console.log('Thank you for seeing alert from tray');
-                if (data.author && data.permlink) {
+              if (data.author && data.permlink) {
+                var alertPopup = $ionicPopup.alert({
+                  title: data.title,
+                  template: data.body
+                });
+                alertPopup.then(function(res) {
+                  console.log('Thank you for seeing alert from tray');
                   $rootScope.getContentAndOpen(data.author, data.permlink);
-                }
-              });
-
+                  
+                });
+              }
             }else{
               //Notification was received in foreground. Maybe the user needs to be notified.
               //alert( JSON.stringify(data) );
-              
-              var alertPopup = $ionicPopup.alert({
-                title: data.title,
-                template: data.body
-              });
-              alertPopup.then(function(res) {
-                console.log('Thank you for seeing alert');
-              });
-              
+              if (data.author && data.permlink) {
+                var alertPopup = $ionicPopup.alert({
+                  title: data.title,
+                  template: data.body
+                });
+                alertPopup.then(function(res) {
+                  console.log('Thank you for seeing alert from tray');
+                  //$rootScope.getContentAndOpen(data.author, data.permlink);
+                });
+              } else {
+                $rootScope.showMessage(data.title, data.body);
+              }
             }
           },
           function(msg){

@@ -1,20 +1,21 @@
-<ion-modal-view>
-  <ion-header-bar>
+<ion-modal-view style="height:50%;">
+  <ion-header-bar class="bar bar-header bar-positive">
     <label class="item item-input" style="width: 60%;">
       <i class="icon ion-search placeholder-icon"></i>
       <input type="search" placeholder="Search" autofocus ng-model="data.search" ng-change="search()">
     </label>
     <label class="item item-input search item-select">
-      <div class="input-label">&nbsp;</div>
+      <div class="input-label"></div>
       <select ng-model="data.type" ng-change="typechange()">
 	      	<option value="tag">Tag</option>
         	<option value="user">User</option>
 	    </select>
     </label>
     <div class="buttons">
-      <button class="button button-clear button-dark fbold" ng-click="closeSmodal()">Done</button>
+      <button class="button button-clear fbold" ng-click="closeSmodal()">Done</button>
     </div>
-  </ion-header-bar>
+    &nbsp;
+  </ion-header-bar><!--ng-class="{'fullmodal': data.searchResult.length>0, 'halfmodal': data.searchResult.length==0}"-->
   <ion-content>
     <div class="list" ng-if="data.searchResult.length>0">
       <div ng-if="data.type=='tag'">

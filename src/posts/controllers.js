@@ -127,7 +127,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   };
   $scope.data = {};
   $ionicModal.fromTemplateUrl('templates/search.html', {
-    scope: $scope
+    scope: $scope,
+    animation: 'slide-in-down'
   }).then(function(modal) {
     $scope.smodal = modal;
   });
@@ -497,6 +498,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $rootScope.$broadcast('hide:loading');
     } else {
       $rootScope.$broadcast('hide:loading');
+      post.invoting = false;
       $rootScope.showAlert("Warning", "Please, login to Vote");
     }
   };
@@ -538,6 +540,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $rootScope.$broadcast('hide:loading');
     } else {
       $rootScope.$broadcast('hide:loading');
+      post.invoting = false;
       $rootScope.showAlert("Warning", "Please, login to Vote");
     }
   };
@@ -580,6 +583,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $rootScope.$broadcast('hide:loading');
     } else {
       $rootScope.$broadcast('show:loading');
+      post.invoting = false;
       $rootScope.showAlert("Warning", "Please, login to UnVote"); 
     }
   };
@@ -1109,6 +1113,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       $rootScope.$broadcast('hide:loading');
     } else {
       $rootScope.$broadcast('hide:loading');
+      post.invoting = false;
       $rootScope.showAlert("Warning", "Please, login to Vote");
     }
   };
@@ -1152,6 +1157,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       $rootScope.$broadcast('hide:loading');
     } else {
       $rootScope.$broadcast('hide:loading');
+      post.invoting = false;
       $rootScope.showAlert("Warning", "Please, login to Vote");
     }
   };
@@ -1195,6 +1201,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       $rootScope.$broadcast('hide:loading');
     } else {
       $rootScope.$broadcast('hide:loading');
+      post.invoting = false;
       $rootScope.showAlert("Warning", "Please, login to Vote");
     }
   };

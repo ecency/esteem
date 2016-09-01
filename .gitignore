@@ -2,7 +2,8 @@
 # http://git-scm.com/docs/gitignore
 
 node_modules
-
+google-services.json
+GoogleService-Info.plist
 bower_components/
 platforms/
 plugins/

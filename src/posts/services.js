@@ -27,7 +27,25 @@ module.exports = function (app) {
       }
 		};
 	}])
-
+  app.directive('select', function() {
+    return {
+      restrict: 'E',
+      link: function(scope, element, attrs) {
+        element.bind('focus', function(e) {
+          if (window.cordova && window.cordova.plugins.Keyboard) {
+            // console.log("show bar (hide = false)");
+            cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
+          }
+        });
+        element.bind('blur', function(e) {
+          if (window.cordova && window.cordova.plugins.Keyboard) {
+            // console.log("hide bar (hide = true)");
+            cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+          }
+        });
+      }
+    };
+  });
 	app.filter('timeago', function() {
         return function(input, p_allowFuture) {
 		
