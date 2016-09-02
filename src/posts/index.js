@@ -215,11 +215,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       if (!angular.isDefined($rootScope.timeint)) {
         window.Api.initPromise.then(function(response) {
           console.log("Api ready state change: "+angular.toJson(response));
-          /*$rootScope.timeint = $interval(function(){
+          $rootScope.timeint = $interval(function(){
             window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
               console.log("get_dynamic_global_properties " + response.head_block_number);
             });
-          }, 15000);*/
+          }, 15000);
         });
       }
       if ($rootScope.$storage.pincode) {
@@ -228,11 +228,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     });
     $ionicPlatform.on('pause', function(){
       console.log("app pause");
-      /*if (angular.isDefined($rootScope.timeint)) {
+      if (angular.isDefined($rootScope.timeint)) {
         console.log("cancel interval");
         $interval.cancel($rootScope.timeint);
         $rootScope.timeint = undefined;
-      }*/
+      }
     });
     
     $ionicPlatform.on('offline', function(){
