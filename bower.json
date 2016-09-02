@@ -16,7 +16,8 @@
     "ngCordova": "~0.1.23-alpha",
     "ngstorage": "^0.3.10",
     "ionic-threads": "^1.0.5",
-    "jquery": "^3.1.0"
+    "jquery": "^3.1.0",
+    "ion-floating-menu": "^1.0.1"
   },
   "resolutions": {
     "angular": "1.4.3",

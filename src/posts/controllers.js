@@ -460,132 +460,20 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $scope.modal.hide();
   };
 
+  $rootScope.$on('fetchPosts', function(){
+    $scope.fetchPosts();
+  });
+
   $scope.votePost = function(post) {
-    post.invoting = true;
-    console.log('upvoting');
-    $rootScope.$broadcast('show:loading');
-    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-        console.log('Api ready:');
-        $scope.mylogin = new window.steemJS.Login();
-        $scope.mylogin.setRoles(["posting"]);
-        var loginSuccess = $scope.mylogin.checkKeys({
-            accountName: $rootScope.$storage.user.username,    
-            password: $rootScope.$storage.user.password,
-            auths: {
-                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-            }}
-        );
-        if (loginSuccess) {
-          var tr = new window.steemJS.TransactionBuilder();
-          tr.add_type_operation("vote", {
-              voter: $rootScope.$storage.user.username,
-              author: post.author,
-              permlink: post.permlink,
-              weight: $rootScope.$storage.voteWeight || 10000
-          });
-          localStorage.error = 0;
-          tr.process_transaction($scope.mylogin, null, true);
-          setTimeout(function() {
-            post.invoting = false;
-            if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-            } else {
-              $scope.fetchPosts();
-            }
-            
-          }, 3000);
-        }
-      $rootScope.$broadcast('hide:loading');
-    } else {
-      $rootScope.$broadcast('hide:loading');
-      post.invoting = false;
-      $rootScope.showAlert("Warning", "Please, login to Vote");
-    }
+    $rootScope.votePost(post, 'upvote', 'fetchPosts');
   };
 
   $scope.downvotePost = function(post) {
-    post.invoting = true;
-    console.log('downvoting');
-    $rootScope.$broadcast('show:loading');
-    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-        console.log('Api ready:');
-        $scope.mylogin = new window.steemJS.Login();
-        $scope.mylogin.setRoles(["posting"]);
-        var loginSuccess = $scope.mylogin.checkKeys({
-            accountName: $rootScope.$storage.user.username,    
-            password: $rootScope.$storage.user.password,
-            auths: {
-                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-            }}
-        );
-        if (loginSuccess) {
-          var tr = new window.steemJS.TransactionBuilder();
-          tr.add_type_operation("vote", {
-              voter: $rootScope.$storage.user.username,
-              author: post.author,
-              permlink: post.permlink,
-              weight: $rootScope.$storage.voteWeight*-1 || -10000
-          });
-          localStorage.error = 0;
-          tr.process_transaction($scope.mylogin, null, true);
-          setTimeout(function() {
-            post.invoting = false;
-            if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-            } else {
-              $scope.fetchPosts();
-            }
-          }, 3000);
-        }
-      $rootScope.$broadcast('hide:loading');
-    } else {
-      $rootScope.$broadcast('hide:loading');
-      post.invoting = false;
-      $rootScope.showAlert("Warning", "Please, login to Vote");
-    }
+    $rootScope.votePost(post, 'downvote', 'fetchPosts');
   };
 
   $scope.unvotePost = function(post) {
-    post.invoting = true;
-    console.log('unvoting');
-    $rootScope.$broadcast('show:loading');
-    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-        console.log('Api ready:');
-        $scope.mylogin = new window.steemJS.Login();
-        $scope.mylogin.setRoles(["posting"]);
-        var loginSuccess = $scope.mylogin.checkKeys({
-            accountName: $rootScope.$storage.user.username,    
-            password: $rootScope.$storage.user.password,
-            auths: {
-                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-            }}
-        );
-        if (loginSuccess) {
-          var tr = new window.steemJS.TransactionBuilder();
-          tr.add_type_operation("vote", {
-              voter: $rootScope.$storage.user.username,
-              author: post.author,
-              permlink: post.permlink,
-              weight: 0
-          });
-          localStorage.error = 0;
-          tr.process_transaction($scope.mylogin, null, true);
-          setTimeout(function() {
-            post.invoting = false;
-            if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-            } else {
-              $scope.fetchPosts();  
-            }
-            
-          }, 3000);  
-        }
-      $rootScope.$broadcast('hide:loading');
-    } else {
-      $rootScope.$broadcast('show:loading');
-      post.invoting = false;
-      $rootScope.showAlert("Warning", "Please, login to UnVote"); 
-    }
+    $rootScope.votePost(post, 'unvote', 'fetchPosts');
   };
 
   $scope.showFilter = function() {
@@ -1073,137 +961,16 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }, true);
 
   $scope.upvotePost = function(post) {
-    post.invoting = true;
-    $rootScope.$broadcast('show:loading');
-    // Then create the transaction and sign it without broadcasting
-    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-        console.log('Api ready:')
-        $scope.mylogin = new window.steemJS.Login();
-        $scope.mylogin.setRoles(["posting"]);
-        var loginSuccess = $scope.mylogin.checkKeys({
-            accountName: $rootScope.$storage.user.username,    
-            password: $rootScope.$storage.user.password,
-            auths: {
-                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-            }}
-        );
-        if (loginSuccess) {
-          var tr = new window.steemJS.TransactionBuilder();
-          tr.add_type_operation("vote", {
-              voter: $rootScope.$storage.user.username,
-              author: post.author,
-              permlink: post.permlink,
-              weight: $rootScope.$storage.voteWeight || 10000
-          });
-          //var my_pubkeys = $scope.mylogin.getPubKeys();
-          //console.log(my_pubkeys);
-          localStorage.error = 0;
-          tr.process_transaction($scope.mylogin, null, true);
-          
-          setTimeout(function() {
-            post.invoting = false;
-            if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-            } else {
-              $scope.getContent($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink);
-            }
-            
-          }, 3000);
-        } 
-      $rootScope.$broadcast('hide:loading');
-    } else {
-      $rootScope.$broadcast('hide:loading');
-      post.invoting = false;
-      $rootScope.showAlert("Warning", "Please, login to Vote");
-    }
+    $rootScope.votePost(post, 'upvote', 'getContent');
   };
+  $rootScope.$on('getContent', function() {
+    $scope.getContent($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink);
+  });
   $scope.downvotePost = function(post) {
-    post.invoting = true;
-    $rootScope.$broadcast('show:loading');
-    // Then create the transaction and sign it without broadcasting
-    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-        console.log('Api ready:');
-        $scope.mylogin = new window.steemJS.Login();
-        $scope.mylogin.setRoles(["posting"]);
-        var loginSuccess = $scope.mylogin.checkKeys({
-            accountName: $rootScope.$storage.user.username,    
-            password: $rootScope.$storage.user.password,
-            auths: {
-                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-            }}
-        );
-        if (loginSuccess) {
-          var tr = new window.steemJS.TransactionBuilder();
-          tr.add_type_operation("vote", {
-              voter: $rootScope.$storage.user.username,
-              author: post.author,
-              permlink: post.permlink,
-              weight: $rootScope.$storage.voteWeight*-1 || -10000
-          });
-          //var my_pubkeys = $scope.mylogin.getPubKeys();
-          localStorage.error = 0;
-          tr.process_transaction($scope.mylogin, null, true);
-          setTimeout(function() {
-            post.invoting = false;
-            if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-            } else {
-              $scope.getContent($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink);   
-            }
-            
-          }, 3000);
-        }
-      
-      $rootScope.$broadcast('hide:loading');
-    } else {
-      $rootScope.$broadcast('hide:loading');
-      post.invoting = false;
-      $rootScope.showAlert("Warning", "Please, login to Vote");
-    }
+    $rootScope.votePost(post, 'downvote', 'getContent');
   };
   $scope.unvotePost = function(post) {
-    post.invoting = true;
-    $rootScope.$broadcast('show:loading');
-    // Then create the transaction and sign it without broadcasting
-    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-        console.log('Api ready:');
-        $scope.mylogin = new window.steemJS.Login();
-        $scope.mylogin.setRoles(["posting"]);
-        var loginSuccess = $scope.mylogin.checkKeys({
-            accountName: $rootScope.$storage.user.username,    
-            password: $rootScope.$storage.user.password,
-            auths: {
-                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-            }}
-        );
-        if (loginSuccess) {
-          var tr = new window.steemJS.TransactionBuilder();
-          tr.add_type_operation("vote", {
-              voter: $rootScope.$storage.user.username,
-              author: post.author,
-              permlink: post.permlink,
-              weight: 0
-          });
-          //var my_pubkeys = $scope.mylogin.getPubKeys();
-          localStorage.error = 0;
-          tr.process_transaction($scope.mylogin, null, true);
-          setTimeout(function() {
-            post.invoting = false;
-            if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-            } else {
-              $scope.getContent($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink);
-            }
-            
-          }, 3000);
-          
-        }
-      $rootScope.$broadcast('hide:loading');
-    } else {
-      $rootScope.$broadcast('hide:loading');
-      post.invoting = false;
-      $rootScope.showAlert("Warning", "Please, login to Vote");
-    }
+    $rootScope.votePost(post, 'unvote', 'getContent');
   };
 
   $scope.$on('$ionicView.leave', function(){
@@ -1675,134 +1442,17 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     }
     
   };
-
+  $rootScope.$on('profileRefresh', function(){
+    $scope.refresh();
+  });
   $scope.upvotePost = function(post) {
-    post.invoting = true;
-    $rootScope.$broadcast('show:loading');
-    // Then create the transaction and sign it without broadcasting
-    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-        
-        $scope.mylogin = new window.steemJS.Login();
-        $scope.mylogin.setRoles(["posting"]);
-        var loginSuccess = $scope.mylogin.checkKeys({
-            accountName: $rootScope.$storage.user.username,    
-            password: $rootScope.$storage.user.password,
-            auths: {
-                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-            }}
-        );
-        console.log(loginSuccess);
-        if (loginSuccess) {
-          var tr = new window.steemJS.TransactionBuilder();
-          tr.add_type_operation("vote", {
-              voter: $rootScope.$storage.user.username,
-              author: post.author,
-              permlink: post.permlink,
-              weight: $rootScope.$storage.voteWeight || 10000
-          });
-          //var my_pubkeys = $scope.mylogin.getPubKeys();
-          //console.log(my_pubkeys);
-          localStorage.error = 0;
-          tr.process_transaction($scope.mylogin, null, true);
-          setTimeout(function() {
-            post.invoting = false;
-            if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-            } else {
-              $scope.refresh();
-            }
-            
-          }, 3000);
-        } 
-      $rootScope.$broadcast('hide:loading');
-    } else {
-      $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert("Warning", "Please, login to Vote");
-    }
+    $rootScope.votePost(post, 'upvote', 'profileRefresh');
   };
   $scope.downvotePost = function(post) {
-    post.invoting = true;
-    $rootScope.$broadcast('show:loading');
-    // Then create the transaction and sign it without broadcasting
-    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-        console.log('Api ready:');
-        $scope.mylogin = new window.steemJS.Login();
-        $scope.mylogin.setRoles(["posting"]);
-        var loginSuccess = $scope.mylogin.checkKeys({
-            accountName: $rootScope.$storage.user.username,    
-            password: $rootScope.$storage.user.password,
-            auths: {
-                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-            }}
-        );
-        if (loginSuccess) {
-          var tr = new window.steemJS.TransactionBuilder();
-          tr.add_type_operation("vote", {
-              voter: $rootScope.$storage.user.username,
-              author: post.author,
-              permlink: post.permlink,
-              weight: $rootScope.$storage.voteWeight*-1 || -10000
-          });
-          //var my_pubkeys = $scope.mylogin.getPubKeys();
-          localStorage.error = 0;
-          tr.process_transaction($scope.mylogin, null, true);
-          setTimeout(function() {
-            post.invoting = false;
-            if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-            } else {
-              $scope.refresh();
-            }
-            
-          }, 3000);
-        }
-      $rootScope.$broadcast('hide:loading');
-    } else {
-      $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert("Warning", "Please, login to Vote");
-    }
+    $rootScope.votePost(post, 'downvote', 'profileRefresh');
   };
   $scope.unvotePost = function(post) {
-    post.invoting = true;
-    $rootScope.$broadcast('show:loading');
-    // Then create the transaction and sign it without broadcasting
-    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-        console.log('Api ready:');
-        $scope.mylogin = new window.steemJS.Login();
-        $scope.mylogin.setRoles(["posting"]);
-        var loginSuccess = $scope.mylogin.checkKeys({
-            accountName: $rootScope.$storage.user.username,    
-            password: $rootScope.$storage.user.password,
-            auths: {
-                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-            }}
-        );
-        if (loginSuccess) {
-          var tr = new window.steemJS.TransactionBuilder();
-          tr.add_type_operation("vote", {
-              voter: $rootScope.$storage.user.username,
-              author: post.author,
-              permlink: post.permlink,
-              weight: 0
-          });
-          //var my_pubkeys = $scope.mylogin.getPubKeys();
-          localStorage.error = 0;
-          tr.process_transaction($scope.mylogin, null, true);
-          setTimeout(function() {
-            post.invoting = false;
-            if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-            } else {
-              $scope.refresh();
-            }
-            
-          }, 3000);
-        }
-      $rootScope.$broadcast('hide:loading');
-    } else {
-      $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert("Warning", "Please, login to Vote");
-    }
+    $rootScope.votePost(post, 'unvote', 'profileRefresh');
   };
   $scope.$watch('profile', function(newValue, oldValue){
     //console.log('changed');

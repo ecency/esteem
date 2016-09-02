@@ -10,6 +10,11 @@
 	      <button class="button button-icon button-clear ion-android-share-alt" ng-click="share()"></button>
 	    </ion-nav-buttons>
 	</ion-nav-bar>
+  <ion-floating-menu menu-color="#387ef5" menu-open-color="#387ef5">
+    <ion-floating-item icon="ion-chatbubbles" click="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username" button-color="#387ef5" icon-color="#fff"></ion-floating-item>
+    <ion-floating-item icon="ion-android-arrow-dropup-circle" click="upvotePost($root.$storage.sitem)" button-color="#387ef5" icon-color="#fff"></ion-floating-item>
+    <ion-floating-item icon="ion-edit" click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode=='first_payout' && $root.$storage.sitem.author==$root.$storage.user.username" button-color="#387ef5" icon-color="#fff"></ion-floating-item>
+  </ion-floating-menu>
   <ion-content class="padding" delegate-handle="mainScroll" overflow-scroll="true"><!---->
   	<p class="title h3">{{$root.$storage.sitem.title}}</p>
   	<div class="stitle row gray"><div class="col"><i class="icon ion-android-time"></i> {{$root.$storage.sitem.created|timeago}} by <i class="icon ion-android-person"></i>&nbsp;<b>{{$root.$storage.sitem.author}}</b>&nbsp;<div class="reputation">{{$root.$storage.sitem.author_reputation|reputation|number:0}}</div> in&nbsp;<i class="icon ion-pricetags"></i>&nbsp;{{$root.$storage.sitem.category}}</div></div>

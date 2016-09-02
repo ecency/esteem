@@ -5,13 +5,15 @@ var app = angular.module('steem', [
 	'ngStorage', 
 	'ngCordova',
   'wiz.markdown',
-  'rzModule'
+  'rzModule',
+  'ion-floating-menu'
 	//'ionic.contrib.ui.ionThread'
 ]);
 var steemRPC = require("steem-rpc");
 if (localStorage.getItem("socketUrl") === null) {
   localStorage.setItem("socketUrl", "wss://steemit.com/wspa");
 }
+
 window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
 window.steemJS = require("steemjs-lib");
 
@@ -121,7 +123,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/posts/');
   $ionicConfigProvider.navBar.alignTitle('left')
-  $ionicConfigProvider.backButton.text('').icon('ion-ios-arrow-back');
+  $ionicConfigProvider.backButton.text('').icon('ion-chevron-left');
   $ionicConfigProvider.views.swipeBackEnabled(false);
   //$sceDelegateProvider.resourceUrlWhitelist(['self', new RegExp('^(http[s]?):\/\/(w{3}.)?youtube\.com/.+$')]);
 });
@@ -213,11 +215,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       if (!angular.isDefined($rootScope.timeint)) {
         window.Api.initPromise.then(function(response) {
           console.log("Api ready state change: "+angular.toJson(response));
-          $rootScope.timeint = $interval(function(){
+          /*$rootScope.timeint = $interval(function(){
             window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
               console.log("get_dynamic_global_properties " + response.head_block_number);
             });
-          }, 15000);
+          }, 15000);*/
         });
       }
       if ($rootScope.$storage.pincode) {
@@ -226,11 +228,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     });
     $ionicPlatform.on('pause', function(){
       console.log("app pause");
-      if (angular.isDefined($rootScope.timeint)) {
+      /*if (angular.isDefined($rootScope.timeint)) {
         console.log("cancel interval");
         $interval.cancel($rootScope.timeint);
         $rootScope.timeint = undefined;
-      }
+      }*/
     });
     
     $ionicPlatform.on('offline', function(){
@@ -339,32 +341,93 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
 
     $rootScope.getContentAndOpen = function(author, permlink) {
-    (new Steem(localStorage.socketUrl)).getContent(author, permlink, function(err, result){
-      //console.log(err);
-      //console.log(result);
-      if (!err) {
-        for (var j = result.active_votes.length - 1; j >= 0; j--) {
-          if (result.active_votes[j].voter === $rootScope.$storage.user.username) {
-            if (result.active_votes[j].percent > 0) {
-              result.upvoted = true;  
-            } else if (result.active_votes[j].percent < 0) {
-              result.downvoted = true;  
-            } else {
-              result.downvoted = false;  
-              result.upvoted = false;  
+      (new Steem(localStorage.socketUrl)).getContent(author, permlink, function(err, result){
+        //console.log(err);
+        //console.log(result);
+        if (!err) {
+          for (var j = result.active_votes.length - 1; j >= 0; j--) {
+            if (result.active_votes[j].voter === $rootScope.$storage.user.username) {
+              if (result.active_votes[j].percent > 0) {
+                result.upvoted = true;  
+              } else if (result.active_votes[j].percent < 0) {
+                result.downvoted = true;  
+              } else {
+                result.downvoted = false;  
+                result.upvoted = false;  
+              }
             }
           }
+          $rootScope.$storage.sitem = result;
+          $state.go('app.single');
         }
-        $rootScope.$storage.sitem = result;
-        $state.go('app.single');
-      }
-      if (!$rootScope.$$phase) {
-        $rootScope.$apply();
-      }
-    });
-    $rootScope.$broadcast('hide:loading');
-  };
+        if (!$rootScope.$$phase) {
+          $rootScope.$apply();
+        }
+      });
+      $rootScope.$broadcast('hide:loading');
+    };
+    
+    $rootScope.votePost = function(post, type, afterward) {
+      //window.Api = window.steemWS.Client.get();
+      //console.log(test);
 
+      post.invoting = true;
+      var tt = 1;
+      if (type === "upvote") {
+        tt = 1;
+      }
+      if (type === "downvote") {
+        tt = -1;
+      }
+      if (type === "unvote") {
+        tt = 0;
+      }
+      console.log('voting '+tt);
+      $rootScope.$broadcast('show:loading');
+
+      if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+        window.Api.initPromise.then(function(response) {
+          console.log("Api ready:", response);
+          $rootScope.mylogin = new window.steemJS.Login();
+          $rootScope.mylogin.setRoles(["posting"]);
+          var loginSuccess = $rootScope.mylogin.checkKeys({
+              accountName: $rootScope.$storage.user.username,    
+              password: $rootScope.$storage.user.password,
+              auths: {
+                  posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
+              }}
+          );
+          if (loginSuccess) {
+            var tr = new window.steemJS.TransactionBuilder();
+            tr.add_type_operation("vote", {
+                voter: $rootScope.$storage.user.username,
+                author: post.author,
+                permlink: post.permlink,
+                weight: $rootScope.$storage.voteWeight*tt || 10000*tt
+            });
+            localStorage.error = 0;
+            tr.process_transaction($rootScope.mylogin, null, true);
+            setTimeout(function() {
+              post.invoting = false;
+              if (localStorage.error == 1) {
+                $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+              } else {
+                $rootScope.$broadcast(afterward);  
+              }
+            }, 3000);
+          }
+        });
+        /*var wif = steem.auth.toWif($rootScope.$storage.user.username, $rootScope.$storage.user.password, 'posting');
+        steem.broadcast.vote(wif, $rootScope.$storage.user.username, post.author, post.permlink, $rootScope.$storage.voteWeight*tt, function(err, result) {
+            console.log(err, result);
+        });*/
+        $rootScope.$broadcast('hide:loading');
+      } else {
+        $rootScope.$broadcast('hide:loading');
+        post.invoting = false;
+        $rootScope.showAlert("Warning", "Please, login to Vote");
+      }
+    };
     if (window.cordova) {
       if (ionic.Platform.isAndroid()) {
         //FCMPlugin.getToken( successCallback(token), errorCallback(err) );
