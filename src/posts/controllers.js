@@ -447,13 +447,16 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $rootScope.showAlert("Warning", "Please, login to Comment");
     }
   }
-
+  $scope.savePost = function() {
+    $rootScope.$storage.spost = $scope.spost;
+  }
   $ionicModal.fromTemplateUrl('templates/story.html', {
     scope: $scope  }).then(function(modal) {
     $scope.modal = modal;
   });
   $scope.openPostModal = function() {
     $rootScope.$broadcast('close:popover');
+    $scope.spost = $rootScope.$storage.spost || {};
     $scope.modal.show();
   };
   $scope.closePostModal = function() {
