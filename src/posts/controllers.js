@@ -449,6 +449,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   }
   $scope.savePost = function() {
     $rootScope.$storage.spost = $scope.spost;
+    $rootScope.showMessage("Saved:", "Post for later submission!");
+    $scope.closePostModal();
+  }
+  $scope.clearPost = function() {
+    $rootScope.$storage.spost = {};
+    $scope.spost = {};
+    $rootScope.showMessage("Cleared:", "Post!");
   }
   $ionicModal.fromTemplateUrl('templates/story.html', {
     scope: $scope  }).then(function(modal) {
