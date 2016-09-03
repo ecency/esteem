@@ -429,7 +429,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       }
     };
     if (window.cordova) {
-      //if (ionic.Platform.isAndroid()) {
+      if (!ionic.Platform.isWindowsPhone()) {
         //FCMPlugin.getToken( successCallback(token), errorCallback(err) );
         //Keep in mind the function will return null if the token has not been established yet.
         FCMPlugin.getToken(
@@ -490,7 +490,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         );  
       }
       
-    //}
+    }
 
   });
 });
