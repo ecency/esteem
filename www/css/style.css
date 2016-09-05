@@ -915,14 +915,14 @@ textarea.markdown-input {
 
 .tabbed-slidebox .tsb-icons .scroll a{
   width:auto;
-  font-size: 1.5em;
-  line-height: 1.5em;
+  font-size: 1.2em!important;
+  line-height: 1.5em!important;
   text-decoration: none;
   margin: 0 15px;
   border-bottom: 3px solid transparent;
 }
 .tabbed-slidebox .tsb-icons .scroll a.active {
-  font-size: 1.8em;
+  font-size: 1.5em!important;
   border-bottom: 3px solid #ccc;
 }
 .slider-slide h4{

@@ -368,7 +368,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   });
 
 });
-app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams) {
+app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate) {
   
   $scope.activeMenu = $rootScope.$storage.filter || "trending";
 
@@ -379,6 +379,50 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     var tag = $rootScope.$storage.tag || "";
     $scope.fetchPosts(type, $scope.limit, tag);  
   });
+  /*if ($rootScope.$storage.filter) {
+    if ($rootScope.$storage.filter === 'trending') {
+      //$scope.events.trigger("slideChange", {"index" : 0});
+      initialIndex = 0;
+      ionicSlideBoxDelegate = ionicSlideBoxDelegate.$getByHandle(handle);
+    }
+    if ($rootScope.$storage.filter === 'hot'){
+      //$scope.events.trigger("slideChange", {"index" : 1});
+      initialIndex = 1;
+    }
+    if ($rootScope.$storage.filter === 'created'){
+      //$scope.events.trigger("slideChange", {"index" : 2});
+      initialIndex = 2; 
+    }
+    if ($rootScope.$storage.filter === 'active'){
+      //$scope.events.trigger("slideChange", {"index" : 3});
+      initialIndex = 3;
+    }
+    if ($rootScope.$storage.filter === 'promoted'){
+      //$scope.events.trigger("slideChange", {"index" : 4});
+      initialIndex = 4; 
+    }
+    if ($rootScope.$storage.filter === 'trending30'){
+      //$scope.events.trigger("slideChange", {"index" : 5});
+      initialIndex = 5;
+    }
+    if ($rootScope.$storage.filter === 'votes'){
+      //$scope.events.trigger("slideChange", {"index" : 6});
+      initialIndex = 6;
+    }
+    if ($rootScope.$storage.filter === 'children'){
+      //$scope.events.trigger("slideChange", {"index" : 7});
+      initialIndex = 7;
+    }
+    if ($rootScope.$storage.filter === 'cashout'){
+      //$scope.events.trigger("slideChange", {"index" : 8});
+      initialIndex = 8;
+    }
+    var ionicSlideBoxDelegate = $ionicSlideBoxDelegate.$getByHandle(initialIndex);
+    setTimeout(function() {
+      ionicSlideBoxDelegate.slide(initialIndex);
+    }, 1000);
+    
+  }*/
   function slug(text) {
     return getSlug(text, {truncate: 128});
   };
@@ -627,7 +671,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     if ($scope.error) {
       $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
     } else {
-      console.log("fetching..."+type, limit, tag)
+      console.log("fetching..."+type+" "+limit+" "+tag);
       window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
         $scope.data = response; 
         //console.log(response);

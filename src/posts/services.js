@@ -147,8 +147,8 @@ module.exports = function (app) {
           }
       }
   })
-  app.directive('tabSlideBox', [ '$timeout', '$window', '$ionicSlideBoxDelegate', '$ionicScrollDelegate',
-    function($timeout, $window, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
+  app.directive('tabSlideBox', [ '$timeout', '$window', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$rootScope',
+    function($timeout, $window, $ionicSlideBoxDelegate, $ionicScrollDelegate, $rootScope) {
       'use strict';
 
       return {
@@ -199,11 +199,50 @@ module.exports = function (app) {
             if(initialIndex == 0){
               setPosition(0);
             }
-            
+            console.log('initialIndex '+initialIndex);
+            if ($rootScope.$storage.filter) {
+              if ($rootScope.$storage.filter === 'trending') {
+                //$scope.events.trigger("slideChange", {"index" : 0});
+                initialIndex = 0;
+              }
+              if ($rootScope.$storage.filter === 'hot'){
+                //$scope.events.trigger("slideChange", {"index" : 1});
+                initialIndex = 1;
+              }
+              if ($rootScope.$storage.filter === 'created'){
+                //$scope.events.trigger("slideChange", {"index" : 2});
+                initialIndex = 2; 
+              }
+              if ($rootScope.$storage.filter === 'active'){
+                //$scope.events.trigger("slideChange", {"index" : 3});
+                initialIndex = 3;
+              }
+              if ($rootScope.$storage.filter === 'promoted'){
+                //$scope.events.trigger("slideChange", {"index" : 4});
+                initialIndex = 4; 
+              }
+              if ($rootScope.$storage.filter === 'trending30'){
+                //$scope.events.trigger("slideChange", {"index" : 5});
+                initialIndex = 5;
+              }
+              if ($rootScope.$storage.filter === 'votes'){
+                //$scope.events.trigger("slideChange", {"index" : 6});
+                initialIndex = 6;
+              }
+              if ($rootScope.$storage.filter === 'children'){
+                //$scope.events.trigger("slideChange", {"index" : 7});
+                initialIndex = 7;
+              }
+              if ($rootScope.$storage.filter === 'cashout'){
+                //$scope.events.trigger("slideChange", {"index" : 8});
+                initialIndex = 8;
+              }
+            }
             $timeout(function() {
               ionicSlideBoxDelegate.slide(initialIndex);
-            }, 0);
+            }, 3000);
           }
+
           function setPosition(index){
             var iconsDiv = angular.element(ta.querySelector(".tsb-icons")), icons = iconsDiv.find("a"), wrap = iconsDiv[0].querySelector(".tsb-ic-wrp"), totalTabs = icons.length;
             var scrollDiv = wrap.querySelector(".scroll");
@@ -253,6 +292,7 @@ module.exports = function (app) {
           }
           var events = scope.events;
           events.on('slideChange', function(data){
+            console.log('slideChange');
             setPosition(data.index);
           });
           events.on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
@@ -263,7 +303,6 @@ module.exports = function (app) {
         },
         controller : function($scope, $attrs, $element, $rootScope) {
           $scope.events = new SimplePubSub();
-          
           $scope.slideHasChanged = function(index){
             console.log(index);
             $scope.currentSlide = index;
@@ -309,8 +348,50 @@ module.exports = function (app) {
           };
           
           $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
+            console.log('ngRepeatFinished');
             $scope.events.trigger("ngRepeatFinished", {"event" : ngRepeatFinishedEvent});
           });
+
+          /*if ($rootScope.$storage.filter) {
+            var initialIndex = 0;
+            if ($rootScope.$storage.filter === 'trending') {
+              //$scope.events.trigger("slideChange", {"index" : 0});
+              initialIndex = 0;
+            }
+            if ($rootScope.$storage.filter === 'hot'){
+              //$scope.events.trigger("slideChange", {"index" : 1});
+              initialIndex = 1;
+            }
+            if ($rootScope.$storage.filter === 'created'){
+              //$scope.events.trigger("slideChange", {"index" : 2});
+              initialIndex = 2; 
+            }
+            if ($rootScope.$storage.filter === 'active'){
+              //$scope.events.trigger("slideChange", {"index" : 3});
+              initialIndex = 3;
+            }
+            if ($rootScope.$storage.filter === 'promoted'){
+              //$scope.events.trigger("slideChange", {"index" : 4});
+              initialIndex = 4; 
+            }
+            if ($rootScope.$storage.filter === 'trending30'){
+              //$scope.events.trigger("slideChange", {"index" : 5});
+              initialIndex = 5;
+            }
+            if ($rootScope.$storage.filter === 'votes'){
+              //$scope.events.trigger("slideChange", {"index" : 6});
+              initialIndex = 6;
+            }
+            if ($rootScope.$storage.filter === 'children'){
+              //$scope.events.trigger("slideChange", {"index" : 7});
+              initialIndex = 7;
+            }
+            if ($rootScope.$storage.filter === 'cashout'){
+              //$scope.events.trigger("slideChange", {"index" : 8});
+              initialIndex = 8;
+            }
+            $scope.events.trigger("slideChange", {"index" : initialIndex});
+          }*/
         }
       };
 
