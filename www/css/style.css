@@ -208,6 +208,9 @@ textarea.markdown-input {
 .positives {
 	background-color: #387ef5;
 }
+.calms {
+  background-color: #11c1f3;
+}
 .spinner svg {
   width: 16px;
   height: 16px; 
@@ -785,4 +788,47 @@ textarea.markdown-input {
 }
 #floating-menu.active > li:nth-child(6){
     transition-delay: 250ms; -webkit-transition-delay: 250ms; top: -420px;
+}
+.mynav nav {
+    background: #387ef5 none repeat scroll 0 0;
+    /*border-bottom: 8px solid #fff;
+    border-top: 2px solid #40b5a2;*/
+    margin: 0 auto;
+    overflow: hidden;
+    width: 100%;
+}
+.mynav nav ul {
+    margin: 0 -999em 2em 0;
+    white-space: nowrap;
+}
+.mynav nav ul li {
+    float: left;
+}
+.mynav nav ul li a, nav ul li span {
+    background: #387ef5 none repeat scroll 0 0;
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    padding: 1em;
+    text-decoration: none;
+    transition-duration: 0.3s;
+}
+.mynav nav ul li a:hover, nav ul li span:hover {
+    background: #11c1f3 none repeat scroll 0 0;
+}
+.mynav .arrow {
+    border-color: #387ef5 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+    border-style: solid;
+    border-width: 10px 10px 0;
+    display: none;
+    height: 0;
+    left: 0;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    right: 0;
+    width: 0;
+}
+.mynav .active .arrow {
+    display: block;
 }

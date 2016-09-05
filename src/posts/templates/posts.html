@@ -1,4 +1,4 @@
-<ion-view view-title="{{$root.$storage.filter}} | {{$root.$storage.tag}}">
+<ion-view view-title="Home | {{$root.$storage.tag}}">
 	<ion-nav-bar class="bar-positive">
 		<ion-nav-back-button>
   		</ion-nav-back-button>
@@ -11,6 +11,12 @@
 	    </ion-nav-buttons>
 	</ion-nav-bar>
   <ion-content class="has-header" delegate-handle="mainScroll">
+	<span class="mynav">
+		<nav id="nav2">
+			<navigation menulinks='menuData'></navigation>
+	    </nav>
+    </span>
+
     <div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">
     	<!--Compact View-->
     	<div ng-repeat="d in data">

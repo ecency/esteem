@@ -212,6 +212,13 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     $ionicPlatform.on('resume', function(){
       console.log("app resume");
+      var steemRPC = require("steem-rpc");
+      if (localStorage.getItem("socketUrl") === null) {
+        localStorage.setItem("socketUrl", "wss://steemit.com/wspa");
+      }
+      window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
+      window.steemJS = require("steemjs-lib");
+
       if (!angular.isDefined($rootScope.timeint)) {
         window.Api.initPromise.then(function(response) {
           console.log("Api ready state change: "+angular.toJson(response));
@@ -232,6 +239,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         console.log("cancel interval");
         $interval.cancel($rootScope.timeint);
         $rootScope.timeint = undefined;
+        window.Api.close();
       }
     });
     

@@ -3,6 +3,17 @@ module.exports = function (app) {
 
 app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform, $filter, APIs) {
 
+  $scope.menuData = [
+      {role: 'main-menu', href: 'trending', name: 'Trending'},
+      {role: 'main-menu', href: 'hot', name: 'Hot'},
+      {role: 'main-menu', href: 'active', name: 'Active'},
+      {role: 'main-menu', href: 'created', name: 'New'},   
+      {role: 'main-menu', href: 'promoted', name: 'Promoted'},
+      {role: 'main-menu', href: 'trending30', name: 'Trending 30d'},    
+      {role: 'main-menu', href: 'cashout', name: 'Payout'},
+      {role: 'main-menu', href: 'votes', name: 'Votes'},    
+      {role: 'main-menu', href: 'children', name: 'Comments'}
+    ];
   $scope.loginData = {};  
 
   $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -358,6 +369,8 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
 
 });
 app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams) {
+  
+  $scope.activeMenu = $rootScope.$storage.filter || "trending";
 
   $rootScope.$on('filter:change', function() {
     $rootScope.$broadcast('show:loading');
@@ -1767,8 +1780,24 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
   });
   
   $scope.save = function(){
-    localStorage.socketUrl = $rootScope.$storage.socket;
-    $rootScope.showAlert("Success", "Settings are updated! Please, restart app for this to take effect!");
+    if (localStorage.socketUrl !== $rootScope.$storage.socket) {
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'Are you sure?',
+        template: 'Server update requires Restart!'
+      });
+      confirmPopup.then(function(res) {
+        if(res) {
+          console.log('You are sure');
+          localStorage.socketUrl = $rootScope.$storage.socket;
+          setTimeout(function() {
+            ionic.Platform.exitApp(); // stops the app
+          }, 10);
+        } else {
+          console.log('You are not sure');
+        }
+      });
+    };
+    $rootScope.showMessage("Success", "Settings are updated!");
     $ionicHistory.nextViewOptions({
       disableBack: true
     });

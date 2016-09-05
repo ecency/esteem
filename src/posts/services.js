@@ -46,6 +46,132 @@ module.exports = function (app) {
       }
     };
   });
+  /*app.directive('navigation', function () {
+    var controller = ['$scope', '$q', function ($scope, $q) {
+      $scope.types = angular.fromJson(localStorage.types);
+      console.log("active type "+$scope.types[0].label);
+      $scope.activeMenu = $scope.types[0].label;
+      $scope.someCtrlFn({type: $scope.types[0]});
+
+      $scope.addactiveclass = function (type) {
+        $scope.activeMenu = type.label;
+        $scope.center(type.label);
+        $scope.someCtrlFn({type: type});
+      };
+
+      $(window).resize(function(){
+          $scope.center();
+      });
+
+      $scope.center = function(menuItem) {
+        var nav = document.getElementById("nav");
+        var navWidth = document.getElementById("nav2").offsetWidth;
+        var currentElement = document.querySelectorAll('[name="'+menuItem+'"]');
+        currentElement = menuItem ? currentElement[0] : document.getElementsByClassName('active')[0];
+
+        if(currentElement) {
+          var margin = 0;
+          for(var i =0; i<nav.children.length; i++){
+            if(currentElement == nav.children[i]){
+              break;
+            }else {
+              margin += nav.children[i].offsetWidth;
+            }
+          }
+          nav.style.marginLeft = (navWidth/2 - margin - currentElement.offsetWidth/2) + 'px';
+        }
+        else {
+            nav.style.marginLeft = (navWidth/2 + $scope.activeMenu.length) + 'px';
+        }
+      };
+
+      setTimeout(function() {
+        $scope.center();
+      }, 5);
+    }];
+
+    return {
+      restrict: "E",
+      replace: true,
+      scope: {
+        types: '=',
+        someCtrlFn: '&callbackFn'
+      },
+      controller: controller,
+      template: fs.readFileSync(__dirname + '/templates/navigation.html', 'utf8'),
+      link: function(scope, iElement, iAttrs) {}
+    }
+  });*/
+  app.directive('navigation', function () {
+    var controller = ['$scope', '$rootScope', function ($scope, $rootScope) {
+      $scope.addactiveclass = function (menuItem) {
+          $scope.activeMenu = menuItem.name;
+          //console.log(menuItem);
+          $rootScope.$storage.filter = menuItem.href;
+          $rootScope.$broadcast('filter:change');
+          $scope.center(menuItem.name);
+          $scope.someCtrlFn({menulinks: menuItem});
+      };
+      
+
+      $(window).resize(function(){
+        $scope.center();
+      });
+      $scope.center = function(menuItem) {
+        var nav = document.getElementById("nav1");
+        var navWidth = document.getElementById("nav2").offsetWidth;
+        var currentElement = document.querySelectorAll('[name="'+menuItem+'"]');
+        currentElement = menuItem ? currentElement[0] : document.getElementsByClassName('active')[0]; 
+        if(currentElement) {
+          var margin = 0;
+          for(var i =0; i<nav.children.length; i++){
+            
+            if(currentElement == nav.children[i]){
+              break;
+            }else {
+              margin += nav.children[i].offsetWidth;
+            }
+          }
+          nav.style.marginLeft = (navWidth/2 - margin - currentElement.offsetWidth/2) + 'px';
+        }
+        else {
+          nav.style.marginLeft = (navWidth/2 - $scope.activeMenu.length) + 'px';
+        }
+      };
+      for (var i = 0; i < $scope.menulinks.length; i++) {
+        if ($rootScope.$storage.filter) {
+          if ($scope.menulinks[i].href == $rootScope.$storage.filter) {
+            $scope.activeMenu = $scope.menulinks[i].name;      
+          }
+        } else {
+          $scope.activeMenu = "Trending";    
+        }
+      }
+      
+      //$scope.center();
+      setTimeout(function() {
+        $scope.center();
+      }, 5);
+    }];
+
+    return {
+      restrict: "E",
+      replace: true,
+      scope: {
+        menulinks: '=',
+        someCtrlFn: '&callbackFn'
+      },
+      controller: controller,
+      template: "<ul id='nav1'>"+
+              "<li name='{{menulinks.name}}' ng-repeat='menulinks in menulinks' class='top {{menulinks.role}}' ng-class='{active : activeMenu === menulinks.name}'>"+
+                "<a ng-click='addactiveclass(menulinks)'>"+
+                  "{{menulinks.name}}"
+                +"</a>"+
+                "<div class='arrow'></div>"+
+                "</li>"
+            +"</ul>"
+    }
+  });
 	app.filter('timeago', function() {
         return function(input, p_allowFuture) {
 		
