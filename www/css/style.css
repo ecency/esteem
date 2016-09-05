@@ -789,6 +789,11 @@ textarea.markdown-input {
 #floating-menu.active > li:nth-child(6){
     transition-delay: 250ms; -webkit-transition-delay: 250ms; top: -420px;
 }
+.bar.bar-subheader.mynav {
+  padding: 0!important;
+  margin: 0!important;
+  border: 0!important;
+}
 .mynav nav {
     background: #387ef5 none repeat scroll 0 0;
     /*border-bottom: 8px solid #fff;

@@ -10,12 +10,14 @@
 	      <button class="button button-icon ion-more" ng-click="openMenuPopover($event)"></button>
 	    </ion-nav-buttons>
 	</ion-nav-bar>
-  <ion-content class="has-header" delegate-handle="mainScroll">
-	<span class="mynav">
-		<nav id="nav2">
-			<navigation menulinks='menuData'></navigation>
-	    </nav>
-    </span>
+	<div class="bar bar-subheader mynav">
+		
+			<nav id="nav2">
+				<navigation menulinks='menuData'></navigation>
+		    </nav>
+	    
+	</div>
+  <ion-content class="has-header has-subheader" delegate-handle="mainScroll">
 
     <div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">
     	<!--Compact View-->
