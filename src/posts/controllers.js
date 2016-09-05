@@ -519,6 +519,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $scope.filterchange = function(f){
       console.log($scope.fdata.filter)
       $rootScope.$storage.filter = $scope.fdata.filter;
+      //$rootScope.$storage.filter = f;
+      console.log(f);
       myPopupF.close();
       $scope.closeMenuPopover();
       $rootScope.$broadcast('filter:change');

@@ -10,17 +10,429 @@
 	      <button class="button button-icon ion-more" ng-click="openMenuPopover($event)"></button>
 	    </ion-nav-buttons>
 	</ion-nav-bar>
-	<div class="bar bar-subheader mynav">
-		
-			<nav id="nav2">
-				<navigation menulinks='menuData'></navigation>
-		    </nav>
-	    
-	</div>
-  <ion-content class="has-header has-subheader" delegate-handle="mainScroll">
-
-    <div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">
-    	<!--Compact View-->
+	<!--<div class="bar bar-subheader mynav">
+		<nav id="nav2">
+			<navigation menulinks='menuData'></navigation>
+	    </nav>
+	</div>-->
+  <ion-content class="has-header" scroll="true" delegate-handle="mainScroll">
+  	<tab-slide-box>
+	    	<div class="tsb-icons">
+	    		<div class="tsb-ic-wrp">
+					<ion-scroll direction="x" class="tsb-hscroll">
+					<a href="javascript:;" class="">Trending</a>
+					<a href="javascript:;" class="">Hot</a>
+					<a href="javascript:;" class="">New</a>
+					<a href="javascript:;" class="">Active</a>
+					<a href="javascript:;" class="">Promoted</a>
+					<a href="javascript:;" class="">Trending30</a>
+					<a href="javascript:;" class="">Votes</a>
+					<a href="javascript:;" class="">Comments</a>
+					<a href="javascript:;" class="">Payout</a>
+					</ion-scroll>
+				</div>
+	    	</div>
+	        <ion-slide-box show-pager="false" on-slide-changed="slideHasChanged($index)">
+	            <ion-slide>
+	            	<div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">
+				    	<div ng-repeat="d in data">
+					    	<div class="item">
+							    <div ng-click="open(d)">
+							    <p><h2>{{d.title}}</h2></p>
+							    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;by&nbsp;<b>{{d.author}}&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div></b></div></div>
+							    </div>
+							    <div class="row">
+							    <div class="col">
+							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{d.children}}</a>
+							      </div>
+							      </div>
+						  	</div>
+						</div>
+					</div>
+					<div class="list card" ng-if="$root.$storage.view=='card' && data.length>0" ng-repeat="ds in data">
+						<div class="item" ng-click="open(ds)">
+						    <h2>{{ds.title}}</h2>
+						    <div class="row twrap"><div class="col">{{ds.created|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i>&nbsp;<b>{{ds.author}}&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div></b></div></div>
+						</div>
+						<div class="item-body">
+						    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" ng-click="open(ds)"/>
+						    <div class="row">
+						    <div class="col">
+						      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{ds.children}}</a>
+						      </div>
+						      </div>
+						</div>
+					</div>
+	            </ion-slide>
+	            <ion-slide>
+	            <div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">
+				    	<div ng-repeat="d in data">
+					    	<div class="item">
+							    <div ng-click="open(d)">
+							    <p><h2>{{d.title}}</h2></p>
+							    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;by&nbsp;<b>{{d.author}}&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div></b></div></div>
+							    </div>
+							    <div class="row">
+							    <div class="col">
+							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{d.children}}</a>
+							      </div>
+							      </div>
+						  	</div>
+						</div>
+					</div>
+					<div class="list card" ng-if="$root.$storage.view=='card' && data.length>0" ng-repeat="ds in data">
+						<div class="item" ng-click="open(ds)">
+						    <h2>{{ds.title}}</h2>
+						    <div class="row twrap"><div class="col">{{ds.created|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i>&nbsp;<b>{{ds.author}}&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div></b></div></div>
+						</div>
+						<div class="item-body">
+						    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" ng-click="open(ds)"/>
+						    <div class="row">
+						    <div class="col">
+						      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{ds.children}}</a>
+						      </div>
+						      </div>
+						</div>
+					</div>
+	            </ion-slide>
+				<ion-slide>
+				<div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">
+				    	<div ng-repeat="d in data">
+					    	<div class="item">
+							    <div ng-click="open(d)">
+							    <p><h2>{{d.title}}</h2></p>
+							    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;by&nbsp;<b>{{d.author}}&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div></b></div></div>
+							    </div>
+							    <div class="row">
+							    <div class="col">
+							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{d.children}}</a>
+							      </div>
+							      </div>
+						  	</div>
+						</div>
+					</div>
+					<div class="list card" ng-if="$root.$storage.view=='card' && data.length>0" ng-repeat="ds in data">
+						<div class="item" ng-click="open(ds)">
+						    <h2>{{ds.title}}</h2>
+						    <div class="row twrap"><div class="col">{{ds.created|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i>&nbsp;<b>{{ds.author}}&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div></b></div></div>
+						</div>
+						<div class="item-body">
+						    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" ng-click="open(ds)"/>
+						    <div class="row">
+						    <div class="col">
+						      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{ds.children}}</a>
+						      </div>
+						      </div>
+						</div>
+					</div>
+	            </ion-slide>
+	            <ion-slide>
+	            <div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">
+				    	<div ng-repeat="d in data">
+					    	<div class="item">
+							    <div ng-click="open(d)">
+							    <p><h2>{{d.title}}</h2></p>
+							    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;by&nbsp;<b>{{d.author}}&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div></b></div></div>
+							    </div>
+							    <div class="row">
+							    <div class="col">
+							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{d.children}}</a>
+							      </div>
+							      </div>
+						  	</div>
+						</div>
+					</div>
+					<div class="list card" ng-if="$root.$storage.view=='card' && data.length>0" ng-repeat="ds in data">
+						<div class="item" ng-click="open(ds)">
+						    <h2>{{ds.title}}</h2>
+						    <div class="row twrap"><div class="col">{{ds.created|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i>&nbsp;<b>{{ds.author}}&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div></b></div></div>
+						</div>
+						<div class="item-body">
+						    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" ng-click="open(ds)"/>
+						    <div class="row">
+						    <div class="col">
+						      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{ds.children}}</a>
+						      </div>
+						      </div>
+						</div>
+					</div>
+	            </ion-slide>
+	            <ion-slide>
+	            <div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">
+				    	<div ng-repeat="d in data">
+					    	<div class="item">
+							    <div ng-click="open(d)">
+							    <p><h2>{{d.title}}</h2></p>
+							    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;by&nbsp;<b>{{d.author}}&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div></b></div></div>
+							    </div>
+							    <div class="row">
+							    <div class="col">
+							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{d.children}}</a>
+							      </div>
+							      </div>
+						  	</div>
+						</div>
+					</div>
+					<div class="list card" ng-if="$root.$storage.view=='card' && data.length>0" ng-repeat="ds in data">
+						<div class="item" ng-click="open(ds)">
+						    <h2>{{ds.title}}</h2>
+						    <div class="row twrap"><div class="col">{{ds.created|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i>&nbsp;<b>{{ds.author}}&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div></b></div></div>
+						</div>
+						<div class="item-body">
+						    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" ng-click="open(ds)"/>
+						    <div class="row">
+						    <div class="col">
+						      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{ds.children}}</a>
+						      </div>
+						      </div>
+						</div>
+					</div>
+	            </ion-slide>
+				<ion-slide>
+				<div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">
+				    	<div ng-repeat="d in data">
+					    	<div class="item">
+							    <div ng-click="open(d)">
+							    <p><h2>{{d.title}}</h2></p>
+							    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;by&nbsp;<b>{{d.author}}&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div></b></div></div>
+							    </div>
+							    <div class="row">
+							    <div class="col">
+							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{d.children}}</a>
+							      </div>
+							      </div>
+						  	</div>
+						</div>
+					</div>
+					<div class="list card" ng-if="$root.$storage.view=='card' && data.length>0" ng-repeat="ds in data">
+						<div class="item" ng-click="open(ds)">
+						    <h2>{{ds.title}}</h2>
+						    <div class="row twrap"><div class="col">{{ds.created|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i>&nbsp;<b>{{ds.author}}&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div></b></div></div>
+						</div>
+						<div class="item-body">
+						    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" ng-click="open(ds)"/>
+						    <div class="row">
+						    <div class="col">
+						      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{ds.children}}</a>
+						      </div>
+						      </div>
+						</div>
+					</div>	                
+	            </ion-slide>
+				<ion-slide>
+				<div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">
+				    	<div ng-repeat="d in data">
+					    	<div class="item">
+							    <div ng-click="open(d)">
+							    <p><h2>{{d.title}}</h2></p>
+							    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;by&nbsp;<b>{{d.author}}&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div></b></div></div>
+							    </div>
+							    <div class="row">
+							    <div class="col">
+							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{d.children}}</a>
+							      </div>
+							      </div>
+						  	</div>
+						</div>
+					</div>
+					<div class="list card" ng-if="$root.$storage.view=='card' && data.length>0" ng-repeat="ds in data">
+						<div class="item" ng-click="open(ds)">
+						    <h2>{{ds.title}}</h2>
+						    <div class="row twrap"><div class="col">{{ds.created|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i>&nbsp;<b>{{ds.author}}&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div></b></div></div>
+						</div>
+						<div class="item-body">
+						    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" ng-click="open(ds)"/>
+						    <div class="row">
+						    <div class="col">
+						      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{ds.children}}</a>
+						      </div>
+						      </div>
+						</div>
+					</div>
+	            </ion-slide>
+				<ion-slide>
+				<div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">
+				    	<div ng-repeat="d in data">
+					    	<div class="item">
+							    <div ng-click="open(d)">
+							    <p><h2>{{d.title}}</h2></p>
+							    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;by&nbsp;<b>{{d.author}}&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div></b></div></div>
+							    </div>
+							    <div class="row">
+							    <div class="col">
+							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{d.children}}</a>
+							      </div>
+							      </div>
+						  	</div>
+						</div>
+					</div>
+					<div class="list card" ng-if="$root.$storage.view=='card' && data.length>0" ng-repeat="ds in data">
+						<div class="item" ng-click="open(ds)">
+						    <h2>{{ds.title}}</h2>
+						    <div class="row twrap"><div class="col">{{ds.created|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i>&nbsp;<b>{{ds.author}}&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div></b></div></div>
+						</div>
+						<div class="item-body">
+						    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" ng-click="open(ds)"/>
+						    <div class="row">
+						    <div class="col">
+						      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{ds.children}}</a>
+						      </div>
+						      </div>
+						</div>
+					</div>
+	            </ion-slide>
+				<ion-slide>
+				<div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">
+				    	<div ng-repeat="d in data">
+					    	<div class="item">
+							    <div ng-click="open(d)">
+							    <p><h2>{{d.title}}</h2></p>
+							    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;by&nbsp;<b>{{d.author}}&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div></b></div></div>
+							    </div>
+							    <div class="row">
+							    <div class="col">
+							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
+							      </div>
+							      <div class="col col-25 tright">
+							      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{d.children}}</a>
+							      </div>
+							      </div>
+						  	</div>
+						</div>
+					</div>
+					<div class="list card" ng-if="$root.$storage.view=='card' && data.length>0" ng-repeat="ds in data">
+						<div class="item" ng-click="open(ds)">
+						    <h2>{{ds.title}}</h2>
+						    <div class="row twrap"><div class="col">{{ds.created|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i>&nbsp;<b>{{ds.author}}&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div></b></div></div>
+						</div>
+						<div class="item-body">
+						    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" ng-click="open(ds)"/>
+						    <div class="row">
+						    <div class="col">
+						      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
+						      </div>
+						      <div class="col col-25 tright">
+						      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{ds.children}}</a>
+						      </div>
+						      </div>
+						</div>
+					</div>
+	            </ion-slide>
+	        </ion-slide-box>
+  	</tab-slide-box>
+  	
+    <!--<div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">
     	<div ng-repeat="d in data">
 	    	<div class="item">
 			    <div ng-click="open(d)">
@@ -42,16 +454,12 @@
 		</div>
 	</div>
 	<div class="list card" ng-if="$root.$storage.view=='card' && data.length>0" ng-repeat="ds in data">
-		<!--Card View-->
-		<div class="item" ng-click="open(ds)"><!-- item-avatar">-->
-		    <!--<img src="mcfly.jpg">-->
+		<div class="item" ng-click="open(ds)">
 		    <h2>{{ds.title}}</h2>
 		    <div class="row twrap"><div class="col">{{ds.created|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i>&nbsp;<b>{{ds.author}}&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div></b></div></div>
 		</div>
 		<div class="item-body">
 		    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" ng-click="open(ds)"/>
-		    <!--<p ng-bind-html="d.body.substring(0, 50)|parseUrl">
-		    </p>-->
 		    <div class="row">
 		    <div class="col">
 		      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
@@ -65,7 +473,7 @@
 		      </div>
 		      </div>
 		</div>
-	</div>
+	</div>-->
 	<center ng-if="data.length>0"><button class="button button-small button-positive icon ion-refresh" ng-click="loadMore()">
       Load More
     </button></center>
