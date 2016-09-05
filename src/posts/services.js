@@ -266,6 +266,7 @@ module.exports = function (app) {
           
           $scope.slideHasChanged = function(index){
             console.log(index);
+            $scope.currentSlide = index;
 
             if (index === 0) {
               $rootScope.$storage.filter = 'trending';
