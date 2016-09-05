@@ -943,7 +943,7 @@ module.exports = function (app) {
                     console.log('delete to comment', comment);
                     var confirmPopup = $ionicPopup.confirm({
                         title: 'Are you sure?',
-                        template: 'Deleting comments irreversible...'
+                        template: 'Deleting comments are irreversible...'
                     });
                     confirmPopup.then(function(res) {
                         if(res) {

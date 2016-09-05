@@ -379,50 +379,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     var tag = $rootScope.$storage.tag || "";
     $scope.fetchPosts(type, $scope.limit, tag);  
   });
-  /*if ($rootScope.$storage.filter) {
-    if ($rootScope.$storage.filter === 'trending') {
-      //$scope.events.trigger("slideChange", {"index" : 0});
-      initialIndex = 0;
-      ionicSlideBoxDelegate = ionicSlideBoxDelegate.$getByHandle(handle);
-    }
-    if ($rootScope.$storage.filter === 'hot'){
-      //$scope.events.trigger("slideChange", {"index" : 1});
-      initialIndex = 1;
-    }
-    if ($rootScope.$storage.filter === 'created'){
-      //$scope.events.trigger("slideChange", {"index" : 2});
-      initialIndex = 2; 
-    }
-    if ($rootScope.$storage.filter === 'active'){
-      //$scope.events.trigger("slideChange", {"index" : 3});
-      initialIndex = 3;
-    }
-    if ($rootScope.$storage.filter === 'promoted'){
-      //$scope.events.trigger("slideChange", {"index" : 4});
-      initialIndex = 4; 
-    }
-    if ($rootScope.$storage.filter === 'trending30'){
-      //$scope.events.trigger("slideChange", {"index" : 5});
-      initialIndex = 5;
-    }
-    if ($rootScope.$storage.filter === 'votes'){
-      //$scope.events.trigger("slideChange", {"index" : 6});
-      initialIndex = 6;
-    }
-    if ($rootScope.$storage.filter === 'children'){
-      //$scope.events.trigger("slideChange", {"index" : 7});
-      initialIndex = 7;
-    }
-    if ($rootScope.$storage.filter === 'cashout'){
-      //$scope.events.trigger("slideChange", {"index" : 8});
-      initialIndex = 8;
-    }
-    var ionicSlideBoxDelegate = $ionicSlideBoxDelegate.$getByHandle(initialIndex);
-    setTimeout(function() {
-      ionicSlideBoxDelegate.slide(initialIndex);
-    }, 1000);
-    
-  }*/
   function slug(text) {
     return getSlug(text, {truncate: 128});
   };
@@ -765,7 +721,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   //$scope.refresh();   
 })
 
-app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter) {
+app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService) {
   $scope.post = $rootScope.$storage.sitem;
   $scope.data = {};
   $scope.spost = {};  
@@ -797,6 +753,86 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     }
     
   };
+
+  $scope.showImg = function() {
+   var hideSheet = $ionicActionSheet.show({
+     buttons: [
+       { text: 'Capture Picture' },
+       { text: 'Select Picture' },
+       { text: 'Set Custom URL' },
+     ],
+     titleText: 'Insert Picture',
+     cancelText: 'Cancel',
+     cancel: function() {
+        // add cancel code..
+      },
+     buttonClicked: function(index) {
+        $scope.insertImage(index);  
+        return true;
+     }
+   });
+  };
+  $scope.insertImage = function(type) {
+    var options = {};
+    if (type == 0) {
+      //capture
+      options = {
+        quality: 50,
+        destinationType: Camera.DestinationType.FILE_URI,
+        sourceType: Camera.PictureSourceType.CAMERA,
+        allowEdit: true,
+        encodingType: Camera.EncodingType.JPEG,
+        popoverOptions: CameraPopoverOptions,
+        saveToPhotoAlbum: false,
+        correctOrientation:true
+      };
+    }
+    if (type == 1) {
+      //capture
+      options = {
+        quality: 50,
+        destinationType: Camera.DestinationType.FILE_URI,
+        sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+        allowEdit: true,
+        encodingType: Camera.EncodingType.JPEG,
+        popoverOptions: CameraPopoverOptions,
+        saveToPhotoAlbum: false,
+        correctOrientation:true
+      };
+    }
+    if (type !== 2) {
+      $cordovaCamera.getPicture(options).then(function(imageData) {
+        ImageUploadService.uploadImage(imageData).then(function(result) {
+          var url = result.secure_url || '';
+          var final = "![image](" + url + ")";
+          $scope.data.comment.concat(final);
+          $cordovaCamera.cleanup();
+        },
+        function(err) {
+          $rootScope.showAlert("Error", "Upload Error");
+          $cordovaCamera.cleanup();
+        });
+      }, function(err) {
+        $rootScope.showAlert("Error", "Camera Cancelled");
+      });
+    } else {
+      $ionicPopup.prompt({
+        title: 'Set URL',
+        template: 'Direct web link for the picture',
+        inputType: 'text',
+        inputPlaceholder: 'http://example.com/image.jpg'
+      }).then(function(res) {
+        console.log('Your url is', res);
+        if (res) {
+          var url = res.trim();
+          var final = "![image](" + url + ")";
+          $scope.data.comment.concat(final);
+        }
+      });
+    }
+  };
+
+
 
   $ionicModal.fromTemplateUrl('templates/story.html', {
     scope: $scope  }).then(function(modal) {
