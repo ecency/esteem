@@ -240,7 +240,7 @@ module.exports = function (app) {
             }
             $timeout(function() {
               ionicSlideBoxDelegate.slide(initialIndex);
-            }, 3000);
+            }, 3200);
           }
 
           function setPosition(index){
@@ -1079,12 +1079,12 @@ module.exports = function (app) {
                     deferred.resolve(response);
                   }, function(err) {
                     // Uh oh!
-                    $ionicLoading.show({template : 'Upload Failed', duration: 3000});
+                    $ionicLoading.show({template : 'Upload Failed', duration: 2000});
                     deferred.reject(err);
                   }, function (progress) {
                     // The upload plugin gives you information about how much data has been transferred 
                     // on some interval.  Use this with the original file size to show a progress indicator.
-                    percentage = Math.floor(progress.loaded / fileSize * 100);
+                    percentage = Math.floor((progress.loaded / fileSize) * 100);
                     $ionicLoading.show({template : 'Uploading Picture : ' + percentage + '%'});
                   });
             });

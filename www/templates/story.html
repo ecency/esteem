@@ -13,10 +13,11 @@
         <wiz-toolbar-button command="code" class="button button-small"><i class="icon ion-code"></i></wiz-toolbar-button>
         <wiz-toolbar-button command="ullist" class="button button-small"><img src="img/ullist.png"/></wiz-toolbar-button>
         <wiz-toolbar-button command="ollist" class="button button-small"><img src="img/ollist.png"/></wiz-toolbar-button>
-        <wiz-toolbar-button command="link" class="button button-small"><i class="icon ion-link"></i></wiz-toolbar-button>
-        <wiz-toolbar-button command="img" class="button button-small"><i class="icon ion-image"></i></wiz-toolbar-button>
+        <!--<wiz-toolbar-button command="link" class="button button-small"><i class="icon ion-link"></i></wiz-toolbar-button>
+        <wiz-toolbar-button command="img" class="button button-small"><i class="icon ion-image"></i></wiz-toolbar-button>-->
         <wiz-toolbar-button command="hr" class="button button-small">HR</wiz-toolbar-button>
         <wiz-toolbar-button command="heading" class="button button-small">H</wiz-toolbar-button>
+        <button class="button button-small" ng-click="showImg()"><i class="icon ion-image"></i></button>
       </wiz-markdown-editor>
 
       <input type="text" name="categories" placeholder="Tags" ng-model="spost.tags" ng-change="tagsChange()" style="width:100%;">

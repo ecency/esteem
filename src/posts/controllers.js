@@ -368,7 +368,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   });
 
 });
-app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate) {
+app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera) {
   
   $scope.activeMenu = $rootScope.$storage.filter || "trending";
 
@@ -379,6 +379,92 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     var tag = $rootScope.$storage.tag || "";
     $scope.fetchPosts(type, $scope.limit, tag);  
   });
+
+  $scope.showImg = function() {
+   var hideSheet = $ionicActionSheet.show({
+     buttons: [
+       { text: 'Capture Picture' },
+       { text: 'Select Picture' },
+       { text: 'Set Custom URL' },
+     ],
+     titleText: 'Insert Picture',
+     cancelText: 'Cancel',
+     cancel: function() {
+        // add cancel code..
+      },
+     buttonClicked: function(index) {
+        $scope.insertImage(index);  
+        return true;
+     }
+   });
+  };
+  $scope.insertImage = function(type) {
+    var options = {};
+    
+    if (type == 0 || type == 1) {
+      options = {
+        quality: 50,
+        destinationType: Camera.DestinationType.FILE_URI,
+        sourceType: (type===0)?Camera.PictureSourceType.CAMERA:Camera.PictureSourceType.PHOTOLIBRARY,
+        allowEdit: true,
+        encodingType: Camera.EncodingType.JPEG,
+        popoverOptions: CameraPopoverOptions,
+        saveToPhotoAlbum: false,
+        correctOrientation:true
+      };
+
+      $ionicPlatform.ready(function() {
+        $cordovaCamera.getPicture(options).then(function(imageData) {
+          if (ionic.Platform.isAndroid()) {
+            if (imageData.indexOf('file://')===-1) {
+              imageData="file://"+imageData;
+            }
+          }
+          ImageUploadService.uploadImage(imageData).then(function(result) {
+            var url = result.secure_url || '';
+            var final = " ![image](" + url + ")";
+            //console.log(final);
+            if ($scope.spost.body) {
+              $scope.spost.body += final;
+            } else {
+              $scope.spost.body = final;
+            }
+            
+            $cordovaCamera.cleanup();
+          },
+          function(err) {
+            $rootScope.showAlert("Error", "Upload Error");
+            $cordovaCamera.cleanup();
+          });  
+        }, function(err) {
+          $rootScope.showAlert("Error", "Camera Cancelled");
+        });
+      });
+    } else {
+      $ionicPopup.prompt({
+        title: 'Set URL',
+        template: 'Direct web link for the picture',
+        inputType: 'text',
+        inputPlaceholder: 'http://example.com/image.jpg'
+      }).then(function(res) {
+        console.log('Your url is', res);
+        if (res) {
+          var url = res.trim();
+          var final = " ![image](" + url + ")";
+          //console.log(final);
+          if ($scope.spost.body) {
+            $scope.spost.body += final;
+          } else {
+            $scope.spost.body = final;
+          }
+        }
+      });
+    }
+  };
+
+
+
+
   function slug(text) {
     return getSlug(text, {truncate: 128});
   };
@@ -398,6 +484,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       return permlink;
     }
   };
+
   $scope.submitStorys = function() {
     console.log(createPermlink($scope.spost.title));
     console.log($filter("metadata")($rootScope.$storage.sitem.body));
@@ -721,7 +808,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   //$scope.refresh();   
 })
 
-app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService) {
+app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform) {
   $scope.post = $rootScope.$storage.sitem;
   $scope.data = {};
   $scope.spost = {};  
@@ -774,46 +861,45 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   };
   $scope.insertImage = function(type) {
     var options = {};
-    if (type == 0) {
-      //capture
+
+    if (type == 0 || type == 1) {
       options = {
         quality: 50,
         destinationType: Camera.DestinationType.FILE_URI,
-        sourceType: Camera.PictureSourceType.CAMERA,
+        sourceType: (type===0)?Camera.PictureSourceType.CAMERA:Camera.PictureSourceType.PHOTOLIBRARY,
         allowEdit: true,
         encodingType: Camera.EncodingType.JPEG,
         popoverOptions: CameraPopoverOptions,
         saveToPhotoAlbum: false,
         correctOrientation:true
       };
-    }
-    if (type == 1) {
-      //capture
-      options = {
-        quality: 50,
-        destinationType: Camera.DestinationType.FILE_URI,
-        sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-        allowEdit: true,
-        encodingType: Camera.EncodingType.JPEG,
-        popoverOptions: CameraPopoverOptions,
-        saveToPhotoAlbum: false,
-        correctOrientation:true
-      };
-    }
-    if (type !== 2) {
-      $cordovaCamera.getPicture(options).then(function(imageData) {
-        ImageUploadService.uploadImage(imageData).then(function(result) {
-          var url = result.secure_url || '';
-          var final = "![image](" + url + ")";
-          $scope.data.comment.concat(final);
-          $cordovaCamera.cleanup();
-        },
-        function(err) {
-          $rootScope.showAlert("Error", "Upload Error");
-          $cordovaCamera.cleanup();
+      $ionicPlatform.ready(function() {
+        $cordovaCamera.getPicture(options).then(function(imageData) {
+          console.log(imageData);
+          if (ionic.Platform.isAndroid()) {
+            if (imageData.indexOf('file://')===-1) {
+              imageData="file://"+imageData;
+            }
+          }
+          ImageUploadService.uploadImage(imageData).then(function(result) {
+            var url = result.secure_url || '';
+            var final = " ![image](" + url + ")";
+            console.log(final);
+            if ($scope.data.comment) {
+              $scope.data.comment += final;
+            } else {
+              $scope.data.comment = final;
+            }
+            
+            $cordovaCamera.cleanup();
+          },
+          function(err) {
+            $rootScope.showAlert("Error", "Upload Error");
+            $cordovaCamera.cleanup();
+          });  
+        }, function(err) {
+          $rootScope.showAlert("Error", "Camera Cancelled");
         });
-      }, function(err) {
-        $rootScope.showAlert("Error", "Camera Cancelled");
       });
     } else {
       $ionicPopup.prompt({
@@ -825,8 +911,13 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         console.log('Your url is', res);
         if (res) {
           var url = res.trim();
-          var final = "![image](" + url + ")";
-          $scope.data.comment.concat(final);
+          var final = " ![image](" + url + ")";
+          console.log(final);
+          if ($scope.data.comment) {
+            $scope.data.comment += final;
+          } else {
+            $scope.data.comment = final;
+          }
         }
       });
     }

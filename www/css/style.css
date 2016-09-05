@@ -316,13 +316,14 @@ textarea.markdown-input {
   margin:auto;
   max-width: 96vw;
   border-radius: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 20px!important;
 }
 .platform-android .action-sheet .action-sheet-title, .platform-android .action-sheet .button {
   text-align: left;
   font-size: 16px;
   color: inherit;
 }
+
 .platform-android .action-sheet .action-sheet-title {
   font-size: 14px;
   padding: 16px;
@@ -344,7 +345,7 @@ textarea.markdown-input {
   background-color: #fafafa; 
 }
 .platform-android .action-sheet-cancel {
-  display: none;
+  display: block!important;
 }
 .platform-android .action-sheet-has-icons .button {
   padding-left: 56px; 
