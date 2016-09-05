@@ -11,9 +11,9 @@
 	    </ion-nav-buttons>
 	</ion-nav-bar>
   <ion-floating-menu menu-color="#387ef5" menu-open-color="#387ef5" has-footer="true">
-    <ion-floating-item icon="ion-chatbubbles" click="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username" button-color="#387ef5" icon-color="#fff"></ion-floating-item>
-    <ion-floating-item icon="ion-android-arrow-dropup-circle" click="upvotePost($root.$storage.sitem)" button-color="#387ef5" icon-color="#fff"></ion-floating-item>
-    <ion-floating-item icon="ion-edit" click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode=='first_payout' && $root.$storage.sitem.author==$root.$storage.user.username" button-color="#387ef5" icon-color="#fff"></ion-floating-item>
+    <ion-floating-item icon="ion-chatbubbles" click="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username" button-color="#387ef5" icon-color="#fff" text="Reply" text-class="text-class"></ion-floating-item>
+    <ion-floating-item icon="ion-android-arrow-dropup-circle" click="upvotePost($root.$storage.sitem)" button-color="#387ef5" icon-color="#fff" text="Upvote" text-class="text-class"></ion-floating-item>
+    <ion-floating-item icon="ion-edit" click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode!=='archived' && $root.$storage.sitem.author==$root.$storage.user.username" button-color="#387ef5" icon-color="#fff" text="Edit" text-class="text-class"></ion-floating-item>
   </ion-floating-menu>
   <ion-content class="padding" delegate-handle="mainScroll" overflow-scroll="true"><!---->
   	<p class="title h3">{{$root.$storage.sitem.title}}</p>

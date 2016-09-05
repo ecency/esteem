@@ -837,3 +837,7 @@ textarea.markdown-input {
 .mynav .active .arrow {
     display: block;
 }
+.text-class {
+  background-color: #000!important;
+  color: #fff!important;
+}
