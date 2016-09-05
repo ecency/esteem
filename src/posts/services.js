@@ -814,11 +814,18 @@ module.exports = function (app) {
                     } else {
                         $scope.edit = true;
                         $scope.data.comment = $scope.post.body;
+                        $scope.patchbody = $scope.post.body;
                         $scope.openModal();
                     }
                   }
-
-                $scope.reply = function (xx) {
+                  var dmp = new window.diff_match_patch();
+                  function createPatch(text1, text2) {
+                      if (!text1 && text1 === '') return undefined;
+                      var patches = dmp.patch_make(text1, text2);
+                      var patch = dmp.patch_toText(patches);
+                      return patch;
+                  }
+                  $scope.reply = function (xx) {
                     if (!$scope.edit) {
                         $rootScope.$broadcast('show:loading');
                         if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
@@ -867,6 +874,14 @@ module.exports = function (app) {
                           $rootScope.showAlert("Warning", "Please, login to Comment");
                         }
                     } else {
+                        
+                        var patch = createPatch($scope.patchbody, $scope.data.comment)
+                        // Putting body into buffer will expand Unicode characters into their true length
+                        if (patch && patch.length < new Buffer($scope.data.comment, 'utf-8').length) {
+                          $scope.data.comment2 = patch;
+                          //console.log(patch);
+                        }
+
                         $rootScope.$broadcast('show:loading');
                         if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
                           $scope.mylogin = new window.steemJS.Login();
@@ -888,7 +903,7 @@ module.exports = function (app) {
                               author: $scope.post.author,
                               permlink: $scope.post.permlink,
                               title: "",
-                              body: $scope.data.comment,
+                              body: $scope.data.comment2 || $scope.data.comment,
                               json_metadata: $scope.post.json_metadata
                             });
                             //console.log(my_pubkeys);

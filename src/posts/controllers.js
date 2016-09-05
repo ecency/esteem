@@ -456,6 +456,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $scope.disableBtn = false;
     }
   }
+
   $scope.submitStory = function() {
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
@@ -807,10 +808,21 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.closePostModal = function() {
     $scope.pmodal.hide();
   };
+  
+  var dmp = new window.diff_match_patch();
+
+  function createPatch(text1, text2) {
+      if (!text1 && text1 === '') return undefined;
+      var patches = dmp.patch_make(text1, text2);
+      var patch = dmp.patch_toText(patches);
+      return patch;
+  }
+  $scope.edit = false;
   $scope.editPost = function(xx) {
     $scope.edit = true;
     if (!$scope.spost.body) {
       $scope.spost = xx;  
+      $scope.patchbody = xx.body;
     }
     $scope.spost.tags = angular.fromJson(xx.json_metadata).tags.join().replace(/\,/g,' ');
     console.log(xx);
@@ -818,6 +830,17 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
   
   $scope.submitStory = function() {
+    if ($scope.edit) {
+      var patch = createPatch($scope.patchbody, $scope.spost.body)
+      // Putting body into buffer will expand Unicode characters into their true length
+      if (patch && patch.length < new Buffer($scope.spost.body, 'utf-8').length) {
+        $scope.spost.body2 = patch;
+      }
+      //console.log(patch);
+    } else {
+      $scope.spost.body2 = undefined;
+    }
+    
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
       $scope.mylogin = new window.steemJS.Login();
@@ -840,7 +863,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           author: $rootScope.$storage.user.username,
           permlink: $scope.spost.permlink,
           title: $scope.spost.title,
-          body: $scope.spost.body,
+          body: $scope.spost.body2 || $scope.spost.body,
           json_metadata: angular.toJson(json)
         });
         //console.log(my_pubkeys);
@@ -1592,7 +1615,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     });
   };
   $scope.$on('$ionicView.beforeEnter', function(){
-    console.log($ionicHistory.viewHistory());
+    //console.log($ionicHistory.viewHistory());
 
     if ($rootScope.$storage.user.username !== $stateParams.username) {
       $scope.getOtherUsersData();  

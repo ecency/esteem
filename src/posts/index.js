@@ -16,6 +16,7 @@ if (localStorage.getItem("socketUrl") === null) {
 
 window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
 window.steemJS = require("steemjs-lib");
+window.diff_match_patch = require('diff-match-patch');
 
 require('./services')(app);
 require('./controllers')(app);
