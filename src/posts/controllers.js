@@ -462,9 +462,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
   };
 
-
-
-
   function slug(text) {
     return getSlug(text, {truncate: 128});
   };
@@ -652,7 +649,29 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
     return -1;
   }
-  $scope.$watch('data', function(newValue, oldValue){
+  $scope.dataChanged = function(newValue) {
+    for (var i = 0; i < newValue.length; i++) {
+      if ($rootScope.$storage.user){
+        for (var j = newValue[i].active_votes.length - 1; j >= 0; j--) {
+          if (newValue[i].active_votes[j].voter === $rootScope.$storage.user.username) {
+            if (newValue[i].active_votes[j].percent > 0) {
+              newValue[i].upvoted = true;  
+            } else if (newValue[i].active_votes[j].percent < 0) {
+              newValue[i].downvoted = true;  
+            } else {
+              newValue[i].downvoted = false;  
+              newValue[i].upvoted = false;  
+            }
+          }
+        }
+      }
+      if ($rootScope.$storage.view == 'card') {
+        newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata?newValue[i].json_metadata:[]);
+      }
+    }
+    return newValue;
+  }
+  /*$scope.$watch('data', function(newValue, oldValue){
       //console.log('changed');
       if (newValue) {
         var length = newValue.length;
@@ -682,7 +701,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       if (!$scope.$$phase){
         $scope.$apply();
       }
-  }, true);
+  }, true);*/
 
 
   $ionicPopover.fromTemplateUrl('templates/popover.html', {
@@ -717,7 +736,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     } else {
       console.log("fetching..."+type+" "+limit+" "+tag);
       window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
-        $scope.data = response; 
+        $scope.data = $scope.dataChanged(response); 
         //console.log(response);
         $rootScope.$broadcast('hide:loading');
         if (!$scope.$$phase) {
@@ -728,7 +747,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   };
   
   $scope.$on('$ionicView.afterEnter', function(){
-    $scope.limit = 7;
+    $scope.limit = 5;
     
     $rootScope.$broadcast('show:loading');
     console.log('enter ');
@@ -1117,9 +1136,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           $scope.$apply();
         }
       });
-      $rootScope.$broadcast('hide:loading');  
     }, 100);
-    
+    $rootScope.$broadcast('hide:loading');  
   });
 
   $scope.getContent = function(author, permlink) {
@@ -1147,7 +1165,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     });
     $rootScope.$broadcast('hide:loading');
   };
-  $scope.$watch('data', function(newValue, oldValue){
+  /*$scope.$watch('data', function(newValue, oldValue){
       //console.log('changed');
       if (newValue) {
         var length = newValue.length;
@@ -1177,7 +1195,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       if (!$scope.$$phase){
         $scope.$apply();
       }
-  }, true);
+  }, true);*/
 
   $scope.upvotePost = function(post) {
     $rootScope.votePost(post, 'upvote', 'getContent');
@@ -1279,7 +1297,7 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
           }
         });
       }
-    }, 800);
+    }, 600);
 
     $scope.dfetching = $interval(function(){
       if ($scope.following.length == $scope.limit) {
@@ -1300,7 +1318,7 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
           }
         });
       }
-    }, 700);
+    }, 1000);
   });
    
   $scope.$on('$ionicView.leave', function(){
@@ -1518,12 +1536,11 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   };
   $scope.changeProfileInfo = function(type) {
     var options = {};
-    if (type == 0) {
-      //capture
+    if (type == 0 || type == 1) {
       options = {
         quality: 50,
         destinationType: Camera.DestinationType.FILE_URI,
-        sourceType: Camera.PictureSourceType.CAMERA,
+        sourceType: (type===0)?Camera.PictureSourceType.CAMERA:Camera.PictureSourceType.PHOTOLIBRARY,
         allowEdit: true,
         encodingType: Camera.EncodingType.JPEG,
         targetWidth: 500,
@@ -1532,23 +1549,6 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         saveToPhotoAlbum: false,
         correctOrientation:true
       };
-    }
-    if (type == 1) {
-      //capture
-      options = {
-        quality: 50,
-        destinationType: Camera.DestinationType.FILE_URI,
-        sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-        allowEdit: true,
-        encodingType: Camera.EncodingType.JPEG,
-        targetWidth: 500,
-        targetHeight: 500,
-        popoverOptions: CameraPopoverOptions,
-        saveToPhotoAlbum: false,
-        correctOrientation:true
-      };
-    }
-    if (type !== 2) {
       $cordovaCamera.getPicture(options).then(function(imageData) {
         ImageUploadService.uploadImage(imageData).then(function(result) {
           var url = result.secure_url || '';
@@ -1673,7 +1673,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   $scope.unvotePost = function(post) {
     $rootScope.votePost(post, 'unvote', 'profileRefresh');
   };
-  $scope.$watch('profile', function(newValue, oldValue){
+
+  /*$scope.$watch('profile', function(newValue, oldValue){
     //console.log('changed');
     if (newValue) {
       for (var i = 0; i < newValue.length; i++) {
@@ -1693,7 +1694,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         }
       }
     }
-  }, true);
+  }, true);*/
+
   $scope.refresh = function() {  
     if (!$scope.active) {
       $scope.active = "blog";  
@@ -1714,7 +1716,22 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           if (res.content.hasOwnProperty(property)) {
             // do stuff
             //console.log(res.content[property])
-            $scope.profile.push(res.content[property]);
+            var ins = res.content[property];
+            if ($rootScope.$storage.user){
+              for (var j = ins.active_votes.length - 1; j >= 0; j--) {
+                if (ins.active_votes[j].voter === $rootScope.$storage.user.username) {
+                  if (ins.active_votes[j].percent > 0) {
+                    ins.upvoted = true;  
+                  } else if (ins.active_votes[j].percent < 0) {
+                    ins.downvoted = true;  
+                  } else {
+                    ins.upvoted = false;
+                    ins.downvoted = false;    
+                  }
+                }
+              }
+            }
+            $scope.profile.push(ins);
           }
         }
         $scope.nonexist = false;
@@ -1771,7 +1788,22 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         if (Object.keys(res.content).length>0) {
           for (var property in res.content) {
             if (res.content.hasOwnProperty(property)) {
-              $scope.profile.push(res.content[property]);
+              var ins = res.content[property];
+              if ($rootScope.$storage.user){
+                for (var j = ins.active_votes.length - 1; j >= 0; j--) {
+                  if (ins.active_votes[j].voter === $rootScope.$storage.user.username) {
+                    if (ins.active_votes[j].percent > 0) {
+                      ins.upvoted = true;  
+                    } else if (ins.active_votes[j].percent < 0) {
+                      ins.downvoted = true;  
+                    } else {
+                      ins.upvoted = false;
+                      ins.downvoted = false;    
+                    }
+                  }
+                }
+              }
+              $scope.profile.push(ins);
             }
           }    
           $scope.nonexist = false;

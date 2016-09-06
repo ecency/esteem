@@ -873,8 +873,9 @@ textarea.markdown-input {
 .tabbed-slidebox .tsb-icons a {
     display: inline-block;
     width: 54px;
+    padding-bottom: 5px;
     font-size: 1.3em!important;
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.7);
   -webkit-transform:translate3d(0,8px,0);
 }
 
