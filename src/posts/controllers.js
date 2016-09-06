@@ -1261,27 +1261,27 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
     $scope.active = "followers";  
     $scope.followers = [];
     $scope.following = [];
-    $scope.limit = 50;
+    $scope.limit = 100;
     $scope.tt = {ruser:"", duser:""};
       
     APIs.getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit).then(function(res){
-      if (res && res.length==$scope.limit) {
+      if (res && res.length===$scope.limit) {
         $scope.tt.ruser = res[res.length-1].follower;
       }
       $scope.followers = res;
     });
     
     APIs.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
-      if (res && res.length==$scope.limit) {
+      if (res && res.length===$scope.limit) {
         $scope.tt.duser = res[res.length-1].following;
       }
       $scope.following = res;
     });
 
     $scope.rfetching = $interval(function(){
-      if ($scope.followers.length == $scope.limit) {
+      if ($scope.followers.length === $scope.limit) {
         APIs.getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit).then(function(res){
-          if (res && res.length==$scope.limit) {
+          if (res && res.length===$scope.limit) {
             $scope.tt.ruser = res[res.length-1].follower;
           }
           //angular.merge($scope.followers, res);
@@ -1300,9 +1300,9 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
     }, 600);
 
     $scope.dfetching = $interval(function(){
-      if ($scope.following.length == $scope.limit) {
+      if ($scope.following.length === $scope.limit) {
         APIs.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
-          if (res && res.length==$scope.limit) {
+          if (res && res.length===$scope.limit) {
             $scope.tt.duser = res[res.length-1].following;
           }
           //angular.merge($scope.followers, res);
@@ -1822,7 +1822,6 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         } 
         //console.log($scope.transfers);
       }
-      
       if(!$scope.$$phase){
         $scope.$apply();
       }

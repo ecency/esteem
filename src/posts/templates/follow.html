@@ -4,10 +4,10 @@
       <div class="item item-button-right" ng-repeat="f in followers">
         <span ng-click="profileView(f.follower)">{{f.follower}}</span>
         <button class="button button-positive button-outline" ng-if="!isFollowed(f.follower)" ng-click="followUser(f.follower)">
-        Follow
+        Follow back
         </button>
         <button class="button button-positive" ng-if="isFollowed(f.follower)" ng-click="unfollowUser(f.follower)">
-        Unfollow
+        Followed
         </button>
       </div>
     </div>
@@ -18,7 +18,7 @@
         Unfollow
         </button>
         <button class="button button-positive" ng-if="isFollowing(f.following)">
-        Followed
+        Following
         </button>
       </div>
     </div>
