@@ -491,10 +491,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
   };
 
-  $scope.submitStorys = function() {
-    console.log(createPermlink($scope.spost.title));
-    console.log($filter("metadata")($rootScope.$storage.sitem.body));
-  }
   $scope.spost = {};
   $scope.tagsChange = function() {
     console.log("tagsChange");
@@ -515,7 +511,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           accountName: $rootScope.$storage.user.username,    
           password: $rootScope.$storage.user.password || null,
           auths: {
-              posting: $rootScope.$storage.user.posting
+              posting: $rootScope.$storage.user.posting.key_auths
           },
           privateKey: $rootScope.$storage.user.privatePostingKey || null
         }
@@ -525,6 +521,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         var permlink = createPermlink($scope.spost.title);
         var json = $filter("metadata")($scope.spost.body);
         angular.merge(json, {tags: $scope.spost.category});
+        console.log(json, permlink);
 
         tr.add_type_operation("comment", {
           parent_author: "",
@@ -541,7 +538,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         $scope.closePostModal();
         $scope.replying = false;
         setTimeout(function() {
-          $rootScope.$broadcast('hide:loading');
           if (localStorage.error == 1) {
             $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
           } else {
@@ -553,7 +549,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         }, 3000);
       } else {
         $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
-      } 
+      }
+      $rootScope.$broadcast('hide:loading');
     } else {
       $rootScope.$broadcast('hide:loading');
       $rootScope.showAlert("Warning", "Please, login to Comment");
@@ -1016,19 +1013,19 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $scope.closePostModal();
         $scope.replying = false;
         setTimeout(function() {
-          $rootScope.$broadcast('hide:loading');
           if (localStorage.error == 1) {
             $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
           } else {
             $scope.spost = {};
-            $rootScope.showMessage("Success", "Comment is submitted!");  
+            $rootScope.showMessage("Success", "Post is submitted!");  
             //$scope.closePostPopover();
             //$state.go("app.profile", {username: $rootScope.$storage.user.username});
           }
         }, 3000);
       } else {
         $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
-      } 
+      }
+      $rootScope.$broadcast('hide:loading'); 
     } else {
       $rootScope.$broadcast('hide:loading');
       $rootScope.showAlert("Warning", "Please, login to Comment");
