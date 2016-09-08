@@ -698,37 +698,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
     return newValue;
   }
-  /*$scope.$watch('data', function(newValue, oldValue){
-      //console.log('changed');
-      if (newValue) {
-        var length = newValue.length;
-        if (length < $scope.limit) {
-          $scope.noMoreItemsAvailable = true;
-        }
-        for (var i = 0; i < newValue.length; i++) {
-          if ($rootScope.$storage.user){
-            for (var j = newValue[i].active_votes.length - 1; j >= 0; j--) {
-              if (newValue[i].active_votes[j].voter === $rootScope.$storage.user.username) {
-                if (newValue[i].active_votes[j].percent > 0) {
-                  newValue[i].upvoted = true;  
-                } else if (newValue[i].active_votes[j].percent < 0) {
-                  newValue[i].downvoted = true;  
-                } else {
-                  newValue[i].downvoted = false;  
-                  newValue[i].upvoted = false;  
-                }
-              }
-            }
-          }
-          if ($rootScope.$storage.view == 'card') {
-            newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata?newValue[i].json_metadata:[]);
-          }
-        }
-      }      
-      if (!$scope.$$phase){
-        $scope.$apply();
-      }
-  }, true);*/
 
 
   $ionicPopover.fromTemplateUrl('templates/popover.html', {
@@ -1202,37 +1171,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     });
     $rootScope.$broadcast('hide:loading');
   };
-  /*$scope.$watch('data', function(newValue, oldValue){
-      //console.log('changed');
-      if (newValue) {
-        var length = newValue.length;
-        if (length < $scope.limit) {
-          $scope.noMoreItemsAvailable = true;
-        }
-        for (var i = 0; i < newValue.length; i++) {
-          if ($rootScope.$storage.user){
-            for (var j = newValue[i].active_votes.length - 1; j >= 0; j--) {
-              if (newValue[i].active_votes[j].voter === $rootScope.$storage.user.username) {
-                if (newValue[i].active_votes[j].percent > 0) {
-                  newValue[i].upvoted = true;  
-                } else if (newValue[i].active_votes[j].percent < 0) {
-                  newValue[i].downvoted = true;  
-                } else {
-                  newValue[i].downvoted = false;  
-                  newValue[i].upvoted = false;  
-                }
-              }
-            }
-          }
-          if ($rootScope.$storage.view == 'card') {
-            newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata?newValue[i].json_metadata:[]);
-          }
-        }
-      }      
-      if (!$scope.$$phase){
-        $scope.$apply();
-      }
-  }, true);*/
 
   $scope.upvotePost = function(post) {
     $rootScope.votePost(post, 'upvote', 'getContent');
