@@ -556,28 +556,28 @@ module.exports = function (app) {
 	app.filter('sp', function($sce, $rootScope) {
 	    return function(text) {
 	    	if (text) {
-	    		return (Number(text.substring(0, text.length-6))/1e6*$rootScope.$storage.steem_per_mvests).toFixed(3);	
+	    		return (Number(text.split(" ")[0])/1e6*$rootScope.$storage.steem_per_mvests).toFixed(3);	
 	    	}
 	    };
 	})
 	app.filter('sd', function($sce, $rootScope) {
-	    return function(text) {
+	    return function(text, balance, sbd) {
 	    	if (text) {
-	    		return (Number(text.substring(0, text.length-6))/1e6*$rootScope.$storage.steem_per_mvests*$rootScope.$storage.base).toFixed(3);	
+	    		return (Number(text.split(" ")[0])/1e6*$rootScope.$storage.steem_per_mvests*$rootScope.$storage.base + Number(balance.split(" ")[0])*$rootScope.$storage.base + Number(sbd.split(" ")[0])).toFixed(3);	
 	    	}
 	    };
 	})
 	app.filter('sbd', function($sce, $rootScope) {
 	    return function(text) {
 	    	if (text) {
-	    		return (Number(text.substring(0, text.length-4)).toFixed(3));	
+	    		return (Number(text.split(" ")[0]).toFixed(3));	
 	    	}
 	    };
 	})
 	app.filter('st', function($sce, $rootScope) {
 	    return function(text) {
 	    	if (text) {
-	    		return (Number(text.substring(0, text.length-6)).toFixed(3));	
+	    		return (Number(text.split(" ")[0]).toFixed(3));	
 	    	}
 	    };
 	})
@@ -678,117 +678,27 @@ module.exports = function (app) {
                       }
                     }
                 }
-                $scope.upvotePost = function(post) {
-                    $rootScope.$broadcast('show:loading');
-                    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-                        $scope.mylogin = new window.steemJS.Login();
-                        $scope.mylogin.setRoles(["posting"]);
-                        var loginSuccess = $scope.mylogin.checkKeys({
-                            accountName: $rootScope.$storage.user.username,    
-                            password: $rootScope.$storage.user.password,
-                            auths: {
-                                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-                            }}
-                        );
-                        if (loginSuccess) {
-                          var tr = new window.steemJS.TransactionBuilder();
-                          tr.add_type_operation("vote", {
-                              voter: $rootScope.$storage.user.username,
-                              author: post.author,
-                              permlink: post.permlink,
-                              weight: $rootScope.$storage.voteWeight || 10000
-                          });
-                          localStorage.error = 0;
-                          tr.process_transaction($scope.mylogin, null, true);
-
-                          setTimeout(function() {
-                              if (localStorage.error == 1) {
-                                $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-                              } else {
-                                $rootScope.$broadcast("update:content");
-                              }
-                            }, 3000);
-                        } 
-                      $rootScope.$broadcast('hide:loading');
-                    } else {
-                      $rootScope.$broadcast('hide:loading');
-                      $rootScope.showAlert("Warning", "Please, login to Vote");
-                    }
+                  $scope.upvotePost = function(post) {
+                    $rootScope.votePost(post, 'upvote', 'update:content');
                   };
 
                   $scope.downvotePost = function(post) {
-                    $rootScope.$broadcast('show:loading');
-                    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-                        $scope.mylogin = new window.steemJS.Login();
-                        $scope.mylogin.setRoles(["posting"]);
-                        var loginSuccess = $scope.mylogin.checkKeys({
-                            accountName: $rootScope.$storage.user.username,    
-                            password: $rootScope.$storage.user.password,
-                            auths: {
-                                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-                            }}
-                        );
-                        if (loginSuccess) {
-                          var tr = new window.steemJS.TransactionBuilder();
-                          tr.add_type_operation("vote", {
-                              voter: $rootScope.$storage.user.username,
-                              author: post.author,
-                              permlink: post.permlink,
-                              weight: $rootScope.$storage.voteWeight*-1 || -10000
-                          });
-                          localStorage.error = 0;
-                          tr.process_transaction($scope.mylogin, null, true);
-                           setTimeout(function() {
-                              if (localStorage.error == 1) {
-                                $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-                              } else {
-                                $rootScope.$broadcast("update:content");
-                              }
-                            }, 3000);
-                        }
-                      $rootScope.$broadcast('hide:loading');
-                    } else {
-                      $rootScope.$broadcast('hide:loading');
-                      $rootScope.showAlert("Warning", "Please, login to Vote");
-                    }
+                    var confirmPopup = $ionicPopup.confirm({
+                      title: 'Are you sure?',
+                      template: 'Downvote or Flag'
+                    });
+                    confirmPopup.then(function(res) {
+                      if(res) {
+                        console.log('You are sure');
+                        $rootScope.votePost(post, 'downvote', 'update:content');
+                      } else {
+                        console.log('You are not sure');
+                      }
+                    });
                   };
 
                   $scope.unvotePost = function(post) {
-                    $rootScope.$broadcast('show:loading');
-                    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-                        console.log('Api ready:');
-                        $scope.mylogin = new window.steemJS.Login();
-                        $scope.mylogin.setRoles(["posting"]);
-                        var loginSuccess = $scope.mylogin.checkKeys({
-                            accountName: $rootScope.$storage.user.username,    
-                            password: $rootScope.$storage.user.password,
-                            auths: {
-                                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-                            }}
-                        );
-                        if (loginSuccess) {
-                          var tr = new window.steemJS.TransactionBuilder();
-                          tr.add_type_operation("vote", {
-                              voter: $rootScope.$storage.user.username,
-                              author: post.author,
-                              permlink: post.permlink,
-                              weight: 0
-                          });
-                          localStorage.error = 0;
-                          tr.process_transaction($scope.mylogin, null, true);
-                           setTimeout(function() {
-                              if (localStorage.error == 1) {
-                                $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-                              } else {
-                                $rootScope.$broadcast("update:content");
-                              }
-                            }, 3000);
-                        }
-                      $rootScope.$broadcast('hide:loading');
-                    } else {
-                      $rootScope.$broadcast('hide:loading');
-                      $rootScope.showAlert("Warning", "Please, login to Vote");
-                    }
+                    $rootScope.votePost(post, 'unvote', 'update:content');
                   };
                   $scope.data={};
                   $ionicModal.fromTemplateUrl('templates/reply.html', {
@@ -828,15 +738,17 @@ module.exports = function (app) {
                   $scope.reply = function (xx) {
                     if (!$scope.edit) {
                         $rootScope.$broadcast('show:loading');
-                        if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+                        if ($rootScope.$storage.user) {
                           $scope.mylogin = new window.steemJS.Login();
                           $scope.mylogin.setRoles(["posting"]);
                           var loginSuccess = $scope.mylogin.checkKeys({
                               accountName: $rootScope.$storage.user.username,    
-                              password: $rootScope.$storage.user.password,
+                              password: $rootScope.$storage.user.password || null,
                               auths: {
-                                  posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-                              }}
+                                  posting: $rootScope.$storage.user.posting.key_auths
+                              },
+                              privateKey: $rootScope.$storage.user.privatePostingKey || null
+                            }
                           );
                           if (loginSuccess) {
                             var tr = new window.steemJS.TransactionBuilder();
@@ -864,9 +776,12 @@ module.exports = function (app) {
                                 $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                               } else {
                                 $scope.data.comment = "";
+                                $rootScope.showMessage("Success", "Comment is submitted!");
                                 $rootScope.$broadcast("update:content");
                               }
                             }, 3000);
+                          } else {
+                            $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
                           } 
                           $rootScope.$broadcast('hide:loading');
                         } else {
@@ -883,15 +798,17 @@ module.exports = function (app) {
                         }
 
                         $rootScope.$broadcast('show:loading');
-                        if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+                        if ($rootScope.$storage.user) {
                           $scope.mylogin = new window.steemJS.Login();
                           $scope.mylogin.setRoles(["posting"]);
                           var loginSuccess = $scope.mylogin.checkKeys({
                               accountName: $rootScope.$storage.user.username,    
-                              password: $rootScope.$storage.user.password,
+                              password: $rootScope.$storage.user.password || null,
                               auths: {
-                                  posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-                              }}
+                                  posting: $rootScope.$storage.user.posting.key_auths
+                              },
+                              privateKey: $rootScope.$storage.user.privatePostingKey || null
+                            }
                           );
                           if (loginSuccess) {
                             var tr = new window.steemJS.TransactionBuilder();
@@ -917,9 +834,12 @@ module.exports = function (app) {
                                 $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                               } else {
                                 $scope.data.comment = "";
+                                $rootScope.showMessage("Success", "Comment is submitted!");
                                 $rootScope.$broadcast("update:content");
                               }
                             }, 3000);
+                          } else {
+                            $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
                           } 
                           $rootScope.$broadcast('hide:loading');
                         } else {
@@ -949,15 +869,17 @@ module.exports = function (app) {
                         if(res) {
                             console.log('You are sure');
                             $rootScope.$broadcast('show:loading');
-                            if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+                            if ($rootScope.$storage.user) {
                               $scope.mylogin = new window.steemJS.Login();
                               $scope.mylogin.setRoles(["posting"]);
                               var loginSuccess = $scope.mylogin.checkKeys({
                                   accountName: $rootScope.$storage.user.username,    
-                                  password: $rootScope.$storage.user.password,
+                                  password: $rootScope.$storage.user.password || null,
                                   auths: {
-                                      posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-                                  }}
+                                      posting: $rootScope.$storage.user.posting.key_auths
+                                  },
+                                  privateKey: $rootScope.$storage.user.privatePostingKey || null
+                                }
                               );
                               if (loginSuccess) {
                                 var tr = new window.steemJS.TransactionBuilder();
@@ -974,6 +896,7 @@ module.exports = function (app) {
                                   if (localStorage.error == 1) {
                                     $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                                   } else {
+                                    $rootScope.showMessage("Success", "Deleted comment!");
                                     $rootScope.$broadcast("update:content");
                                   }
                                 }, 3000);
@@ -1053,6 +976,11 @@ module.exports = function (app) {
           var deferred = $q.defer();
           var fileSize;
           var percentage;
+          /*if (ionic.Platform.isAndroid()) {
+            if (imageURI.indexOf('file://')===-1) {
+              imageURI="file://"+imageURI;
+            }
+          }*/
           // Find out how big the original file is
           window.resolveLocalFileSystemURL(imageURI, function(fileEntry) {
             fileEntry.file(function(fileObj) {

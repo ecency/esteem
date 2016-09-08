@@ -3,17 +3,6 @@ module.exports = function (app) {
 
 app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform, $filter, APIs) {
 
-  $scope.menuData = [
-      {role: 'main-menu', href: 'trending', name: 'Trending'},
-      {role: 'main-menu', href: 'hot', name: 'Hot'},
-      {role: 'main-menu', href: 'active', name: 'Active'},
-      {role: 'main-menu', href: 'created', name: 'New'},   
-      {role: 'main-menu', href: 'promoted', name: 'Promoted'},
-      {role: 'main-menu', href: 'trending30', name: 'Trending 30d'},    
-      {role: 'main-menu', href: 'cashout', name: 'Payout'},
-      {role: 'main-menu', href: 'votes', name: 'Votes'},    
-      {role: 'main-menu', href: 'children', name: 'Comments'}
-    ];
   $scope.loginData = {};  
 
   $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -29,7 +18,12 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     //console.log(item);
     $state.go('app.single');
   };
-
+  $scope.advancedChange = function() {
+    console.log($scope.loginData.advanced);
+    if ($scope.loginData.advanced) {
+      $scope.loginData.password = null;
+    }
+  }
   $scope.closeLogin = function() {
     $scope.modal.hide();
   };
@@ -58,43 +52,52 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   
   $scope.doLogin = function() {
     console.log('Doing login');
-    (new Steem(localStorage.socketUrl)).getAccounts([$scope.loginData.username], function(err, dd) {
-      //console.log(dd);
-      dd = dd[0];
-      $scope.loginData.id = dd.id;
-      $scope.loginData.owner = dd.owner;
-      $scope.loginData.active = dd.active;
-      $scope.loginData.reputation = dd.reputation;
-      $scope.loginData.posting = dd.posting;
-      $scope.loginData.memo_key = dd.memo_key;
-      $scope.loginData.post_count = dd.post_count;
-      $scope.loginData.voting_power = dd.voting_power;
+    if ($scope.loginData.password || $scope.loginData.privatePostingKey) {
+      (new Steem(localStorage.socketUrl)).getAccounts([$scope.loginData.username], function(err, dd) {
+        //console.log(dd);
+        dd = dd[0];
+        $scope.loginData.id = dd.id;
+        $scope.loginData.owner = dd.owner;
+        $scope.loginData.active = dd.active;
+        $scope.loginData.reputation = dd.reputation;
+        $scope.loginData.posting = dd.posting;
+        $scope.loginData.memo_key = dd.memo_key;
+        $scope.loginData.post_count = dd.post_count;
+        $scope.loginData.voting_power = dd.voting_power;
 
-      $rootScope.$storage.user = $scope.loginData;
+        $rootScope.$storage.user = $scope.loginData;
 
-      var login = new window.steemJS.Login();
-      login.setRoles(["posting"]);
-      var loginSuccess = login.checkKeys({
-          accountName: $scope.loginData.username,    
-          password: $scope.loginData.password,
-          auths: {
-              posting: [[dd.posting.key_auths[0][0], 1]]
-          }}
-      );
+        var login = new window.steemJS.Login();
+        login.setRoles(["posting"]);
+        var loginSuccess = login.checkKeys({
+            accountName: $scope.loginData.username,    
+            password: $scope.loginData.password || null,
+            auths: {
+                posting: dd.posting.key_auths
+            },
+            privateKey: $scope.loginData.privatePostingKey || null
+          }
+        );
 
-      if (!loginSuccess) {
-          $rootScope.showAlert("Error","The password or account name was incorrect");
-      } else {
-        $rootScope.$storage.mylogin = login;
-        APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, "").then(function(res){
-          console.log(angular.toJson(res));
-        });
-      }
-      $timeout(function() {
-        $state.go('app.posts', {}, { reload: true });
-        $scope.closeLogin();
-      }, 1000);
-    });
+        if (!loginSuccess) {
+            $rootScope.showMessage("Error","The password or account name was incorrect");
+        } else {
+          $rootScope.$storage.mylogin = login;
+          APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, "").then(function(res){
+            console.log(angular.toJson(res));
+          });
+          $timeout(function() {
+            $state.go('app.posts', {}, { reload: true });
+            $scope.closeLogin();
+          }, 1000);
+        }
+      });
+    } else {
+      $rootScope.showAlert("Error", "Please login either with your main password or private posting key!").then(function(){
+        console.log("error login");
+      });
+    }
+    
   };
 
   $scope.$on("$ionicView.enter", function(){
@@ -251,96 +254,104 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   }
 
   $scope.transfer = function () {
-    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-      if ($scope.data.type === 'sbd') {
-        if ($scope.data.amount > Number($scope.balance.sbd_balance.split(" ")[0])) {
-          $rootScope.showAlert("Warning", "Make sure you have enough balance for transaction!");          
-        } else {
-          $scope.okbalance = true;
-        }
-      }
-      if ($scope.data.type === 'sp' || $scope.data.type === 'steem') {
-        if ($scope.data.amount > Number($scope.balance.balance.split(" ")[0])) {
-          $rootScope.showAlert("Warning", "Make sure you have enough balance for transaction!");          
-        } else {
-          $scope.okbalance = true;
-        }
-      }
-      if (!$scope.users || $scope.users.name !== $scope.data.username) {
-        $rootScope.showAlert("Warning", "User you are trying to transfer fund, doesn't exist!");
+    if ($rootScope.$storage.user) {
+      if (!$rootScope.$storage.user.password && !$rootScope.$storage.user.privateActiveKey) {
+        $rootScope.showMessage("Error", "Please provide Active private key if you have chosen Advanced login mode!");
       } else {
-        $scope.okuser = true;
-      }
-      if ($scope.okbalance && $scope.okuser) {
-        var confirmPopup = $ionicPopup.confirm({
-          title: 'Confirmation',
-          template: 'Are you sure you want to transfer?'
-        });
-
-      confirmPopup.then(function(res) {
-        if(res) {
-          console.log('You are sure');
-          $rootScope.$broadcast('show:loading');
-          $scope.mylogin = new window.steemJS.Login();
-          $scope.mylogin.setRoles(["active"]);
-          //console.log($rootScope.$storage.user.active.key_auths[0][0]);
-          var loginSuccess = $scope.mylogin.checkKeys({
-              accountName: $rootScope.$storage.user.username,    
-              password: $rootScope.$storage.user.password,
-              auths: {
-                active: $rootScope.$storage.user.active.key_auths
-              }}
-          );
-          if (loginSuccess) {
-            //console.log($scope.mylogin);
-            var tr = new window.steemJS.TransactionBuilder();
-            if ($scope.data.type !== 'sp') {
-
-              var tt = $filter('number')($scope.data.amount) +" "+angular.uppercase($scope.data.type);
-              tr.add_type_operation("transfer", {
-                from: $rootScope.$storage.user.username,
-                to: $scope.data.username,
-                amount: tt,
-                memo: $scope.data.memo || ""
-              });
-              localStorage.error = 0;
-              tr.process_transaction($scope.mylogin, null, true);  
-              setTimeout(function() {
-                if (localStorage.error == 1) {
-                  $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-                } else {
-                  $rootScope.showAlert("Info", "Transaction is broadcasted").then(function(){
-                    $scope.data = {type: "steem", amount: 0.001};
-                  });
-                }
-              }, 2000);
-            } else {
-              console.log($scope.data);
-              var tt = $filter('number')($scope.data.amount) +" STEEM";
-              tr.add_type_operation("transfer_to_vesting", {
-                from: $rootScope.$storage.user.username,
-                to: $scope.data.username,
-                amount: tt
-              });
-              localStorage.error = 0;
-              tr.process_transaction($scope.mylogin, null, true);
-              setTimeout(function() {
-                if (localStorage.error == 1) {
-                  $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-                } else {
-                  $rootScope.showAlert("Info", "Transaction is broadcasted").then(function(){
-                    $scope.data = {type: "steem", amount: 0.001};
-                  });
-                }
-              }, 2000);
-             
-            }
+        if ($scope.data.type === 'sbd') {
+          if ($scope.data.amount > Number($scope.balance.sbd_balance.split(" ")[0])) {
+            $rootScope.showAlert("Warning", "Make sure you have enough balance for transaction!");          
+          } else {
+            $scope.okbalance = true;
           }
-          $rootScope.$broadcast('hide:loading');
-         } else {
-           console.log('You are not sure');
-         }
-        });
+        }
+        if ($scope.data.type === 'sp' || $scope.data.type === 'steem') {
+          if ($scope.data.amount > Number($scope.balance.balance.split(" ")[0])) {
+            $rootScope.showAlert("Warning", "Make sure you have enough balance for transaction!");          
+          } else {
+            $scope.okbalance = true;
+          }
+        }
+        if (!$scope.users || $scope.users.name !== $scope.data.username) {
+          $rootScope.showAlert("Warning", "User you are trying to transfer fund, doesn't exist!");
+        } else {
+          $scope.okuser = true;
+        }
+        if ($scope.okbalance && $scope.okuser) {
+          var confirmPopup = $ionicPopup.confirm({
+            title: 'Confirmation',
+            template: 'Are you sure you want to transfer?'
+          });
+
+          confirmPopup.then(function(res) {
+            if(res) {
+              console.log('You are sure');
+              $rootScope.$broadcast('show:loading');
+              $scope.mylogin = new window.steemJS.Login();
+              $scope.mylogin.setRoles(["active"]);
+              //console.log($rootScope.$storage.user.active.key_auths[0][0]);
+              var loginSuccess = $scope.mylogin.checkKeys({
+                  accountName: $rootScope.$storage.user.username,    
+                  password: $rootScope.$storage.user.password || null,
+                  auths: {
+                    active: $rootScope.$storage.user.active.key_auths
+                  },
+                  privateKey: $rootScope.$storage.user.privateActiveKey || null
+                }
+              );
+              if (loginSuccess) {
+                //console.log($scope.mylogin);
+                var tr = new window.steemJS.TransactionBuilder();
+                if ($scope.data.type !== 'sp') {
+
+                  var tt = $filter('number')($scope.data.amount) +" "+angular.uppercase($scope.data.type);
+                  tr.add_type_operation("transfer", {
+                    from: $rootScope.$storage.user.username,
+                    to: $scope.data.username,
+                    amount: tt,
+                    memo: $scope.data.memo || ""
+                  });
+                  localStorage.error = 0;
+                  tr.process_transaction($scope.mylogin, null, true);  
+                  setTimeout(function() {
+                    if (localStorage.error == 1) {
+                      $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                    } else {
+                      $rootScope.showAlert("Info", "Transaction is broadcasted").then(function(){
+                        $scope.data = {type: "steem", amount: 0.001};
+                      });
+                    }
+                  }, 2000);
+                } else {
+                  console.log($scope.data);
+                  var tt = $filter('number')($scope.data.amount) +" STEEM";
+                  tr.add_type_operation("transfer_to_vesting", {
+                    from: $rootScope.$storage.user.username,
+                    to: $scope.data.username,
+                    amount: tt
+                  });
+                  localStorage.error = 0;
+                  tr.process_transaction($scope.mylogin, null, true);
+                  setTimeout(function() {
+                    if (localStorage.error == 1) {
+                      $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                    } else {
+                      $rootScope.showAlert("Info", "Transaction is broadcasted").then(function(){
+                        $scope.data = {type: "steem", amount: 0.001};
+                      });
+                    }
+                  }, 2000);
+                 
+                }
+              } else {
+                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
+              }
+              $rootScope.$broadcast('hide:loading');
+             } else {
+               console.log('You are not sure');
+             }
+          });
+        }
       }
     } else {
       $rootScope.$broadcast('hide:loading');
@@ -368,7 +379,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   });
 
 });
-app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera) {
+app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService) {
   
   $scope.activeMenu = $rootScope.$storage.filter || "trending";
 
@@ -406,20 +417,15 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         quality: 50,
         destinationType: Camera.DestinationType.FILE_URI,
         sourceType: (type===0)?Camera.PictureSourceType.CAMERA:Camera.PictureSourceType.PHOTOLIBRARY,
-        allowEdit: true,
+        allowEdit: (type===0)?true:false,
         encodingType: Camera.EncodingType.JPEG,
         popoverOptions: CameraPopoverOptions,
-        saveToPhotoAlbum: false,
-        correctOrientation:true
+        saveToPhotoAlbum: false
+        //correctOrientation:true
       };
-
-      $ionicPlatform.ready(function() {
-        $cordovaCamera.getPicture(options).then(function(imageData) {
-          if (ionic.Platform.isAndroid()) {
-            if (imageData.indexOf('file://')===-1) {
-              imageData="file://"+imageData;
-            }
-          }
+      $cordovaCamera.getPicture(options).then(function(imageData) {
+        console.log(imageData);
+        setTimeout(function() {
           ImageUploadService.uploadImage(imageData).then(function(result) {
             var url = result.secure_url || '';
             var final = " ![image](" + url + ")";
@@ -429,16 +435,19 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             } else {
               $scope.spost.body = final;
             }
-            
-            $cordovaCamera.cleanup();
+            if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
+              $cordovaCamera.cleanup();  
+            }
           },
           function(err) {
             $rootScope.showAlert("Error", "Upload Error");
-            $cordovaCamera.cleanup();
+            if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
+              $cordovaCamera.cleanup();
+            }
           });  
-        }, function(err) {
-          $rootScope.showAlert("Error", "Camera Cancelled");
-        });
+        }, 10);
+      }, function(err) {
+        $rootScope.showAlert("Error", "Camera Cancelled");
       });
     } else {
       $ionicPopup.prompt({
@@ -499,15 +508,17 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
   $scope.submitStory = function() {
     $rootScope.$broadcast('show:loading');
-    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+    if ($rootScope.$storage.user) {
       $scope.mylogin = new window.steemJS.Login();
       $scope.mylogin.setRoles(["posting"]);
       var loginSuccess = $scope.mylogin.checkKeys({
           accountName: $rootScope.$storage.user.username,    
-          password: $rootScope.$storage.user.password,
+          password: $rootScope.$storage.user.password || null,
           auths: {
-              posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-          }}
+              posting: $rootScope.$storage.user.posting
+          },
+          privateKey: $rootScope.$storage.user.privatePostingKey || null
+        }
       );
       if (loginSuccess) {
         var tr = new window.steemJS.TransactionBuilder();
@@ -535,10 +546,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
           } else {
             $scope.spost = {};  
+            $rootScope.showMessage("Success", "Post is submitted!");
             $scope.closeMenuPopover();
             $state.go("app.profile", {username: $rootScope.$storage.user.username});
           }
         }, 3000);
+      } else {
+        $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
       } 
     } else {
       $rootScope.$broadcast('hide:loading');
@@ -547,13 +561,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   }
   $scope.savePost = function() {
     $rootScope.$storage.spost = $scope.spost;
-    $rootScope.showMessage("Saved:", "Post for later submission!");
+    $rootScope.showMessage("Saved", "Post for later submission!");
     $scope.closePostModal();
   }
   $scope.clearPost = function() {
     $rootScope.$storage.spost = {};
     $scope.spost = {};
-    $rootScope.showMessage("Cleared:", "Post!");
+    $rootScope.showMessage("Cleared", "Post!");
   }
   $ionicModal.fromTemplateUrl('templates/story.html', {
     scope: $scope  }).then(function(modal) {
@@ -577,7 +591,20 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   };
 
   $scope.downvotePost = function(post) {
-    $rootScope.votePost(post, 'downvote', 'fetchPosts');
+    
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Are you sure?',
+      template: 'Downvote or Flag'
+    });
+    confirmPopup.then(function(res) {
+      if(res) {
+        console.log('You are sure');
+        $rootScope.votePost(post, 'downvote', 'fetchPosts');
+      } else {
+        console.log('You are not sure');
+      }
+    });
+    
   };
 
   $scope.unvotePost = function(post) {
@@ -776,10 +803,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
               $scope.mylogin.setRoles(["posting"]);
               var loginSuccess = $scope.mylogin.checkKeys({
                   accountName: $rootScope.$storage.user.username,    
-                  password: $rootScope.$storage.user.password,
+                  password: $rootScope.$storage.user.password || null,
                   auths: {
-                      posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-                  }}
+                      posting: $rootScope.$storage.user.posting.key_auths
+                  },
+                  privateKey: $rootScope.$storage.user.privatePostingKey || null
+                }
               );
               console.log("login "+loginSuccess);
             }          
@@ -886,20 +915,15 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         quality: 50,
         destinationType: Camera.DestinationType.FILE_URI,
         sourceType: (type===0)?Camera.PictureSourceType.CAMERA:Camera.PictureSourceType.PHOTOLIBRARY,
-        allowEdit: true,
+        allowEdit: (type===0)?true:false,
         encodingType: Camera.EncodingType.JPEG,
         popoverOptions: CameraPopoverOptions,
-        saveToPhotoAlbum: false,
-        correctOrientation:true
+        saveToPhotoAlbum: false
+        //correctOrientation:true
       };
-      $ionicPlatform.ready(function() {
-        $cordovaCamera.getPicture(options).then(function(imageData) {
-          console.log(imageData);
-          if (ionic.Platform.isAndroid()) {
-            if (imageData.indexOf('file://')===-1) {
-              imageData="file://"+imageData;
-            }
-          }
+      $cordovaCamera.getPicture(options).then(function(imageData) {
+        console.log(imageData);
+        setTimeout(function() {
           ImageUploadService.uploadImage(imageData).then(function(result) {
             var url = result.secure_url || '';
             var final = " ![image](" + url + ")";
@@ -909,16 +933,19 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             } else {
               $scope.data.comment = final;
             }
-            
-            $cordovaCamera.cleanup();
+            if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
+              $cordovaCamera.cleanup();
+            }
           },
           function(err) {
             $rootScope.showAlert("Error", "Upload Error");
-            $cordovaCamera.cleanup();
-          });  
-        }, function(err) {
-          $rootScope.showAlert("Error", "Camera Cancelled");
-        });
+            if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
+              $cordovaCamera.cleanup();
+            }
+          });    
+        }, 10);
+      }, function(err) {
+        $rootScope.showAlert("Error", "Camera Cancelled");
       });
     } else {
       $ionicPopup.prompt({
@@ -988,15 +1015,17 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     }
     
     $rootScope.$broadcast('show:loading');
-    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+    if ($rootScope.$storage.user) {
       $scope.mylogin = new window.steemJS.Login();
       $scope.mylogin.setRoles(["posting"]);
       var loginSuccess = $scope.mylogin.checkKeys({
           accountName: $rootScope.$storage.user.username,    
-          password: $rootScope.$storage.user.password,
+          password: $rootScope.$storage.user.password || null,
           auths: {
-              posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-          }}
+              posting: $rootScope.$storage.user.posting.key_auths
+          },
+          privateKey: $rootScope.$storage.user.privatePostingKey || null
+        }
       );
       if (loginSuccess) {
         var tr = new window.steemJS.TransactionBuilder();
@@ -1022,11 +1051,14 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           if (localStorage.error == 1) {
             $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
           } else {
-            $scope.spost = {};  
+            $scope.spost = {};
+            $rootScope.showMessage("Success", "Comment is submitted!");  
             //$scope.closePostPopover();
             //$state.go("app.profile", {username: $rootScope.$storage.user.username});
           }
         }, 3000);
+      } else {
+        $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
       } 
     } else {
       $rootScope.$broadcast('hide:loading');
@@ -1038,15 +1070,17 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.reply = function (xx) {
     //console.log(xx);
     $rootScope.$broadcast('show:loading');
-    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+    if ($rootScope.$storage.user) {
       $scope.mylogin = new window.steemJS.Login();
       $scope.mylogin.setRoles(["posting"]);
       var loginSuccess = $scope.mylogin.checkKeys({
           accountName: $rootScope.$storage.user.username,    
-          password: $rootScope.$storage.user.password,
+          password: $rootScope.$storage.user.password || null,
           auths: {
-              posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-          }}
+              posting: $rootScope.$storage.user.posting.key_auths
+          },
+          privateKey: $rootScope.$storage.user.privatePostingKey || null
+        }
       );
       if (loginSuccess) {
         var tr = new window.steemJS.TransactionBuilder();
@@ -1073,6 +1107,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
           } else {
             $scope.data.comment = "";  
+            $rootScope.showMessage("Success", "Comment is submitted!");
             (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
               //console.log(result);      
               $scope.comments = result;
@@ -1082,6 +1117,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             });
           }
         }, 3000);
+      } else {
+        $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
       } 
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -1204,7 +1241,18 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     $scope.getContent($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink);
   });
   $scope.downvotePost = function(post) {
-    $rootScope.votePost(post, 'downvote', 'getContent');
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Are you sure?',
+      template: 'Downvote or Flag'
+    });
+    confirmPopup.then(function(res) {
+      if(res) {
+        console.log('You are sure');
+        $rootScope.votePost(post, 'downvote', 'getContent');
+      } else {
+        console.log('You are not sure');
+      }
+    });
   };
   $scope.unvotePost = function(post) {
     $rootScope.votePost(post, 'unvote', 'getContent');
@@ -1364,16 +1412,17 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
   $scope.unfollowUser = function(xx){
     //$rootScope.showAlert("Info", "In Development, coming soon!");
     $rootScope.$broadcast('show:loading');
-    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+    if ($rootScope.$storage.user) {
         $scope.mylogin = new window.steemJS.Login();
-        $scope.mylogin.setRoles(["posting","active"]);
+        $scope.mylogin.setRoles(["posting"]);
         var loginSuccess = $scope.mylogin.checkKeys({
             accountName: $rootScope.$storage.user.username,    
-            password: $rootScope.$storage.user.password,
+            password: $rootScope.$storage.user.password || null,
             auths: {
-                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]],
-                active: [[$rootScope.$storage.user.active.key_auths[0][0], 1]]
-            }}
+                posting: $rootScope.$storage.user.posting.key_auths
+            },
+            privateKey: $rootScope.$storage.user.privatePostingKey || null
+          }
         );
         if (loginSuccess) {
           console.log("do unfollowing");
@@ -1395,6 +1444,8 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
               $state.go($state.current, {}, {reload: true});
             }
           }, 2000);
+        } else {
+          $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
         }
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -1405,17 +1456,18 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
   $scope.followUser = function(xx){
     //console.log($rootScope.$storage.user);
     $rootScope.$broadcast('show:loading');
-    if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+    if ($rootScope.$storage.user) {
         console.log('Api ready:');
         $scope.mylogin = new window.steemJS.Login();
-        $scope.mylogin.setRoles(["posting","active"]);
+        $scope.mylogin.setRoles(["posting"]);
         var loginSuccess = $scope.mylogin.checkKeys({
             accountName: $rootScope.$storage.user.username,    
-            password: $rootScope.$storage.user.password,
+            password: $rootScope.$storage.user.password || null,
             auths: {
-                posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]],
-                active: [[$rootScope.$storage.user.active.key_auths[0][0], 1]]
-            }}
+                posting: $rootScope.$storage.user.posting.key_auths
+            },
+            privateKey: $rootScope.$storage.user.privatePostingKey || null
+          }
         );
         if (loginSuccess) {
           console.log("do following")
@@ -1436,6 +1488,8 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
               $state.go($state.current, {}, {reload: true});
             }
           }, 2000);
+        } else {
+          $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
         }
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -1474,8 +1528,12 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         // add cancel code..
       },
      buttonClicked: function(index) {
+      if (!$rootScope.$storage.user.password && !$rootScope.$storage.user.privateActiveKey) {
+        $rootScope.showMessage("Error", "Please provide Active private key if you have chosen Advanced login mode!");
+      } else {
         $scope.changeProfileInfo(index);  
-        return true;
+      }
+      return true;
      }, 
      destructiveButtonClicked: function(index){
       var confirmPopup = $ionicPopup.confirm({
@@ -1484,47 +1542,53 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       });
       confirmPopup.then(function(res) {
         if(res) {
-          var update = {profile: {profile_image:""} };
-          angular.merge(update, $rootScope.$storage.user.json_metadata);
-          if (update.profilePicUrl) {delete update.profilePicUrl;}
-
-          update.profile.profile_image = "";
-
-          console.log('You are sure');
-          if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
-            $scope.mylogin = new window.steemJS.Login();
-            $scope.mylogin.setRoles(["owner","active","posting"]);
-            var loginSuccess = $scope.mylogin.checkKeys({
-                accountName: $rootScope.$storage.user.username,    
-                password: $rootScope.$storage.user.password,
-                auths: {
-                  owner: $rootScope.$storage.user.owner.key_auths,
-                  active: $rootScope.$storage.user.active.key_auths,
-                  posting: $rootScope.$storage.user.posting.key_auths
-                }}
-            );
-            //todo: if json_metadata already exist make sure to keep it.
-            if (loginSuccess) {
-              var tr = new window.steemJS.TransactionBuilder();
-              tr.add_type_operation("account_update", {
-                account: $rootScope.$storage.user.username,
-                memo_key: $rootScope.$storage.user.memo_key,
-                json_metadata: JSON.stringify(update)      
-              });
-              localStorage.error = 0;
-              tr.process_transaction($scope.mylogin, null, true);
-              setTimeout(function() {
-                if (localStorage.error == 1) {
-                  $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-                } else {
-                  $scope.refreshLocalUserData();
-                }
-              }, 2000);
-            }
-            $rootScope.$broadcast('hide:loading');
+          if (!$rootScope.$storage.user.password && !$rootScope.$storage.user.privateActiveKey) {
+            $rootScope.showMessage("Error", "Please provide Active private key if you have chosen Advanced login mode!");
           } else {
-            $rootScope.$broadcast('hide:loading');
-            $rootScope.showAlert("Warning", "Please, login to Update");
+            var update = {profile: {profile_image:""} };
+            angular.merge(update, $rootScope.$storage.user.json_metadata);
+            if (update.profilePicUrl) {delete update.profilePicUrl;}
+
+            update.profile.profile_image = "";
+
+            console.log('You are sure');
+            if ($rootScope.$storage.user) {
+              $scope.mylogin = new window.steemJS.Login();
+              $scope.mylogin.setRoles(["active"]);
+              var loginSuccess = $scope.mylogin.checkKeys({
+                  accountName: $rootScope.$storage.user.username,    
+                  password: $rootScope.$storage.user.password || null,
+                  auths: {
+                    active: $rootScope.$storage.user.active.key_auths
+                  },
+                  privateKey: $rootScope.$storage.user.privateActiveKey || null
+                }
+              );
+              //todo: if json_metadata already exist make sure to keep it.
+              if (loginSuccess) {
+                var tr = new window.steemJS.TransactionBuilder();
+                tr.add_type_operation("account_update", {
+                  account: $rootScope.$storage.user.username,
+                  memo_key: $rootScope.$storage.user.memo_key,
+                  json_metadata: JSON.stringify(update)      
+                });
+                localStorage.error = 0;
+                tr.process_transaction($scope.mylogin, null, true);
+                setTimeout(function() {
+                  if (localStorage.error == 1) {
+                    $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                  } else {
+                    $scope.refreshLocalUserData();
+                  }
+                }, 2000);
+              } else {
+                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have choosed Advanced mode.");
+              }
+              $rootScope.$broadcast('hide:loading');
+            } else {
+              $rootScope.$broadcast('hide:loading');
+              $rootScope.showAlert("Warning", "Please, login to Update");
+            }
           }
         } else {
           console.log('You are not sure');
@@ -1541,13 +1605,13 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         quality: 50,
         destinationType: Camera.DestinationType.FILE_URI,
         sourceType: (type===0)?Camera.PictureSourceType.CAMERA:Camera.PictureSourceType.PHOTOLIBRARY,
-        allowEdit: true,
+        allowEdit: (type===0)?true:false,
         encodingType: Camera.EncodingType.JPEG,
         targetWidth: 500,
         targetHeight: 500,
         popoverOptions: CameraPopoverOptions,
-        saveToPhotoAlbum: false,
-        correctOrientation:true
+        saveToPhotoAlbum: false
+        //correctOrientation:true
       };
       $cordovaCamera.getPicture(options).then(function(imageData) {
         ImageUploadService.uploadImage(imageData).then(function(result) {
@@ -1558,17 +1622,17 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           update.profile.profile_image = url;
           setTimeout(function() {
             $rootScope.$broadcast('show:loading');
-            if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+            if ($rootScope.$storage.user) {
               $scope.mylogin = new window.steemJS.Login();
-              $scope.mylogin.setRoles(["owner","active","posting"]);
+              $scope.mylogin.setRoles(["active"]);
               var loginSuccess = $scope.mylogin.checkKeys({
                   accountName: $rootScope.$storage.user.username,    
-                  password: $rootScope.$storage.user.password,
+                  password: $rootScope.$storage.user.password || null,
                   auths: {
-                    owner: $rootScope.$storage.user.owner.key_auths,
-                    active: $rootScope.$storage.user.active.key_auths,
-                    posting: $rootScope.$storage.user.posting.key_auths
-                  }}
+                    active: $rootScope.$storage.user.active.key_auths
+                  },
+                  privateKey: $rootScope.$storage.user.privateActiveKey || null,
+                }
               );
               if (loginSuccess) {
                 var tr = new window.steemJS.TransactionBuilder();
@@ -1589,6 +1653,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                     $scope.refreshLocalUserData();
                   }
                 }, 2000);
+              } else {
+                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have choosed Advanced mode.");
               }
             $rootScope.$broadcast('hide:loading');
           } else {
@@ -1596,12 +1662,15 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             $rootScope.showAlert("Warning", "Please, login to Update");
           }
           }, 2000);
-          
-          $cordovaCamera.cleanup();
+          if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
+            $cordovaCamera.cleanup();
+          }
         },
         function(err) {
           $rootScope.showAlert("Error", "Upload Error");
-          $cordovaCamera.cleanup();
+          if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
+            $cordovaCamera.cleanup();
+          }
         });
       }, function(err) {
         $rootScope.showAlert("Error", "Camera Cancelled");
@@ -1620,17 +1689,17 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           if (update.profilePicUrl) {delete update.profilePicUrl;}
           update.profile.profile_image = res;
           setTimeout(function() {
-            if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+            if ($rootScope.$storage.user) {
               $scope.mylogin = new window.steemJS.Login();
-              $scope.mylogin.setRoles(["owner","active","posting"]);
+              $scope.mylogin.setRoles(["active"]);
               var loginSuccess = $scope.mylogin.checkKeys({
                   accountName: $rootScope.$storage.user.username,    
-                  password: $rootScope.$storage.user.password,
+                  password: $rootScope.$storage.user.password || null,
                   auths: {
-                    owner: $rootScope.$storage.user.owner.key_auths,
-                    active: $rootScope.$storage.user.active.key_auths,
-                    posting: $rootScope.$storage.user.posting.key_auths
-                  }}
+                    active: $rootScope.$storage.user.active.key_auths
+                  },
+                  privateKey: $rootScope.$storage.user.privateActiveKey || null,
+                }
               );
               if (loginSuccess) {
                 var tr = new window.steemJS.TransactionBuilder();
@@ -1648,6 +1717,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                     $scope.refreshLocalUserData();
                   }
                 }, 2000);
+              } else {
+                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have choosed Advanced mode.");
               }
               $rootScope.$broadcast('hide:loading');
             } else {
@@ -1668,33 +1739,22 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     $rootScope.votePost(post, 'upvote', 'profileRefresh');
   };
   $scope.downvotePost = function(post) {
-    $rootScope.votePost(post, 'downvote', 'profileRefresh');
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Are you sure?',
+      template: 'Downvote or Flag'
+    });
+    confirmPopup.then(function(res) {
+      if(res) {
+        console.log('You are sure');
+        $rootScope.votePost(post, 'downvote', 'profileRefresh');
+      } else {
+        console.log('You are not sure');
+      }
+    });    
   };
   $scope.unvotePost = function(post) {
     $rootScope.votePost(post, 'unvote', 'profileRefresh');
   };
-
-  /*$scope.$watch('profile', function(newValue, oldValue){
-    //console.log('changed');
-    if (newValue) {
-      for (var i = 0; i < newValue.length; i++) {
-        if ($rootScope.$storage.user){
-          for (var j = newValue[i].active_votes.length - 1; j >= 0; j--) {
-            if (newValue[i].active_votes[j].voter === $rootScope.$storage.user.username) {
-              if (newValue[i].active_votes[j].percent > 0) {
-                newValue[i].upvoted = true;  
-              } else if (newValue[i].active_votes[j].percent < 0) {
-                newValue[i].downvoted = true;  
-              } else {
-                newValue[i].upvoted = false;
-                newValue[i].downvoted = false;    
-              }
-            }
-          }
-        }
-      }
-    }
-  }, true);*/
 
   $scope.refresh = function() {  
     if (!$scope.active) {

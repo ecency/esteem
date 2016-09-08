@@ -144,9 +144,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       StatusBar.styleDefault();
     }
     setTimeout(function() {
-      (new Steem(localStorage.socketUrl)).getCurrentMedianHistoryPrice(function(e,r){
-        $rootScope.$storage.base = r.base.substring(r.base.length-4,-4);
+      (new Steem(localStorage.socketUrl)).getFeedHistory(function(e,r){
+        //console.log(r);
+        $rootScope.$storage.base = r.current_median_history.base.split(" ")[0];
         (new Steem(localStorage.socketUrl)).getDynamicGlobalProperties(function(e,r){
+          //console.log(r);
           $rootScope.$storage.steem_per_mvests = (Number(r.total_vesting_fund_steem.substring(0, r.total_vesting_fund_steem.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;
         });
       });
@@ -394,17 +396,19 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       console.log('voting '+tt);
       $rootScope.$broadcast('show:loading');
 
-      if ($rootScope.$storage.user && $rootScope.$storage.user.password) {
+      if ($rootScope.$storage.user) {
         window.Api.initPromise.then(function(response) {
           console.log("Api ready:", response);
           $rootScope.mylogin = new window.steemJS.Login();
           $rootScope.mylogin.setRoles(["posting"]);
           var loginSuccess = $rootScope.mylogin.checkKeys({
               accountName: $rootScope.$storage.user.username,    
-              password: $rootScope.$storage.user.password,
+              password: $rootScope.$storage.user.password || null,
               auths: {
-                  posting: [[$rootScope.$storage.user.posting.key_auths[0][0], 1]]
-              }}
+                  posting: $rootScope.$storage.user.posting.key_auths
+              },
+              privateKey: $rootScope.$storage.user.privatePostingKey || null
+            }
           );
           if (loginSuccess) {
             var tr = new window.steemJS.TransactionBuilder();
@@ -424,6 +428,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 $rootScope.$broadcast(afterward);  
               }
             }, 3000);
+          } else {
+            $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
+            $rootScope.$broadcast('hide:loading');
+            post.invoting = false;
           }
         });
         /*var wif = steem.auth.toWif($rootScope.$storage.user.username, $rootScope.$storage.user.password, 'posting');

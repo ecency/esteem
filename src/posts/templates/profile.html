@@ -80,7 +80,7 @@
             Estimated Value <br><span class="gray wrap">The estimated value is based on a 7 day average value of Steem.</span>
             </div>
             <div class="col col-33">
-            ${{accounts.vesting_shares | sd | number}}
+            ${{accounts.vesting_shares | sd:accounts.balance:accounts.sbd_balance | number}}
             </div>
           </div>
           <p class="bold">Transaction History</p>

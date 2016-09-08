@@ -9,21 +9,36 @@
     <center><h1>Welcome back!</h1></center>
     <center><p class="gray fsmaller padding">Sign in with your username and password to continue.</p></center>
     <br/>
-    <form ng-submit="doLogin()">
+    <form ng-submit="doLogin()" name="login" novalidate>
       <div class="list">
         <label class="item item-input">
-          <!--<span class="input-label">Username</span>-->
-          <input type="text" ng-model="loginData.username" placeholder="Username" ng-change="changeUsername()">
+          <input type="text" ng-model="loginData.username" placeholder="Username" ng-change="changeUsername()" required>
         </label>
-        <!--<i class="icon ion-ios-information-outline gray" ng-click="openTooltip($event,'Enter your username without @')"></i>-->
         <label class="item item-input">
-          <!--<span class="input-label">Password</span>-->
-          <input type="password" placeholder="Master/main password" ng-model="loginData.password">
+          <input type="password" placeholder="Master/main password" ng-model="loginData.password" ng-disabled="loginData.advanced" ng-required="!loginData.advanced">
         </label>
-        <!--<i class="icon ion-ios-information-outline gray" ng-click="openTooltip($event,'Enter your master password you have from signup process on Steemit.com or on app')"></i>-->
-        <p class="gray padding tcenter">Note: User credentials are kept locally on the device. Upon Logout credentials are removed!</p>
+        <div ng-if="loginData.advanced">
+          <label class="item item-input">
+            <input type="password" placeholder="Posting private key" ng-model="loginData.privatePostingKey" ng-disabled="!loginData.advanced" ng-required="loginData.advanced">
+          </label>
+          <p class="padding tcenter gray"><i class="icon ion-ios-information-outline"></i> Posting key is used for post, comment, (un,up,down)vote, (un)follows.</p>
+          <label class="item item-input">
+            <input type="password" placeholder="Active private key" ng-model="loginData.privateActiveKey" ng-disabled="!loginData.advanced">
+          </label>
+          <p class="padding tcenter gray"><i class="icon ion-ios-information-outline"></i> Active key is used for transfers and profile picture update.</p>
+        </div>
+        <!--<div class="col pull-right tright">
+          <label class="toggle toggle-positive">
+           <input type="checkbox" ng-model="loginData.advanced" ng-change="advancedChange()">
+           <div class="track">
+             <div class="handle"></div>
+           </div>
+          </label>
+        </div>-->
+        <ion-toggle ng-model="loginData.advanced" toggle-class="toggle-calm" ng-change="advancedChange()">Advanced</ion-toggle>
+        <p class="gray padding tcenter"><i class="icon ion-ios-information-outline"></i> User credentials are kept locally on the device. Upon Logout credentials are removed!</p>
 
-        <button class="button button-block button-positive" ng-click="doLogin()">Log in</button>
+        <button class="button button-block button-positive" ng-click="doLogin()" ng-disabled="login.$invalid">Log in</button>
         <button class="button button-block button-light" ng-click="closeLogin()">Cancel</button>
         
       </div>
