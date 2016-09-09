@@ -5,7 +5,7 @@
   </ion-header-bar>-->
   <ion-content>
     <br>
-    <center><img ng-src="img/logo.png" width="130" /></center>
+    <center><img ng-src="img/logo.png" width="100" /></center>
     <center><h1>Welcome back!</h1></center>
     <center><p class="gray fsmaller padding">Sign in with your username and password to continue.</p></center>
     <br/>
@@ -27,22 +27,16 @@
           </label>
           <p class="padding gray"><i class="icon ion-ios-information-outline"></i> Active key is used for transfers and profile picture update.</p>
         </div>
-        <!--<div class="col pull-right tright">
-          <label class="toggle toggle-positive">
-           <input type="checkbox" ng-model="loginData.advanced" ng-change="advancedChange()">
-           <div class="track">
-             <div class="handle"></div>
-           </div>
-          </label>
-        </div>-->
         <ion-toggle ng-model="loginData.advanced" toggle-class="toggle-calm" ng-change="advancedChange()">Advanced</ion-toggle>
         <p class="gray padding"><i class="icon ion-ios-information-outline"></i> User credentials are kept locally on the device. Upon Logout credentials are removed!</p>
+        
         <div class="row">
         <div class="col">
         <button class="button button-block button-light" ng-click="closeLogin()">Cancel</button>
         </div><div class="col"><button class="button button-block button-positive" ng-click="doLogin()" ng-disabled="login.$invalid">Log in</button></div>
         </div>
-        
+        <p class="tcenter">Don't have an account? <a href onClick="window.open('https://steemit.com/create_account', '_blank', 'location=yes');return false;">Sign up now</a></p>
+        <br/>
       </div>
     </form>
   </ion-content>
