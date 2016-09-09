@@ -93,7 +93,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         }
       });
     } else {
-      $rootScope.showAlert("Error", "Please login either with your main password or private posting key!").then(function(){
+      $rootScope.showAlert("Info", "Please login either with your main password or private posting key!").then(function(){
         console.log("error login");
       });
     }
