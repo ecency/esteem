@@ -1032,6 +1032,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     }
   }
 
+  
 
   $scope.reply = function (xx) {
     //console.log(xx);
@@ -1196,6 +1197,13 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.$on('$ionicView.leave', function(){
     //$rootScope.$storage.sitem = undefined;
   });
+
+  console.log($ionicScrollDelegate.getScrollPosition());
+
+  $scope.$on('floating-menu:open', function(){
+    console.log($ionicScrollDelegate.$getByHandle('mainScroll').getScrollPosition());
+  });
+
 })
 app.controller('BookmarkCtrl', function($scope, $stateParams, $rootScope, $state, APIs, $interval, $ionicScrollDelegate) {
 
