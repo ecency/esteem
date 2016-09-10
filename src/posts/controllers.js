@@ -640,6 +640,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $scope.fetchPosts();
     $scope.closeMenuPopover();
     $rootScope.$broadcast('filter:change');
+    $scope.$broadcast('scroll.refreshComplete');
   };
   
   $rootScope.$on("user:logout", function(){
