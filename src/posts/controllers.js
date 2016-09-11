@@ -607,7 +607,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.unvotePost = function(post) {
     $rootScope.votePost(post, 'unvote', 'fetchPosts');
   };
-
+  /*
   $scope.showFilter = function() {
     $rootScope.$broadcast('close:popover');
     $scope.fdata = {filter: $rootScope.$storage.filter || "trending"};
@@ -635,7 +635,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $rootScope.$broadcast('filter:change');
     }
   };
-  
+  */
   $scope.refresh = function(){
     $scope.fetchPosts();
     $scope.closeMenuPopover();
@@ -742,9 +742,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   
   $scope.$on('$ionicView.afterEnter', function(){
     $scope.limit = 5;
-    
     $rootScope.$broadcast('show:loading');
-    console.log('enter ');
     if (!$rootScope.$storage.socket) {
       $rootScope.$storage.socket = localStorage.socketUrl;
     }
@@ -754,8 +752,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     if (!$rootScope.$storage.filter) {
       $rootScope.$storage.filter = "trending";
     }
-    //console.log(window.Api)
-    //$scope.fetchPosts(null, $scope.limit, null);
     if (!angular.isDefined($rootScope.timeint)) {
       window.Api.initPromise.then(function(response) {
         console.log("Api ready:", response);
@@ -783,16 +779,16 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         }, 15000);
         setTimeout(function() {
           $scope.fetchPosts(null, $scope.limit, null);  
-        }, 10);
+        }, 1);
       });
     } else {
       setTimeout(function() {
         $scope.fetchPosts(null, $scope.limit, null);    
-      }, 10);
+      }, 1);
     }
     setTimeout(function() {
       $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();   
-    }, 100);
+    }, 10);
   });
   
   $scope.$on('$ionicView.beforeEnter', function(){
@@ -800,30 +796,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $rootScope.$storage.tag = $stateParams.tags;
     }
     $rootScope.$broadcast('show:loading');
-  })
-  $scope.$on('$ionicView.loaded', function(){
-    
   });
 
-  /*if (!angular.isDefined($rootScope.timeint)) {
-    $rootScope.timeint = $interval(function(){
-      window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
-        console.log("get_dynamic_global_properties", response.head_block_number);
-      });
-    }, 20000);
-  }*/
-
-  $scope.$on('$ionicView.leave', function(){
-
-    if (!$scope.$$phase) {
-      $scope.$apply();
-    }
-  });
   
   //$scope.refresh();   
 })
 
-app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform) {
+app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform, $ionicSlideBoxDelegate) {
   $scope.post = $rootScope.$storage.sitem;
   $scope.data = {};
   $scope.spost = {};  
@@ -851,9 +830,48 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       } else {
         $rootScope.$storage.bookmark = [{title: $rootScope.$storage.sitem.title, author:$rootScope.$storage.sitem.author, author_reputation: $rootScope.$storage.sitem.author_reputation, created: $rootScope.$storage.sitem.created, permlink:$rootScope.$storage.sitem.permlink}];
       }
-      $rootScope.showMessage("Success", "Post is added to bookmarks!");  
+      $rootScope.showMessage("Success", "Post is added to bookmarks!");
     }
-    
+  };
+
+  $scope.isImages = function() {
+    var len = $rootScope.$storage.sitem.json_metadata.image.length;
+
+    if (len>0) {
+      $scope.images = $rootScope.$storage.sitem.json_metadata.image;
+      return true
+    } else {
+      return false
+    }
+  };
+  $scope.zoomMin = 1;
+  $scope.showImages = function(index) {
+    $scope.activeSlide = index;
+    console.log($scope.images[index]);
+    $scope.showGalleryModal('templates/gallery_images.html');
+  };
+   
+  $scope.showGalleryModal = function(templateUrl) {
+    $ionicModal.fromTemplateUrl(templateUrl, {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modalg = modal;
+      $scope.modalg.show();
+    });
+  }
+   
+  $scope.closeGalleryModal = function() {
+    $scope.modalg.hide();
+    $scope.modalg.remove()
+  };
+   
+  $scope.updateSlideStatus = function(slide) {
+    var zoomFactor = $ionicScrollDelegate.$getByHandle('scrollHandle' + slide).getScrollPosition().zoom;
+    if (zoomFactor == $scope.zoomMin) {
+      $ionicSlideBoxDelegate.enableSlide(true);
+    } else {
+      $ionicSlideBoxDelegate.enableSlide(false);
+    }
   };
 
   $scope.showImg = function() {
@@ -1130,7 +1148,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   //$scope.post = {};
   $scope.$on('$ionicView.enter', function(){   
     //$scope.post = $rootScope.$storage.sitem;
-    //console.log($rootScope.$storage.sitem);
+    console.log($rootScope.$storage.sitem);
     setTimeout(function() {
       $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
       (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
@@ -1141,7 +1159,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           $scope.$apply();
         }
       });
-    }, 100);
+    }, 10);
     $rootScope.$broadcast('hide:loading');  
   });
 
@@ -1195,15 +1213,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     $rootScope.votePost(post, 'unvote', 'getContent');
   };
 
-  $scope.$on('$ionicView.leave', function(){
-    //$rootScope.$storage.sitem = undefined;
-  });
-
-  console.log($ionicScrollDelegate.getScrollPosition());
-
-  $scope.$on('floating-menu:open', function(){
-    console.log($ionicScrollDelegate.$getByHandle('mainScroll').getScrollPosition());
-  });
 
 })
 app.controller('BookmarkCtrl', function($scope, $stateParams, $rootScope, $state, APIs, $interval, $ionicScrollDelegate) {
