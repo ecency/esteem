@@ -289,7 +289,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
 
 })
-app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $filter, $q, $timeout) {
+app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $filter, $q, $timeout, $cordovaBarcodeScanner, $ionicPlatform) {
   $scope.data = {type: "steem", amount: 0.001};
   $scope.changeUsername = function(typed) {
     console.log('searching');
@@ -301,7 +301,39 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
       }
     });
   }
-
+  $scope.qrScan = function() {
+    $ionicPlatform.ready(function() {
+      /*$cordovaBarcodeScanner.scan().then(function(barcodeData) {
+        // Success! Barcode data is here
+        alert(barcodeData);
+        $scope.data.username = barcodeData.text;
+      }, function(error) {
+        // An error occurred
+      });*/
+      cordova.plugins.barcodeScanner.scan(
+        function (result) {
+            /*alert("We got a barcode\n" +
+                  "Result: " + result.text + "\n" +
+                  "Format: " + result.format + "\n" +
+                  "Cancelled: " + result.cancelled);*/
+          $scope.data.username = result.text;
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        },
+        function (error) {
+            alert("Scanning failed: " + error);
+        },
+        {
+            "preferFrontCamera" : false, // iOS and Android
+            "showFlipCameraButton" : true, // iOS and Android
+            "prompt" : "Place a QR code inside the scan area", // supported on Android only
+            "formats" : "QR_CODE" // default: all but PDF_417 and RSS_EXPANDED
+            //"orientation" : "landscape" // Android only (portrait|landscape), default unset so it rotates with the device
+        }
+      );
+    });
+  };
   $scope.transfer = function () {
     if ($rootScope.$storage.user) {
       if (!$rootScope.$storage.user.password && !$rootScope.$storage.user.privateActiveKey) {
@@ -1063,7 +1095,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       if (loginSuccess) {
         var tr = new window.steemJS.TransactionBuilder();
         var permlink = $scope.spost.permlink;
-        var json = angular.merge(angular.fromJson($scope.spost.json_metadata), {tags: $scope.spost.tags.split(" ")});
+        var jjson = $filter("metadata")($scope.spost.body);
+        var json = angular.merge(jjson, {tags: $scope.spost.tags.split(" ")});
 
         tr.add_type_operation("comment", {
           parent_author: "",

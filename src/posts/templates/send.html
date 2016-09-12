@@ -1,10 +1,11 @@
 <ion-view view-cache="false" view-title="Transfer">
   <ion-content class="padding">
     <div class="list">
-      <label class="item item-input">
+      <div class="item item-input item-icon-right">
         <span class="input-label">To</span>
         <input type="text" ng-model="data.username" placeholder="User e.g. good-karma" ng-change="changeUsername()">
-      </label>
+        <i class="icon ion-ios-camera-outline" ng-click="qrScan()"></i>
+      </div>
       <label class="item item-input item-select">
         <span class="input-label">Asset</span>
         <select ng-model="data.type" ng-change="typechange()">
@@ -26,7 +27,9 @@
       <center><button class="button button-positive" ng-click="transfer()">
         SEND
       </button></center>
-
+      <br>
+      <center><qr text="$root.$storage.user.username"></qr></center>
+      <center><i class="italic">{{$root.$storage.user.username}}</i></center>
     </div>
   </ion-content>
 </ion-view>
