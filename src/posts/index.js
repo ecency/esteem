@@ -363,8 +363,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     $rootScope.getContentAndOpen = function(author, permlink) {
       (new Steem(localStorage.socketUrl)).getContent(author, permlink, function(err, result){
-        //console.log(err);
-        //console.log(result);
         if (!err) {
           for (var j = result.active_votes.length - 1; j >= 0; j--) {
             if (result.active_votes[j].voter === $rootScope.$storage.user.username) {
@@ -455,6 +453,59 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.showAlert("Warning", "Please, login to Vote");
       }
     };
+    $rootScope.voteWitness = function() {
+        var confirmPopup = $ionicPopup.confirm({
+          title: 'Are you sure?',
+          template: 'Voting for witness @good-karma'
+        });
+        confirmPopup.then(function(res) {
+          if(res) {
+            console.log('You are sure');
+            $rootScope.$broadcast('show:loading');
+            if ($rootScope.$storage.user) {
+                $rootScope.mylogin = new window.steemJS.Login();
+                $rootScope.mylogin.setRoles(["active"]);
+                var loginSuccess = $rootScope.mylogin.checkKeys({
+                    accountName: $rootScope.$storage.user.username,    
+                    password: $rootScope.$storage.user.password || null,
+                    auths: {
+                        posting: $rootScope.$storage.user.posting.key_auths
+                    },
+                    privateKey: $rootScope.$storage.user.privateActiveKey || null
+                  }
+                );
+                if (loginSuccess) {
+                  var tr = new window.steemJS.TransactionBuilder();
+                  tr.add_type_operation("account_witness_vote", {
+                      account: $rootScope.$storage.user.username,
+                      approve: true,
+                      witness: "good-karma"
+                  });
+                  localStorage.error = 0;
+                  tr.process_transaction($rootScope.mylogin, null, true);
+
+                  setTimeout(function() {
+                    if (localStorage.error == 1) {
+                      $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                    } else {
+                      //$scope.refreshFollowers();
+                      $rootScope.showMessage("Success",'Voted for witness @good-karma');
+                    }
+                  }, 2000);
+                } else {
+                  $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
+                }
+              $rootScope.$broadcast('hide:loading');
+            } else {
+              $rootScope.$broadcast('hide:loading');
+              $rootScope.showAlert("Warning", "Please, login to Vote Witness");
+            }
+          } else {
+            console.log('You are not sure');
+          }
+        });
+    };
+
     $rootScope.following = function(xx, mtype) {
       $rootScope.$broadcast('show:loading');
       if ($rootScope.$storage.user) {

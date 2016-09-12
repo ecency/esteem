@@ -113,7 +113,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
           }
           angular.merge($rootScope.$storage.user, dd);
         });
-        if ($scope.follower.length>0 || $scope.following.length>0) {
+        if (($scope.follower && $scope.follower.length>0) || ($scope.following && $scope.following.length>0)) {
 
           $scope.follower = [];
           $scope.following = [];
