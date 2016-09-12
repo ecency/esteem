@@ -1257,6 +1257,7 @@ app.controller('BookmarkCtrl', function($scope, $stateParams, $rootScope, $state
 
 })
 app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, APIs, $interval, $ionicScrollDelegate) {
+  $scope.searchu = {};
   
   $scope.$on('$ionicView.beforeEnter', function(){
     $scope.active = "followers";  
@@ -1265,61 +1266,41 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
     $scope.limit = 100;
     $scope.tt = {ruser:"", duser:""};
       
-    APIs.getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit).then(function(res){
-      if (res && res.length===$scope.limit) {
-        $scope.tt.ruser = res[res.length-1].follower;
-      }
-      $scope.followers = res;
-    });
-    
-    APIs.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
-      if (res && res.length===$scope.limit) {
-        $scope.tt.duser = res[res.length-1].following;
-      }
-      $scope.following = res;
-    });
+    $scope.rfetching = function(){
+      APIs.getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit).then(function(res){
+        if (res && res.length===$scope.limit) {
+          $scope.tt.ruser = res[res.length-1].follower;
+        }
+        for (var i = 0; i < res.length; i++) {
+          $scope.followers.push(res[i]);
+        }
+        if (res.length < $scope.limit) {
 
-    $scope.rfetching = $interval(function(){
-      if ($scope.followers.length === $scope.limit) {
-        APIs.getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit).then(function(res){
-          if (res && res.length===$scope.limit) {
-            $scope.tt.ruser = res[res.length-1].follower;
-          }
-          //angular.merge($scope.followers, res);
-          for (var i = 1; i < res.length; i++) {
-            $scope.followers.push(res[i]);
-          }
-          //$scope.followers.push.apply($scope.followers, res);
-          if (res.length<$scope.limit) {
-            if (angular.isDefined($scope.rfetching)){
-              $interval.cancel($scope.rfetching);
-              $scope.rfetching = undefined;
-            }
-          }
-        });
-      }
-    }, 600);
+        } else {
+          setTimeout($scope.rfetching, 10);
+        }
+      });
+    };
 
-    $scope.dfetching = $interval(function(){
-      if ($scope.following.length === $scope.limit) {
-        APIs.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
-          if (res && res.length===$scope.limit) {
-            $scope.tt.duser = res[res.length-1].following;
-          }
-          //angular.merge($scope.followers, res);
-          for (var i = 1; i < res.length; i++) {
-            $scope.following.push(res[i]);
-          }
-          //$scope.followers.push.apply($scope.followers, res);
-          if (res.length<$scope.limit) {
-            if (angular.isDefined($scope.dfetching)){
-              $interval.cancel($scope.dfetching);
-              $scope.dfetching = undefined;
-            }
-          }
-        });
-      }
-    }, 1000);
+    $scope.dfetching = function(){
+      APIs.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
+        if (res && res.length===$scope.limit) {
+          $scope.tt.duser = res[res.length-1].following;
+        }
+        for (var i = 0; i < res.length; i++) {
+          $scope.following.push(res[i]);
+        }
+        if (res.length<$scope.limit) {
+          
+        } else {
+          setTimeout($scope.dfetching, 10);
+        }
+      });
+    };
+
+    $scope.rfetching();
+    $scope.dfetching();
+
   });
    
   $scope.$on('$ionicView.leave', function(){
@@ -1362,94 +1343,17 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
     }
     //$scope.loadMore(type);
   }
-  $scope.unfollowUser = function(xx){
-    //$rootScope.showAlert("Info", "In Development, coming soon!");
-    $rootScope.$broadcast('show:loading');
-    if ($rootScope.$storage.user) {
-        $scope.mylogin = new window.steemJS.Login();
-        $scope.mylogin.setRoles(["posting"]);
-        var loginSuccess = $scope.mylogin.checkKeys({
-            accountName: $rootScope.$storage.user.username,    
-            password: $rootScope.$storage.user.password || null,
-            auths: {
-                posting: $rootScope.$storage.user.posting.key_auths
-            },
-            privateKey: $rootScope.$storage.user.privatePostingKey || null
-          }
-        );
-        if (loginSuccess) {
-          console.log("do unfollowing");
-          var tr = new window.steemJS.TransactionBuilder();
-          var json = {follower:$rootScope.$storage.user.username, following:xx, what: []}
-          tr.add_type_operation("custom_json", {
-            id: 'follow',
-            required_posting_auths: [$rootScope.$storage.user.username],
-            json: JSON.stringify(json)
-          });
-          localStorage.error = 0;
-          tr.process_transaction($scope.mylogin, null, true);
 
-          setTimeout(function() {
-            if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-            } else {
-              //$scope.refreshFollowers();
-              $state.go($state.current, {}, {reload: true});
-            }
-          }, 2000);
-        } else {
-          $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
-        }
-      $rootScope.$broadcast('hide:loading');
-    } else {
-      $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert("Warning", "Please, login to Follow");
-    }
+  $scope.$on('current:reload', function(){
+    console.log('current:reload');
+    $state.go($state.current, {}, {reload: true});
+  });
+
+  $scope.unfollowUser = function(xx){
+    $rootScope.following(xx, "unfollow");
   };
   $scope.followUser = function(xx){
-    //console.log($rootScope.$storage.user);
-    $rootScope.$broadcast('show:loading');
-    if ($rootScope.$storage.user) {
-        console.log('Api ready:');
-        $scope.mylogin = new window.steemJS.Login();
-        $scope.mylogin.setRoles(["posting"]);
-        var loginSuccess = $scope.mylogin.checkKeys({
-            accountName: $rootScope.$storage.user.username,    
-            password: $rootScope.$storage.user.password || null,
-            auths: {
-                posting: $rootScope.$storage.user.posting.key_auths
-            },
-            privateKey: $rootScope.$storage.user.privatePostingKey || null
-          }
-        );
-        if (loginSuccess) {
-          console.log("do following")
-          var tr = new window.steemJS.TransactionBuilder();
-          var json = {follower:$rootScope.$storage.user.username, following:xx, what: ["blog"]}
-          tr.add_type_operation("custom_json", {
-            id: 'follow',
-            required_posting_auths: [$rootScope.$storage.user.username],
-            json: JSON.stringify(json)
-          });
-          localStorage.error = 0;
-          tr.process_transaction($scope.mylogin, null, true);
-          setTimeout(function() {
-            if (localStorage.error == 1) {
-              $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
-            } else {
-              //$scope.refreshFollowers();
-              $state.go($state.current, {}, {reload: true});
-            }
-          }, 2000);
-        } else {
-          $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
-        }
-      $rootScope.$broadcast('hide:loading');
-    } else {
-      $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert("Warning", "Please, login to Follow");
-    }
-    //$rootScope.showAlert("Info", "In Development, coming soon!");
+    $rootScope.following(xx, "follow");
   };
   $scope.profileView = function(xx){
     $state.go('app.profile', {username: xx});
@@ -1467,6 +1371,17 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       $ionicHistory.goBack();  
     }
   };
+  $scope.followUser = function(xx){
+    $rootScope.following(xx, "follow");
+  };
+  $scope.unfollowUser = function(xx){
+    $rootScope.following(xx, "unfollow");
+  };
+
+  $scope.$on('current:reload', function(){
+    $state.go($state.current, {}, {reload: true});
+  });
+
   $scope.show = function() {
    var hideSheet = $ionicActionSheet.show({
      buttons: [
@@ -1766,6 +1681,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         dd.json_metadata = angular.fromJson(dd.json_metadata);
       }
       angular.merge($scope.user, dd);
+      console.log($scope.user);
+
       if(!$scope.$$phase){
         $scope.$apply();
       }

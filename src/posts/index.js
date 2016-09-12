@@ -43,6 +43,16 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
     }
   })
 
+  .state('app.about', {
+    url: '/about',
+    views: {
+      'menuContent': {
+        //templateUrl: 'templates/settings.html'
+        template: fs.readFileSync(__dirname + '/templates/about.html', 'utf8')
+      }
+    }
+  })
+
   .state('app.send', {
     url: '/send',
     views: {
@@ -445,6 +455,59 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.showAlert("Warning", "Please, login to Vote");
       }
     };
+    $rootScope.following = function(xx, mtype) {
+      $rootScope.$broadcast('show:loading');
+      if ($rootScope.$storage.user) {
+          $rootScope.mylogin = new window.steemJS.Login();
+          $rootScope.mylogin.setRoles(["posting"]);
+          var loginSuccess = $rootScope.mylogin.checkKeys({
+              accountName: $rootScope.$storage.user.username,    
+              password: $rootScope.$storage.user.password || null,
+              auths: {
+                  posting: $rootScope.$storage.user.posting.key_auths
+              },
+              privateKey: $rootScope.$storage.user.privatePostingKey || null
+            }
+          );
+          if (loginSuccess) {
+            var tr = new window.steemJS.TransactionBuilder();
+            var json;
+            if (mtype === "follow") {
+              json = {follower:$rootScope.$storage.user.username, following:xx, what: ["blog"]};
+            } else {
+              json = {follower:$rootScope.$storage.user.username, following:xx, what: []}  
+            }
+            
+            tr.add_type_operation("custom_json", {
+              id: 'follow',
+              required_posting_auths: [$rootScope.$storage.user.username],
+              json: JSON.stringify(json)
+            });
+            localStorage.error = 0;
+            tr.process_transaction($rootScope.mylogin, null, true);
+
+            setTimeout(function() {
+              if (localStorage.error == 1) {
+                $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+              } else {
+                //$scope.refreshFollowers();
+                $rootScope.$broadcast('current:reload');
+              }
+            }, 2000);
+          } else {
+            $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
+          }
+        $rootScope.$broadcast('hide:loading');
+      } else {
+        $rootScope.$broadcast('hide:loading');
+        $rootScope.showAlert("Warning", "Please, login to Follow");
+      }
+    };
+
+
+
+
+
     if (window.cordova) {
       if (!ionic.Platform.isWindowsPhone()) {
         //FCMPlugin.getToken( successCallback(token), errorCallback(err) );

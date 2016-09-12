@@ -158,6 +158,10 @@ textarea.markdown-input {
 .profilebtn {
   position: absolute!important;
 }
+.profilebtn_follow {
+  position: absolute!important;
+  right: 0!important;
+}
 
 /***************************************/
 /*Comments                             */
