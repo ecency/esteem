@@ -303,7 +303,13 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   }
   $scope.qrScan = function() {
     $ionicPlatform.ready(function() {
-      $cordovaBarcodeScanner.scan().then(function(barcodeData) {
+      $cordovaBarcodeScanner.scan({
+          "preferFrontCamera" : false, // iOS and Android
+          "showFlipCameraButton" : false, // iOS and Android
+          "prompt" : "Place a QR code inside the scan area", // supported on Android only
+          "formats" : "QR_CODE" // default: all but PDF_417 and RSS_EXPANDED
+          //"orientation" : "landscape" // Android only (portrait|landscape), default unset so it rotates with the device
+        }).then(function(barcodeData) {
         // Success! Barcode data is here
         //alert(barcodeData);
         $scope.data.username = barcodeData.text;
@@ -326,7 +332,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
         },
         {
           "preferFrontCamera" : false, // iOS and Android
-          "showFlipCameraButton" : true, // iOS and Android
+          "showFlipCameraButton" : false, // iOS and Android
           "prompt" : "Place a QR code inside the scan area", // supported on Android only
           "formats" : "QR_CODE" // default: all but PDF_417 and RSS_EXPANDED
           //"orientation" : "landscape" // Android only (portrait|landscape), default unset so it rotates with the device
@@ -916,7 +922,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   };
 
   $scope.isImages = function() {
-    var len = $rootScope.$storage.sitem.json_metadata.image.length;
+    var len = $rootScope.$storage.sitem.json_metadata.image?$rootScope.$storage.sitem.json_metadata.image.length:0;
     if (len > 0) {
       $scope.images = $rootScope.$storage.sitem.json_metadata.image;
       return true
@@ -1227,7 +1233,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   //$scope.post = {};
   $scope.$on('$ionicView.enter', function(){   
     //$scope.post = $rootScope.$storage.sitem;
-    //console.log($rootScope.$storage.sitem);
+    console.log($rootScope.$storage.sitem);
     setTimeout(function() {
       $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
       (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
@@ -1313,6 +1319,7 @@ app.controller('BookmarkCtrl', function($scope, $stateParams, $rootScope, $state
             }
           }
         }
+        result.json_metadata = angular.fromJson(result.json_metadata);
         $rootScope.$storage.sitem = result;
 
         $state.go('app.single');
