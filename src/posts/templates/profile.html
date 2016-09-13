@@ -15,7 +15,7 @@
           <span class="item-myavatar" ng-if="!(user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image)"><ng-letter-avatar data="{{user.username}}" shape="round"></ng-letter-avatar></span>
           <img ng-src="{{user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image}}" ng-if="user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image" />
           <h4><span class="light">@{{user.username}}</span>&nbsp;<div class="reputation">{{user.reputation|reputation|number:0}}</div></h4>
-          <div class="padding"><i class="icon ion-android-list"></i>&nbsp;{{user.post_count}}&nbsp;posts&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{user.voting_power/100|number:2}}&nbsp;voting power</div>
+          <div class="padding"><i class="icon ion-android-list"></i>&nbsp;{{user.post_count}}&nbsp;posts&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{user.voting_power/100|number:2}}&nbsp;voting</div>
         </div>
       </center>
     </div>
