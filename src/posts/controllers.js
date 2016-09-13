@@ -303,35 +303,35 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   }
   $scope.qrScan = function() {
     $ionicPlatform.ready(function() {
-      /*$cordovaBarcodeScanner.scan().then(function(barcodeData) {
+      $cordovaBarcodeScanner.scan().then(function(barcodeData) {
         // Success! Barcode data is here
-        alert(barcodeData);
+        //alert(barcodeData);
         $scope.data.username = barcodeData.text;
       }, function(error) {
         // An error occurred
-      });*/
-      cordova.plugins.barcodeScanner.scan(
+      });
+      /*cordova.plugins.barcodeScanner.scan(
         function (result) {
-            /*alert("We got a barcode\n" +
-                  "Result: " + result.text + "\n" +
-                  "Format: " + result.format + "\n" +
-                  "Cancelled: " + result.cancelled);*/
+            //alert("We got a barcode\n" +
+            //      "Result: " + result.text + "\n" +
+            //      "Format: " + result.format + "\n" +
+            //      "Cancelled: " + result.cancelled);
           $scope.data.username = result.text;
           if (!$scope.$$phase) {
             $scope.$apply();
           }
         },
         function (error) {
-            alert("Scanning failed: " + error);
+            $rootScope.showMessage("Error","Scanning failed: " + error);
         },
         {
-            "preferFrontCamera" : false, // iOS and Android
-            "showFlipCameraButton" : true, // iOS and Android
-            "prompt" : "Place a QR code inside the scan area", // supported on Android only
-            "formats" : "QR_CODE" // default: all but PDF_417 and RSS_EXPANDED
-            //"orientation" : "landscape" // Android only (portrait|landscape), default unset so it rotates with the device
+          "preferFrontCamera" : false, // iOS and Android
+          "showFlipCameraButton" : true, // iOS and Android
+          "prompt" : "Place a QR code inside the scan area", // supported on Android only
+          "formats" : "QR_CODE" // default: all but PDF_417 and RSS_EXPANDED
+          //"orientation" : "landscape" // Android only (portrait|landscape), default unset so it rotates with the device
         }
-      );
+      );*/
     });
   };
   $scope.transfer = function () {
@@ -811,9 +811,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     } else {
       console.log("fetching..."+type+" "+limit+" "+tag);
       window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
+        $rootScope.$broadcast('hide:loading');
         $scope.data = $scope.dataChanged(response); 
         //console.log(response);
-        $rootScope.$broadcast('hide:loading');
         if (!$scope.$$phase) {
           $scope.$apply();
         }
@@ -1132,8 +1132,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     }
   }
 
-  
-
   $scope.reply = function (xx) {
     //console.log(xx);
     $rootScope.$broadcast('show:loading');
@@ -1229,7 +1227,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   //$scope.post = {};
   $scope.$on('$ionicView.enter', function(){   
     //$scope.post = $rootScope.$storage.sitem;
-    console.log($rootScope.$storage.sitem);
+    //console.log($rootScope.$storage.sitem);
     setTimeout(function() {
       $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
       (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
@@ -1762,7 +1760,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         dd.json_metadata = angular.fromJson(dd.json_metadata);
       }
       angular.merge($scope.user, dd);
-      console.log($scope.user);
+      //console.log($scope.user);
 
       if(!$scope.$$phase){
         $scope.$apply();

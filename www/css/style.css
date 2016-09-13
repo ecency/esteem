@@ -161,6 +161,9 @@ textarea.markdown-input {
 .profilebtn_follow {
   position: absolute!important;
   right: 0!important;
+  margin-right: 5px!important;
+  margin-bottom: 5px!important;
+  bottom: 0!important;
 }
 
 /***************************************/
