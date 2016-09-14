@@ -431,7 +431,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
                  
                 }
               } else {
-                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
+                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have chosen Advanced mode.");
               }
               $rootScope.$broadcast('hide:loading');
              } else {
@@ -635,7 +635,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           }
         }, 3000);
       } else {
-        $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
+        $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have chosen Advanced mode.");
       }
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -1129,7 +1129,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           }
         }, 3000);
       } else {
-        $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
+        $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have chosen Advanced mode.");
       }
       $rootScope.$broadcast('hide:loading'); 
     } else {
@@ -1189,7 +1189,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           }
         }, 3000);
       } else {
-        $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
+        $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have chosen Advanced mode.");
       } 
       $rootScope.$broadcast('hide:loading');
     } else {
@@ -1536,7 +1536,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   }
                 }, 2000);
               } else {
-                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have choosed Advanced mode.");
+                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have chosen Advanced mode.");
               }
               $rootScope.$broadcast('hide:loading');
             } else {
@@ -1608,7 +1608,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   }
                 }, 2000);
               } else {
-                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have choosed Advanced mode.");
+                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have chosen Advanced mode.");
               }
             $rootScope.$broadcast('hide:loading');
           } else {
@@ -1672,7 +1672,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   }
                 }, 2000);
               } else {
-                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have choosed Advanced mode.");
+                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have chosen Advanced mode.");
               }
               $rootScope.$broadcast('hide:loading');
             } else {
