@@ -788,11 +788,12 @@ module.exports = function (app) {
                                 $rootScope.showMessage("Success", "Comment is submitted!");
                                 $rootScope.$broadcast("update:content");
                               }
+                              $rootScope.$broadcast('hide:loading');
                             }, 3000);
                           } else {
+                            $rootScope.$broadcast('hide:loading');
                             $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
                           } 
-                          $rootScope.$broadcast('hide:loading');
                         } else {
                           $rootScope.$broadcast('hide:loading');
                           $rootScope.showAlert("Warning", "Please, login to Comment");
@@ -846,11 +847,12 @@ module.exports = function (app) {
                                 $rootScope.showMessage("Success", "Comment is submitted!");
                                 $rootScope.$broadcast("update:content");
                               }
+                              $rootScope.$broadcast('hide:loading');
                             }, 3000);
                           } else {
+                            $rootScope.$broadcast('hide:loading');
                             $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
                           } 
-                          $rootScope.$broadcast('hide:loading');
                         } else {
                           $rootScope.$broadcast('hide:loading');
                           $rootScope.showAlert("Warning", "Please, login to Comment");
@@ -908,9 +910,11 @@ module.exports = function (app) {
                                     $rootScope.showMessage("Success", "Deleted comment!");
                                     $rootScope.$broadcast("update:content");
                                   }
+                                  $rootScope.$broadcast('hide:loading');
                                 }, 3000);
+                              } else {
+                                $rootScope.$broadcast('hide:loading');
                               } 
-                              $rootScope.$broadcast('hide:loading');
                             } else {
                               $rootScope.$broadcast('hide:loading');
                               $rootScope.showAlert("Warning", "Please, login to Delete Comment");

@@ -633,11 +633,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             $scope.closeMenuPopover();
             $state.go("app.profile", {username: $rootScope.$storage.user.username});
           }
+          $rootScope.$broadcast('hide:loading');
         }, 3000);
       } else {
+        $rootScope.$broadcast('hide:loading');
         $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have chosen Advanced mode.");
       }
-      $rootScope.$broadcast('hide:loading');
     } else {
       $rootScope.$broadcast('hide:loading');
       $rootScope.showAlert("Warning", "Please, login to Comment");
@@ -1074,6 +1075,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
   
   $scope.submitStory = function() {
+    $rootScope.$broadcast('show:loading');
     if ($scope.edit) {
       var patch = createPatch($scope.patchbody, $scope.spost.body)
       // Putting body into buffer will expand Unicode characters into their true length
@@ -1085,7 +1087,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       $scope.spost.body2 = undefined;
     }
     
-    $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user) {
       $scope.mylogin = new window.steemJS.Login();
       $scope.mylogin.setRoles(["posting"]);
@@ -1127,11 +1128,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             //$scope.closePostPopover();
             //$state.go("app.profile", {username: $rootScope.$storage.user.username});
           }
+          $rootScope.$broadcast('hide:loading');
         }, 3000);
       } else {
+        $rootScope.$broadcast('hide:loading');
         $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have chosen Advanced mode.");
       }
-      $rootScope.$broadcast('hide:loading'); 
     } else {
       $rootScope.$broadcast('hide:loading');
       $rootScope.showAlert("Warning", "Please, login to Comment");
@@ -1187,11 +1189,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               }
             });
           }
+          $rootScope.$broadcast('hide:loading');
         }, 3000);
       } else {
+        $rootScope.$broadcast('hide:loading');
         $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have chosen Advanced mode.");
       } 
-      $rootScope.$broadcast('hide:loading');
     } else {
       $rootScope.$broadcast('hide:loading');
       $rootScope.showAlert("Warning", "Please, login to Comment");
