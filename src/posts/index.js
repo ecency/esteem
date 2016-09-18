@@ -10,13 +10,18 @@ var app = angular.module('steem', [
   'ja.qr'
 	//'ionic.contrib.ui.ionThread'
 ]);
-var steemRPC = require("steem-rpc");
+//var steemRPC = require("steem-rpc");
 if (localStorage.getItem("socketUrl") === null) {
   localStorage.setItem("socketUrl", "wss://steemit.com/wspa");
 }
-
-window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
-window.steemJS = require("steemjs-lib");
+var options = {url:localStorage.socketUrl};
+var Client = window.steemJS.steemRPC.Client;
+window.Api = Client.get(options, true);
+window.Api.initPromise.then(function(response) {
+    console.log("Api ready:", response);
+});
+/*window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
+window.steemJS = require("steemjs-lib");*/
 window.diff_match_patch = require('diff-match-patch');
 
 require('./services')(app);

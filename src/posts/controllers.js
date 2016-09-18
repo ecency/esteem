@@ -622,13 +622,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         //console.log(my_pubkeys);
         localStorage.error = 0;
         tr.process_transaction($scope.mylogin, null, true);
-        $scope.closePostModal();
         $scope.replying = false;
         setTimeout(function() {
           if (localStorage.error == 1) {
             $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
           } else {
-            $scope.spost = {};  
+            $scope.closePostModal();
+            $scope.spost = {};
             $rootScope.showMessage("Success", "Post is submitted!");
             $scope.closeMenuPopover();
             $state.go("app.profile", {username: $rootScope.$storage.user.username});
@@ -1117,12 +1117,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         //console.log(my_pubkeys);
         localStorage.error = 0;
         tr.process_transaction($scope.mylogin, null, true);
-        $scope.closePostModal();
         $scope.replying = false;
         setTimeout(function() {
           if (localStorage.error == 1) {
             $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
           } else {
+            $scope.closePostModal();
             $scope.spost = {};
             $rootScope.showMessage("Success", "Post is submitted!");  
             //$scope.closePostPopover();
@@ -1173,13 +1173,14 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         //console.log(my_pubkeys);
         localStorage.error = 0;
         tr.process_transaction($scope.mylogin, null, true);
-        $scope.closeModal();
         $scope.replying = false;
         setTimeout(function() {
           if (localStorage.error == 1) {
             $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
           } else {
+            $scope.closeModal();
             $scope.data.comment = "";  
+
             $rootScope.showMessage("Success", "Comment is submitted!");
             (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
               //console.log(result);      

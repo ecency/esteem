@@ -778,12 +778,12 @@ module.exports = function (app) {
                             localStorage.error = 0;
                             tr.process_transaction($scope.mylogin, null, true);
                             
-                            $scope.closeModal();
                             $scope.replying = false;
                             setTimeout(function() {
                               if (localStorage.error == 1) {
                                 $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                               } else {
+                                $scope.closeModal();
                                 $scope.data.comment = "";
                                 $rootScope.showMessage("Success", "Comment is submitted!");
                                 $rootScope.$broadcast("update:content");
