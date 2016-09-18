@@ -1538,7 +1538,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   } else {
                     $scope.refreshLocalUserData();
                   }
-                }, 2000);
+                }, 3000);
               } else {
                 $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have chosen Advanced mode.");
               }
@@ -1619,7 +1619,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             $rootScope.$broadcast('hide:loading');
             $rootScope.showAlert("Warning", "Please, login to Update");
           }
-          }, 2000);
+          }, 1000);
           if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
             $cordovaCamera.cleanup();
           }
@@ -1674,7 +1674,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   } else {
                     $scope.refreshLocalUserData();
                   }
-                }, 2000);
+                }, 3000);
               } else {
                 $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have chosen Advanced mode.");
               }
@@ -1683,7 +1683,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               $rootScope.$broadcast('hide:loading');
               $rootScope.showAlert("Warning", "Please, login to Update");
             }
-          }, 2000);
+          }, 1000);
           
         }
       });
@@ -1714,90 +1714,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     $rootScope.votePost(post, 'unvote', 'profileRefresh');
   };
 
-  $scope.refresh = function() {  
-    if (!$scope.active) {
-      $scope.active = "blog";  
-    }
-    if ($scope.active != "blog") {
-      $scope.rest = "/"+$scope.active;
-    } else {
-      $scope.rest = "";
-    }  
-    
-    $scope.nonexist = false;
-    
-    (new Steem(localStorage.socketUrl)).getState("/@"+$stateParams.username+$scope.rest, function(err, res){
-      $scope.profile = [];
-      //console.log(res.content);
-      if (Object.keys(res.content).length>0) {
-        for (var property in res.content) {
-          if (res.content.hasOwnProperty(property)) {
-            // do stuff
-            //console.log(res.content[property])
-            var ins = res.content[property];
-            if ($rootScope.$storage.user){
-              for (var j = ins.active_votes.length - 1; j >= 0; j--) {
-                if (ins.active_votes[j].voter === $rootScope.$storage.user.username) {
-                  if (ins.active_votes[j].percent > 0) {
-                    ins.upvoted = true;  
-                  } else if (ins.active_votes[j].percent < 0) {
-                    ins.downvoted = true;  
-                  } else {
-                    ins.upvoted = false;
-                    ins.downvoted = false;    
-                  }
-                }
-              }
-            }
-            $scope.profile.push(ins);
-          }
-        }
-        $scope.nonexist = false;
-        if(!$scope.$$phase){
-          $scope.$apply();
-        }
-      } else {
-        $scope.nonexist = true;
-      }
-    });
-  };
-  $scope.user = {username: $stateParams.username};
-  $scope.getOtherUsersData = function() {
-    console.log("getOtherUsersData");
-    (new Steem(localStorage.socketUrl)).getAccounts([$stateParams.username], function(err, dd) {
-      //console.log(dd);
-      dd = dd[0];
-      if (dd.json_metadata) {
-        dd.json_metadata = angular.fromJson(dd.json_metadata);
-      }
-      angular.merge($scope.user, dd);
-      //console.log($scope.user);
-
-      if(!$scope.$$phase){
-        $scope.$apply();
-      }
-    });
-    $scope.following = [];
-    $scope.limit = 100;
-    $scope.tt = {duser: ""};
-    $scope.dfetching = function(){
-      APIs.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
-        if (res && res.length===$scope.limit) {
-          $scope.tt.duser = res[res.length-1].following;
-        }
-        for (var i = 0; i < res.length; i++) {
-          $scope.following.push(res[i].following);
-        }
-        if (res.length<$scope.limit) {
-          
-        } else {
-          setTimeout($scope.dfetching, 10);
-        }
-      });
-    };
-
-    $scope.dfetching();
-  };
+  
   $scope.isFollowing = function(xx) {
     if ($scope.following && $scope.following.indexOf(xx)!==-1) {
       return true;
@@ -1807,7 +1724,89 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   };
   $scope.$on('$ionicView.beforeEnter', function(){
     //console.log($ionicHistory.viewHistory());
+    $scope.refresh = function() {  
+      if (!$scope.active) {
+        $scope.active = "blog";  
+      }
+      if ($scope.active != "blog") {
+        $scope.rest = "/"+$scope.active;
+      } else {
+        $scope.rest = "";
+      }  
+      
+      $scope.nonexist = false;
+      
+      (new Steem(localStorage.socketUrl)).getState("/@"+$stateParams.username+$scope.rest, function(err, res){
+        $scope.profile = [];
+        //console.log(res.content);
+        if (Object.keys(res.content).length>0) {
+          for (var property in res.content) {
+            if (res.content.hasOwnProperty(property)) {
+              // do stuff
+              //console.log(res.content[property])
+              var ins = res.content[property];
+              if ($rootScope.$storage.user){
+                for (var j = ins.active_votes.length - 1; j >= 0; j--) {
+                  if (ins.active_votes[j].voter === $rootScope.$storage.user.username) {
+                    if (ins.active_votes[j].percent > 0) {
+                      ins.upvoted = true;  
+                    } else if (ins.active_votes[j].percent < 0) {
+                      ins.downvoted = true;  
+                    } else {
+                      ins.upvoted = false;
+                      ins.downvoted = false;    
+                    }
+                  }
+                }
+              }
+              $scope.profile.push(ins);
+            }
+          }
+          $scope.nonexist = false;
+          if(!$scope.$$phase){
+            $scope.$apply();
+          }
+        } else {
+          $scope.nonexist = true;
+        }
+      });
+    };
+    $scope.user = {username: $stateParams.username};
+    $scope.getOtherUsersData = function() {
+      console.log("getOtherUsersData");
+      (new Steem(localStorage.socketUrl)).getAccounts([$stateParams.username], function(err, dd) {
+        //console.log(dd);
+        dd = dd[0];
+        if (dd.json_metadata) {
+          dd.json_metadata = angular.fromJson(dd.json_metadata);
+        }
+        angular.merge($scope.user, dd);
+        //console.log($scope.user);
 
+        if(!$scope.$$phase){
+          $scope.$apply();
+        }
+      });
+      $scope.following = [];
+      $scope.limit = 100;
+      $scope.tt = {duser: ""};
+      $scope.dfetching = function(){
+        APIs.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
+          if (res && res.length===$scope.limit) {
+            $scope.tt.duser = res[res.length-1].following;
+          }
+          for (var i = 0; i < res.length; i++) {
+            $scope.following.push(res[i].following);
+          }
+          if (res.length<$scope.limit) {
+            
+          } else {
+            setTimeout($scope.dfetching, 5);
+          }
+        });
+      };
+      $scope.dfetching();
+    };
     if ($rootScope.$storage.user.username !== $stateParams.username) {
       $scope.getOtherUsersData();  
     }/* else {
@@ -1818,7 +1817,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   $scope.openMenu = function() {
     $ionicSideMenuDelegate.toggleLeft();
   }
-   $scope.change = function(type){
+  $scope.change = function(type){
     $scope.profile = [];
     $scope.accounts = [];
     $scope.active = type;
