@@ -7,7 +7,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
   $ionicModal.fromTemplateUrl('templates/login.html', {
     scope: $scope  }).then(function(modal) {
-    $scope.modal = modal;
+    $scope.loginModal = modal;
   });
 
   $scope.changeUsername = function(){
@@ -26,11 +26,11 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     }
   }
   $scope.closeLogin = function() {
-    $scope.modal.hide();
+    $scope.loginModal.hide();
   };
 
   $scope.login = function() {
-    $scope.modal.show();
+    $scope.loginModal.show();
   };
   $scope.goProfile = function() {
     $state.go("app.profile", {username:$rootScope.$storage.user.username});
@@ -54,45 +54,57 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.doLogin = function() {
     console.log('Doing login');
     if ($scope.loginData.password || $scope.loginData.privatePostingKey) {
-      (new Steem(localStorage.socketUrl)).getAccounts([$scope.loginData.username], function(err, dd) {
-        //console.log(dd);
-        dd = dd[0];
-        $scope.loginData.id = dd.id;
-        $scope.loginData.owner = dd.owner;
-        $scope.loginData.active = dd.active;
-        $scope.loginData.reputation = dd.reputation;
-        $scope.loginData.posting = dd.posting;
-        $scope.loginData.memo_key = dd.memo_key;
-        $scope.loginData.post_count = dd.post_count;
-        $scope.loginData.voting_power = dd.voting_power;
+      $rootScope.$broadcast('show:loading');
+      $scope.loginData.username = $scope.loginData.username.trim();
+      if (!$rootScope.$storage.user) {
 
-        $rootScope.$storage.user = $scope.loginData;
+        //(new Steem(localStorage.socketUrl)).getAccounts([$scope.loginData.username], function(err, dd) {
+        window.Api.database_api().exec("get_accounts", [[$scope.loginData.username]]).then(function(dd){
+          //console.log(dd);
+          dd = dd[0];
+          $scope.loginData.id = dd.id;
+          $scope.loginData.owner = dd.owner;
+          $scope.loginData.active = dd.active;
+          $scope.loginData.reputation = dd.reputation;
+          $scope.loginData.posting = dd.posting;
+          $scope.loginData.memo_key = dd.memo_key;
+          $scope.loginData.post_count = dd.post_count;
+          $scope.loginData.voting_power = dd.voting_power;
+          $scope.loginData.witness_votes = dd.witness_votes;
 
-        var login = new window.steemJS.Login();
-        login.setRoles(["posting"]);
-        var loginSuccess = login.checkKeys({
-            accountName: $scope.loginData.username,    
-            password: $scope.loginData.password || null,
-            auths: {
-                posting: dd.posting.key_auths
-            },
-            privateKey: $scope.loginData.privatePostingKey || null
+          
+
+          $scope.login = new window.steemJS.Login();
+          $scope.login.setRoles(["posting"]);
+          var loginSuccess = $scope.login.checkKeys({
+              accountName: $scope.loginData.username,    
+              password: $scope.loginData.password || null,
+              auths: {
+                  posting: dd.posting.key_auths
+              },
+              privateKey: $scope.loginData.privatePostingKey || null
+            }
+          );
+
+          if (!loginSuccess) {
+              $rootScope.$broadcast('hide:loading');
+              $rootScope.showMessage("Error","The password or account name was incorrect");
+          } else {
+            $rootScope.$storage.user = $scope.loginData;
+            $rootScope.$broadcast('fetchPosts');
+            $rootScope.$storage.mylogin = $scope.login;
+            APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, "").then(function(res){
+              //console.log(angular.toJson(res));
+              $rootScope.$broadcast('hide:loading');
+              //$state.go('app.posts', {}, { reload: true });
+              $scope.closeLogin();
+            });
           }
-        );
-
-        if (!loginSuccess) {
-            $rootScope.showMessage("Error","The password or account name was incorrect");
-        } else {
-          $rootScope.$storage.mylogin = login;
-          APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, "").then(function(res){
-            console.log(angular.toJson(res));
-          });
-          $timeout(function() {
-            $state.go('app.posts', {}, { reload: true });
-            $scope.closeLogin();
-          }, 1000);
-        }
-      });
+          /*if(!$scope.$$phase) {
+            $scope.$apply();
+          }*/
+        });
+      }
     } else {
       $rootScope.showAlert("Info", "Please login either with your main password or private posting key!").then(function(){
         console.log("error login");
@@ -101,69 +113,71 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     
   };
 
-  $scope.$on("$ionicView.enter", function(){
-    $scope.refreshLocalUserData = function() {
-      console.log('refreshLocalUserData');
-      if ($rootScope.$storage.user && $rootScope.$storage.user.username) {
-        (new Steem(localStorage.socketUrl)).getAccounts([$rootScope.$storage.user.username], function(err, dd) {
-          //console.log(dd);
-          dd = dd[0];
-          if (dd.json_metadata) {
-            dd.json_metadata = angular.fromJson(dd.json_metadata);
-          }
-          angular.merge($rootScope.$storage.user, dd);
-        });
-        if (($scope.follower && $scope.follower.length>0) || ($scope.following && $scope.following.length>0)) {
-
-          $scope.follower = [];
-          $scope.following = [];
-          $scope.limit = 100;
-          $scope.tt = {duser: "", ruser: ""};
-          $scope.dfetching = function(){
-            //APIs.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
-            (new Steem(localStorage.socketUrl)).getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit, function(err, res) {
-              //console.log(res.length);
-              if (res && res.length===$scope.limit) {
-                $scope.tt.duser = res[res.length-1].following;
-              }
-              for (var i = 0; i < res.length; i++) {
-                $scope.following.push(res[i].following);
-              }
-              if (res.length<$scope.limit) {
-                if (!$scope.$$phase) {
-                  $scope.$apply();
-                }  
-              } else {
-                setTimeout($scope.dfetching, 10);
-              }
-            });
-          };
-          $scope.rfetching = function(){
-            //APIs.getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit).then(function(res){
-            (new Steem(localStorage.socketUrl)).getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit, function(err, res){
-              //console.log(res.length);
-              if (res && res.length===$scope.limit) {
-                $scope.tt.ruser = res[res.length-1].follower;
-              }
-              for (var i = 0; i < res.length; i++) {
-                $scope.follower.push(res[i].follower);
-              }
-              if (res.length<$scope.limit) {
-                if (!$scope.$$phase) {
-                  $scope.$apply();
-                }  
-              } else {
-                setTimeout($scope.rfetching, 10);
-              }
-            });
-          };
-
-          $scope.dfetching();
-          $scope.rfetching();
+  $rootScope.$on('refreshLocalUserData', function() {
+    console.log('refreshLocalUserData');
+    if ($rootScope.$storage.user && $rootScope.$storage.user.username) {
+      (new Steem(localStorage.socketUrl)).getAccounts([$rootScope.$storage.user.username], function(err, dd) {
+      //window.Api.database_api().exec("get_accounts", [[$rootScope.$storage.user.username]]).then(function(dd){
+        //console.log(dd);
+        dd = dd[0];
+        if (dd.json_metadata) {
+          dd.json_metadata = angular.fromJson(dd.json_metadata);
         }
-      }  
-    };
-    $scope.refreshLocalUserData();
+        angular.merge($rootScope.$storage.user, dd);
+      });
+      /*if (($scope.follower && $scope.follower.length>0) || ($scope.following && $scope.following.length>0)) {
+
+        $scope.follower = [];
+        $scope.following = [];
+        $scope.limit = 100;
+        $scope.tt = {duser: "", ruser: ""};
+        $scope.dfetching = function(){
+          //APIs.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
+          (new Steem(localStorage.socketUrl)).getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit, function(err, res) {
+            //console.log(res.length);
+            if (res && res.length===$scope.limit) {
+              $scope.tt.duser = res[res.length-1].following;
+            }
+            for (var i = 0; i < res.length; i++) {
+              $scope.following.push(res[i].following);
+            }
+            if (res.length<$scope.limit) {
+              if (!$scope.$$phase) {
+                $scope.$apply();
+              }  
+            } else {
+              setTimeout($scope.dfetching, 10);
+            }
+          });
+        };
+        $scope.rfetching = function(){
+          //APIs.getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit).then(function(res){
+          (new Steem(localStorage.socketUrl)).getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit, function(err, res){
+            //console.log(res.length);
+            if (res && res.length===$scope.limit) {
+              $scope.tt.ruser = res[res.length-1].follower;
+            }
+            for (var i = 0; i < res.length; i++) {
+              $scope.follower.push(res[i].follower);
+            }
+            if (res.length<$scope.limit) {
+              if (!$scope.$$phase) {
+                $scope.$apply();
+              }  
+            } else {
+              setTimeout($scope.rfetching, 10);
+            }
+          });
+        };
+
+        $scope.dfetching();
+        $scope.rfetching();
+      }*/
+    }
+  })
+
+  $scope.$on("$ionicView.enter", function(){
+    $rootScope.$broadcast('refreshLocalUserData');
   });
 
   // get app version
@@ -182,11 +196,12 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $rootScope.$storage.mylogin = null;
     //make sure user credentials cleared.
     APIs.updateSubscription($rootScope.$storage.deviceid, "", "").then(function(res){
-      console.log(angular.toJson(res));
+      //console.log(angular.toJson(res));
+      $ionicSideMenuDelegate.toggleLeft();
+      //$state.go('app.posts', {tags:""}, {reload:true});
+      $rootScope.$broadcast('fetchPosts');
+      $rootScope.$broadcast("user:logout");
     });
-    $ionicSideMenuDelegate.toggleLeft();
-    $state.go('app.posts', {tags:""}, {reload:true});
-    $rootScope.$broadcast("user:logout");
   };
   $scope.data = {};
   $ionicModal.fromTemplateUrl('templates/search.html', {
@@ -1536,7 +1551,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   if (localStorage.error == 1) {
                     $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                   } else {
-                    $scope.refreshLocalUserData();
+                    $rootScope.$broadcast('refreshLocalUserData');
                   }
                 }, 3000);
               } else {
@@ -1608,7 +1623,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   if (localStorage.error == 1) {
                     $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage);
                   } else {
-                    $scope.refreshLocalUserData();
+                    $rootScope.$broadcast('refreshLocalUserData');
                   }
                 }, 2000);
               } else {
@@ -1672,7 +1687,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   if (localStorage.error == 1) {
                     $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                   } else {
-                    $scope.refreshLocalUserData();
+                    //$scope.refreshLocalUserData();
+                    $rootScope.$broadcast('refreshLocalUserData');
                   }
                 }, 3000);
               } else {
@@ -1809,9 +1825,56 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     };
     if ($rootScope.$storage.user.username !== $stateParams.username) {
       $scope.getOtherUsersData();  
-    }/* else {
-      $scope.refreshLocalUserData();
-    }*/  
+    } else {
+      if (($scope.follower && $scope.follower.length>0) || ($scope.following && $scope.following.length>0)) {
+
+        $scope.follower = [];
+        $scope.following = [];
+        $scope.limit = 100;
+        $scope.tt = {duser: "", ruser: ""};
+        $scope.dfetching = function(){
+          //APIs.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
+          (new Steem(localStorage.socketUrl)).getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit, function(err, res) {
+            //console.log(res.length);
+            if (res && res.length===$scope.limit) {
+              $scope.tt.duser = res[res.length-1].following;
+            }
+            for (var i = 0; i < res.length; i++) {
+              $scope.following.push(res[i].following);
+            }
+            if (res.length<$scope.limit) {
+              if (!$scope.$$phase) {
+                $scope.$apply();
+              }  
+            } else {
+              setTimeout($scope.dfetching, 10);
+            }
+          });
+        };
+        $scope.rfetching = function(){
+          //APIs.getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit).then(function(res){
+          (new Steem(localStorage.socketUrl)).getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit, function(err, res){
+            //console.log(res.length);
+            if (res && res.length===$scope.limit) {
+              $scope.tt.ruser = res[res.length-1].follower;
+            }
+            for (var i = 0; i < res.length; i++) {
+              $scope.follower.push(res[i].follower);
+            }
+            if (res.length<$scope.limit) {
+              if (!$scope.$$phase) {
+                $scope.$apply();
+              }  
+            } else {
+              setTimeout($scope.rfetching, 10);
+            }
+          });
+        };
+
+        $scope.dfetching();
+        $scope.rfetching();
+      }
+    }  
     $scope.refresh();  
   });
   $scope.openMenu = function() {

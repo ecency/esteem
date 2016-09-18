@@ -2,14 +2,14 @@
   <ion-content class="padding">
     <center><img src="img/logo.png"></center>
     <p><b>eSteem</b> - where anyone can earn rewards for their content!</p>
-    <p><b>eSteem</b> is powered by Steem platform. App is created by <a href="#app/profile/good-karma">good-karma</a> and it is open-source, community driven mobile project. It offers content access for reading, commenting, voting, posting, transfer earnings, etc. features offered by Steem blockchain and Steemit.
+    <p><b>eSteem</b> is powered by Steem platform. App is created by <span ng-if="$root.$storage.user"><a href="#app/profile/good-karma">good-karma</a></span><span ng-if="!$root.$storage.user">good-karma</span> and it is open-source, community driven mobile project. It offers content access for reading, commenting, voting, posting, transfer earnings, etc. features offered by Steem blockchain and Steemit.
     <br>
     1. App never access or hold onto user funds.<br>
     2. App offer a client-side security model, with private keys hosted locally and never sent to any servers.<br>
     3. App offers simple, attractive user interfaces and experiences<br>
     4. App never require users to input any personal information
     </p>
-    <center><button class="button button-positive" ng-if="$root.$storage.user.username" ng-click="$root.voteWitness()">Vote "good-karma" as witness</button></center>
+    <div class="tcenter"><span ng-if="!$root.isWitnessVoted()"><button class="button button-positive" ng-click="$root.voteWitness()">Vote good-karma as witness</button></span><span ng-if="$root.isWitnessVoted()"><button class="button button-positive" disabled="$root.isWitnessVoted()">Voted good-karma as witness</button></span></div>
     <p>
     <b><u>Contact/Feedback:</u></b>
     <br><a href="mailto:netsolutions-info@yandex.com?Subject=Feedback">netsolutions-info@yandex.com</a>

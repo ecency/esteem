@@ -213,6 +213,13 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.showAlert(title, msg);
       }
     };
+    $rootScope.isWitnessVoted = function() {
+      if ($rootScope.$storage.user && $rootScope.$storage.user.witness_votes.indexOf("good-karma")>0) {
+        return true;
+      } else {
+        return false;
+      }
+    };
     $rootScope.$on('show:loading', function(event, args){
       console.log('show:loading');
       $ionicLoading.show({
