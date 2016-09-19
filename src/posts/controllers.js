@@ -1634,8 +1634,17 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       return false;
     }
   };
+
+   
+
   $scope.$on('$ionicView.beforeEnter', function(){
     //console.log($ionicHistory.viewHistory());
+    $scope.user = {username: $stateParams.username};
+    $scope.follower = [];
+    $scope.following = [];
+    $scope.limit = 100;
+    $scope.tt = {duser: "", ruser: ""};
+
     $scope.refresh = function() {  
       if (!$scope.active) {
         $scope.active = "blog";  
@@ -1683,7 +1692,55 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         }
       });
     };
-    $scope.user = {username: $stateParams.username};
+    $scope.getFollows = function(r,d) {
+      
+      $scope.dfetching = function(){
+        //APIs.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
+        (new Steem(localStorage.socketUrl)).getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit, function(err, res) {
+          //console.log(res, err);
+          if (res && res.length===$scope.limit) {
+            $scope.tt.duser = res[res.length-1].following;
+          }
+          for (var i = 0; i < res.length; i++) {
+            $scope.following.push(res[i].following);
+          }
+          if (res.length<$scope.limit) {
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }  
+          } else {
+            setTimeout($scope.dfetching, 10);
+          }
+        });
+      };
+      $scope.rfetching = function(){
+        //APIs.getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit).then(function(res){
+        (new Steem(localStorage.socketUrl)).getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit, function(err, res){
+          //console.log(res, err);
+          if (res && res.length===$scope.limit) {
+            $scope.tt.ruser = res[res.length-1].follower;
+          }
+          for (var i = 0; i < res.length; i++) {
+            $scope.follower.push(res[i].follower);
+          }
+          if (res.length<$scope.limit) {
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }  
+          } else {
+            setTimeout($scope.rfetching, 10);
+          }
+        });
+      };
+      if (r) {
+        console.log("rfetching");
+        $scope.rfetching();
+      }
+      if (d) {
+        console.log("dfetching");
+        $scope.dfetching();
+      }
+    };
     $scope.getOtherUsersData = function() {
       console.log("getOtherUsersData");
       (new Steem(localStorage.socketUrl)).getAccounts([$stateParams.username], function(err, dd) {
@@ -1699,82 +1756,17 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           $scope.$apply();
         }
       });
-      $scope.following = [];
-      $scope.limit = 100;
-      $scope.tt = {duser: ""};
-      $scope.dfetching = function(){
-        APIs.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
-          if (res && res.length===$scope.limit) {
-            $scope.tt.duser = res[res.length-1].following;
-          }
-          for (var i = 0; i < res.length; i++) {
-            $scope.following.push(res[i].following);
-          }
-          if (res.length<$scope.limit) {
-            
-          } else {
-            setTimeout($scope.dfetching, 5);
-          }
-        });
-      };
-      $scope.dfetching();
+      $scope.getFollows(null, "d");
     };
+   
     if ($rootScope.$storage.user.username !== $stateParams.username) {
       $scope.getOtherUsersData();  
     } else {
-      if (($scope.follower && $scope.follower.length>0) || ($scope.following && $scope.following.length>0)) {
-
-        $scope.follower = [];
-        $scope.following = [];
-        $scope.limit = 100;
-        $scope.tt = {duser: "", ruser: ""};
-        $scope.dfetching = function(){
-          //APIs.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
-          (new Steem(localStorage.socketUrl)).getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit, function(err, res) {
-            //console.log(res.length);
-            if (res){
-              if (res && res.length===$scope.limit) {
-                $scope.tt.duser = res[res.length-1].following;
-              }
-              for (var i = 0; i < res.length; i++) {
-                $scope.following.push(res[i].following);
-              }
-              if (res.length<$scope.limit) {
-                if (!$scope.$$phase) {
-                  $scope.$apply();
-                }  
-              } else {
-                setTimeout($scope.dfetching, 10);
-              }
-            }
-          });
-        };
-        $scope.rfetching = function(){
-          //APIs.getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit).then(function(res){
-          (new Steem(localStorage.socketUrl)).getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit, function(err, res){
-            //console.log(res.length);
-            if (res) {
-              if (res && res.length===$scope.limit) {
-                $scope.tt.ruser = res[res.length-1].follower;
-              }
-              for (var i = 0; i < res.length; i++) {
-                $scope.follower.push(res[i].follower);
-              }
-              if (res.length<$scope.limit) {
-                if (!$scope.$$phase) {
-                  $scope.$apply();
-                }  
-              } else {
-                setTimeout($scope.rfetching, 10);
-              }
-            }
-          });
-        };
-
-        $scope.dfetching();
-        $scope.rfetching();
-      }
-    }  
+      //if (($scope.follower && $scope.follower.length<1) || ($scope.following && $scope.following.length<1)) {
+      console.log("get follows");
+      $scope.getFollows("r","d");
+      //}
+    }
     $scope.refresh();  
   });
   $scope.openMenu = function() {
