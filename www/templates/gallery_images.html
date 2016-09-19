@@ -1,12 +1,7 @@
 <div class="modal image-modal gallery-transparent" on-swipe-down="closeGalleryModal()">
   <ion-slide-box on-slide-changed="slideChanged(index)" active-slide="activeSlide">
     <ion-slide ng-repeat="image in images">
-      <ion-scroll direction="xy" scrollbar-x="false" scrollbar-y="false"
-      zooming="true" min-zoom="{{zoomMin}}" style="width: 100%; height: 100%"
-      delegate-handle="scrollHandle{{$index}}" on-scroll="updateSlideStatus(activeSlide)" on-release="updateSlideStatus(activeSlide)">
-      <div class="gallery-image" style="background-image: url( {{image}} )!important;"></div>
-      
-    </ion-scroll>
+      <ion-scroll direction="xy" scrollbar-x="false" overflow-scroll="false" scrollbar-y="false" zooming="true" min-zoom="{{zoomMin}}" style="width: 100%; height: 100%" delegate-handle="scrollHandle{{$index}}" on-scroll="updateSlideStatus(activeSlide)" on-release="updateSlideStatus(activeSlide)"><div class="gallery-image" style="background-image: url( {{image}} )!important;"></div></ion-scroll>
   </ion-slide>
 </ion-slide-box>
 </div>
