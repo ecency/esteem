@@ -3,11 +3,18 @@
 		<ion-nav-back-button>
     	</ion-nav-back-button>
 	    <ion-nav-buttons side="left">
-	      <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+	      <button class="button button-icon button-clear ion-navicon" ng-if="!$root.isVoiceOver()" menu-toggle="left"></button>
+        <a href class="button button-icon ion-more" ng-if="$root.isVoiceOver()" menu-toggle="left">Menu</a>
 	    </ion-nav-buttons>
 	    <ion-nav-buttons side="right">
+      <span ng-if="!$root.isVoiceOver()">
         <button class="button button-icon button-clear" ng-click="bookmark()"><i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i></button> &nbsp; 
 	      <button class="button button-icon button-clear ion-android-share-alt" ng-click="share()"></button>
+      </span>
+      <span ng-if="$root.isVoiceOver()">
+        <a href class="button button-icon button-clear" ng-click="bookmark()"><i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i>Bookmark</a> &nbsp; 
+        <a href class="button button-icon button-clear ion-android-share-alt" ng-click="share()">Share</a>
+      </span>
 	    </ion-nav-buttons>
 	</ion-nav-bar>
   <ion-floating-menu menu-color="#387ef5" menu-open-color="#387ef5" has-footer="true">
@@ -26,9 +33,13 @@
     <br>
     
     <div class="row gray">
-      <div class="col col-33"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
+      <div class="col col-33" ng-if="!$root.isVoiceOver()"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
       <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted"></i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted"></i>&nbsp;{{$root.$storage.sitem.net_votes}}&nbsp;
        <i class="icon ion-android-arrow-dropdown-circle" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted"></i><i class="icon ion-android-arrow-dropdown-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted"></i></div>
+
+      <div class="col col-33" ng-if="$root.isVoiceOver()"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
+      <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted">Upvote</i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted">Unvote Upvoted</i>&nbsp;{{$root.$storage.sitem.net_votes}}&nbsp;
+       <i class="icon ion-android-arrow-dropdown-circle" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted">Downvote</i><i class="icon ion-android-arrow-dropdown-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted">Unvote Downvoted</i></div>
       <div class="col col-33"><i class="ion-social-usd"></i>{{$root.$storage.sitem | sumPostTotal | number}}</div>
       <div class="col"><i class="icon ion-chatbubbles"></i>{{$root.$storage.sitem.children}}</div>
       <div class="col" ng-click="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username">Reply</div>

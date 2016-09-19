@@ -3,11 +3,13 @@
 		<ion-nav-back-button>
   		</ion-nav-back-button>
 	    <ion-nav-buttons side="left">
-	      <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+	      <button class="button button-icon button-clear ion-navicon" ng-if="!$root.isVoiceOver()" menu-toggle="left"></button>
+	      <a href class="button button-icon button-clear ion-navicon" ng-if="$root.isVoiceOver()" menu-toggle="left">Menu</a>
 	    </ion-nav-buttons>
 	    <ion-nav-buttons side="right">
 	      <!--<button class="button" ng-click="testfunction()">Test</button>-->
-	      <button class="button button-icon ion-more" ng-click="openMenuPopover($event)"></button>
+	      <button class="button button-icon ion-more" ng-if="!$root.isVoiceOver()" ng-click="openMenuPopover($event)"></button>
+	      <a href class="button button-icon ion-more" ng-click="openMenuPopover($event)" ng-if="$root.isVoiceOver()">Options</a>
 	    </ion-nav-buttons>
 	</ion-nav-bar>
 	<!--<div class="bar bar-subheader mynav">
@@ -45,7 +47,10 @@
 							    </div>
 							    <div class="row">
 							    <div class="col">
-							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a>
+							      <span ng-if="!$root.isVoiceOver()">
+							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a></span>
+							      <span ng-if="$root.isVoiceOver()">
+							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>Upvote<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>Unvote<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a></span>
 							      </div>
 							      <div class="col col-25 tright">
 							      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
@@ -66,8 +71,14 @@
 						    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" ng-click="open(ds)"/>
 						    <div class="row">
 						    <div class="col">
+						      <span ng-if="!$root.isVoiceOver()">
 						      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
 						      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      </span>
+						      <span ng-if="$root.isVoiceOver()">
+						      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>Upvote<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>Unvote<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      </span>
 						      </div>
 						      <div class="col col-25 tright">
 						      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>

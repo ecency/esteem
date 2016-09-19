@@ -58,9 +58,11 @@ hr {
 .platform-ios .mysubheader {
   padding-top: 20px!important;
 }
-
 .has-mysubheader {
   top: 190px;
+}
+.platform-ios .has-mysubheader {
+  top: 210px;
 }
 .pane img {
 	max-width: 100%;
@@ -985,4 +987,13 @@ textarea.markdown-input {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center, center;
+}
+
+.platform-ios.sr-on .pane,
+.platform-ios.sr-on .scroll-content{
+    position: static;
+}
+
+.platform-ios.sr-on .scroll-content.has-header > .scroll {
+    margin-top: 80px;
 }
