@@ -214,13 +214,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.showAlert(title, msg);
       }
     };
-    $rootScope.isWitnessVoted = function() {
-      if ($rootScope.$storage.user && $rootScope.$storage.user.witness_votes.indexOf("good-karma")>0) {
-        return true;
-      } else {
-        return false;
-      }
-    };
+   
     $rootScope.$on('show:loading', function(event, args){
       console.log('show:loading');
       $ionicLoading.show({
@@ -468,6 +462,13 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.showAlert("Warning", "Please, login to Vote");
       }
     };
+    $rootScope.isWitnessVoted = function() {
+      if ($rootScope.$storage.user && $rootScope.$storage.user.witness_votes.indexOf("good-karma")>-1) {
+        return true;
+      } else {
+        return false;
+      }
+    };
     $rootScope.voteWitness = function() {
         var confirmPopup = $ionicPopup.confirm({
           title: 'Are you sure?',
@@ -478,13 +479,14 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             console.log('You are sure');
             $rootScope.$broadcast('show:loading');
             if ($rootScope.$storage.user) {
+              if ($rootScope.$storage.user.password || $rootScope.$storage.user.privateActiveKey) {
                 $rootScope.mylogin = new window.steemJS.Login();
                 $rootScope.mylogin.setRoles(["active"]);
                 var loginSuccess = $rootScope.mylogin.checkKeys({
                     accountName: $rootScope.$storage.user.username,    
                     password: $rootScope.$storage.user.password || null,
                     auths: {
-                        posting: $rootScope.$storage.user.posting.key_auths
+                        active: $rootScope.$storage.user.active.key_auths
                     },
                     privateKey: $rootScope.$storage.user.privateActiveKey || null
                   }
@@ -497,6 +499,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                       witness: "good-karma"
                   });
                   localStorage.error = 0;
+
                   tr.process_transaction($rootScope.mylogin, null, true);
 
                   setTimeout(function() {
@@ -505,11 +508,15 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                     } else {
                       //$scope.refreshFollowers();
                       $rootScope.showMessage("Success",'Voted for witness @good-karma');
+                      $rootScope.$broadcast('refreshLocalUserData');
                     }
                   }, 3000);
                 } else {
-                  $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
+                  $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have choosed Advanced mode.");
                 }
+              } else {
+                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have choosed Advanced mode.");
+              }
               $rootScope.$broadcast('hide:loading');
             } else {
               $rootScope.$broadcast('hide:loading');
