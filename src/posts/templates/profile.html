@@ -3,7 +3,7 @@
     <button class="button button-icon button-clear ion-ios-arrow-back profilebtn" ng-click="goBack()"></button>
     <button class="button button-outline button-light profilebtn_follow" ng-click="followUser(user.username)" ng-if="$root.$storage.user && $root.$storage.user.username != user.username && !isFollowing(user.username)"><!--<i class="fa fa-user-plus fa-lg"></i>-->Follow</button>
     <button class="button button-outline button-light profilebtn_follow" ng-click="unfollowUser(user.username)" ng-if="$root.$storage.user && $root.$storage.user.username != user.username && isFollowing(user.username)"><!--button-icon button-clear<i class="fa fa-user-times fa-lg"></i>-->Unfollow</button>&nbsp;
-    <div ng-if="$root.$storage.user">
+    <div ng-if="$root.$storage.user" class="tcenter">
       <center>
         <div class="item-myavatar" ng-if="$root.$storage.user && $root.$storage.user.username == user.username">
           <span class="item-myavatar" ng-if="!($root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image)"><ng-letter-avatar data="{{$root.$storage.user.username}}" shape="round" ng-click="show()"></ng-letter-avatar></span>

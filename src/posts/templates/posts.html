@@ -20,7 +20,7 @@
   <ion-content class="has-header" scroll="true" delegate-handle="mainScroll">
 	<ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
 	</ion-refresher>
-  	<tab-slide-box>
+  		<tab-slide-box>
 	    	<div class="tsb-icons">
 	    		<div class="tsb-ic-wrp">
 					<ion-scroll direction="x" class="tsb-hscroll">
@@ -37,7 +37,7 @@
 				</div>
 	    	</div>
 	        <ion-slide-box show-pager="false" on-slide-changed="slideHasChanged($index)">
-	            <ion-slide ng-repeat="i in [0, 1, 2, 3, 4, 5, 6, 7, 8]" delegate-handle="{{$index}}">
+	            <ion-slide ng-repeat="i in [0, 1, 2, 3, 4, 5, 6, 7, 8]" delegate-handle="{{$index}}" style="height:100%;">
 	            	<div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">
 				    	<div ng-repeat="d in data">
 					    	<div class="item">
@@ -91,7 +91,7 @@
 					</div>
 	            </ion-slide>
 	        </ion-slide-box>
-  	</tab-slide-box>
+  		</tab-slide-box>
   	<br/>
 	<center ng-if="data.length>0"><button class="button button-small button-positive icon ion-refresh" ng-click="loadMore()">
       Load More

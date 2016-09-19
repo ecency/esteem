@@ -854,7 +854,7 @@ textarea.markdown-input {
     display: block;
 }
 .tabbed-slidebox .slider {
-    height: 100%;
+    height: auto;
 }
 .tabbed-slidebox.btm .slider {
     margin-bottom: -50px;

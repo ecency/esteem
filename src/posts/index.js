@@ -173,15 +173,19 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     $rootScope.isVoiceOver = function() {
       if (window.cordova) {
-        MobileAccessibility.isVoiceOverRunning(function(bool) {
-          if (bool) {
-              console.log("Screen reader: ON");
-              return true;
-          } else {
-              console.log("Screen reader: OFF");
-              return false;
-          } 
-        });  
+        if ( ionic.Platform.isIPad() || ionic.Platform.isIOS()) {
+          MobileAccessibility.isVoiceOverRunning(function(bool) {
+            if (bool) {
+                console.log("Screen reader: ON");
+                return true;
+            } else {
+                console.log("Screen reader: OFF");
+                return false;
+            } 
+          });    
+        } else {
+          return false;
+        }
       } else {
         return false;
       }
