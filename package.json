@@ -5,8 +5,6 @@
   "dependencies": {
     "acorn": "^3.3.0",
     "brfs": "^1.4.2",
-    "crypto": "0.0.3",
-    "crypto-browserify": "^3.11.0",
     "diff-match-patch": "^1.0.0",
     "elementtree": "^0.1.6",
     "fs": "0.0.2",
@@ -20,12 +18,8 @@
     "object-assign": "^4.1.0",
     "path": "^0.12.7",
     "plist": "^1.2.0",
-    "reconnecting-websocket": "^1.3.0",
-    "reconnectingwebsocket": "^1.0.0",
     "require-main-filename": "^1.0.1",
-    "steem": "^0.3.17",
-    "steem-rpc": "feruzm/steem-rpc",
-    "steemjs-lib": "feruzm/steemjs-lib"
+    "steem": "^0.3.17"
   },
   "devDependencies": {
     "bower": "^1.3.3",

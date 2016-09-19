@@ -8652,7 +8652,7 @@ ionic.views.Slider = ionic.views.View.inherit({
 
         // determine if scrolling test has run - one time test
         if ( typeof isScrolling == 'undefined') {
-          isScrolling = !!( isScrolling || Math.abs(delta.x) < Math.abs(delta.y) );
+          isScrolling = !!( isScrolling || Math.abs(delta.x) <= Math.abs(delta.y) );
         }
 
         // if user is not trying to scroll vertically

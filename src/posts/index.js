@@ -10,18 +10,19 @@ var app = angular.module('steem', [
   'ja.qr'
 	//'ionic.contrib.ui.ionThread'
 ]);
-//var steemRPC = require("steem-rpc");
+
 if (localStorage.getItem("socketUrl") === null) {
   localStorage.setItem("socketUrl", "wss://steemit.com/wspa");
 }
-var options = {url:localStorage.socketUrl};
+/*var options = {url:localStorage.socketUrl};
 var Client = window.steemJS.steemRPC.Client;
 window.Api = Client.get(options, true);
 window.Api.initPromise.then(function(response) {
     console.log("Api ready:", response);
-});
-/*window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
-window.steemJS = require("steemjs-lib");*/
+});*/
+var steemRPC = require("steem-rpc");
+window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
+window.steemJS = require("steemjs-lib");
 window.diff_match_patch = require('diff-match-patch');
 
 require('./services')(app);
@@ -401,7 +402,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     
     $rootScope.votePost = function(post, type, afterward) {
       //window.Api = window.steemWS.Client.get();
-      //console.log(test);
+      //console.log(window.Api);
+      //console.log(window.steemJS);
 
       post.invoting = true;
       var tt = 1;
@@ -498,13 +500,13 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                   tr.process_transaction($rootScope.mylogin, null, true);
 
                   setTimeout(function() {
-                    if (localStorage.error == 1) {
+                    if (localStorage.error === 1) {
                       $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
                     } else {
                       //$scope.refreshFollowers();
                       $rootScope.showMessage("Success",'Voted for witness @good-karma');
                     }
-                  }, 2000);
+                  }, 3000);
                 } else {
                   $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
                 }

@@ -10,8 +10,8 @@ var browserify = require('gulp-browserify');
 
 var paths = {
   sass: ['./scss/**/*.scss'],
-  scripts: ['./src/**/*.js', './src/**/*.html']
-  //browserify: ['./node_modules/steem-rpc/*.js', './node_modules/steemjs-lib/*.js']
+  scripts: ['./src/**/*.js', './src/**/*.html'],
+  browserify: ['./node_modules/steem-rpc/*.js', './node_modules/steemjs-lib/*.js']
 };
 
 gulp.task('default', ['sass']);
