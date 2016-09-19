@@ -125,54 +125,6 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         }
         angular.merge($rootScope.$storage.user, dd);
       });
-      /*if (($scope.follower && $scope.follower.length>0) || ($scope.following && $scope.following.length>0)) {
-
-        $scope.follower = [];
-        $scope.following = [];
-        $scope.limit = 100;
-        $scope.tt = {duser: "", ruser: ""};
-        $scope.dfetching = function(){
-          //APIs.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
-          (new Steem(localStorage.socketUrl)).getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit, function(err, res) {
-            //console.log(res.length);
-            if (res && res.length===$scope.limit) {
-              $scope.tt.duser = res[res.length-1].following;
-            }
-            for (var i = 0; i < res.length; i++) {
-              $scope.following.push(res[i].following);
-            }
-            if (res.length<$scope.limit) {
-              if (!$scope.$$phase) {
-                $scope.$apply();
-              }  
-            } else {
-              setTimeout($scope.dfetching, 10);
-            }
-          });
-        };
-        $scope.rfetching = function(){
-          //APIs.getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit).then(function(res){
-          (new Steem(localStorage.socketUrl)).getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit, function(err, res){
-            //console.log(res.length);
-            if (res && res.length===$scope.limit) {
-              $scope.tt.ruser = res[res.length-1].follower;
-            }
-            for (var i = 0; i < res.length; i++) {
-              $scope.follower.push(res[i].follower);
-            }
-            if (res.length<$scope.limit) {
-              if (!$scope.$$phase) {
-                $scope.$apply();
-              }  
-            } else {
-              setTimeout($scope.rfetching, 10);
-            }
-          });
-        };
-
-        $scope.dfetching();
-        $scope.rfetching();
-      }*/
     }
   })
 
@@ -300,10 +252,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       console.log(response)
     });
   }
-  
-
 
 })
+
 app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $filter, $q, $timeout, $cordovaBarcodeScanner, $ionicPlatform) {
   $scope.data = {type: "steem", amount: 0.001};
   $scope.changeUsername = function(typed) {
@@ -331,28 +282,6 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
       }, function(error) {
         // An error occurred
       });
-      /*cordova.plugins.barcodeScanner.scan(
-        function (result) {
-            //alert("We got a barcode\n" +
-            //      "Result: " + result.text + "\n" +
-            //      "Format: " + result.format + "\n" +
-            //      "Cancelled: " + result.cancelled);
-          $scope.data.username = result.text;
-          if (!$scope.$$phase) {
-            $scope.$apply();
-          }
-        },
-        function (error) {
-            $rootScope.showMessage("Error","Scanning failed: " + error);
-        },
-        {
-          "preferFrontCamera" : false, // iOS and Android
-          "showFlipCameraButton" : false, // iOS and Android
-          "prompt" : "Place a QR code inside the scan area", // supported on Android only
-          "formats" : "QR_CODE" // default: all but PDF_417 and RSS_EXPANDED
-          //"orientation" : "landscape" // Android only (portrait|landscape), default unset so it rotates with the device
-        }
-      );*/
     });
   };
   $scope.transfer = function () {
@@ -710,35 +639,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.unvotePost = function(post) {
     $rootScope.votePost(post, 'unvote', 'fetchPosts');
   };
-  /*
-  $scope.showFilter = function() {
-    $rootScope.$broadcast('close:popover');
-    $scope.fdata = {filter: $rootScope.$storage.filter || "trending"};
-    var myPopupF = $ionicPopup.show({
-       template: '<ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="created"><i class="icon" ng-class="{\'ion-star gray\':fdata.filter!=\'new\', \'ion-star positive\': fdata.filter==\'new\'}"></i> New</ion-radio><ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="hot"><i class="icon" ng-class="{\'ion-flame gray\':fdata.filter!=\'hot\', \'ion-flame positive\': fdata.filter==\'hot\'}"></i> Hot</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="trending"><i class="icon" ng-class="{\'ion-podium gray\':fdata.filter!=\'trending\', \'ion-podium positive\': fdata.filter==\'trending\'}"></i> Trending</ion-radio><ion-radio ng-model="fdata.filter" ng-change="filterchange()" value="promoted"><i class="icon" ng-class="{\'ion-paper-airplane gray\':fdata.filter!=\'promoted\', \'ion-paper-airplane positive\': fdata.filter==\'promoted\'}"></i> Promoted</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="trending30"><i class="icon" ng-class="{\'ion-connection-bars gray\':fdata.filter!=\'trending30\', \'ion-connection-bars positive\': fdata.filter==\'trending30\'}"></i> Trending (30 days)</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="active"><i class="icon" ng-class="{\'ion-chatbubble-working gray\':fdata.filter!=\'active\', \'ion-chatbubble-working positive\': fdata.filter==\'active\'}"></i> Active</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="cashout"><i class="icon" ng-class="{\'ion-share gray\':fdata.filter!=\'cashout\', \'ion-share positive\': fdata.filter==\'cashout\'}"></i> Cashout</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="votes"><i class="icon" ng-class="{\'ion-person-stalker gray\':fdata.filter!=\'votes\', \'ion-person-stalker positive\': fdata.filter==\'votes\'}"></i> Votes</ion-radio><ion-radio ng-model="fdata.filter"  ng-change="filterchange()" value="children"><i class="icon" ng-class="{\'ion-chatbubbles gray\':fdata.filter!=\'children\', \'ion-chatbubbles positive\': fdata.filter==\'children\'}"></i> Comments</ion-radio><button class="button button-block button-positive" ng-click="cancelFilter()">Cancel</button>',   
-       title: 'Sort by',
-       scope: $scope
-    });
-    myPopupF.then(function(res) {
-      if (res) {
-        $scope.fetchPosts(res[0], null, res[1]);
-      }
-    });
-    $scope.cancelFilter = function() {
-      myPopupF.close();
-    };
-
-    $scope.filterchange = function(f){
-      console.log($scope.fdata.filter)
-      $rootScope.$storage.filter = $scope.fdata.filter;
-      //$rootScope.$storage.filter = f;
-      console.log(f);
-      myPopupF.close();
-      $scope.closeMenuPopover();
-      $rootScope.$broadcast('filter:change');
-    }
-  };
-  */
+  
   $scope.refresh = function(){
     $scope.fetchPosts();
     $scope.closeMenuPopover();
@@ -825,7 +726,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     type = type || $rootScope.$storage.filter || "trending";
     tag = tag || $rootScope.$storage.tag || "";
     limit = limit || $scope.limit || 5;
-    //$rootScope.$broadcast('show:loading');
 
     var params = {tag: tag, limit: limit, filter_tags: []};
     if ($scope.error) {
@@ -835,7 +735,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
         $rootScope.$broadcast('hide:loading');
         $scope.data = $scope.dataChanged(response); 
-        //console.log(response);
         if (!$scope.$$phase) {
           $scope.$apply();
         }
@@ -861,9 +760,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         $rootScope.timeint = $interval(function(){  
           window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
             console.log("get_dynamic_global_properties "+ response.head_block_number);
-            /*window.Api.database_api().exec("get_block", [response.head_block_number]).then(function(res){
-              console.log(res);
-            });*/
             if ($rootScope.$storage.user) {
               $scope.mylogin = new window.steemJS.Login();
               $scope.mylogin.setRoles(["posting"]);
@@ -1836,18 +1732,20 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           //APIs.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
           (new Steem(localStorage.socketUrl)).getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit, function(err, res) {
             //console.log(res.length);
-            if (res && res.length===$scope.limit) {
-              $scope.tt.duser = res[res.length-1].following;
-            }
-            for (var i = 0; i < res.length; i++) {
-              $scope.following.push(res[i].following);
-            }
-            if (res.length<$scope.limit) {
-              if (!$scope.$$phase) {
-                $scope.$apply();
-              }  
-            } else {
-              setTimeout($scope.dfetching, 10);
+            if (res){
+              if (res && res.length===$scope.limit) {
+                $scope.tt.duser = res[res.length-1].following;
+              }
+              for (var i = 0; i < res.length; i++) {
+                $scope.following.push(res[i].following);
+              }
+              if (res.length<$scope.limit) {
+                if (!$scope.$$phase) {
+                  $scope.$apply();
+                }  
+              } else {
+                setTimeout($scope.dfetching, 10);
+              }
             }
           });
         };
@@ -1855,18 +1753,20 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           //APIs.getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit).then(function(res){
           (new Steem(localStorage.socketUrl)).getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit, function(err, res){
             //console.log(res.length);
-            if (res && res.length===$scope.limit) {
-              $scope.tt.ruser = res[res.length-1].follower;
-            }
-            for (var i = 0; i < res.length; i++) {
-              $scope.follower.push(res[i].follower);
-            }
-            if (res.length<$scope.limit) {
-              if (!$scope.$$phase) {
-                $scope.$apply();
-              }  
-            } else {
-              setTimeout($scope.rfetching, 10);
+            if (res) {
+              if (res && res.length===$scope.limit) {
+                $scope.tt.ruser = res[res.length-1].follower;
+              }
+              for (var i = 0; i < res.length; i++) {
+                $scope.follower.push(res[i].follower);
+              }
+              if (res.length<$scope.limit) {
+                if (!$scope.$$phase) {
+                  $scope.$apply();
+                }  
+              } else {
+                setTimeout($scope.rfetching, 10);
+              }
             }
           });
         };
