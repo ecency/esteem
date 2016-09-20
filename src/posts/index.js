@@ -366,6 +366,25 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     });
     $rootScope.closePin = function() {
       $rootScope.pinmodal.hide();
+      if ($rootScope.pinenabled) {
+        if ($rootScope.$storage.notifData) {
+          var alertPopup = $ionicPopup.confirm({
+            title: $rootScope.$storage.notifData.title,
+            template: $rootScope.$storage.notifData.body + ", opening post"
+          });
+          alertPopup.then(function(res) {
+            console.log('Thank you for seeing alert from tray');
+            if (res) {
+              $rootScope.getContentAndOpen($rootScope.$storage.notifData.author, $rootScope.$storage.notifData.permlink);  
+              $rootScope.$storage.notifData = undefined;
+            } else {
+              console.log("not sure to open alert");
+              $rootScope.$storage.notifData = undefined;
+            }
+            $rootScope.pinenabled = false;
+          });    
+        }
+      }
     };
     $rootScope.openPin = function(type) {
       $rootScope.passcode = "";
@@ -691,17 +710,28 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               //Notification was received on device tray and tapped by the user.
               //alert( JSON.stringify(data) );
               if (data.author && data.permlink) {
-                var alertPopup = $ionicPopup.alert({
-                  title: data.title,
-                  template: data.body + ", opening post"
-                });
-                alertPopup.then(function(res) {
-                  console.log('Thank you for seeing alert from tray');
-                  $rootScope.getContentAndOpen(data.author, data.permlink);
-                  
-                });
+                if (!$rootScope.$storage.pincode) {
+
+                  var alertPopup = $ionicPopup.confirm({
+                    title: data.title,
+                    template: data.body + ", opening post"
+                  });
+
+                  alertPopup.then(function(res) {
+                    console.log('Thank you for seeing alert from tray');
+                    if (res) {
+                      $rootScope.getContentAndOpen(data.author, data.permlink);  
+                    } else {
+                      console.log("not sure to open alert");
+                    }
+                  });
+                    
+                } else {
+                  $rootScope.$storage.notifData = {title:data.title, body: data.body, author: data.author, permlink: data.permlink};
+                  $rootScope.pinenabled = true;
+                }
               }
-            }else{
+            } else{
               //Notification was received in foreground. Maybe the user needs to be notified.
               //alert( JSON.stringify(data) );
               if (data.author && data.permlink) {
