@@ -1669,6 +1669,9 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               //console.log(res.content[property])
               var ins = res.content[property];
               if ($rootScope.$storage.user){
+                if ($rootScope.$storage.user.username !== ins.author) {
+                  ins.reblogged = true;
+                }
                 for (var j = ins.active_votes.length - 1; j >= 0; j--) {
                   if (ins.active_votes[j].voter === $rootScope.$storage.user.username) {
                     if (ins.active_votes[j].percent > 0) {
@@ -1793,6 +1796,11 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             if (res.content.hasOwnProperty(property)) {
               var ins = res.content[property];
               if ($rootScope.$storage.user){
+                if (type==="blog") {
+                  if ($rootScope.$storage.user.username !== ins.author) {
+                    ins.reblogged = true;
+                  }
+                }
                 for (var j = ins.active_votes.length - 1; j >= 0; j--) {
                   if (ins.active_votes[j].voter === $rootScope.$storage.user.username) {
                     if (ins.active_votes[j].percent > 0) {

@@ -58,6 +58,9 @@
 							      <div class="col col-25 tright">
 							      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{d.children}}</a>
 							      </div>
+							      <div class="col col-10 tright">
+							      <a href="#" class="subdued" ng-click="$root.reBlog(s.author, s.permlink)"><i class="icon ion-arrow-return-right"></i>&nbsp;</a>
+							      </div>
 							      </div>
 						  	</div>
 						</div>
@@ -85,6 +88,9 @@
 						      </div>
 						      <div class="col col-25 tright">
 						      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{ds.children}}</a>
+						      </div>
+						      <div class="col col-10 tright">
+						      <a href="#" class="subdued" ng-click="$root.reBlog(ds.author, ds.permlink)"><i class="icon ion-arrow-return-right"></i>&nbsp;</a>
 						      </div>
 						      </div>
 						</div>

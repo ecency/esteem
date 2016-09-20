@@ -414,7 +414,64 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       });
       $rootScope.$broadcast('hide:loading');
     };
-    
+
+    $rootScope.reBlog = function(author, permlink) {
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'Are you sure?',
+        template: 'Reblogging is irreversible for now, are you sure to continue?'
+      });
+      confirmPopup.then(function(res) {
+        if(res) {
+          console.log('You are sure');
+          $rootScope.$broadcast('show:loading');
+          if ($rootScope.$storage.user) {
+              $rootScope.mylogin = new window.steemJS.Login();
+              $rootScope.mylogin.setRoles(["posting"]);
+              var loginSuccess = $rootScope.mylogin.checkKeys({
+                  accountName: $rootScope.$storage.user.username,    
+                  password: $rootScope.$storage.user.password || null,
+                  auths: {
+                      posting: $rootScope.$storage.user.posting.key_auths
+                  },
+                  privateKey: $rootScope.$storage.user.privatePostingKey || null
+                }
+              );
+              if (loginSuccess) {
+                var tr = new window.steemJS.TransactionBuilder();
+                var json;
+                
+                json = ["reblog",{account:$rootScope.$storage.user.username, author:author, permlink:permlink}];  
+
+                tr.add_type_operation("custom_json", {
+                  id: 'follow',
+                  required_posting_auths: [$rootScope.$storage.user.username],
+                  json: JSON.stringify(json)
+                });
+                localStorage.error = 0;
+                tr.process_transaction($rootScope.mylogin, null, true);
+
+                setTimeout(function() {
+                  if (localStorage.error == 1) {
+                    $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                  } else {
+                    //$scope.refreshFollowers();
+                    $rootScope.showMessage('Success', 'Reblogged post!');
+                  }
+                }, 3000);
+              } else {
+                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
+              }
+            $rootScope.$broadcast('hide:loading');
+          } else {
+            $rootScope.$broadcast('hide:loading');
+            $rootScope.showAlert("Warning", "Please, login to Reblog");
+          }
+        } else {
+          console.log('You are not sure');
+        }
+      });
+    };
+
     $rootScope.votePost = function(post, type, afterward) {
       //window.Api = window.steemWS.Client.get();
       //console.log(window.Api);

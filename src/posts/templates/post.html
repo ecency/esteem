@@ -9,11 +9,13 @@
 	    <ion-nav-buttons side="right">
       <span ng-if="!$root.isVoiceOver()">
         <button class="button button-icon button-clear" ng-click="bookmark()"><i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i></button> &nbsp; 
-	      <button class="button button-icon button-clear ion-android-share-alt" ng-click="share()"></button>
+	      <!--<button class="button button-icon button-clear ion-android-share-alt" ng-click="share()"></button>-->
+        <button class="button button-icon button-clear ion-arrow-return-right" ng-if="$root.$storage.user.username !== $root.$storage.sitem.author" ng-click="$root.reBlog($root.$storage.sitem.author, $root.$storage.sitem.permlink)"></button>
       </span>
       <span ng-if="$root.isVoiceOver()">
         <a href class="button button-icon button-clear" ng-click="bookmark()"><i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i>Bookmark</a> &nbsp; 
-        <a href class="button button-icon button-clear ion-android-share-alt" ng-click="share()">Share</a>
+        <!--<a href class="button button-icon button-clear ion-android-share-alt" ng-click="share()">Share</a>-->
+        <a href class="button button-icon button-clear ion-arrow-return-right" ng-if="$root.$storage.user.username !== $root.$storage.sitem.author" ng-click="$root.reBlog($root.$storage.sitem.author, $root.$storage.sitem.permlink)">Reblog</a>
       </span>
 	    </ion-nav-buttons>
 	</ion-nav-bar>
