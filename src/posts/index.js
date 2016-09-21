@@ -711,11 +711,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             console.log("device "+token);
             $rootScope.$storage.deviceid = token;
             if ($rootScope.$storage.user) {
-              APIs.saveSubscription(token, $rootScope.$storage.user.username, "").then(function(res){
+              APIs.saveSubscription(token, $rootScope.$storage.user.username, { device: ionic.Platform.platform() }).then(function(res){
                 console.log(angular.toJson(res));
               });
             } else {
-              APIs.saveSubscription(token, "", "").then(function(res){
+              APIs.saveSubscription(token, "", { device: ionic.Platform.platform() }).then(function(res){
                 console.log(angular.toJson(res));
               });
             }

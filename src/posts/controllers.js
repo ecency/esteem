@@ -93,7 +93,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
             $rootScope.$storage.user = $scope.loginData;
             $rootScope.$broadcast('fetchPosts');
             $rootScope.$storage.mylogin = $scope.login;
-            APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, "").then(function(res){
+            APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, {device: ionic.Platform.platform()}).then(function(res){
               //console.log(angular.toJson(res));
               $rootScope.$broadcast('hide:loading');
               //$state.go('app.posts', {}, { reload: true });
@@ -147,7 +147,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $rootScope.$storage.mylogin = undefined;
     $rootScope.$storage.mylogin = null;
     //make sure user credentials cleared.
-    APIs.updateSubscription($rootScope.$storage.deviceid, "", "").then(function(res){
+    APIs.deleteSubscription($rootScope.$storage.deviceid).then(function(res){
       //console.log(angular.toJson(res));
       $ionicSideMenuDelegate.toggleLeft();
       $rootScope.$broadcast('fetchPosts');

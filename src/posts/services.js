@@ -22,6 +22,9 @@ module.exports = function (app) {
       updateSubscription: function(deviceid, username, subscription) {
         return $http.put("http://192.158.29.1:8080/api/devices", {deviceid: deviceid, username: username, subscription: subscription});
       },
+      deleteSubscription: function(deviceid) {
+        return $http.put("http://192.158.29.1:8080/api/devices/"+deviceid);
+      },
       getSubscriptions: function(deviceid) {
         return $http.get("http://192.158.29.1:8080/api/devices/"+deviceid);
       }
