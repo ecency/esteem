@@ -3,16 +3,16 @@
 		<ion-nav-back-button>
     	</ion-nav-back-button>
 	    <ion-nav-buttons side="left">
-	      <button class="button button-icon button-clear ion-navicon" ng-if="!$root.isVoiceOver()" menu-toggle="left"></button>
-        <a href class="button button-icon ion-more" ng-if="$root.isVoiceOver()" menu-toggle="left">Menu</a>
+	      <button class="button button-icon button-clear ion-navicon" ng-if="!$root.voiceOver" menu-toggle="left"></button>
+        <a href class="button button-icon ion-more" ng-if="$root.voiceOver" menu-toggle="left">Menu</a>
 	    </ion-nav-buttons>
 	    <ion-nav-buttons side="right">
-      <span ng-if="!$root.isVoiceOver()">
+      <span ng-if="!$root.voiceOver">
         <button class="button button-icon button-clear" ng-click="bookmark()"><i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i></button> &nbsp; 
 	      <!--<button class="button button-icon button-clear ion-android-share-alt" ng-click="share()"></button>-->
         <button class="button button-icon button-clear ion-arrow-return-right" ng-if="$root.$storage.user.username !== $root.$storage.sitem.author" ng-click="$root.reBlog($root.$storage.sitem.author, $root.$storage.sitem.permlink)"></button>
       </span>
-      <span ng-if="$root.isVoiceOver()">
+      <span ng-if="$root.voiceOver">
         <a href class="button button-icon button-clear" ng-click="bookmark()"><i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i>Bookmark</a> &nbsp; 
         <!--<a href class="button button-icon button-clear ion-android-share-alt" ng-click="share()">Share</a>-->
         <a href class="button button-icon button-clear ion-arrow-return-right" ng-if="$root.$storage.user.username !== $root.$storage.sitem.author" ng-click="$root.reBlog($root.$storage.sitem.author, $root.$storage.sitem.permlink)">Reblog</a>
@@ -35,11 +35,11 @@
     <br>
     
     <div class="row gray">
-      <div class="col col-33" ng-if="!$root.isVoiceOver()"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
+      <div class="col col-33" ng-if="!$root.voiceOver"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
       <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted"></i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted"></i>&nbsp;{{$root.$storage.sitem.net_votes}}&nbsp;
        <i class="icon ion-android-arrow-dropdown-circle" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted"></i><i class="icon ion-android-arrow-dropdown-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted"></i></div>
 
-      <div class="col col-33" ng-if="$root.isVoiceOver()"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
+      <div class="col col-33" ng-if="$root.voiceOver"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
       <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted">Upvote</i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted">Unvote Upvoted</i>&nbsp;{{$root.$storage.sitem.net_votes}}&nbsp;
        <i class="icon ion-android-arrow-dropdown-circle" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted">Downvote</i><i class="icon ion-android-arrow-dropdown-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted">Unvote Downvoted</i></div>
       <div class="col col-33"><i class="ion-social-usd"></i>{{$root.$storage.sitem | sumPostTotal | number}}</div>

@@ -171,25 +171,25 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       });
     }, 10);
 
-    $rootScope.isVoiceOver = function() {
-      if (window.cordova) {
-        if ( ionic.Platform.isIPad() || ionic.Platform.isIOS()) {
-          return MobileAccessibility.isVoiceOverRunning(function(bool) {
-            if (bool) {
-                console.log("Screen reader: ON");
-                return true;
-            } else {
-                console.log("Screen reader: OFF");
-                return false;
-            } 
-          });    
-        } else {
-          return false;
-        }
+    
+    if (window.cordova) {
+      if (ionic.Platform.isIPad() || ionic.Platform.isIOS()) {
+        MobileAccessibility.isVoiceOverRunning(function(bool) {
+          if (bool) {
+              console.log("Screen reader: ON");
+              $rootScope.voiceOver = bool;
+          } else {
+              console.log("Screen reader: OFF");
+              $rootScope.voiceOver = bool;
+          } 
+        });    
+
       } else {
-        return false;
+        $rootScope.voiceOver = false;
       }
-    };
+    } else {
+      $rootScope.voiceOver = false;
+    }
 
     if (!$rootScope.$storage.view) {
       $rootScope.$storage.view = 'compact';
