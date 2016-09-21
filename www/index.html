@@ -12,6 +12,18 @@
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
+    
+    <script src="lib/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyACyMCcdmrXJhiZJIgRDdah8DxAU4j6oPQ",
+        authDomain: "esteem-b829d.firebaseapp.com",
+        databaseURL: "https://esteem-b829d.firebaseio.com",
+        storageBucket: "esteem-b829d.appspot.com",
+      };
+      firebase.initializeApp(config);
+    </script>
 
     <script src="lib/steem.js"></script>
     <!--<script src="lib/steem-rpc.js"></script>
@@ -24,18 +36,6 @@
     <script src="lib/speakingurl.min.js"></script>
     <script src="js/index.js"></script>
     <script src="lib/rzslider.min.js"></script>
-
-    <script src="lib/firebase.js"></script>
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyACyMCcdmrXJhiZJIgRDdah8DxAU4j6oPQ",
-        authDomain: "esteem-b829d.firebaseapp.com",
-        databaseURL: "https://esteem-b829d.firebaseio.com",
-        storageBucket: "esteem-b829d.appspot.com",
-      };
-      firebase.initializeApp(config);
-    </script>
         
 
     <!-- cordova script (this will be a 404 during development) -->
