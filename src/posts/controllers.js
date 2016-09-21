@@ -1964,7 +1964,8 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     $rootScope.$storage.subscription = {
       vote: $scope.data.vote,
       comment: $scope.data.comment,
-      follow: $scope.data.follow
+      follow: $scope.data.follow,
+      device: ionic.Platform.platform()
     }
     APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, $rootScope.$storage.subscription).then(function(res){
       console.log(angular.toJson(res));
