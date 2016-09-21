@@ -42,7 +42,7 @@
     <script src="cordova.js"></script>
   </head>
 
-  <body ng-app="steem" >
+  <body ng-app="steem" ng-class="{'sr-on':$root.isVoiceOver()}">
     <ion-nav-view></ion-nav-view>
   </body>
 </html>
