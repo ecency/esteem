@@ -174,7 +174,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     $rootScope.isVoiceOver = function() {
       if (window.cordova) {
         if ( ionic.Platform.isIPad() || ionic.Platform.isIOS()) {
-          MobileAccessibility.isVoiceOverRunning(function(bool) {
+          return MobileAccessibility.isVoiceOverRunning(function(bool) {
             if (bool) {
                 console.log("Screen reader: ON");
                 return true;
@@ -725,7 +725,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                       console.log("not sure to open alert");
                     }
                   });
-                    
+
                 } else {
                   $rootScope.$storage.notifData = {title:data.title, body: data.body, author: data.author, permlink: data.permlink};
                   $rootScope.pinenabled = true;
