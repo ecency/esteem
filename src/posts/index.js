@@ -274,6 +274,25 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       if ($rootScope.$storage.pincode) {
         $rootScope.$broadcast("pin:check");
       }
+
+      if (window.cordova) {
+        if (ionic.Platform.isIPad() || ionic.Platform.isIOS()) {
+          MobileAccessibility.isVoiceOverRunning(function(bool) {
+            if (bool) {
+                console.log("Screen reader: ON");
+                $rootScope.voiceOver = bool;
+            } else {
+                console.log("Screen reader: OFF");
+                $rootScope.voiceOver = bool;
+            } 
+          });    
+
+        } else {
+          $rootScope.voiceOver = false;
+        }
+      } else {
+        $rootScope.voiceOver = false;
+      }
     });
     $ionicPlatform.on('pause', function(){
       console.log("app pause");
