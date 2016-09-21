@@ -147,13 +147,21 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $rootScope.$storage.mylogin = undefined;
     $rootScope.$storage.mylogin = null;
     //make sure user credentials cleared.
-    APIs.deleteSubscription($rootScope.$storage.deviceid).then(function(res){
-      //console.log(angular.toJson(res));
+    if ($rootScope.$storage.deviceid) {
+      APIs.deleteSubscription($rootScope.$storage.deviceid).then(function(res){
+        //console.log(angular.toJson(res));
+        $ionicSideMenuDelegate.toggleLeft();
+        $rootScope.$broadcast('fetchPosts');
+        $rootScope.$broadcast("user:logout");
+        $state.go('app.posts');
+      });  
+    } else {
       $ionicSideMenuDelegate.toggleLeft();
       $rootScope.$broadcast('fetchPosts');
       $rootScope.$broadcast("user:logout");
       $state.go('app.posts');
-    });
+    }
+    
   };
   $scope.data = {};
   $ionicModal.fromTemplateUrl('templates/search.html', {
