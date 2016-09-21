@@ -146,7 +146,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   //$sceDelegateProvider.resourceUrlWhitelist(['self', new RegExp('^(http[s]?):\/\/(w{3}.)?youtube\.com/.+$')]);
 });
 
-app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state, $ionicConfigProvider) {
+app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state) {
   $rootScope.$storage = $localStorage;
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -178,11 +178,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           if (bool) {
               console.log("Screen reader: ON");
               $rootScope.voiceOver = bool;
-              $ionicConfigProvider.navBar.alignTitle('center');
+              //$ionicConfigProvider.navBar.alignTitle('center');
           } else {
               console.log("Screen reader: OFF");
               $rootScope.voiceOver = bool;
-              $ionicConfigProvider.navBar.alignTitle('left');
+              //$ionicConfigProvider.navBar.alignTitle('left');
           } 
         });    
 
@@ -284,11 +284,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             if (bool) {
                 console.log("Screen reader: ON");
                 $rootScope.voiceOver = bool;
-                $ionicConfigProvider.navBar.alignTitle('center');
+                //$ionicConfigProvider.navBar.alignTitle('center');
             } else {
                 console.log("Screen reader: OFF");
                 $rootScope.voiceOver = bool;
-                $ionicConfigProvider.navBar.alignTitle('left');
+                //$ionicConfigProvider.navBar.alignTitle('left');
             } 
           });    
         } else {
