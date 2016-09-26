@@ -23,7 +23,7 @@ module.exports = function (app) {
         return $http.put("http://192.158.29.1:8080/api/devices", {deviceid: deviceid, username: username, subscription: subscription});
       },
       deleteSubscription: function(deviceid) {
-        return $http.put("http://192.158.29.1:8080/api/devices/"+deviceid);
+        return $http.delete("http://192.158.29.1:8080/api/devices/"+deviceid);
       },
       getSubscriptions: function(deviceid) {
         return $http.get("http://192.158.29.1:8080/api/devices/"+deviceid);
@@ -1010,11 +1010,12 @@ module.exports = function (app) {
           });
           function uploadFile() {
             // Add the Cloudinary "upload preset" name to the headers
+            // "https://api.cloudinary.com/v1_1/esteem/image/upload"
             var uploadOptions = {
               params : { 'upload_preset': "profilePics"}
             };
             $ionicPlatform.ready(function() {
-                $cordovaFileTransfer.upload("https://api.cloudinary.com/v1_1/esteem/image/upload", imageURI, uploadOptions).then(function(result) {
+                $cordovaFileTransfer.upload("http://192.158.29.1:8080/api/upload", imageURI, uploadOptions).then(function(result) {
                     // Let the user know the upload is completed
                     $ionicLoading.show({template : 'Upload Completed', duration: 1000});
                     // Result has a "response" property that is escaped

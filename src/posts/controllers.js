@@ -466,7 +466,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         console.log(imageData);
         setTimeout(function() {
           ImageUploadService.uploadImage(imageData).then(function(result) {
-            var url = result.secure_url || '';
+            //var url = result.secure_url || '';
+            var url = result.imageUrl || '';
             var final = " ![image](" + url + ")";
             //console.log(final);
             if ($scope.spost.body) {
@@ -916,7 +917,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         console.log(imageData);
         setTimeout(function() {
           ImageUploadService.uploadImage(imageData).then(function(result) {
-            var url = result.secure_url || '';
+            //var url = result.secure_url || '';
+            var url = result.imageUrl || '';
             var final = " ![image](" + url + ")";
             console.log(final);
             if ($scope.data.comment) {
@@ -1495,7 +1497,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         };
         $cordovaCamera.getPicture(options).then(function(imageData) {
           ImageUploadService.uploadImage(imageData).then(function(result) {
-            var url = result.secure_url || '';
+            //var url = result.secure_url || '';
+            var url = result.imageUrl || '';
             var update = { profile: { profile_image: "" } };
             angular.merge(update, $rootScope.$storage.user.json_metadata);
             if (update.profilePicUrl) {delete update.profilePicUrl;}
