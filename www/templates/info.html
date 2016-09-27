@@ -1,0 +1,17 @@
+<ion-modal-view>
+  <ion-header-bar class="bar bar-header bar-positive">
+    <h1 class="title">Voters info</h1>
+    <button class="button button-positive button-primary" ng-click="closeInfo()">CLOSE</button>
+  </ion-header-bar>
+  <ion-content class="padding">
+    <div class="row" ng-repeat="v in $root.voters.active_votes">
+      <div class="col">
+      {{v.voter}}<div class="reputation">{{v.reputation|reputation}}</div>
+      </div>
+      <div class="col">
+      {{v.percent/100}}%
+      </div>
+    </div>
+      
+  </ion-content>
+</ion-modal-view>
