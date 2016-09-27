@@ -433,6 +433,19 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     });
 
 
+    $ionicModal.fromTemplateUrl('templates/info.html', {
+      scope: $rootScope
+    }).then(function(modal) {
+      $rootScope.infomodal = modal;
+    });
+    $rootScope.openInfo = function(xx) {
+      $rootScope.voters = xx;
+      $rootScope.infomodal.show();
+    };
+    $rootScope.closeInfo = function() {
+      $rootScope.infomodal.hide();
+    };
+
     $rootScope.getContentAndOpen = function(author, permlink) {
       (new Steem(localStorage.socketUrl)).getContent(author, permlink, function(err, result){
         if (!err) {

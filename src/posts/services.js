@@ -214,46 +214,89 @@ module.exports = function (app) {
             }
             console.log('initialIndex '+initialIndex);
             if ($rootScope.$storage.filter) {
-              if ($rootScope.$storage.filter === 'trending') {
-                //$scope.events.trigger("slideChange", {"index" : 0});
-                initialIndex = 0;
-              }
-              if ($rootScope.$storage.filter === 'hot'){
-                //$scope.events.trigger("slideChange", {"index" : 1});
-                initialIndex = 1;
-              }
-              if ($rootScope.$storage.filter === 'created'){
-                //$scope.events.trigger("slideChange", {"index" : 2});
-                initialIndex = 2; 
-              }
-              if ($rootScope.$storage.filter === 'active'){
-                //$scope.events.trigger("slideChange", {"index" : 3});
-                initialIndex = 3;
-              }
-              if ($rootScope.$storage.filter === 'promoted'){
-                //$scope.events.trigger("slideChange", {"index" : 4});
-                initialIndex = 4; 
-              }
-              if ($rootScope.$storage.filter === 'trending30'){
-                //$scope.events.trigger("slideChange", {"index" : 5});
-                initialIndex = 5;
-              }
-              if ($rootScope.$storage.filter === 'votes'){
-                //$scope.events.trigger("slideChange", {"index" : 6});
-                initialIndex = 6;
-              }
-              if ($rootScope.$storage.filter === 'children'){
-                //$scope.events.trigger("slideChange", {"index" : 7});
-                initialIndex = 7;
-              }
-              if ($rootScope.$storage.filter === 'cashout'){
-                //$scope.events.trigger("slideChange", {"index" : 8});
-                initialIndex = 8;
+              if ($rootScope.$storage.user) {
+                if ($rootScope.$storage.filter === 'feed') {
+                  //$scope.events.trigger("slideChange", {"index" : 0});
+                  initialIndex = 0;
+                }
+                if ($rootScope.$storage.filter === 'trending') {
+                  //$scope.events.trigger("slideChange", {"index" : 0});
+                  initialIndex = 1;
+                }
+                if ($rootScope.$storage.filter === 'hot'){
+                  //$scope.events.trigger("slideChange", {"index" : 1});
+                  initialIndex = 2;
+                }
+                if ($rootScope.$storage.filter === 'created'){
+                  //$scope.events.trigger("slideChange", {"index" : 2});
+                  initialIndex = 3; 
+                }
+                if ($rootScope.$storage.filter === 'active'){
+                  //$scope.events.trigger("slideChange", {"index" : 3});
+                  initialIndex = 4;
+                }
+                if ($rootScope.$storage.filter === 'promoted'){
+                  //$scope.events.trigger("slideChange", {"index" : 4});
+                  initialIndex = 5; 
+                }
+                if ($rootScope.$storage.filter === 'trending30'){
+                  //$scope.events.trigger("slideChange", {"index" : 5});
+                  initialIndex = 6;
+                }
+                if ($rootScope.$storage.filter === 'votes'){
+                  //$scope.events.trigger("slideChange", {"index" : 6});
+                  initialIndex = 7;
+                }
+                if ($rootScope.$storage.filter === 'children'){
+                  //$scope.events.trigger("slideChange", {"index" : 7});
+                  initialIndex = 8;
+                }
+                if ($rootScope.$storage.filter === 'cashout'){
+                  //$scope.events.trigger("slideChange", {"index" : 8});
+                  initialIndex = 9;
+                }
+              } else {
+                if ($rootScope.$storage.filter === 'trending') {
+                  //$scope.events.trigger("slideChange", {"index" : 0});
+                  initialIndex = 0;
+                }
+                if ($rootScope.$storage.filter === 'hot'){
+                  //$scope.events.trigger("slideChange", {"index" : 1});
+                  initialIndex = 1;
+                }
+                if ($rootScope.$storage.filter === 'created'){
+                  //$scope.events.trigger("slideChange", {"index" : 2});
+                  initialIndex = 2; 
+                }
+                if ($rootScope.$storage.filter === 'active'){
+                  //$scope.events.trigger("slideChange", {"index" : 3});
+                  initialIndex = 3;
+                }
+                if ($rootScope.$storage.filter === 'promoted'){
+                  //$scope.events.trigger("slideChange", {"index" : 4});
+                  initialIndex = 4; 
+                }
+                if ($rootScope.$storage.filter === 'trending30'){
+                  //$scope.events.trigger("slideChange", {"index" : 5});
+                  initialIndex = 5;
+                }
+                if ($rootScope.$storage.filter === 'votes'){
+                  //$scope.events.trigger("slideChange", {"index" : 6});
+                  initialIndex = 6;
+                }
+                if ($rootScope.$storage.filter === 'children'){
+                  //$scope.events.trigger("slideChange", {"index" : 7});
+                  initialIndex = 7;
+                }
+                if ($rootScope.$storage.filter === 'cashout'){
+                  //$scope.events.trigger("slideChange", {"index" : 8});
+                  initialIndex = 8;
+                }
               }
             }
             $timeout(function() {
               ionicSlideBoxDelegate.slide(initialIndex);
-            }, 3200);
+            }, 10);
           }
 
           function setPosition(index){
@@ -286,14 +329,17 @@ module.exports = function (app) {
               var wrapWidth = wrap.offsetWidth;
               var currentX = Math.abs(getX(scrollDiv.style.webkitTransform));
               var leftOffset = 100;
-              var elementOffset = 40;
+              var elementOffset = 54;
               //If tabs are reaching right end or left end
               if(((currentX + wrapWidth) < (curElLeft + curElWidth + elementOffset)) || (currentX > (curElLeft - leftOffset))){
                 if(leftStr > 0){
                   leftStr = 0;
                 }
                 //Use this scrollTo, so when scrolling tab manually will not flicker
-                ionicScrollDelegate.scrollTo(Math.abs(leftStr), 0, true);
+                setTimeout(function() {
+                  ionicScrollDelegate.scrollTo(Math.abs(leftStr), 0, true);
+                }, 10);
+                
               }
             }
             }
@@ -305,112 +351,120 @@ module.exports = function (app) {
           }
           var events = scope.events;
           events.on('slideChange', function(data){
-            console.log('slideChange');
             setPosition(data.index);
           });
           events.on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
             renderScrollableTabs();
           });
+          setTimeout(function() {
+            renderScrollableTabs();    
+          }, 10);
           
-          renderScrollableTabs();
         },
         controller : function($scope, $attrs, $element, $rootScope) {
           $scope.events = new SimplePubSub();
           $scope.slideHasChanged = function(index){
-            console.log(index);
+            console.log("SlideChanged "+index);
             $scope.currentSlide = index;
-
-            if (index === 0) {
-              $rootScope.$storage.filter = 'trending';
-              $rootScope.$broadcast('filter:change');
-            }
-            if (index === 1) {
-              $rootScope.$storage.filter = 'hot';
-              $rootScope.$broadcast('filter:change');
-            }
-            if (index === 2) {
-              $rootScope.$storage.filter = 'created';
-              $rootScope.$broadcast('filter:change');
-            }
-            if (index === 3) {
-              $rootScope.$storage.filter = 'active';
-              $rootScope.$broadcast('filter:change');
-            }
-            if (index === 4) {
-              $rootScope.$storage.filter = 'promoted';
-              $rootScope.$broadcast('filter:change');
-            }
-            if (index === 5) {
-              $rootScope.$storage.filter = 'trending30';
-              $rootScope.$broadcast('filter:change');
-            }
-            if (index === 6) {
-              $rootScope.$storage.filter = 'votes';
-              $rootScope.$broadcast('filter:change');
-            }
-            if (index === 7) {
-              $rootScope.$storage.filter = 'children';
-              $rootScope.$broadcast('filter:change');
-            }
-            if (index === 8) {
-              $rootScope.$storage.filter = 'cashout';
-              $rootScope.$broadcast('filter:change');
-            }
             $scope.events.trigger("slideChange", {"index" : index});
-            $timeout(function(){if($scope.onSlideMove) $scope.onSlideMove({"index" : eval(index)});},100);
+            $timeout(function(){
+              if($scope.onSlideMove) 
+                $scope.onSlideMove({"index" : eval(index)});
+            }, 10);
+
+            if ($rootScope.$storage.user) {
+              if (index === 0) {
+                $rootScope.$storage.filter = 'feed';
+                $rootScope.$broadcast('filter:change');
+              }
+              if (index === 1) {
+                $rootScope.$storage.filter = 'trending';
+                $rootScope.$broadcast('filter:change');
+              }
+              if (index === 2) {
+                $rootScope.$storage.filter = 'hot';
+                $rootScope.$broadcast('filter:change');
+              }
+              if (index === 3) {
+                $rootScope.$storage.filter = 'created';
+                $rootScope.$broadcast('filter:change');
+              }
+              if (index === 4) {
+                $rootScope.$storage.filter = 'active';
+                $rootScope.$broadcast('filter:change');
+              }
+              if (index === 5) {
+                $rootScope.$storage.filter = 'promoted';
+                $rootScope.$broadcast('filter:change');
+              }
+              if (index === 6) {
+                $rootScope.$storage.filter = 'trending30';
+                $rootScope.$broadcast('filter:change');
+              }
+              if (index === 7) {
+                $rootScope.$storage.filter = 'votes';
+                $rootScope.$broadcast('filter:change');
+              }
+              if (index === 8) {
+                $rootScope.$storage.filter = 'children';
+                $rootScope.$broadcast('filter:change');
+              }
+              if (index === 9) {
+                $rootScope.$storage.filter = 'cashout';
+                $rootScope.$broadcast('filter:change');
+              }
+            } else {
+              if (index === 0) {
+                $rootScope.$storage.filter = 'trending';
+                $rootScope.$broadcast('filter:change');
+              }
+              if (index === 1) {
+                $rootScope.$storage.filter = 'hot';
+                $rootScope.$broadcast('filter:change');
+              }
+              if (index === 2) {
+                $rootScope.$storage.filter = 'created';
+                $rootScope.$broadcast('filter:change');
+              }
+              if (index === 3) {
+                $rootScope.$storage.filter = 'active';
+                $rootScope.$broadcast('filter:change');
+              }
+              if (index === 4) {
+                $rootScope.$storage.filter = 'promoted';
+                $rootScope.$broadcast('filter:change');
+              }
+              if (index === 5) {
+                $rootScope.$storage.filter = 'trending30';
+                $rootScope.$broadcast('filter:change');
+              }
+              if (index === 6) {
+                $rootScope.$storage.filter = 'votes';
+                $rootScope.$broadcast('filter:change');
+              }
+              if (index === 7) {
+                $rootScope.$storage.filter = 'children';
+                $rootScope.$broadcast('filter:change');
+              }
+              if (index === 8) {
+                $rootScope.$storage.filter = 'cashout';
+                $rootScope.$broadcast('filter:change');
+              }
+            }
+            if (!$rootScope.$$phase){
+              $rootScope.$apply();
+            }
           };
           
           $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
             console.log('ngRepeatFinished');
             $scope.events.trigger("ngRepeatFinished", {"event" : ngRepeatFinishedEvent});
           });
-
-          /*if ($rootScope.$storage.filter) {
-            var initialIndex = 0;
-            if ($rootScope.$storage.filter === 'trending') {
-              //$scope.events.trigger("slideChange", {"index" : 0});
-              initialIndex = 0;
-            }
-            if ($rootScope.$storage.filter === 'hot'){
-              //$scope.events.trigger("slideChange", {"index" : 1});
-              initialIndex = 1;
-            }
-            if ($rootScope.$storage.filter === 'created'){
-              //$scope.events.trigger("slideChange", {"index" : 2});
-              initialIndex = 2; 
-            }
-            if ($rootScope.$storage.filter === 'active'){
-              //$scope.events.trigger("slideChange", {"index" : 3});
-              initialIndex = 3;
-            }
-            if ($rootScope.$storage.filter === 'promoted'){
-              //$scope.events.trigger("slideChange", {"index" : 4});
-              initialIndex = 4; 
-            }
-            if ($rootScope.$storage.filter === 'trending30'){
-              //$scope.events.trigger("slideChange", {"index" : 5});
-              initialIndex = 5;
-            }
-            if ($rootScope.$storage.filter === 'votes'){
-              //$scope.events.trigger("slideChange", {"index" : 6});
-              initialIndex = 6;
-            }
-            if ($rootScope.$storage.filter === 'children'){
-              //$scope.events.trigger("slideChange", {"index" : 7});
-              initialIndex = 7;
-            }
-            if ($rootScope.$storage.filter === 'cashout'){
-              //$scope.events.trigger("slideChange", {"index" : 8});
-              initialIndex = 8;
-            }
-            $scope.events.trigger("slideChange", {"index" : initialIndex});
-          }*/
         }
       };
 
     } 
   ]);
-
 
 	app.filter('timeago', function() {
         return function(input, p_allowFuture) {
@@ -595,7 +649,7 @@ module.exports = function (app) {
 	    };
 	})
 	app.filter('reputation', function(){
-		return function(value) {
+		return function(value, bool) {
 			reputation_level = 1;
 			neg = false;
 
@@ -616,7 +670,7 @@ module.exports = function (app) {
 				return 0;
 			}
 
-			return Math.floor(reputation_level);
+			return bool?reputation_level:Math.floor(reputation_level);
 		}
 	})
 

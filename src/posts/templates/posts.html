@@ -1,4 +1,4 @@
-<ion-view view-title="Home | {{$root.$storage.tag}}">
+<ion-view view-title="{{$root.$storage.filter}} | {{$root.$storage.tag}}">
 	<ion-nav-bar class="bar-positive">
 		<ion-nav-back-button>
   		</ion-nav-back-button>
@@ -24,6 +24,7 @@
 	    	<div class="tsb-icons">
 	    		<div class="tsb-ic-wrp">
 					<ion-scroll direction="x" class="tsb-hscroll">
+					<a href="javascript:;" class="" ng-hide="!$root.$storage.user">Feed</a>
 					<a href="javascript:;" class="">Trending</a>
 					<a href="javascript:;" class="">Hot</a>
 					<a href="javascript:;" class="">New</a>
@@ -37,23 +38,26 @@
 				</div>
 	    	</div>
 	    	<ion-slide-box show-pager="false" on-slide-changed="slideHasChanged($index)">
-	            <ion-slide ng-repeat="i in [0, 1, 2, 3, 4, 5, 6, 7, 8]" delegate-handle="{{$index}}" style="height:100%;">
+	            <ion-slide ng-repeat="i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]" delegate-handle="{{$index}}" style="height:100%;">
+	            <!--<div ng-if="currentSlide !== $index"></div>-->
+	            <div>
 	            	<div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">
 				    	<div ng-repeat="d in data">
 					    	<div class="item">
 							    <div ng-click="open(d)">
+							    <span ng-if="d.first_reblogged_by"><i class="icon ion-arrow-return-right"></i> Resteemed by {{d.first_reblogged_by}}</span>
 							    <p><h2>{{d.title}}</h2></p>
 							    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;by&nbsp;<b>{{d.author}}&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div></b></div></div>
 							    </div>
 							    <div class="row">
 							    <div class="col">
 							      <span ng-if="!$root.voiceOver">
-							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a></span>
+							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i></a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i></a>&nbsp;<span class="gray" ng-click="openTooltip($event,'<div class=\'row\'><div class=\'col\'><b>Payout Circle</b></div><div class=\'col\'>{{d.mode}}</div></div><div class=\'row\'><div class=\'col\'><b>Potential Payout</b></div><div class=\'col\'>${{d.total_pending_payout_value.split(' ')[0]}}</div></div><div class=\'row\'><div class=\'col\'><b>Promoted </b></div><div class=\'col\'>${{d.promoted.split(' ')[0]}}</div></div><div class=\'row\'><div class=\'col\'><b>Past Payout</b></div><div class=\'col\'>${{d.total_payout_value.split(' ')[0]}}</div></div><div class=\'row\'><div class=\'col\'><b>Author Payout</b></div><div class=\'col\'>${{(d.total_payout_value.split(' ')[0] -d.curator_payout_value.split(' ')[0])|number:3}}</div></div><div class=\'row\'><div class=\'col\'><b>Curation Payout</b></div><div class=\'col\'>${{d.curator_payout_value.split(' ')[0]}}</div></div>')"><i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</span></span>
 							      <span ng-if="$root.voiceOver">
-							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>Upvote<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>Unvote<i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</a></span>
+							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>Upvote</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>Unvote</a>&nbsp;<span class="gray" ng-click="openTooltip($event,'<div class=\'row\'><div class=\'col\'><b>Payout Circle</b></div><div class=\'col\'>{{d.mode}}</div></div><div class=\'row\'><div class=\'col\'><b>Potential Payout</b></div><div class=\'col\'>${{d.total_pending_payout_value.split(' ')[0]}}</div></div><div class=\'row\'><div class=\'col\'><b>Promoted </b></div><div class=\'col\'>${{d.promoted.split(' ')[0]}}</div></div><div class=\'row\'><div class=\'col\'><b>Past Payout</b></div><div class=\'col\'>${{d.total_payout_value.split(' ')[0]}}</div></div><div class=\'row\'><div class=\'col\'><b>Author Payout</b></div><div class=\'col\'>${{(d.total_payout_value.split(' ')[0] -d.curator_payout_value.split(' ')[0])|number:3}}</div></div><div class=\'row\'><div class=\'col\'><b>Curation Payout</b></div><div class=\'col\'>${{d.curator_payout_value.split(' ')[0]}}</div></div>')"><i class="ion-social-usd"></i>&nbsp;{{d | sumPostTotal | number}}</span></span>
 							      </div>
 							      <div class="col col-25 tright">
-							      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
+							      <a href="#" class="subdued" ng-click="$root.openInfo(d)"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
 							      </div>
 							      <div class="col col-25 tright">
 							      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{d.children}}</a>
@@ -67,6 +71,7 @@
 					</div>
 					<div class="list card" ng-if="$root.$storage.view=='card' && data.length>0" ng-repeat="ds in data">
 						<div class="item" ng-click="open(ds)">
+							<span ng-if="ds.first_reblogged_by"><i class="icon ion-arrow-return-right"></i> Resteemed by {{ds.first_reblogged_by}}</span>
 						    <h2>{{ds.title}}</h2>
 						    <div class="row twrap"><div class="col">{{ds.created|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i>&nbsp;<b>{{ds.author}}&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div></b></div></div>
 						</div>
@@ -75,16 +80,15 @@
 						    <div class="row">
 						    <div class="col">
 						      <span ng-if="!$root.voiceOver">
-						      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
-						      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>&nbsp;<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i></a><a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i></a>&nbsp;<span class="gray" ng-click="openTooltip($event,'<div class=\'row\'><div class=\'col\'><b>Payout Circle</b></div><div class=\'col\'>{{ds.mode}}</div></div><div class=\'row\'><div class=\'col\'><b>Potential Payout</b></div><div class=\'col\'>${{ds.total_pending_payout_value.split(' ')[0]}}</div></div><div class=\'row\'><div class=\'col\'><b>Promoted </b></div><div class=\'col\'>${{ds.promoted.split(' ')[0]}}</div></div><div class=\'row\'><div class=\'col\'><b>Past Payout</b></div><div class=\'col\'>${{ds.total_payout_value.split(' ')[0]}}</div></div><div class=\'row\'><div class=\'col\'><b>Author Payout</b></div><div class=\'col\'>${{(ds.total_payout_value.split(' ')[0] -ds.curator_payout_value.split(' ')[0])|number:3}}</div></div><div class=\'row\'><div class=\'col\'><b>Curation Payout</b></div><div class=\'col\'>${{ds.curator_payout_value.split(' ')[0]}}</div></div>')"><i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</span>
 						      </span>
 						      <span ng-if="$root.voiceOver">
-						      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>Upvote<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
-						      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>Unvote<i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</a>
+						      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>Upvote</a>
+						      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>Unvote</a>&nbsp;<span class="gray" ng-click="openTooltip($event,'<div class=\'row\'><div class=\'col\'><b>Payout Circle</b></div><div class=\'col\'>{{ds.mode}}</div></div><div class=\'row\'><div class=\'col\'><b>Potential Payout</b></div><div class=\'col\'>${{ds.total_pending_payout_value.split(' ')[0]}}</div></div><div class=\'row\'><div class=\'col\'><b>Promoted </b></div><div class=\'col\'>${{ds.promoted.split(' ')[0]}}</div></div><div class=\'row\'><div class=\'col\'><b>Past Payout</b></div><div class=\'col\'>${{ds.total_payout_value.split(' ')[0]}}</div></div><div class=\'row\'><div class=\'col\'><b>Author Payout</b></div><div class=\'col\'>${{(ds.total_payout_value.split(' ')[0] -ds.curator_payout_value.split(' ')[0])|number:3}}</div></div><div class=\'row\'><div class=\'col\'><b>Curation Payout</b></div><div class=\'col\'>${{ds.curator_payout_value.split(' ')[0]}}</div></div>')"><i class="ion-social-usd"></i>&nbsp;{{ds | sumPostTotal | number}}</span>
 						      </span>
 						      </div>
 						      <div class="col col-25 tright">
-						      <a href="#" class="subdued"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
+						      <a href="#" class="subdued" ng-click="$root.openInfo(ds)"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
 						      </div>
 						      <div class="col col-25 tright">
 						      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{ds.children}}</a>
@@ -95,6 +99,7 @@
 						      </div>
 						</div>
 					</div>
+					</div>
 	            </ion-slide>
 	        </ion-slide-box>
   		</tab-slide-box>
@@ -103,5 +108,16 @@
       Load More
     </button></center>
     <br>
+    <script id = "popoverT.html" type="text/ng-template">
+      <ion-popover-view class="detailedPost">
+        <ion-header-bar>
+           <h1 class="title tcenter">Info</h1>
+        </ion-header-bar>
+        <ion-content>
+          <div class="padding" ng-bind-html="tooltipText"></div>
+        </ion-content>
+      
+      </ion-popover-view>
+    </script>
   </ion-content>
 </ion-view>

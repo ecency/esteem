@@ -430,6 +430,37 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $scope.fetchPosts(type, $scope.limit, tag);  
   });
 
+  $ionicPopover.fromTemplateUrl('popoverT.html', {
+      scope: $scope
+   }).then(function(popover) {
+      $scope.tooltip = popover;
+   });
+
+  $scope.openTooltip = function($event, text) {
+      $scope.tooltipText = text;
+      $scope.tooltip.show($event);
+   };
+
+   $scope.closeTooltip = function() {
+      $scope.tooltip.hide();
+   };
+
+   //Cleanup the popover when we're done with it!
+   $scope.$on('$destroy', function() {
+      $scope.tooltip.remove();
+   });
+
+   // Execute action on hide popover
+   $scope.$on('popover.hidden', function() {
+      // Execute action
+   });
+
+   // Execute action on remove popover
+   $scope.$on('popover.removed', function() {
+      // Execute action
+   });
+
+
   $scope.showImg = function() {
    var hideSheet = $ionicActionSheet.show({
      buttons: [
@@ -632,7 +663,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     
     var confirmPopup = $ionicPopup.confirm({
       title: 'Are you sure?',
-      template: 'Downvote or Flag'
+      template: 'Flagging a post can remove rewards and make this material less visible.<br><br>The flag should be used for the following: <ul><li>Fraud or Plagiarism</li><li>Hate Speech or Internet Trolling</li><li>Intentional miscategorized content or Spam</li></ul>'
     });
     confirmPopup.then(function(res) {
       if(res) {
@@ -707,6 +738,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata?newValue[i].json_metadata:[]);
       }
     }
+    console.log(newValue);
     return newValue;
   }
 
@@ -736,18 +768,70 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     tag = tag || $rootScope.$storage.tag || "";
     limit = limit || $scope.limit || 5;
 
-    var params = {tag: tag, limit: limit, filter_tags: []};
+    var params = {};
+
+    if (type === "feed" && $rootScope.$storage.user) {
+      params = {tag: $rootScope.$storage.user.username, limit: limit, filter_tags: []};
+    } else {
+      if ($rootScope.$storage.filter === "feed") {
+        $rootScope.$storage.filter = "trending";
+        type = "trending";
+      }
+      params = {tag: tag, limit: limit, filter_tags: []};
+    }
+
     if ($scope.error) {
       $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
     } else {
       console.log("fetching..."+type+" "+limit+" "+tag);
-      window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
-        $rootScope.$broadcast('hide:loading');
-        $scope.data = $scope.dataChanged(response); 
-        if (!$scope.$$phase) {
-          $scope.$apply();
-        }
-      });  
+      /*if (type === "feed") {
+        $scope.data = [];
+        //(new Steem(localStorage.socketUrl)).getState("/@"+$rootScope.$storage.user.username+"/feed", function(err, res){
+        window.Api.database_api().exec("get_state", ["/@"+$rootScope.$storage.user.username+"/feed"]).then(function(res){
+          $rootScope.$broadcast('hide:loading');
+          console.log(res)
+          if (res.content) {
+            //console.log(res.content)
+            if (Object.keys(res.content).length>0) {
+              for (var property in res.content) {
+                if (res.content.hasOwnProperty(property)) {
+                  var ins = res.content[property];
+                  if ($rootScope.$storage.view == 'card') {
+                    ins.json_metadata = angular.fromJson(ins.json_metadata?ins.json_metadata:[]);
+                  }
+                  if ($rootScope.$storage.user){
+                    for (var j = ins.active_votes.length - 1; j >= 0; j--) {
+                      if (ins.active_votes[j].voter === $rootScope.$storage.user.username) {
+                        if (ins.active_votes[j].percent > 0) {
+                          ins.upvoted = true;  
+                        } else if (ins.active_votes[j].percent < 0) {
+                          ins.downvoted = true;  
+                        } else {
+                          ins.upvoted = false;
+                          ins.downvoted = false;    
+                        }
+                      }
+                    }                  
+                    $scope.data.push(ins);
+                  }
+                }    
+              }
+            } 
+            //$scope.data = $scope.dataChanged(response.content); 
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }
+          }
+        });
+      } else {*/
+        window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
+          $rootScope.$broadcast('hide:loading');
+          $scope.data = $scope.dataChanged(response); 
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });    
+      //}
     }
   };
   
@@ -1208,7 +1292,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.downvotePost = function(post) {
     var confirmPopup = $ionicPopup.confirm({
       title: 'Are you sure?',
-      template: 'Downvote or Flag'
+      template: 'Flagging a post can remove rewards and make this material less visible.<br><br>The flag should be used for the following: <ul><li>Fraud or Plagiarism</li><li>Hate Speech or Internet Trolling</li><li>Intentional miscategorized content or Spam</li></ul>'
     });
     confirmPopup.then(function(res) {
       if(res) {
@@ -1624,7 +1708,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   $scope.downvotePost = function(post) {
     var confirmPopup = $ionicPopup.confirm({
       title: 'Are you sure?',
-      template: 'Downvote or Flag'
+      template: 'Flagging a post can remove rewards and make this material less visible.<br><br>The flag should be used for the following: <ul><li>Fraud or Plagiarism</li><li>Hate Speech or Internet Trolling</li><li>Intentional miscategorized content or Spam</li></ul>'
     });
     confirmPopup.then(function(res) {
       if(res) {
