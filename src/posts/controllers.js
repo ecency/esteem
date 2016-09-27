@@ -1486,7 +1486,7 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
   
 })
 
-app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicActionSheet, $cordovaCamera, ImageUploadService, $ionicPopup, $ionicSideMenuDelegate, $ionicHistory, $state, APIs) {
+app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicActionSheet, $cordovaCamera, ImageUploadService, $ionicPopup, $ionicSideMenuDelegate, $ionicHistory, $state, APIs, $ionicPopover) {
   
   $scope.goBack = function() {
     var viewHistory = $ionicHistory.viewHistory();
@@ -1506,6 +1506,36 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   $scope.$on('current:reload', function(){
     $state.go($state.current, {}, {reload: true});
   });
+
+  $ionicPopover.fromTemplateUrl('popoverPTr.html', {
+      scope: $scope
+   }).then(function(popover) {
+      $scope.tooltip = popover;
+   });
+
+   $scope.openTooltip = function($event, text) {
+      $scope.tooltipText = text;
+      $scope.tooltip.show($event);
+   };
+
+   $scope.closeTooltip = function() {
+      $scope.tooltip.hide();
+   };
+
+   //Cleanup the popover when we're done with it!
+   $scope.$on('$destroy', function() {
+      $scope.tooltip.remove();
+   });
+
+   // Execute action on hide popover
+   $scope.$on('popover.hidden', function() {
+      // Execute action
+   });
+
+   // Execute action on remove popover
+   $scope.$on('popover.removed', function() {
+      // Execute action
+   });
 
   $scope.show = function() {
    var hideSheet = $ionicActionSheet.show({
