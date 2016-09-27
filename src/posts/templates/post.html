@@ -40,11 +40,22 @@
 
       <div class="col col-33" ng-if="$root.voiceOver"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
       <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted">Upvote</i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted">Unvote Upvoted</i>&nbsp;&nbsp;&nbsp;<span ng-click="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
-      <div class="col col-33"><i class="ion-social-usd"></i>{{$root.$storage.sitem | sumPostTotal | number}}</div>
+      <div class="col col-33" ng-click="openTooltip($event,'<div class=\'row\'><div class=\'col\'><b>Payout Circle</b></div><div class=\'col\'>{{$root.$storage.sitem.mode}}</div></div><div class=\'row\'><div class=\'col\'><b>Potential Payout</b></div><div class=\'col\'>${{$root.$storage.sitem.total_pending_payout_value.split(' ')[0]}}</div></div><div class=\'row\'><div class=\'col\'><b>Promoted </b></div><div class=\'col\'>${{$root.$storage.sitem.promoted.split(' ')[0]}}</div></div><div class=\'row\'><div class=\'col\'><b>Past Payout</b></div><div class=\'col\'>${{$root.$storage.sitem.total_payout_value.split(' ')[0]}}</div></div><div class=\'row\'><div class=\'col\'><b>Author Payout</b></div><div class=\'col\'>${{($root.$storage.sitem.total_payout_value.split(' ')[0] -$root.$storage.sitem.curator_payout_value.split(' ')[0])|number:3}}</div></div><div class=\'row\'><div class=\'col\'><b>Curation Payout</b></div><div class=\'col\'>${{$root.$storage.sitem.curator_payout_value.split(' ')[0]}}</div></div>')"><i class="ion-social-usd"></i>{{$root.$storage.sitem | sumPostTotal | number}}</div>
       <div class="col"><i class="icon ion-chatbubbles"></i>{{$root.$storage.sitem.children}}</div>
       <div class="col" ng-click="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username">Reply</div>
       <div class="col" ng-click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode=='first_payout' && $root.$storage.sitem.author==$root.$storage.user.username">Edit</div>
     </div>
     <ion-thread comments="comments"></ion-thread>
+    <script id = "popoverTr.html" type="text/ng-template">
+      <ion-popover-view class="detailedPost">
+        <ion-header-bar>
+           <h1 class="title tcenter">Info</h1>
+        </ion-header-bar>
+        <ion-content>
+          <div class="padding" ng-bind-html="tooltipText"></div>
+        </ion-content>
+      
+      </ion-popover-view>
+    </script>
   </ion-content>
 </ion-view>

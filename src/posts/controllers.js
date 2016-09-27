@@ -894,7 +894,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   //$scope.refresh();   
 })
 
-app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform, $ionicSlideBoxDelegate) {
+app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPopover) {
   $scope.post = $rootScope.$storage.sitem;
   $scope.data = {};
   $scope.spost = {};  
@@ -925,6 +925,36 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       $rootScope.showMessage("Success", "Post is added to bookmarks!");
     }
   };
+  $ionicPopover.fromTemplateUrl('popoverTr.html', {
+      scope: $scope
+   }).then(function(popover) {
+      $scope.tooltip = popover;
+   });
+
+   $scope.openTooltip = function($event, text) {
+      $scope.tooltipText = text;
+      $scope.tooltip.show($event);
+   };
+
+   $scope.closeTooltip = function() {
+      $scope.tooltip.hide();
+   };
+
+   //Cleanup the popover when we're done with it!
+   $scope.$on('$destroy', function() {
+      $scope.tooltip.remove();
+   });
+
+   // Execute action on hide popover
+   $scope.$on('popover.hidden', function() {
+      // Execute action
+   });
+
+   // Execute action on remove popover
+   $scope.$on('popover.removed', function() {
+      // Execute action
+   });
+
 
   $scope.isImages = function() {
     var len = $rootScope.$storage.sitem.json_metadata.image?$rootScope.$storage.sitem.json_metadata.image.length:0;
