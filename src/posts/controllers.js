@@ -738,7 +738,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata?newValue[i].json_metadata:[]);
       }
     }
-    console.log(newValue);
+    //console.log(newValue);
     return newValue;
   }
 
