@@ -1214,30 +1214,30 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     } else {
       $scope.closeModal();
     }
-  }
+  };
   //$scope.post = {};
   $scope.$on('$ionicView.beforeEnter', function(){ 
     $rootScope.log('beforeEnter postctrl');
-    $scope.post = $rootScope.$storage.sitem;
     setTimeout(function() {
+      $scope.post = $rootScope.$storage.sitem;
       $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
-      (new Steem(localStorage.socketUrl)).getContentReplies($scope.author, $scope.permlink, function(err, result){
+      (new Steem(localStorage.socketUrl)).getContentReplies($scope.post.author, $scope.post.permlink, function(err, result){
         $scope.comments = result;
-
         if (!$scope.$$phase) {
           $scope.$apply();
         }
+        $rootScope.$broadcast('hide:loading');  
       });
-    }, 10);
-    $rootScope.$broadcast('hide:loading');  
+    }, 1);
   });
 
   $scope.getContent = function(author, permlink) {
     (new Steem(localStorage.socketUrl)).getContent(author, permlink, function(err, result){
       if (!err) {
         var len = result.active_votes.length;
+        var user = $rootScope.$storage.user;
         for (var j = len - 1; j >= 0; j--) {
-          if (result.active_votes[j].voter === $rootScope.$storage.user.username) {
+          if (result.active_votes[j].voter === user.username) {
             if (result.active_votes[j].percent > 0) {
               result.upvoted = true;  
             } else if (result.active_votes[j].percent < 0) {

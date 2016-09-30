@@ -155,7 +155,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   //$sceDelegateProvider.resourceUrlWhitelist(['self', new RegExp('^(http[s]?):\/\/(w{3}.)?youtube\.com/.+$')]);
 });
 
-app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state, $log) {
+app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state, $log, $ionicScrollDelegate) {
   $rootScope.$storage = $localStorage;
   $rootScope.log = function(message) {
     $log.info(message);
@@ -446,8 +446,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
 
     $ionicModal.fromTemplateUrl('templates/info.html', {
-      scope: $rootScope,
-      animation: "null"
+      scope: $rootScope
+      //animation: "null"
     }).then(function(modal) {
       $rootScope.infomodal = modal;
     });
@@ -455,6 +455,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.voters = xx;
       $rootScope.infomodal.show();
     };
+
     $rootScope.closeInfo = function() {
       $rootScope.infomodal.hide();
       //$rootScope.infomodal.remove();
