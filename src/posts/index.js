@@ -143,9 +143,10 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $ionicConfigProvider.navBar.alignTitle('left')
   $ionicConfigProvider.backButton.text('').icon('ion-chevron-left');
   $ionicConfigProvider.views.swipeBackEnabled(false);
-  
-  //$animateProvider.classNameFilter( /\banimated\b/ );
-  //$ionicConfigProvider.scrolling.jsScrolling(false);
+  $ionicConfigProvider.views.maxCache(5);
+
+  $animateProvider.classNameFilter( /\banimated\b/ );
+  $ionicConfigProvider.scrolling.jsScrolling(false);
   
   if (window.cordova) {
       $logProvider.debugEnabled(false);
@@ -714,7 +715,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 //$scope.refreshFollowers();
                 $rootScope.$broadcast('current:reload');
               }
-            }, 2000);
+            }, 3000);
           } else {
             $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
           }

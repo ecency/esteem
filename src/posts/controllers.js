@@ -227,7 +227,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         }
         
       }
-    }, 500);
+    }, 50);
     
   };
   $scope.typechange = function() {
@@ -1629,7 +1629,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               $rootScope.$broadcast('hide:loading');
               $rootScope.showAlert("Warning", "Please, login to Update");
             }
-            }, 500);
+            }, 50);
             if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
               $cordovaCamera.cleanup();
             }
@@ -1694,7 +1694,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 $rootScope.$broadcast('hide:loading');
                 $rootScope.showAlert("Warning", "Please, login to Update");
               }
-            }, 1000);
+            }, 50);
           }
         });
       }
@@ -1732,8 +1732,6 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       return false;
     }
   };
-
-   
 
   $scope.$on('$ionicView.beforeEnter', function(){
     $scope.user = {username: $stateParams.username};
@@ -1856,6 +1854,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       $scope.getFollows(null, "d");
     };
    
+    $scope.refresh();  
+
     if ($rootScope.$storage.user.username !== $stateParams.username) {
       $scope.getOtherUsersData();  
     } else {
@@ -1864,7 +1864,6 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       $scope.getFollows("r","d");
       //}
     }
-    $scope.refresh();  
   });
   $scope.openMenu = function() {
     $ionicSideMenuDelegate.toggleLeft();
@@ -2093,7 +2092,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       if (!$scope.$$phase){
         $scope.$apply();
       }
-    }, 100);
+    }, 10);
     
   });
   
