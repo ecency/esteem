@@ -706,11 +706,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   }
   $scope.dataChanged = function(newValue) {
     var lenn = newValue.length;
+    var user = $rootScope.$storage.user || null;
+    var view = $rootScope.$storage.view;
     for (var i = 0; i < lenn; i++) {
-      if ($rootScope.$storage.user){
+      if (user){
         var len = newValue[i].active_votes.length;
         for (var j = len - 1; j >= 0; j--) {
-          if (newValue[i].active_votes[j].voter === $rootScope.$storage.user.username) {
+          if (newValue[i].active_votes[j].voter === user.username) {
             if (newValue[i].active_votes[j].percent > 0) {
               newValue[i].upvoted = true;  
             } else if (newValue[i].active_votes[j].percent < 0) {
@@ -722,7 +724,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           }
         }
       }
-      if ($rootScope.$storage.view == 'card') {
+      if (view === 'card') {
         newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata?newValue[i].json_metadata:[]);
       }
     }
@@ -847,26 +849,29 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.spost = {};  
   $scope.replying = false;
   $scope.isBookmarked = function() {
-    if ($rootScope.$storage.bookmark) {
-      var len = $rootScope.$storage.bookmark.length;
+    var bookm = $rootScope.$storage.bookmark || null;
+    if (bookm) {
+      var len = bookm.length;
       for (var i = 0; i < len; i++) {
-        if ($rootScope.$storage.bookmark[i] && $rootScope.$storage.bookmark[i].permlink == $rootScope.$storage.sitem.permlink) {
+        if (bookm[i] && bookm[i].permlink == bookm.permlink) {
           return true;
         }
       }
     }
   };
   $scope.bookmark = function() {
+    var book = $rootScope.$storage.bookmark;
     if ($scope.isBookmarked()) {
-      var len = $rootScope.$storage.bookmark.length;
+      var len = book.length;
       for (var i = 0; i < len; i++) {
-        if ($rootScope.$storage.bookmark[i].permlink == $rootScope.$storage.sitem.permlink) {
-          $rootScope.$storage.bookmark.splice(i, 1);
+        if (book[i].permlink == $scope.post.permlink) {
+          book.splice(i, 1);
         }
       }  
+      $rootScope.$storage.bookmark = book;
       $rootScope.showMessage("Success", "Post is removed from bookmarks!");  
     } else {
-      if ($rootScope.$storage.bookmark) {
+      if (book) {
         $rootScope.$storage.bookmark.push({title: $rootScope.$storage.sitem.title, author:$rootScope.$storage.sitem.author, author_reputation: $rootScope.$storage.sitem.author_reputation, created: $rootScope.$storage.sitem.created, permlink:$rootScope.$storage.sitem.permlink});  
       } else {
         $rootScope.$storage.bookmark = [{title: $rootScope.$storage.sitem.title, author:$rootScope.$storage.sitem.author, author_reputation: $rootScope.$storage.sitem.author_reputation, created: $rootScope.$storage.sitem.created, permlink:$rootScope.$storage.sitem.permlink}];
@@ -906,12 +911,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
 
   $scope.isImages = function() {
-    var len = $rootScope.$storage.sitem.json_metadata.image?$rootScope.$storage.sitem.json_metadata.image.length:0;
+    var len = $scope.post.json_metadata.image?$scope.post.json_metadata.image.length:0;
     if (len > 0) {
-      $scope.images = $rootScope.$storage.sitem.json_metadata.image;
-      return true
+      $scope.images = $scope.post.json_metadata.image;
+      return true;
     } else {
-      return false
+      return false;
     }
   };
   $scope.zoomMin = 1;
@@ -1023,8 +1028,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       });
     }
   };
-
-
 
   $ionicModal.fromTemplateUrl('templates/story.html', {
     scope: $scope  }).then(function(modal) {
@@ -1182,7 +1185,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
   $rootScope.$on("update:content", function(){
     $rootScope.log("update:content");
-    (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
+    (new Steem(localStorage.socketUrl)).getContentReplies($scope.post.author, $scope.post.permlink, function(err, result){
       $scope.comments = result;
       if (!$scope.$$phase) {
         $scope.$apply();
@@ -1213,11 +1216,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     }
   }
   //$scope.post = {};
-  $scope.$on('$ionicView.enter', function(){   
-
+  $scope.$on('$ionicView.beforeEnter', function(){ 
+    $rootScope.log('beforeEnter postctrl');
+    $scope.post = $rootScope.$storage.sitem;
     setTimeout(function() {
       $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
-      (new Steem(localStorage.socketUrl)).getContentReplies($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink, function(err, result){
+      (new Steem(localStorage.socketUrl)).getContentReplies($scope.author, $scope.permlink, function(err, result){
         $scope.comments = result;
 
         if (!$scope.$$phase) {
