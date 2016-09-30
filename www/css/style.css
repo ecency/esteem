@@ -323,6 +323,7 @@ textarea.markdown-input {
   max-width: 90px;
   max-height: 90px;
   width: 100%;
+  background: #387ef5;
   height: 100%;
   margin-right: auto;
   margin-left: auto;

@@ -1920,6 +1920,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         for (var property in res.accounts) {
           if (res.accounts.hasOwnProperty(property)) {
             $scope.accounts = res.accounts[property];
+            //$rootScope.log(angular.toJson(res.accounts[property].transfer_history));
             $scope.transfers = res.accounts[property].transfer_history;
             $scope.nonexist = false;
           }
