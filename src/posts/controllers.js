@@ -408,7 +408,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   });
 
 });
-app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService) {
+app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService, $filter) {
   
   $scope.activeMenu = $rootScope.$storage.filter || "trending";
 
@@ -426,8 +426,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $scope.tooltip = popover;
    });
 
-  $scope.openTooltip = function($event, text) {
-      $scope.tooltipText = text;
+  $scope.openTooltip = function($event, d) {
+      var texth = "<div class='row'><div class='col'><b>Payout Circle</b></div><div class='col'>"+d.mode+"</div></div><div class='row'><div class='col'><b>Potential Payout</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Promoted </b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Past Payout</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Author Payout</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>Curation Payout</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Payout</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
+      $scope.tooltipText = texth;
+      if (!$scope.$$phase) {
+        $scope.$apply();
+      }
       $scope.tooltip.show($event);
    };
 
@@ -443,6 +447,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
    // Execute action on hide popover
    $scope.$on('popover.hidden', function() {
       // Execute action
+      $scope.tooltipText = undefined;
    });
 
    // Execute action on remove popover
@@ -885,8 +890,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       $scope.tooltip = popover;
    });
 
-   $scope.openTooltip = function($event, text) {
-      $scope.tooltipText = text;
+   $scope.openTooltip = function($event, d) {
+    var texth = "<div class='row'><div class='col'><b>Payout Circle</b></div><div class='col'>"+d.mode+"</div></div><div class='row'><div class='col'><b>Potential Payout</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Promoted </b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Past Payout</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Author Payout</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>Curation Payout</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Payout</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
+      $scope.tooltipText = texth;
       $scope.tooltip.show($event);
    };
 
@@ -1458,8 +1464,9 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       $scope.tooltip = popover;
    });
 
-   $scope.openTooltip = function($event, text) {
-      $scope.tooltipText = text;
+   $scope.openTooltip = function($event, d) {
+    var texth = "<div class='row'><div class='col'><b>Payout Circle</b></div><div class='col'>"+d.mode+"</div></div><div class='row'><div class='col'><b>Potential Payout</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Promoted </b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Past Payout</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Author Payout</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>Curation Payout</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Payout</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
+      $scope.tooltipText = texth;
       $scope.tooltip.show($event);
    };
 
@@ -1978,8 +1985,9 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       $scope.tooltip = popover;
    });
 
-   $scope.openTooltip = function($event, text) {
-      $scope.tooltipText = text;
+   $scope.openTooltip = function($event, d) {
+      var texth = "<div class='row'><div class='col'><b>Payout Circle</b></div><div class='col'>"+d.mode+"</div></div><div class='row'><div class='col'><b>Potential Payout</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Promoted </b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Past Payout</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Author Payout</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>Curation Payout</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Payout</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
+      $scope.tooltipText = texth;
       $scope.tooltip.show($event);
    };
 
