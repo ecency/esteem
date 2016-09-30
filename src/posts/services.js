@@ -45,13 +45,13 @@ module.exports = function (app) {
       link: function(scope, element, attrs) {
         element.bind('focus', function(e) {
           if (window.cordova && window.cordova.plugins.Keyboard) {
-            // console.log("show bar (hide = false)");
+            // $rootScope.log("show bar (hide = false)");
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
           }
         });
         element.bind('blur', function(e) {
           if (window.cordova && window.cordova.plugins.Keyboard) {
-            // console.log("hide bar (hide = true)");
+            // $rootScope.log("hide bar (hide = true)");
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
           }
         });
@@ -62,7 +62,7 @@ module.exports = function (app) {
     var controller = ['$scope', '$rootScope', function ($scope, $rootScope) {
       $scope.addactiveclass = function (menuItem) {
           $scope.activeMenu = menuItem.name;
-          //console.log(menuItem);
+          //$rootScope.log(menuItem);
           $rootScope.$storage.filter = menuItem.href;
           $rootScope.$broadcast('filter:change');
           $scope.center(menuItem.name);
@@ -79,7 +79,8 @@ module.exports = function (app) {
         currentElement = menuItem ? currentElement[0] : document.getElementsByClassName('active')[0]; 
         if(currentElement) {
           var margin = 0;
-          for(var i =0; i<nav.children.length; i++){
+          var lenm = nav.children.length;
+          for(var i =0; i<lenm; i++){
             
             if(currentElement == nav.children[i]){
               break;
@@ -93,7 +94,8 @@ module.exports = function (app) {
           nav.style.marginLeft = (navWidth/2 - $scope.activeMenu.length) + 'px';
         }
       };
-      for (var i = 0; i < $scope.menulinks.length; i++) {
+      var _len = $scope.menulinks.length;
+      for (var i = 0; i < _len; i++) {
         if ($rootScope.$storage.filter) {
           if ($scope.menulinks[i].href == $rootScope.$storage.filter) {
             $scope.activeMenu = $scope.menulinks[i].name;      
@@ -212,7 +214,7 @@ module.exports = function (app) {
             if(initialIndex == 0){
               setPosition(0);
             }
-            console.log('initialIndex '+initialIndex);
+            //$rootScope.log('initialIndex '+initialIndex);
             if ($rootScope.$storage.filter) {
               if ($rootScope.$storage.user) {
                 if ($rootScope.$storage.filter === 'feed') {
@@ -364,7 +366,7 @@ module.exports = function (app) {
         controller : function($scope, $attrs, $element, $rootScope) {
           $scope.events = new SimplePubSub();
           $scope.slideHasChanged = function(index){
-            console.log("SlideChanged "+index);
+            $rootScope.log("SlideChanged "+index);
             $scope.currentSlide = index;
             $scope.events.trigger("slideChange", {"index" : index});
             $timeout(function(){
@@ -457,7 +459,7 @@ module.exports = function (app) {
           };
           
           $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
-            console.log('ngRepeatFinished');
+            $rootScope.log('ngRepeatFinished');
             $scope.events.trigger("ngRepeatFinished", {"event" : ngRepeatFinishedEvent});
           });
         }
@@ -526,7 +528,7 @@ module.exports = function (app) {
             days < 365 && substitute(strings.months, Math.round(days / 30), strings) ||
             years < 1.5 && substitute(strings.year, 1, strings) ||
             substitute(strings.years, Math.round(years), strings);
-			//console.log(prefix+words+suffix+separator);
+			//$rootScope.log(prefix+words+suffix+separator);
 			prefix.replace(/ /g, '')
 			words.replace(/ /g, '')
 			suffix.replace(/ /g, '')
@@ -578,7 +580,8 @@ module.exports = function (app) {
             var mimgs = [];
             var mlinks = [];
             if (murls) {
-                for (var i = 0; i < murls.length; i++) {
+              var _len = murls.length;
+                for (var i = 0; i < _len; i++) {
                     var ind = murls[i].match(imgs);
                     if (ind) {
                         mimgs.push(murls[i]);
@@ -594,7 +597,8 @@ module.exports = function (app) {
                 }
             }
             if (musers) {
-                for (var i = 0; i < musers.length; i++) {
+              var _len = musers.length;
+                for (var i = 0; i < _len; i++) {
                     musers[i] = musers[i].trim().substring(1);
                 }
                 if (musers) {
@@ -612,7 +616,7 @@ module.exports = function (app) {
             var out = {};
             var musers = textu.match(users);
             
-            console.log(musers);
+            $rootScope.log(angular.toJson(musers));
 
             return textu;            
           }
@@ -756,10 +760,10 @@ module.exports = function (app) {
                     });
                     confirmPopup.then(function(res) {
                       if(res) {
-                        console.log('You are sure');
+                        $rootScope.log('You are sure');
                         $rootScope.votePost(post, 'downvote', 'update:content');
                       } else {
-                        console.log('You are not sure');
+                        $rootScope.log('You are not sure');
                       }
                     });
                   };
@@ -832,7 +836,7 @@ module.exports = function (app) {
                               body: $scope.data.comment,
                               json_metadata: angular.toJson(json)
                             });
-                            //console.log(my_pubkeys);
+                            //$rootScope.log(my_pubkeys);
                             localStorage.error = 0;
                             tr.process_transaction($scope.mylogin, null, true);
                             
@@ -862,7 +866,7 @@ module.exports = function (app) {
                         // Putting body into buffer will expand Unicode characters into their true length
                         if (patch && patch.length < new Buffer($scope.data.comment, 'utf-8').length) {
                           $scope.data.comment2 = patch;
-                          //console.log(patch);
+                          //$rootScope.log(patch);
                         }
 
                         $rootScope.$broadcast('show:loading');
@@ -891,7 +895,7 @@ module.exports = function (app) {
                               body: $scope.data.comment2 || $scope.data.comment,
                               json_metadata: $scope.post.json_metadata
                             });
-                            //console.log(my_pubkeys);
+                            //$rootScope.log(my_pubkeys);
                             localStorage.error = 0;
                             tr.process_transaction($scope.mylogin, null, true);
                             
@@ -919,24 +923,24 @@ module.exports = function (app) {
                   $rootScope.$broadcast('hide:loading');  
                 }
                 $scope.replyToComment = function(comment) {
-                    console.log('reply to comment')
+                    $rootScope.log('reply to comment')
                     //$rootScope.$storage.sitem = comment;
                     $scope.isreplying(comment, true);
                 }
                 $scope.editComment = function(comment) {
-                    console.log('edit to comment')
+                    $rootScope.log('edit to comment')
                     //$rootScope.$storage.sitem = comment;
                     $scope.isreplying(comment, false);
                 }
                 $scope.deleteComment = function(comment) {
-                    console.log('delete to comment', comment);
+                    $rootScope.log('delete to comment '+ angular.toJson(comment));
                     var confirmPopup = $ionicPopup.confirm({
                         title: 'Are you sure?',
                         template: 'Deleting comments are irreversible...'
                     });
                     confirmPopup.then(function(res) {
                         if(res) {
-                            console.log('You are sure');
+                            $rootScope.log('You are sure');
                             $rootScope.$broadcast('show:loading');
                             if ($rootScope.$storage.user) {
                               $scope.mylogin = new window.steemJS.Login();
@@ -957,7 +961,7 @@ module.exports = function (app) {
                                   author: comment.author,
                                   permlink: comment.permlink
                                 });
-                                //console.log(my_pubkeys);
+                                //$rootScope.log(my_pubkeys);
                                 localStorage.error = 0;
                                 tr.process_transaction($scope.mylogin, null, true);
                                 
@@ -978,7 +982,7 @@ module.exports = function (app) {
                               $rootScope.showAlert("Warning", "Please, login to Delete Comment");
                             }
                         } else {
-                          console.log('You are not sure');
+                          $rootScope.log('You are not sure');
                         }
                     });
                 }
@@ -1016,13 +1020,13 @@ module.exports = function (app) {
                 
                 $scope.toggleComment = function(comment) {
                     
-                    console.log('toggleComment');
+                    $rootScope.log('toggleComment');
 
                     if (comment.children > 0){
                       //(new Steem(localStorage.socketUrl)).getContentReplies(comment.author, comment.permlink, function(err, res1) {
                       window.Api.database_api().exec("get_content_replies", [comment.author, comment.permlink]).then(function(res1){
                         comment.replies = res1;
-                        //console.log('result',res1);
+                        //$rootScope.log('result',res1);
                         if (comment.showChildren) {
                             comment.showChildren = false;
                         } else {

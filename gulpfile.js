@@ -36,7 +36,7 @@ gulp.task('scripts', function() {
       insertGlobals : true,
       debug : !gulp.env.production,
       transform: ['brfs']
-    }))
+    }).on('error', gutil.log))
     .pipe(rename('index.js'))
     .pipe(gulp.dest('./www/js'));
 

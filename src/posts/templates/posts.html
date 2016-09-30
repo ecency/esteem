@@ -17,7 +17,7 @@
 			<navigation menulinks='menuData'></navigation>
 	    </nav>
 	</div>-->
-  <ion-content class="has-header" scroll="true" delegate-handle="mainScroll">
+  <ion-content class="has-header" scroll="true" delegate-handle="mainScroll" overflow-scroll="true">
 	<ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
 	</ion-refresher>
   		<tab-slide-box>
@@ -38,11 +38,11 @@
 				</div>
 	    	</div>
 	    	<ion-slide-box show-pager="false" on-slide-changed="slideHasChanged($index)">
-	            <ion-slide ng-repeat="i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]" delegate-handle="{{$index}}" style="height:100%;">
+	            <ion-slide ng-repeat="i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] track by $index" delegate-handle="{{$index}}" style="height:100%;">
 	            <!--<div ng-if="currentSlide !== $index"></div>-->
 	            <div>
 	            	<div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">
-				    	<div ng-repeat="d in data">
+				    	<div ng-repeat="d in data track by $index">
 					    	<div class="item">
 							    <div ng-click="open(d)">
 							    <span ng-if="d.first_reblogged_by"><i class="icon ion-arrow-return-right"></i> Resteemed by {{d.first_reblogged_by}}</span>
@@ -69,7 +69,7 @@
 						  	</div>
 						</div>
 					</div>
-					<div class="list card" ng-if="$root.$storage.view=='card' && data.length>0" ng-repeat="ds in data">
+					<div class="list card" ng-if="$root.$storage.view=='card' && data.length>0" ng-repeat="ds in data track by $index">
 						<div class="item" ng-click="open(ds)">
 							<span ng-if="ds.first_reblogged_by"><i class="icon ion-arrow-return-right"></i> Resteemed by {{ds.first_reblogged_by}}</span>
 						    <h2>{{ds.title}}</h2>

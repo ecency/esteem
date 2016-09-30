@@ -18,7 +18,7 @@ if (localStorage.getItem("socketUrl") === null) {
 var Client = window.steemJS.steemRPC.Client;
 window.Api = Client.get(options, true);
 window.Api.initPromise.then(function(response) {
-    console.log("Api ready:", response);
+    $rootScope.log("Api ready:", response);
 });*/
 var steemRPC = require("steem-rpc");
 window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
@@ -28,7 +28,7 @@ window.diff_match_patch = require('diff-match-patch');
 require('./services')(app);
 require('./controllers')(app);
 
-app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $sceDelegateProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $sceDelegateProvider, $logProvider, $compileProvider, $animateProvider) {
   $stateProvider
 
   .state('app', {
@@ -143,11 +143,23 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $ionicConfigProvider.navBar.alignTitle('left')
   $ionicConfigProvider.backButton.text('').icon('ion-chevron-left');
   $ionicConfigProvider.views.swipeBackEnabled(false);
+  
+  //$animateProvider.classNameFilter( /\banimated\b/ );
+  //$ionicConfigProvider.scrolling.jsScrolling(false);
+  
+  if (window.cordova) {
+      $logProvider.debugEnabled(false);
+      $compileProvider.debugInfoEnabled(false);
+  }
   //$sceDelegateProvider.resourceUrlWhitelist(['self', new RegExp('^(http[s]?):\/\/(w{3}.)?youtube\.com/.+$')]);
 });
 
-app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state) {
+app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state, $log) {
   $rootScope.$storage = $localStorage;
+  $rootScope.log = function(message) {
+    $log.info(message);
+  };
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -162,25 +174,24 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     }
     setTimeout(function() {
       (new Steem(localStorage.socketUrl)).getFeedHistory(function(e,r){
-        //console.log(r);
+        //$rootScope.log(r);
         $rootScope.$storage.base = r.current_median_history.base.split(" ")[0];
         (new Steem(localStorage.socketUrl)).getDynamicGlobalProperties(function(e,r){
-          //console.log(r);
+          //$rootScope.log(r);
           $rootScope.$storage.steem_per_mvests = (Number(r.total_vesting_fund_steem.substring(0, r.total_vesting_fund_steem.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;
         });
       });
     }, 10);
 
-    
     if (window.cordova) {
       if (ionic.Platform.isIPad() || ionic.Platform.isIOS()) {
         MobileAccessibility.isVoiceOverRunning(function(bool) {
           if (bool) {
-              console.log("Screen reader: ON");
+              $rootScope.log("Screen reader: ON");
               $rootScope.voiceOver = bool;
               //$ionicConfigProvider.navBar.alignTitle('center');
           } else {
-              console.log("Screen reader: OFF");
+              $rootScope.log("Screen reader: OFF");
               $rootScope.voiceOver = bool;
               //$ionicConfigProvider.navBar.alignTitle('left');
           } 
@@ -204,7 +215,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         navigator.splashscreen.hide();  
       }, 1000);
     }
-    console.log("app start ready");
+    $rootScope.log("app start ready");
     setTimeout(function() {
       if ($rootScope.$storage.pincode) {
         $rootScope.$broadcast("pin:check");
@@ -217,21 +228,21 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       });
       if (msg.indexOf("error")>-1) {
         //window.Api.initPromise.then(function(response) {
-        console.log("broadcast error");
+        $rootScope.log("broadcast error");
         //});
       }
       return alertPopup/*.then(function(res) {
-        console.log('Thank you ...');
+        $rootScope.log('Thank you ...');
       });*/
     };
     $rootScope.showMessage = function(title, msg) {
       if (window.cordova) {
         $cordovaToast.showLongBottom(title+": "+msg).then(function(success) {
           // success
-          console.log("toast"+success);
+          $rootScope.log("toast"+success);
         }, function (error) {
           // error
-          console.log("toast"+error);
+          $rootScope.log("toast"+error);
         });  
       } else {
         $rootScope.showAlert(title, msg);
@@ -239,23 +250,23 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     };
    
     $rootScope.$on('show:loading', function(event, args){
-      console.log('show:loading');
+      $rootScope.log('show:loading');
       $ionicLoading.show({
         noBackdrop : true,
         template: '<ion-spinner></ion-spinner>'
       });
     });
     $rootScope.$on('hide:loading', function(event, args){
-      console.log('hide:loading');
+      $rootScope.log('hide:loading');
       $ionicLoading.hide();
     });
 
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
-      console.log("from "+fromState.name+" to "+toState.name);
+      $rootScope.log("from "+fromState.name+" to "+toState.name);
     });
 
     $ionicPlatform.on('resume', function(){
-      console.log("app resume");
+      $rootScope.log("app resume");
       var steemRPC = require("steem-rpc");
       if (localStorage.getItem("socketUrl") === null) {
         localStorage.setItem("socketUrl", "wss://steemit.com/wspa");
@@ -265,10 +276,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
       if (!angular.isDefined($rootScope.timeint)) {
         window.Api.initPromise.then(function(response) {
-          console.log("Api ready state change: "+angular.toJson(response));
+          $rootScope.log("Api ready state change: "+angular.toJson(response));
           $rootScope.timeint = $interval(function(){
             window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
-              console.log("get_dynamic_global_properties " + response.head_block_number);
+              $rootScope.log("get_dynamic_global_properties " + response.head_block_number);
             });
           }, 15000);
         });
@@ -282,11 +293,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
           MobileAccessibility.isVoiceOverRunning(function(bool) {
             if (bool) {
-                console.log("Screen reader: ON");
+                $rootScope.log("Screen reader: ON");
                 $rootScope.voiceOver = bool;
                 //$ionicConfigProvider.navBar.alignTitle('center');
             } else {
-                console.log("Screen reader: OFF");
+                $rootScope.log("Screen reader: OFF");
                 $rootScope.voiceOver = bool;
                 //$ionicConfigProvider.navBar.alignTitle('left');
             } 
@@ -300,9 +311,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     });
     $ionicPlatform.on('pause', function(){
-      console.log("app pause");
+      $rootScope.log("app pause");
       if (angular.isDefined($rootScope.timeint)) {
-        console.log("cancel interval");
+        $rootScope.log("cancel interval");
         $interval.cancel($rootScope.timeint);
         $rootScope.timeint = undefined;
         window.Api.close();
@@ -310,7 +321,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     });
     
     $ionicPlatform.on('offline', function(){
-      console.log("app offline");
+      $rootScope.log("app offline");
     });
 
     $rootScope.init = function() {
@@ -326,7 +337,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.passcode = $rootScope.passcode + value;
         if($rootScope.passcode.length == 4) {
           $timeout(function() {
-            console.log("PIN "+$rootScope.passcode);
+            $rootScope.log("PIN "+$rootScope.passcode);
             if ($rootScope.pintype == 3) {
               if ($rootScope.$storage.pincode == $rootScope.passcode) {
                 $rootScope.passcode = "";
@@ -343,7 +354,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               }
             }
             if ($rootScope.pintype == 0) {
-              console.log("type 0: set pin");
+              $rootScope.log("type 0: set pin");
               if ($rootScope.$storage.pincode) {
                 $rootScope.$broadcast("pin:check");
                 $rootScope.closePin();
@@ -356,7 +367,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               }
             }
             if ($rootScope.pintype == 1) {
-              console.log("type 1: check pin");                  
+              $rootScope.log("type 1: check pin");                  
               if ($rootScope.$storage.pincode == $rootScope.passcode){
                 $rootScope.$broadcast('pin:correct');
                 $rootScope.passcode = "";
@@ -397,12 +408,12 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             template: $rootScope.$storage.notifData.body + ", opening post"
           });
           alertPopup.then(function(res) {
-            console.log('Thank you for seeing alert from tray');
+            $rootScope.log('Thank you for seeing alert from tray');
             if (res) {
               $rootScope.getContentAndOpen($rootScope.$storage.notifData.author, $rootScope.$storage.notifData.permlink);  
               $rootScope.$storage.notifData = undefined;
             } else {
-              console.log("not sure to open alert");
+              $rootScope.log("not sure to open alert");
               $rootScope.$storage.notifData = undefined;
             }
             $rootScope.pinenabled = false;
@@ -434,7 +445,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
 
     $ionicModal.fromTemplateUrl('templates/info.html', {
-      scope: $rootScope
+      scope: $rootScope,
+      animation: "null"
     }).then(function(modal) {
       $rootScope.infomodal = modal;
     });
@@ -444,12 +456,14 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     };
     $rootScope.closeInfo = function() {
       $rootScope.infomodal.hide();
+      //$rootScope.infomodal.remove();
     };
 
     $rootScope.getContentAndOpen = function(author, permlink) {
       (new Steem(localStorage.socketUrl)).getContent(author, permlink, function(err, result){
         if (!err) {
-          for (var j = result.active_votes.length - 1; j >= 0; j--) {
+          var _len = result.active_votes.length;
+          for (var j = _len - 1; j >= 0; j--) {
             if (result.active_votes[j].voter === $rootScope.$storage.user.username) {
               if (result.active_votes[j].percent > 0) {
                 result.upvoted = true;  
@@ -478,7 +492,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       });
       confirmPopup.then(function(res) {
         if(res) {
-          console.log('You are sure');
+          $rootScope.log('You are sure');
           $rootScope.$broadcast('show:loading');
           if ($rootScope.$storage.user) {
               $rootScope.mylogin = new window.steemJS.Login();
@@ -523,15 +537,15 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             $rootScope.showAlert("Warning", "Please, login to Reblog");
           }
         } else {
-          console.log('You are not sure');
+          $rootScope.log('You are not sure');
         }
       });
     };
 
     $rootScope.votePost = function(post, type, afterward) {
       //window.Api = window.steemWS.Client.get();
-      //console.log(window.Api);
-      //console.log(window.steemJS);
+      //$rootScope.log(window.Api);
+      //$rootScope.log(window.steemJS);
 
       post.invoting = true;
       var tt = 1;
@@ -544,12 +558,12 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       if (type === "unvote") {
         tt = 0;
       }
-      console.log('voting '+tt);
+      $rootScope.log('voting '+tt);
       $rootScope.$broadcast('show:loading');
 
       if ($rootScope.$storage.user) {
         window.Api.initPromise.then(function(response) {
-          console.log("Api ready:", response);
+          $rootScope.log("Api ready:" + angular.toJson(response));
           $rootScope.mylogin = new window.steemJS.Login();
           $rootScope.mylogin.setRoles(["posting"]);
           var loginSuccess = $rootScope.mylogin.checkKeys({
@@ -587,7 +601,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         });
         /*var wif = steem.auth.toWif($rootScope.$storage.user.username, $rootScope.$storage.user.password, 'posting');
         steem.broadcast.vote(wif, $rootScope.$storage.user.username, post.author, post.permlink, $rootScope.$storage.voteWeight*tt, function(err, result) {
-            console.log(err, result);
+            $rootScope.log(err, result);
         });*/
         $rootScope.$broadcast('hide:loading');
       } else {
@@ -610,7 +624,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         });
         confirmPopup.then(function(res) {
           if(res) {
-            console.log('You are sure');
+            $rootScope.log('You are sure');
             $rootScope.$broadcast('show:loading');
             if ($rootScope.$storage.user) {
               if ($rootScope.$storage.user.password || $rootScope.$storage.user.privateActiveKey) {
@@ -657,7 +671,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               $rootScope.showAlert("Warning", "Please, login to Vote Witness");
             }
           } else {
-            console.log('You are not sure');
+            $rootScope.log('You are not sure');
           }
         });
     };
@@ -682,7 +696,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             if (mtype === "follow") {
               json = {follower:$rootScope.$storage.user.username, following:xx, what: ["blog"]};
             } else {
-              json = {follower:$rootScope.$storage.user.username, following:xx, what: []}  
+              json = {follower:$rootScope.$storage.user.username, following:xx, what: []};
             }
             
             tr.add_type_operation("custom_json", {
@@ -721,20 +735,20 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         //Keep in mind the function will return null if the token has not been established yet.
         FCMPlugin.getToken(
           function(token){
-            console.log("device "+token);
+            $rootScope.log("device "+token);
             $rootScope.$storage.deviceid = token;
             if ($rootScope.$storage.user) {
               APIs.saveSubscription(token, $rootScope.$storage.user.username, { device: ionic.Platform.platform() }).then(function(res){
-                console.log(angular.toJson(res));
+                $rootScope.log(angular.toJson(res));
               });
             } else {
               APIs.saveSubscription(token, "", { device: ionic.Platform.platform() }).then(function(res){
-                console.log(angular.toJson(res));
+                $rootScope.log(angular.toJson(res));
               });
             }
           },
           function(err){
-            console.log('error retrieving token: ' + err);
+            $rootScope.log('error retrieving token: ' + err);
           }
         );
 
@@ -755,11 +769,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                   });
 
                   alertPopup.then(function(res) {
-                    console.log('Thank you for seeing alert from tray');
+                    $rootScope.log('Thank you for seeing alert from tray');
                     if (res) {
                       $rootScope.getContentAndOpen(data.author, data.permlink);  
                     } else {
-                      console.log("not sure to open alert");
+                      $rootScope.log("not sure to open alert");
                     }
                   });
 
@@ -779,11 +793,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
           },
           function(msg){
-            console.log('onNotification callback successfully registered: ' + msg);
+            $rootScope.log('onNotification callback successfully registered: ' + msg);
             //alert("msg "+JSON.stringify(msg));
           },
           function(err){
-            console.log('Error registering onNotification callback: ' + err);
+            $rootScope.log('Error registering onNotification callback: ' + err);
           }
         );  
       }
