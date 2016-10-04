@@ -490,7 +490,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     $rootScope.reBlog = function(author, permlink) {
       var confirmPopup = $ionicPopup.confirm({
         title: 'Are you sure?',
-        template: 'Reblogging is irreversible for now, are you sure to continue?'
+        template: 'Resteem is irreversible, do you want to continue?'
       });
       confirmPopup.then(function(res) {
         if(res) {

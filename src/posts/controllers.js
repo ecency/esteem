@@ -557,6 +557,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.spost = {};
   $scope.tagsChange = function() {
     $rootScope.log("tagsChange");
+    $scope.spost.tags = $filter('lowercase')($scope.spost.tags);
     $scope.spost.category = $scope.spost.tags.split(" ");
     if ($scope.spost.category.length > 5) {
       $scope.disableBtn = true;
@@ -848,7 +849,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   //$scope.refresh();   
 })
 
-app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPopover) {
+app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPopover, $filter) {
   $scope.post = $rootScope.$storage.sitem;
   $scope.data = {};
   $scope.spost = {};  
@@ -1094,6 +1095,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         var tr = new window.steemJS.TransactionBuilder();
         var permlink = $scope.spost.permlink;
         var jjson = $filter("metadata")($scope.spost.body);
+        $scope.spost.tags = $filter('lowercase')($scope.spost.tags);
         var json = angular.merge(jjson, {tags: $scope.spost.tags.split(" ")});
 
         tr.add_type_operation("comment", {
@@ -1347,6 +1349,7 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
         }
         var ll = res.length;
         for (var i = 0; i < ll; i++) {
+          res[i].id = res[i].id.replace(/\./g,'');
           $scope.followers.push(res[i]);
         }
         if (res.length < $scope.limit) {
@@ -1354,6 +1357,7 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
         } else {
           setTimeout($scope.rfetching, 10);
         }
+        //console.log($scope.followers);
       });
     };
 
@@ -1363,7 +1367,9 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
           $scope.tt.duser = res[res.length-1].following;
         }
         var ll = res.length;
+        //console.log(res);
         for (var i = 0; i < ll; i++) {
+          res[i].id = res[i].id.replace(/\./g,'');
           $scope.following.push(res[i]);
         }
         if (res.length<$scope.limit) {
@@ -1371,6 +1377,7 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
         } else {
           setTimeout($scope.dfetching, 10);
         }
+        //console.log($scope.following);
       });
     };
 
@@ -1489,7 +1496,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       // Execute action
    });
 
-  $scope.show = function() {
+  $scope.showProfile = function() {
    var hideSheet = $ionicActionSheet.show({
      buttons: [
        { text: 'Capture Picture' },
@@ -1506,7 +1513,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       if (!$rootScope.$storage.user.password && !$rootScope.$storage.user.privateActiveKey) {
         $rootScope.showMessage("Error", "Please provide Active private key if you have chosen Advanced login mode!");
       } else {
-        $scope.changeProfileInfo(index);  
+        $scope.changeProfileInfo(index, 'profile');  
       }
       return true;
      }, 
@@ -1573,7 +1580,9 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
      }
    });
   };
-  $scope.changeProfileInfo = function(type) {
+
+
+  $scope.changeProfileInfo = function(type, which) {
     if (!$rootScope.$storage.user.password && !$rootScope.$storage.user.privateActiveKey) {
       $rootScope.showMessage("Error", "Please provide Active private key if you have chosen Advanced login mode!");
     } else {
@@ -1585,7 +1594,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           sourceType: (type===0)?Camera.PictureSourceType.CAMERA:Camera.PictureSourceType.PHOTOLIBRARY,
           allowEdit: (type===0)?true:false,
           encodingType: Camera.EncodingType.JPEG,
-          targetWidth: 500,
+          targetWidth: which==='profile'?500:1000,
           targetHeight: 500,
           popoverOptions: CameraPopoverOptions,
           saveToPhotoAlbum: false
@@ -1595,10 +1604,16 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           ImageUploadService.uploadImage(imageData).then(function(result) {
             //var url = result.secure_url || '';
             var url = result.imageUrl || '';
-            var update = { profile: { profile_image: "" } };
-            angular.merge(update, $rootScope.$storage.user.json_metadata);
-            if (update.profilePicUrl) {delete update.profilePicUrl;}
-            update.profile.profile_image = url;
+            var update = { profile: { cover_image: "", profile_image: ""} };
+            if (which === 'profile') {
+              angular.merge(update, $rootScope.$storage.user.json_metadata);
+              if (update.profilePicUrl) {delete update.profilePicUrl;}
+              update.profile.profile_image = url;  
+            } else {
+              angular.merge(update, $rootScope.$storage.user.json_metadata);
+              update.profile.cover_image = url;
+            }
+            
             setTimeout(function() {
               $rootScope.$broadcast('show:loading');
               if ($rootScope.$storage.user) {
@@ -1636,11 +1651,11 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have chosen Advanced mode.");
                 }
               $rootScope.$broadcast('hide:loading');
-            } else {
-              $rootScope.$broadcast('hide:loading');
-              $rootScope.showAlert("Warning", "Please, login to Update");
-            }
-            }, 50);
+              } else {
+                $rootScope.$broadcast('hide:loading');
+                $rootScope.showAlert("Warning", "Please, login to Update");
+              }
+            }, 25);
             if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
               $cordovaCamera.cleanup();
             }
@@ -1663,10 +1678,16 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         }).then(function(res) {
           $rootScope.log('Your url is'+ res);
           if (res) {
-            var update = { profile: { profile_image: "" } };
-            angular.merge(update, $rootScope.$storage.user.json_metadata);
-            if (update.profilePicUrl) {delete update.profilePicUrl;}
-            update.profile.profile_image = res;
+            var update = { profile: { profile_image: "", cover_image:"" } };
+            if (which==="profile") {
+              angular.merge(update, $rootScope.$storage.user.json_metadata);
+              if (update.profilePicUrl) {delete update.profilePicUrl;}
+              update.profile.profile_image = res;  
+            } else {
+              angular.merge(update, $rootScope.$storage.user.json_metadata);
+              update.profile.cover_image = res;
+            }
+            
             setTimeout(function() {
               if ($rootScope.$storage.user) {
                 $scope.mylogin = new window.steemJS.Login();
@@ -1705,12 +1726,96 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 $rootScope.$broadcast('hide:loading');
                 $rootScope.showAlert("Warning", "Please, login to Update");
               }
-            }, 50);
+            }, 25);
           }
         });
       }
     }
   };
+
+  $scope.showCover = function() {
+   var hideSheet = $ionicActionSheet.show({
+     buttons: [
+       { text: 'Capture Picture' },
+       { text: 'Select Picture' },
+       { text: 'Set Custom URL' },
+     ],
+     destructiveText: 'Reset',
+     titleText: 'Modify Cover Picture',
+     cancelText: 'Cancel',
+     cancel: function() {
+        // add cancel code..
+      },
+     buttonClicked: function(index) {
+      if (!$rootScope.$storage.user.password && !$rootScope.$storage.user.privateActiveKey) {
+        $rootScope.showMessage("Error", "Please provide Active private key if you have chosen Advanced login mode!");
+      } else {
+        $scope.changeProfileInfo(index, 'cover');
+      }
+      return true;
+     }, 
+     destructiveButtonClicked: function(index){
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'Are you sure?',
+        template: 'This will reset user cover picture'
+      });
+      confirmPopup.then(function(res) {
+        if(res) {
+          if (!$rootScope.$storage.user.password && !$rootScope.$storage.user.privateActiveKey) {
+            $rootScope.showMessage("Error", "Please provide Active private key if you have chosen Advanced login mode!");
+          } else {
+            var update = {profile: {cover_image:""} };
+            angular.merge(update, $rootScope.$storage.user.json_metadata);
+
+            $rootScope.log('You are sure');
+            if ($rootScope.$storage.user) {
+              $scope.mylogin = new window.steemJS.Login();
+              $scope.mylogin.setRoles(["active"]);
+              var loginSuccess = $scope.mylogin.checkKeys({
+                  accountName: $rootScope.$storage.user.username,    
+                  password: $rootScope.$storage.user.password || null,
+                  auths: {
+                    active: $rootScope.$storage.user.active.key_auths
+                  },
+                  privateKey: $rootScope.$storage.user.privateActiveKey || null
+                }
+              );
+              //todo: if json_metadata already exist make sure to keep it.
+              if (loginSuccess) {
+                var tr = new window.steemJS.TransactionBuilder();
+                tr.add_type_operation("account_update", {
+                  account: $rootScope.$storage.user.username,
+                  memo_key: $rootScope.$storage.user.memo_key,
+                  json_metadata: JSON.stringify(update)      
+                });
+                localStorage.error = 0;
+                tr.process_transaction($scope.mylogin, null, true);
+                setTimeout(function() {
+                  if (localStorage.error == 1) {
+                    $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                  } else {
+                    $rootScope.$broadcast('refreshLocalUserData');
+                  }
+                }, 3000);
+              } else {
+                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have chosen Advanced mode.");
+              }
+              $rootScope.$broadcast('hide:loading');
+            } else {
+              $rootScope.$broadcast('hide:loading');
+              $rootScope.showAlert("Warning", "Please, login to Update");
+            }
+          }
+        } else {
+          $rootScope.log('You are not sure');
+        }
+      });
+      return true;
+     }
+   });
+  };
+
+
   $rootScope.$on('profileRefresh', function(){
     $scope.refresh();
   });

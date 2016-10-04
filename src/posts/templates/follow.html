@@ -12,8 +12,8 @@
         <input type="text" ng-model="searchu.following" placeholder="Search following">
       </label>
     </div>
-    <div class="list" ng-if="active=='followers'">
-      <div class="item item-button-right" ng-repeat="f in followers | filter:searchu track by $index">
+    <div class="list" ng-if="active=='followers' && followers.length>0">
+      <div class="item item-button-right" ng-repeat="f in followers | filter:searchu  track by $index">
         <span ng-click="profileView(f.follower)">{{f.follower}}</span>
         <button class="button button-positive button-outline" ng-if="!isFollowed(f.follower)" ng-click="followUser(f.follower)">
         Follow back
@@ -23,8 +23,8 @@
         </button>
       </div>
     </div>
-    <div class="list" ng-if="active=='following'">
-      <div class="item item-button-right" ng-repeat="f in following | filter:searchu track by $index">
+    <div class="list" ng-if="active=='following' && following.length>0">
+      <div class="item item-button-right" ng-repeat="f in following | filter:searchu  track by $index">
         <span ng-click="profileView(f.following)">{{f.following}}</span>
         <button class="button button-positive button-outline" ng-if="!isFollowing(f.following)" ng-click="unfollowUser(f.following)">
         Unfollow

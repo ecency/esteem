@@ -1,24 +1,30 @@
-<ion-view view-title="" hide-nav-bar="true">
-    <div class="bar bar-subheader mysubheader bar-positive">
-    <button class="button button-icon button-clear ion-ios-arrow-back profilebtn" ng-click="goBack()"></button>
-    <button class="button button-outline button-light profilebtn_follow" ng-click="followUser(user.username)" ng-if="$root.$storage.user && $root.$storage.user.username != user.username && !isFollowing(user.username)"><!--<i class="fa fa-user-plus fa-lg"></i>-->Follow</button>
-    <button class="button button-outline button-light profilebtn_follow" ng-click="unfollowUser(user.username)" ng-if="$root.$storage.user && $root.$storage.user.username != user.username && isFollowing(user.username)"><!--button-icon button-clear<i class="fa fa-user-times fa-lg"></i>-->Unfollow</button>&nbsp;
-    <div ng-if="$root.$storage.user" class="center">
-        <div class="item-myavatar" ng-if="$root.$storage.user && $root.$storage.user.username == user.username">
-          <span class="item-myavatar" ng-if="!($root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image)"><ng-letter-avatar data="{{$root.$storage.user.username}}" shape="round" ng-click="show()"></ng-letter-avatar></span>
-          <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.profilePicUrl}}" ng-if="$root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image" ng-click="show()" />
-          <h4 class="center"><span class="light">@{{$root.$storage.user.username}}</span>&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation}}</div></h4>
-          <div class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}}&nbsp;|&nbsp;<i class="icon ion-ios-people"></i>&nbsp;{{follower.length}}&nbsp;|&nbsp;<i class="ion-person-add"></i>&nbsp;{{following.length}}</div>
-        </div>
-        <div class="item-myavatar" ng-if="$root.$storage.user && $root.$storage.user.username != user.username"">
-          <span class="item-myavatar" ng-if="!(user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image)"><ng-letter-avatar data="{{user.username}}" shape="round"></ng-letter-avatar></span>
-          <img ng-src="{{user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image}}" ng-if="user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image" />
-          <h4 class="center"><span class="light">@{{user.username}}</span>&nbsp;<div class="reputation">{{user.reputation|reputation}}</div></h4>
-          <div class="padding"><i class="icon ion-android-list"></i>&nbsp;{{user.post_count}}&nbsp;posts&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{user.voting_power/100|number:2}}&nbsp;voting</div>
-        </div>
+<ion-view view-title="" hide-nav-bar="true"><!--ng-class="{'mpb':$root.$storage.user.json_metadata.profile.cover_image}"-->
+  <ion-content class="has-footer" overflow-scroll="true">
+    <div class="bar bar-subheader mysubheader bar-positive" ng-style="$root.$storage.user.json_metadata.profile.cover_image ? {'background': 'url({{$root.$storage.user.json_metadata.profile.cover_image}})', 'background-size': cover, 'background-position':fixed} : {'background-size':'center center'}">
+      <button class="button button-icon button-clear ion-ios-arrow-back profilebtn" ng-click="goBack()"></button>
+      <button class="button button-outline button-light profilebtn_follow" ng-click="followUser(user.username)" ng-if="$root.$storage.user && $root.$storage.user.username != user.username && !isFollowing(user.username)"><!--<i class="fa fa-user-plus fa-lg"></i>-->Follow</button>
+      <button class="button button-clear profilebtn_follow button-icon ion-camera" ng-click="showCover()" ng-if="$root.$storage.user && $root.$storage.user.username === user.username"></button>
+      <button class="button button-outline button-light profilebtn_follow" ng-click="unfollowUser(user.username)" ng-if="$root.$storage.user && $root.$storage.user.username != user.username && isFollowing(user.username)"><!--button-icon button-clear<i class="fa fa-user-times fa-lg"></i>-->Unfollow</button>&nbsp;
+      <div class="center">
+          <div class="item-myavatar" ng-if="$root.$storage.user && $root.$storage.user.username == user.username">
+            <span class="item-myavatar" ng-if="!($root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image)"><img src="img/photo.png" ng-click="showProfile()"></span>
+            <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.profilePicUrl}}" ng-if="$root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image" ng-click="showProfile()" />
+            <div class="footprofileinfo">
+              <h4 class="center"><span class="light">@{{$root.$storage.user.username}}</span>&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation}}</div></h4>
+              <div class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}}&nbsp;|&nbsp;<i class="icon ion-ios-people"></i>&nbsp;{{follower.length}}&nbsp;|&nbsp;<i class="ion-person-add"></i>&nbsp;{{following.length}}</div>
+            </div>
+          </div>
+          <div class="item-myavatar" ng-if="$root.$storage.user.username !== user.username">
+            <span class="item-myavatar" ng-if="!(user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image)"><ng-letter-avatar data="{{user.username}}" shape="round"></ng-letter-avatar></span>
+            <img ng-src="{{user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image}}" ng-if="user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image" />
+            <div class="footprofileinfo">
+              <h4 class="center"><span class="light">@{{user.username}}</span>&nbsp;<div class="reputation">{{user.reputation|reputation}}</div></h4>
+              <div class="padding"><i class="icon ion-android-list"></i>&nbsp;{{user.post_count}}&nbsp;posts&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{user.voting_power/100|number:2}}&nbsp;voting</div>
+            </div>
+          </div>
+      </div>
     </div>
-  </div>
-  <ion-content class="has-footer has-mysubheader" overflow-scroll="true">
+    <div class="has-mysubheader">
         <div class="box blue" ng-if="active!='wallet'||active!='permissions'">
           <ion-list>
             <!--<div ng-repeat="(key, playlist) in profile" class="item wrap" ng-click="open(playlist)">
@@ -150,6 +156,7 @@
             </div>
           </div>
         </div>
+    </div>
     <script id = "popoverPTr.html" type="text/ng-template">
       <ion-popover-view class="detailedPost">
         <ion-content>

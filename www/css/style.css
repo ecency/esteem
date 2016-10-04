@@ -51,20 +51,35 @@ hr {
 .postdetails {
   font-size: 14px;
 }
+.mpb {
+  -webkit-background-size: cover!important;
+  -moz-background-size: cover!important;
+  -o-background-size: cover!important;
+  background-size: cover!important;
+}
 .platform-android .mysubheader {
-  top: 0px!important;
+  top: 0px;
   height: 190px!important;
 }
 .platform-ios .mysubheader {
   padding-top: 20px!important;
-  top: 0px!important;
+  top: 0px;
   height: 210px!important;
 }
 .platform-android .has-mysubheader {
-  top: 190px;
+  padding-top: 210px!important;
 }
 .platform-ios .has-mysubheader {
-  top: 210px;
+  padding-top: 230px!important;
+}
+.platform-android .footprofileinfo {
+  margin-top: 50px!important;
+}
+.platform-ios .footprofileinfo {
+  margin-top: 70px!important;
+}
+.footprofileinfomenu div {
+  color: #fff;
 }
 .pane img {
 	max-width: 100%;
@@ -314,7 +329,7 @@ textarea.markdown-input {
   background-color: #f8f8f8;
   border-radius: 50%;
   border: 1px solid #dadada;
-  color: ##8a8a8a;
+  color: #000!important;
 }
 .stitle.row, .stitle.row .col {
 	padding: 0px;
@@ -334,7 +349,14 @@ textarea.markdown-input {
   -moz-box-shadow: 0 0 0 1px #fff, 0 0 0 1px #999, 0 1px 1px 1px rgba(0,0,0,.2);
   box-shadow: 0 0 0 1px #fff, 0 0 0 1px #999, 0 1px 1px 1px rgba(0,0,0,.2);
 }
-
+.item-myavatar .footprofileinfo {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border-radius: 5px;
+  margin: 0;
+  font: 14px Sans-Serif;
+  line-height: 14px;
+}
 .platform-android .action-sheet-backdrop.active {
   background-color: rgba(0, 0, 0, 0.1); 
 }
