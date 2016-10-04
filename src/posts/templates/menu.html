@@ -25,14 +25,14 @@
           </div>
         </center>
       </div>
-      <div ng-if="$root.$storage.user" ng-style="$root.$storage.user.json_metadata.profile.cover_image ? {'background': 'url({{$root.$storage.user.json_metadata.profile.cover_image}})', 'background-size': 'cover', 'background-position':'fixed', 'color':'#fff'} : {'background-size':'center center'}">
+      <div ng-if="$root.$storage.user" ng-style="$root.$storage.user.json_metadata.profile.cover_image ? {'background': 'url({{$root.$storage.user.json_metadata.profile.cover_image}})', 'background-size': 'cover', 'background-position':'fixed'} : {'background-size':'center center'}">
       <br>
         <center>
           <a menu-close href="#/app/profile/{{$root.$storage.user.username}}" class="item-myavatar" ng-if="$root.$storage.user">
             <span class="item-myavatar" ng-if="!$root.$storage.user.json_metadata.profilePicUrl && !$root.$storage.user.json_metadata.profile.profile_image"><img src="img/photo.png"></span>
             <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.profilePicUrl}}" ng-if="$root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image" />
           </a>
-          <div class="footprofileinfomenu">
+          <div ng-class="{'footprofileinfomenu':$root.$storage.user.json_metadata.profile.cover_image}">
             <div class="h4">@{{$root.$storage.user.username}}&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation:true|number:1}}</div></div>
             <div ng-click="showMeExtra()" class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}} <i class="icon pull-right" ng-class="{'ion-arrow-down-b':!showExtra, 'ion-arrow-up-b':showExtra}"></i></div>
           </div>

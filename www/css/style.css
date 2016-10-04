@@ -59,12 +59,12 @@ hr {
 }
 .platform-android .mysubheader {
   top: 0px;
-  height: 190px!important;
+  height: 187px!important;
 }
 .platform-ios .mysubheader {
   padding-top: 20px!important;
   top: 0px;
-  height: 210px!important;
+  height: 207px!important;
 }
 .platform-android .has-mysubheader {
   padding-top: 210px!important;

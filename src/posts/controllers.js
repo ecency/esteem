@@ -1766,7 +1766,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           } else {
             var update = {profile: {cover_image:""} };
             angular.merge(update, $rootScope.$storage.user.json_metadata);
-
+            update.profile.cover_image = "";
+            
             $rootScope.log('You are sure');
             if ($rootScope.$storage.user) {
               $scope.mylogin = new window.steemJS.Login();
