@@ -309,44 +309,52 @@ module.exports = function (app) {
             var curEl = angular.element(icons[index]);
             var prvEl = angular.element(iconsDiv[0].querySelector(".active"));
             if(curEl && curEl.length){
-            var curElWidth = curEl[0].offsetWidth, curElLeft = curEl[0].offsetLeft;
+              var curElWidth = curEl[0].offsetWidth, curElLeft = curEl[0].offsetLeft;
 
-            if(prvEl.attr('icon-off')) {
-              prvEl.attr("class", prvEl.attr('icon-off'));
-            }else{
-              prvEl.removeClass("active");
-            }
-            if(curEl.attr('icon-on')) {
-              curEl.attr("class", curEl.attr('icon-on'));
-            }
-            curEl.addClass("active");
-            
-            var leftStr = (middle  - (curElLeft) -  curElWidth/2 + 5);
-            //If tabs are not scrollable
-            if(!scrollDiv){
-              var leftStr = (middle  - (curElLeft) -  curElWidth/2 + 5) + "px";
-              wrap.style.webkitTransform =  "translate3d("+leftStr+",0,0)" ;
-            }else{
-              //If scrollable tabs
-              var wrapWidth = wrap.offsetWidth;
-              var currentX = Math.abs(getX(scrollDiv.style.webkitTransform));
-              var leftOffset = 100;
-              var elementOffset = 54;
-              //If tabs are reaching right end or left end
-              if(((currentX + wrapWidth) < (curElLeft + curElWidth + elementOffset)) || (currentX > (curElLeft - leftOffset))){
-                if(leftStr > 0){
-                  leftStr = 0;
-                }
-                //Use this scrollTo, so when scrolling tab manually will not flicker
-                setTimeout(function() {
-                  ionicScrollDelegate.scrollTo(Math.abs(leftStr), 0, true);
-                }, 10);
-                
+              if(prvEl.attr('icon-off')) {
+                prvEl.attr("class", prvEl.attr('icon-off'));
+              } else{
+                prvEl.removeClass("active");
               }
-            }
+              if(curEl.attr('icon-on')) {
+                curEl.attr("class", curEl.attr('icon-on'));
+              }
+              curEl.addClass("active");
+            
+              var leftStr = (middle  - (curElLeft) -  curElWidth/2 + 5);
+              //If tabs are not scrollable
+              if(!scrollDiv){
+                var leftStr = (middle  - (curElLeft) -  curElWidth/2 + 5) + "px";
+                wrap.style.webkitTransform =  "translate3d("+leftStr+",0,0)" ;
+              } else {
+                //If scrollable tabs
+                var wrapWidth = wrap.offsetWidth;
+                var currentX = Math.abs(getX(scrollDiv.style.webkitTransform));
+                var leftOffset = 100;
+                var elementOffset = 54;
+                //If tabs are reaching right end or left end
+                if(((currentX + wrapWidth) < (curElLeft + curElWidth + elementOffset)) || (currentX > (curElLeft - leftOffset))){
+                  if(leftStr > 0){
+                    leftStr = 0;
+                  }
+                  //Use this scrollTo, so when scrolling tab manually will not flicker
+                  setTimeout(function() {
+                    ionicScrollDelegate.scrollTo(Math.abs(leftStr), 0, true);
+                  }, 10);
+                  
+                } else {
+                  if(leftStr > 0){
+                    leftStr = 0;
+                  }
+                  setTimeout(function() {
+                    ionicScrollDelegate.scrollTo(Math.abs(leftStr), 0, true);
+                  }, 10);
+                }
+              }
             }
           };
           function getX(matrix) {
+
             matrix = matrix.replace("translate3d(","");
             matrix = matrix.replace("translate(","");
             return (parseInt(matrix));

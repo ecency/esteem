@@ -146,17 +146,19 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     if ($rootScope.$storage.deviceid) {
       APIs.deleteSubscription($rootScope.$storage.deviceid).then(function(res){
         $ionicSideMenuDelegate.toggleLeft();
-        $rootScope.$broadcast('fetchPosts');
+        //$rootScope.$broadcast('fetchPosts');
         $rootScope.$broadcast("user:logout");
         $state.go('app.posts');
+        $state.go($state.current, {}, {reload: true});
       });  
     } else {
       $ionicSideMenuDelegate.toggleLeft();
-      $rootScope.$broadcast('fetchPosts');
+      //$rootScope.$broadcast('fetchPosts');
       $rootScope.$broadcast("user:logout");
       $state.go('app.posts');
+      $state.go($state.current, {}, {reload: true});
     }
-    
+    //$rootScope.$broadcast('ngRepeatFinished');
   };
   $scope.data = {};
   $ionicModal.fromTemplateUrl('templates/search.html', {

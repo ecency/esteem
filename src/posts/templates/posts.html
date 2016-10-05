@@ -1,4 +1,4 @@
-<ion-view view-title="{{$root.$storage.filter}} | {{$root.$storage.tag}}">
+<ion-view view-title="{{$root.$storage.filter}} | {{$root.$storage.tag}}" cache-view="false">
 	<ion-nav-bar class="bar-positive">
 		<ion-nav-back-button>
   		</ion-nav-back-button>
@@ -24,7 +24,7 @@
 	    	<div class="tsb-icons">
 	    		<div class="tsb-ic-wrp">
 					<ion-scroll direction="x" class="tsb-hscroll">
-					<a href="javascript:;" class="" ng-if="mymenu.length==10">Feed</a>
+					<a href="javascript:;" class="" ng-if="mymenu.length===10">Feed</a>
 					<a href="javascript:;" class="">Trending</a>
 					<a href="javascript:;" class="">Hot</a>
 					<a href="javascript:;" class="">New</a>
