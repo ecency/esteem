@@ -697,15 +697,15 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             var tr = new window.steemJS.TransactionBuilder();
             var json;
             if (mtype === "follow") {
-              json = [{follower:$rootScope.$storage.user.username, following:xx, what: ["blog"]}];
+              json = ['follow',{follower:$rootScope.$storage.user.username, following:xx, what: ["blog"]}];
             } else {
-              json = [{follower:$rootScope.$storage.user.username, following:xx, what: []}];
+              json = ['follow',{follower:$rootScope.$storage.user.username, following:xx, what: []}];
             }
             
             tr.add_type_operation("custom_json", {
               id: 'follow',
               required_posting_auths: [$rootScope.$storage.user.username],
-              json: JSON.stringify(json)
+              json: angular.toJson(json)
             });
             localStorage.error = 0;
             tr.process_transaction($rootScope.mylogin, null, true);
