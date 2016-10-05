@@ -1354,7 +1354,9 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
           $scope.followers.push(res[i]);
         }
         if (res.length < $scope.limit) {
-
+          if (!$scope.$$phase){
+            $scope.$apply();
+          }
         } else {
           setTimeout($scope.rfetching, 10);
         }
@@ -1374,7 +1376,9 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
           $scope.following.push(res[i]);
         }
         if (res.length<$scope.limit) {
-          
+          if (!$scope.$$phase){
+            $scope.$apply();
+          }
         } else {
           setTimeout($scope.dfetching, 10);
         }
@@ -1430,7 +1434,11 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
 
   $scope.$on('current:reload', function(){
     $rootScope.log('current:reload');
-    $state.go($state.current, {}, {reload: true});
+    //$state.go($state.current, {}, {reload: true});
+    $scope.followers = [];
+    $scope.following = [];
+    $scope.rfetching();
+    $scope.dfetching();
   });
 
   $scope.unfollowUser = function(xx){
