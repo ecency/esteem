@@ -60,6 +60,19 @@
         </label>
       </div>
     </div>
+      <div class="row">
+      <div class="col col-33">
+      <span class="slabel" ng-click="openTooltip($event,'You will get notification when someone mentions you in their post/comment!')"><i class="icon ion-ios-information-outline gray"></i> Mentions</span>
+      </div>
+      <div class="col pull-right tright">
+        <label class="toggle toggle-positive">
+         <input type="checkbox" ng-model="data.mention" ng-change="notificationChange()">
+         <div class="track">
+           <div class="handle"></div>
+         </div>
+        </label>
+      </div>
+    </div>
     </div>
     <div class="item item-divider">
       Configurations
