@@ -24,7 +24,7 @@
 	    	<div class="tsb-icons">
 	    		<div class="tsb-ic-wrp">
 					<ion-scroll direction="x" class="tsb-hscroll">
-					<a href="javascript:;" class="" ng-hide="!$root.$storage.user">Feed</a>
+					<a href="javascript:;" class="" ng-if="mymenu.length==10">Feed</a>
 					<a href="javascript:;" class="">Trending</a>
 					<a href="javascript:;" class="">Hot</a>
 					<a href="javascript:;" class="">New</a>
@@ -38,7 +38,7 @@
 				</div>
 	    	</div>
 	    	<ion-slide-box show-pager="false" on-slide-changed="slideHasChanged($index)">
-	            <ion-slide ng-repeat="i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] track by $index" delegate-handle="{{$index}}" style="height:100%;">
+	            <ion-slide ng-repeat="i in mymenu track by $index" delegate-handle="{{$index}}" style="height:100%;">
 	            <!--<div ng-if="currentSlide !== $index"></div>-->
 	            <div>
 	            	<div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">

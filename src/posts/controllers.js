@@ -411,6 +411,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
 app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService, $filter) {
   
   $scope.activeMenu = $rootScope.$storage.filter || "trending";
+  $scope.mymenu = $rootScope.$storage.user ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] : [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
   $rootScope.$on('filter:change', function() {
     $rootScope.$broadcast('show:loading');
@@ -790,7 +791,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
   };
   
-  $scope.$on('$ionicView.afterEnter', function(){
+  $scope.$on('$ionicView.beforeEnter', function(){
     $scope.limit = 5;
     $rootScope.$broadcast('show:loading');
     if (!$rootScope.$storage.socket) {
@@ -826,7 +827,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         }, 15000);
         setTimeout(function() {
           $scope.fetchPosts(null, $scope.limit, null);  
-        }, 1);
+        }, 10);
       });
     } else {
       setTimeout(function() {
@@ -1458,6 +1459,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     $rootScope.following(xx, "follow");
   };
   $scope.unfollowUser = function(xx){
+    $rootScope.log(xx);
     $rootScope.following(xx, "unfollow");
   };
 

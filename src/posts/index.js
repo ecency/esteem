@@ -680,6 +680,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     $rootScope.following = function(xx, mtype) {
       $rootScope.$broadcast('show:loading');
+      $rootScope.log(xx);
       if ($rootScope.$storage.user) {
           $rootScope.mylogin = new window.steemJS.Login();
           $rootScope.mylogin.setRoles(["posting"]);
@@ -696,9 +697,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             var tr = new window.steemJS.TransactionBuilder();
             var json;
             if (mtype === "follow") {
-              json = {follower:$rootScope.$storage.user.username, following:xx, what: ["blog"]};
+              json = [{follower:$rootScope.$storage.user.username, following:xx, what: ["blog"]}];
             } else {
-              json = {follower:$rootScope.$storage.user.username, following:xx, what: []};
+              json = [{follower:$rootScope.$storage.user.username, following:xx, what: []}];
             }
             
             tr.add_type_operation("custom_json", {
@@ -733,9 +734,67 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     if (window.cordova) {
       if (!ionic.Platform.isWindowsPhone()) {
+        window.FirebasePlugin.getInstanceId(function(token) {
+            // save this server-side and use it to push notifications to this device
+            $rootScope.log("device "+token);
+            $rootScope.$storage.deviceid = token;
+            if ($rootScope.$storage.user) {
+              APIs.saveSubscription(token, $rootScope.$storage.user.username, { device: ionic.Platform.platform() }).then(function(res){
+                $rootScope.log(angular.toJson(res));
+              });
+            } else {
+              APIs.saveSubscription(token, "", { device: ionic.Platform.platform() }).then(function(res){
+                $rootScope.log(angular.toJson(res));
+              });
+            }
+        }, function(error) {
+            console.error(error);
+        });
+
+        window.FirebasePlugin.onNotificationOpen(function(data) {
+            $rootScope.log(angular.toJson(data));
+            if(data.tap){
+              //Notification was received on device tray and tapped by the user.
+              //alert( JSON.stringify(data) );
+              if (data.author && data.permlink) {
+                if (!$rootScope.$storage.pincode) {
+
+                  var alertPopup = $ionicPopup.confirm({
+                    title: data.title,
+                    template: data.body + ", opening post"
+                  });
+
+                  alertPopup.then(function(res) {
+                    $rootScope.log('Thank you for seeing alert from tray');
+                    if (res) {
+                      setTimeout(function() {
+                        $rootScope.getContentAndOpen(data.author, data.permlink);    
+                      }, 10);
+                    } else {
+                      $rootScope.log("not sure to open alert");
+                    }
+                  });
+
+                } else {
+                  $rootScope.$storage.notifData = {title:data.title, body: data.body, author: data.author, permlink: data.permlink};
+                  $rootScope.pinenabled = true;
+                }
+              }
+            } else{
+              //Notification was received in foreground. Maybe the user needs to be notified.
+              //alert( JSON.stringify(data) );
+              if (data.author && data.permlink) {
+                $rootScope.showMessage(data.title, data.body+" "+data.permlink);
+              } else {
+                $rootScope.showMessage(data.title, data.body);
+              }
+            }
+        }, function(error) {
+            console.error(error);
+        });
         //FCMPlugin.getToken( successCallback(token), errorCallback(err) );
         //Keep in mind the function will return null if the token has not been established yet.
-        FCMPlugin.getToken(
+        /*FCMPlugin.getToken(
           function(token){
             $rootScope.log("device "+token);
             $rootScope.$storage.deviceid = token;
@@ -801,7 +860,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           function(err){
             $rootScope.log('Error registering onNotification callback: ' + err);
           }
-        );  
+        );*/  
       }
       
     }
