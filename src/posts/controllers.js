@@ -1958,21 +1958,24 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       }
     };
     $scope.getOtherUsersData = function() {
-      $rootScope.log("getOtherUsersData");
+      console.log("getOtherUsersData");
       (new Steem(localStorage.socketUrl)).getAccounts([$stateParams.username], function(err, dd) {
         dd = dd[0];
         if (dd.json_metadata) {
           dd.json_metadata = angular.fromJson(dd.json_metadata);
         }
         angular.merge($scope.user, dd);
-
+        //console.log(angular.toJson($scope.user));
+        //console.log($scope.user.json_metadata.profile.cover_image);
         if(!$scope.$$phase){
           $scope.$apply();
         }
+        $scope.css = ($rootScope.$storage.user.username === $scope.user.username && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : ($rootScope.$storage.user.username !== $scope.user.username && ($scope.user.json_metadata && $scope.user.json_metadata.profile.cover_image)) ? {'background': 'url('+$scope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;  
       });
+      
       $scope.getFollows(null, "d");
     };
-   
+    
     $scope.refresh();  
 
     if ($rootScope.$storage.user.username !== $stateParams.username) {
@@ -1983,6 +1986,11 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       $scope.getFollows("r","d");
       //}
     }
+    setTimeout(function() {
+      $scope.css = ($rootScope.$storage.user.username === $scope.user.username && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : ($rootScope.$storage.user.username !== $scope.user.username && ($scope.user.json_metadata && $scope.user.json_metadata.profile.cover_image)) ? {'background': 'url('+$scope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;  
+      console.log($scope.css);
+    }, 10);
+    
   });
   $scope.openMenu = function() {
     $ionicSideMenuDelegate.toggleLeft();
