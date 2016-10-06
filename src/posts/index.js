@@ -728,12 +728,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       }
     };
 
-
-
-
-
     if (window.cordova) {
       if (!ionic.Platform.isWindowsPhone()) {
+
         window.FirebasePlugin.getInstanceId(function(token) {
             // save this server-side and use it to push notifications to this device
             $rootScope.log("device "+token);
@@ -753,9 +750,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
         window.FirebasePlugin.onNotificationOpen(function(data) {
             $rootScope.log(angular.toJson(data));
+            //console.log(data.tap);
             if(data.tap){
               //Notification was received on device tray and tapped by the user.
-              //alert( JSON.stringify(data) );
+              console.log(JSON.stringify(data));
               if (data.author && data.permlink) {
                 if (!$rootScope.$storage.pincode) {
 
@@ -860,7 +858,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           function(err){
             $rootScope.log('Error registering onNotification callback: ' + err);
           }
-        );*/  
+        ); */ 
       }
       
     }

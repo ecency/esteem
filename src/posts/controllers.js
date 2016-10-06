@@ -93,8 +93,12 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
             $rootScope.$storage.mylogin = $scope.login;
             APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, {device: ionic.Platform.platform()}).then(function(res){
               $rootScope.$broadcast('hide:loading');
+              $state.go($state.current, {}, {reload: true});
               //$state.go('app.posts', {}, { reload: true });
               $scope.closeLogin();
+              $ionicHistory.clearCache();
+              $ionicHistory.clearHistory();
+              $rootScope.$broadcast('refreshLocalUserData');
             });
           }
           /*if(!$scope.$$phase) {
@@ -120,6 +124,10 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
           dd.json_metadata = angular.fromJson(dd.json_metadata);
         }
         angular.merge($rootScope.$storage.user, dd);
+        if (!$scope.$$phase) {
+          $scope.$apply();
+        }
+        $scope.mcss = ($rootScope.$storage.user.json_metadata && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
       });
     }
   })
@@ -158,6 +166,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       $state.go('app.posts');
       $state.go($state.current, {}, {reload: true});
     }
+    //$ionicHistory.clearCache();
+    $ionicHistory.clearHistory();
     //$rootScope.$broadcast('ngRepeatFinished');
   };
   $scope.data = {};
@@ -701,9 +711,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
     $rootScope.$broadcast('show:loading');
     $scope.refresh();
-    setTimeout(function() {
+    /*setTimeout(function() {
       $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
-    }, 10);
+    }, 10);*/
     
   }
   function arrayObjectIndexOf(myArray, searchTerm, property) {
@@ -793,7 +803,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
   };
   
-  $scope.$on('$ionicView.beforeEnter', function(){
+  $scope.$on('$ionicView.loaded', function(){
     $scope.limit = 5;
     $rootScope.$broadcast('show:loading');
     if (!$rootScope.$storage.socket) {
@@ -805,37 +815,40 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     if (!$rootScope.$storage.filter) {
       $rootScope.$storage.filter = "trending";
     }
-    if (!angular.isDefined($rootScope.timeint)) {
-      window.Api.initPromise.then(function(response) {
-        $rootScope.log("Api ready:" + angular.toJson(response));
-        $rootScope.timeint = $interval(function(){  
-          window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
-            $rootScope.log("get_dynamic_global_properties "+ response.head_block_number);
-            if ($rootScope.$storage.user) {
-              $scope.mylogin = new window.steemJS.Login();
-              $scope.mylogin.setRoles(["posting"]);
-              var loginSuccess = $scope.mylogin.checkKeys({
-                  accountName: $rootScope.$storage.user.username,    
-                  password: $rootScope.$storage.user.password || null,
-                  auths: {
-                      posting: $rootScope.$storage.user.posting.key_auths
-                  },
-                  privateKey: $rootScope.$storage.user.privatePostingKey || null
-                }
-              );
-              $rootScope.log("login "+loginSuccess);
-            }          
-          });
-        }, 15000);
+    if (window.Api) {
+      if (!angular.isDefined($rootScope.timeint)) {
+        window.Api.initPromise.then(function(response) {
+          $rootScope.log("Api ready:" + angular.toJson(response));
+          $rootScope.timeint = $interval(function(){  
+            window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
+              $rootScope.log("get_dynamic_global_properties "+ response.head_block_number);
+              if ($rootScope.$storage.user) {
+                $scope.mylogin = new window.steemJS.Login();
+                $scope.mylogin.setRoles(["posting"]);
+                var loginSuccess = $scope.mylogin.checkKeys({
+                    accountName: $rootScope.$storage.user.username,    
+                    password: $rootScope.$storage.user.password || null,
+                    auths: {
+                        posting: $rootScope.$storage.user.posting.key_auths
+                    },
+                    privateKey: $rootScope.$storage.user.privatePostingKey || null
+                  }
+                );
+                $rootScope.log("login "+loginSuccess);
+              }          
+            });
+          }, 15000);
+          setTimeout(function() {
+            $scope.fetchPosts(null, $scope.limit, null);  
+          }, 10);
+        });
+      } else {
         setTimeout(function() {
-          $scope.fetchPosts(null, $scope.limit, null);  
+          $scope.fetchPosts(null, $scope.limit, null);    
         }, 10);
-      });
-    } else {
-      setTimeout(function() {
-        $scope.fetchPosts(null, $scope.limit, null);    
-      }, 1);
+      }  
     }
+    
     setTimeout(function() {
       $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();   
     }, 10);
@@ -845,7 +858,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     if ($stateParams.tags) {
       $rootScope.$storage.tag = $stateParams.tags;
     }
-    $rootScope.$broadcast('show:loading');
+    //$rootScope.$broadcast('show:loading');
   });
 
   

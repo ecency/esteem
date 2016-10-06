@@ -378,92 +378,93 @@ module.exports = function (app) {
             $scope.currentSlide = index;
             $scope.events.trigger("slideChange", {"index" : index});
             $timeout(function(){
-              if($scope.onSlideMove) 
+              if($scope.onSlideMove) {
                 $scope.onSlideMove({"index" : eval(index)});
-            }, 10);
+              }
 
-            if ($rootScope.$storage.user) {
-              if (index === 0) {
-                $rootScope.$storage.filter = 'feed';
-                $rootScope.$broadcast('filter:change');
+              if ($rootScope.$storage.user) {
+                if (index === 0) {
+                  $rootScope.$storage.filter = 'feed';
+                  $rootScope.$broadcast('filter:change');
+                }
+                if (index === 1) {
+                  $rootScope.$storage.filter = 'trending';
+                  $rootScope.$broadcast('filter:change');
+                }
+                if (index === 2) {
+                  $rootScope.$storage.filter = 'hot';
+                  $rootScope.$broadcast('filter:change');
+                }
+                if (index === 3) {
+                  $rootScope.$storage.filter = 'created';
+                  $rootScope.$broadcast('filter:change');
+                }
+                if (index === 4) {
+                  $rootScope.$storage.filter = 'active';
+                  $rootScope.$broadcast('filter:change');
+                }
+                if (index === 5) {
+                  $rootScope.$storage.filter = 'promoted';
+                  $rootScope.$broadcast('filter:change');
+                }
+                if (index === 6) {
+                  $rootScope.$storage.filter = 'trending30';
+                  $rootScope.$broadcast('filter:change');
+                }
+                if (index === 7) {
+                  $rootScope.$storage.filter = 'votes';
+                  $rootScope.$broadcast('filter:change');
+                }
+                if (index === 8) {
+                  $rootScope.$storage.filter = 'children';
+                  $rootScope.$broadcast('filter:change');
+                }
+                if (index === 9) {
+                  $rootScope.$storage.filter = 'cashout';
+                  $rootScope.$broadcast('filter:change');
+                }
+              } else {
+                if (index === 0) {
+                  $rootScope.$storage.filter = 'trending';
+                  $rootScope.$broadcast('filter:change');
+                }
+                if (index === 1) {
+                  $rootScope.$storage.filter = 'hot';
+                  $rootScope.$broadcast('filter:change');
+                }
+                if (index === 2) {
+                  $rootScope.$storage.filter = 'created';
+                  $rootScope.$broadcast('filter:change');
+                }
+                if (index === 3) {
+                  $rootScope.$storage.filter = 'active';
+                  $rootScope.$broadcast('filter:change');
+                }
+                if (index === 4) {
+                  $rootScope.$storage.filter = 'promoted';
+                  $rootScope.$broadcast('filter:change');
+                }
+                if (index === 5) {
+                  $rootScope.$storage.filter = 'trending30';
+                  $rootScope.$broadcast('filter:change');
+                }
+                if (index === 6) {
+                  $rootScope.$storage.filter = 'votes';
+                  $rootScope.$broadcast('filter:change');
+                }
+                if (index === 7) {
+                  $rootScope.$storage.filter = 'children';
+                  $rootScope.$broadcast('filter:change');
+                }
+                if (index === 8) {
+                  $rootScope.$storage.filter = 'cashout';
+                  $rootScope.$broadcast('filter:change');
+                }
               }
-              if (index === 1) {
-                $rootScope.$storage.filter = 'trending';
-                $rootScope.$broadcast('filter:change');
-              }
-              if (index === 2) {
-                $rootScope.$storage.filter = 'hot';
-                $rootScope.$broadcast('filter:change');
-              }
-              if (index === 3) {
-                $rootScope.$storage.filter = 'created';
-                $rootScope.$broadcast('filter:change');
-              }
-              if (index === 4) {
-                $rootScope.$storage.filter = 'active';
-                $rootScope.$broadcast('filter:change');
-              }
-              if (index === 5) {
-                $rootScope.$storage.filter = 'promoted';
-                $rootScope.$broadcast('filter:change');
-              }
-              if (index === 6) {
-                $rootScope.$storage.filter = 'trending30';
-                $rootScope.$broadcast('filter:change');
-              }
-              if (index === 7) {
-                $rootScope.$storage.filter = 'votes';
-                $rootScope.$broadcast('filter:change');
-              }
-              if (index === 8) {
-                $rootScope.$storage.filter = 'children';
-                $rootScope.$broadcast('filter:change');
-              }
-              if (index === 9) {
-                $rootScope.$storage.filter = 'cashout';
-                $rootScope.$broadcast('filter:change');
-              }
-            } else {
-              if (index === 0) {
-                $rootScope.$storage.filter = 'trending';
-                $rootScope.$broadcast('filter:change');
-              }
-              if (index === 1) {
-                $rootScope.$storage.filter = 'hot';
-                $rootScope.$broadcast('filter:change');
-              }
-              if (index === 2) {
-                $rootScope.$storage.filter = 'created';
-                $rootScope.$broadcast('filter:change');
-              }
-              if (index === 3) {
-                $rootScope.$storage.filter = 'active';
-                $rootScope.$broadcast('filter:change');
-              }
-              if (index === 4) {
-                $rootScope.$storage.filter = 'promoted';
-                $rootScope.$broadcast('filter:change');
-              }
-              if (index === 5) {
-                $rootScope.$storage.filter = 'trending30';
-                $rootScope.$broadcast('filter:change');
-              }
-              if (index === 6) {
-                $rootScope.$storage.filter = 'votes';
-                $rootScope.$broadcast('filter:change');
-              }
-              if (index === 7) {
-                $rootScope.$storage.filter = 'children';
-                $rootScope.$broadcast('filter:change');
-              }
-              if (index === 8) {
-                $rootScope.$storage.filter = 'cashout';
-                $rootScope.$broadcast('filter:change');
-              }
-            }
-            if (!$rootScope.$$phase){
-              $rootScope.$apply();
-            }
+              if (!$rootScope.$$phase){
+                $rootScope.$apply();
+              }            
+            }, 10);
           };
           
           $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {

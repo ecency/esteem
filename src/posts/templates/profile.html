@@ -15,7 +15,7 @@
             </div>
           </div>
           <div class="item-myavatar" ng-if="$root.$storage.user.username !== user.username">
-            <span class="item-myavatar" ng-if="!(user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image)"><ng-letter-avatar data="{{user.username}}" shape="round"></ng-letter-avatar></span>
+            <span class="item-myavatar" ng-if="!(user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image)"><img src="img/photo.png" /></span>
             <img ng-src="{{user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image}}" ng-if="user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image" />
             <div class="footprofileinfo">
               <h4 class="center"><span class="light">@{{user.username}}</span>&nbsp;<div class="reputation">{{user.reputation|reputation}}</div></h4>

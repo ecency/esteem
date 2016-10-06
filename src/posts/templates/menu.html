@@ -25,7 +25,7 @@
           </div>
         </center>
       </div>
-      <div ng-if="$root.$storage.user" ng-style="$root.$storage.user.json_metadata.profile.cover_image ? {'background': 'url({{$root.$storage.user.json_metadata.profile.cover_image}})', 'background-size': 'cover', 'background-position':'fixed'} : {'background-size':'center center'}">
+      <div ng-if="$root.$storage.user" ng-style="$root.$storage.user.json_metadata.profile.cover_image ? mcss : null">
       <br>
         <center>
           <a menu-close href="#/app/profile/{{$root.$storage.user.username}}" class="item-myavatar" ng-if="$root.$storage.user">
