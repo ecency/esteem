@@ -2178,7 +2178,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     if ($rootScope.$storage.user && $rootScope.$storage.deviceid) {
       APIs.getSubscriptions($rootScope.$storage.deviceid).then(function(res){
         $rootScope.log(angular.toJson(res.data));
-        angular.merge($scope.data, {vote: res.data[0].subscription.vote, follow: res.data[0].subscription.follow, comment: res.data[0].subscription.comment, mention: res.data[0].subscription.mention});
+        angular.merge($scope.data, {vote: res.data[0].subscription.vote, follow: res.data[0].subscription.follow, comment: res.data[0].subscription.comment, mention: res.data[0].subscription.mention, resteem: res.data[0].subscription.resteem});
         if (!$scope.$$phase){
           $scope.$apply();
         }
@@ -2196,6 +2196,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       comment: $scope.data.comment,
       follow: $scope.data.follow,
       mention: $scope.data.mention,
+      resteem: $scope.data.resteem,
       device: ionic.Platform.platform()
     }
     APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, $rootScope.$storage.subscription).then(function(res){
