@@ -14,12 +14,7 @@ var app = angular.module('steem', [
 if (localStorage.getItem("socketUrl") === null) {
   localStorage.setItem("socketUrl", "wss://steemit.com/wspa");
 }
-/*var options = {url:localStorage.socketUrl};
-var Client = window.steemJS.steemRPC.Client;
-window.Api = Client.get(options, true);
-window.Api.initPromise.then(function(response) {
-    $rootScope.log("Api ready:", response);
-});*/
+
 var steemRPC = require("steem-rpc");
 window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
 window.steemJS = require("steemjs-lib");
@@ -129,7 +124,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   })
 
   .state('app.single', {
-    url: '/single',
+    url: '/single/:category/:author/:permlink',
     views: {
       'menuContent': {
         //templateUrl: 'templates/post.html',

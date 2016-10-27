@@ -904,23 +904,40 @@ Renderer.prototype.link = function(href, title, text) {
   var imgs = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/gim;
   var youtubeid = /(?:(?:youtube.com\/watch\?v=)|(?:youtu.be\/))([A-Za-z0-9\_\-]+)/i;
   var youtube = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+  var out = "";
 
-  var out = ""
   if (href.match(imgs)){
     out = href.replace(imgs, '<img src="$1" class="postimg" />');  
   } else {
     if (href.match(youtube)) {
       var YouTube1 = mediaParseIdFromUrl('youtube', href);
       out = href.replace(youtube, '<iframe width="100%" height="280" src="http://www.youtube.com/embed/' + YouTube1 + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
-    } else {
-      out = '<a href onClick=\'window.open("' + href + '", \"_blank\", \"location=yes\");return false;\'';
-      if (title) {
-        out += ' title="' + title + '"';
+    } else if (href.indexOf('https://steemit.com') === 0) {
+        var parts = href.split('/');
+        //console.log(parts);
+        if (parts.length===6) {
+          //out = '<a href ng-click=\"$root.getContentAndOpen(\'' + parts[4].substr(1) + '\', \''+parts[5]+'\')\" >'+text+'</a>';
+          out = '<a href="#/app/single/'+parts[3]+'/'+parts[4].substr(1)+'/'+parts[5]+'">'+text+'</a>';
+        } else {
+          if (parts.length===4) {
+            out = '<a href="#/app/profile/'+parts[3].substr(1)+'">'+text+'</a>';
+          } else {
+            out = '<a href onClick=\'window.open("' + href + '", \"_blank\", \"location=yes\");return false;\'';
+            if (title) {
+              out += ' title="' + title + '"';
+            }
+            out += '>' + text||href + '</a>'; 
+          }
+        }
+      } else {
+        out = '<a href onClick=\'window.open("' + href + '", \"_blank\", \"location=yes\");return false;\'';
+        if (title) {
+          out += ' title="' + title + '"';
+        }
+        out += '>' + text||href + '</a>'; 
       }
-      out += '>' + text + '</a>';  
-    }
   }
-  
+  //console.log('out '+out+' title '+title+' text '+text);
   return out;
 };
 

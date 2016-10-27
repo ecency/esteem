@@ -554,24 +554,24 @@ module.exports = function (app) {
   		var youtubeid = /(?:(?:youtube.com\/watch\?v=)|(?:youtu.be\/))([A-Za-z0-9\_\-]+)/i;
 		
 	    return function(textu, subpart) {
-	        var options = {
-	        	//gfm: true,
-				    tables: true,
-            smartLists: true,
-			    /*breaks: false,
+        var options = {
+        	gfm: true,
+			    tables: true,
+          smartLists: true,
+			    breaks: true,
 			    pedantic: false,
-			    sanitize: true,
+			    sanitize: false,
 			    smartLists: true,
-			    smartypants: false*/
-			};
-			var textu = marked(textu, options);
-			if (subpart) {
-				var s = $sce.trustAsHtml(textu).toString();
-				var text = s.substring(s.indexOf("<p>"), s.indexOf("</p>"));
-				return text;
-			} else {
-				return $sce.trustAsHtml(textu);	
-			}
+			    smartypants: false
+			  };
+  			var textu = marked(textu, options);
+  			if (subpart) {
+  				var s = $sce.trustAsHtml(textu).toString();
+  				var text = s.substring(s.indexOf("<p>"), s.indexOf("</p>"));
+  				return text;
+  			} else {
+  				return $sce.trustAsHtml(textu);	
+  			}
 	    };
 	});
 

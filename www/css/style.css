@@ -1097,3 +1097,105 @@ textarea.markdown-input {
 .platform-ios.sr-on .scroll-content.has-header > .scroll {
     margin-top: 80px;
 }
+
+div.pull-right {
+  float: right;
+  padding-left: 1rem;
+  max-width: 50%;
+}
+
+div.pull-left {
+  float: left;
+  padding-right: 1rem;
+  max-width: 50%;
+}
+
+div.text-justify {
+  text-align: justify;
+}
+
+div.text-rtl {
+  direction: rtl;
+}
+p.pull-right {
+  float: right;
+  padding-left: 1rem;
+  max-width: 50%;
+}
+
+p.pull-left {
+  float: left;
+  padding-right: 1rem;
+  max-width: 50%;
+}
+
+p.text-justify {
+  text-align: justify;
+}
+
+p.text-rtl {
+  direction: rtl;
+}
+
+div.text-center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  vertical-align: middle;
+  display: block;
+}
+
+p.text-center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  vertical-align: middle;
+  display: block;
+}
+
+.full-image {
+
+}
+
+.masonry-layout {
+  column-count: 1;
+  column-gap: 0;
+}
+
+.masonry-layout__panel {
+  break-inside: avoid;
+  padding: 5px;
+}
+.masonry-layout__panel-content {
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.bodytext table {
+    border-collapse: collapse;
+    width: 100%
+    max-width: 100%;
+    vertical-align: middle!important;
+    border: 1px solid #ddd;
+}
+
+.bodytext td{
+    display:inline-block;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+}
+
+.bodytext tr{
+  width: 100%;
+  display:block;
+}
+.bodytext tr:hover{background-color:#f5f5f5}
+.bodytext tr:nth-child(even) {background-color: #f2f2f2}
+.bodytext th {
+  text-align: center;
+  padding: 10px;
+  font-style: bold;
+  height: 50px;
+}
