@@ -293,8 +293,8 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
         if (barcodeData.text.indexOf('?amount')>-1) {
           //steem dollar:blocktrades?amount=12.080
 
-          $scope.data.username = barcodeData.text.split(':')[1].split('?')[0];
-          $scope.data.amount = barcodeData.text.split('=')[1];
+          $scope.data.username = barcodeData.text.split(':')[1].split('?')[0].trim();          
+          $scope.data.amount = Number(barcodeData.text.split('=')[1]);
           if (barcodeData.text.split(':')[0]==='steem dollar') {
             $scope.data.type = 'sbd';  
           }
@@ -308,7 +308,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
         } else {
           $scope.data.username = barcodeData.text;  
         }
-        
+        $scope.changeUsername();
       }, function(error) {
         $rootScope.showMessage('Error',angular.toJson(error));
       });

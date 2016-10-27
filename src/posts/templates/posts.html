@@ -76,7 +76,7 @@
 							    <div class="row twrap"><div class="col">{{ds.created|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i>&nbsp;<b>{{ds.author}}&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div></b></div></div>
 							</div>
 							<div class="item-body">
-							    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" ng-click="open(ds)"/>
+							    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" ng-click="open(ds)" ng-if="ds.json_metadata.image[0]"/>
 							    <div class="row">
 								    <div class="col">
 								      <span ng-if="!$root.voiceOver">
