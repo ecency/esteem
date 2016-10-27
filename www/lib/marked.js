@@ -909,7 +909,7 @@ Renderer.prototype.link = function(href, title, text) {
   var out = "";
 
   if (href.match(imgs)){
-    out = href.replace(imgs, '<img src="$1" class="postimg" />');  
+    out = href.replace(imgs, '<img src="$1" class="postimg" onerror="this.src=\'img/noimage.png\'" />');  
   } else {
     if (href.match(youtube)) {
       var YouTube1 = mediaParseIdFromUrl('youtube', href);
@@ -949,7 +949,7 @@ Renderer.prototype.image = function(href, title, text) {
   if (title) {
     out += ' title="' + title + '"';
   }
-  out += this.options.xhtml ? '/>' : '>';
+  out += this.options.xhtml ? ' onerror="this.src=\'img/noimage.png\'"/>' : ' onerror="this.src=\'img/noimage.png\'">';
   return out;
 };
 
