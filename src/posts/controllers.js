@@ -289,7 +289,6 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
           "formats" : "QR_CODE" // default: all but PDF_417 and RSS_EXPANDED
           //"orientation" : "landscape" // Android only (portrait|landscape), default unset so it rotates with the device
         }).then(function(barcodeData) {
-        // Success! Barcode data is here
         //alert(barcodeData);
         if (barcodeData.text.indexOf('?amount')>-1) {
           //steem dollar:blocktrades?amount=12.080
@@ -305,12 +304,13 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
           if (barcodeData.text.split(':')[0]==='steem power') {
             $scope.data.type = 'sp';  
           }
+
         } else {
           $scope.data.username = barcodeData.text;  
         }
         
       }, function(error) {
-        // An error occurred
+        $rootScope.showMessage('Error',angular.toJson(error));
       });
     });
   };
