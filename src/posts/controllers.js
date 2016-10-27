@@ -1280,7 +1280,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $rootScope.$storage.sitem = result;
       }
       $rootScope.$broadcast('update:content');
-      console.log($scope.post);
+      //console.log($scope.post);
       if (!$scope.$$phase) {
         $scope.$apply();
       }
@@ -2012,7 +2012,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       }
     };
     $scope.getOtherUsersData = function() {
-      console.log("getOtherUsersData");
+      //console.log("getOtherUsersData");
       (new Steem(localStorage.socketUrl)).getAccounts([$stateParams.username], function(err, dd) {
         dd = dd[0];
         if (dd.json_metadata) {
@@ -2051,7 +2051,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     
     setTimeout(function() {
       $scope.css = ($rootScope.$storage.user.username === $scope.user.username && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : ($rootScope.$storage.user.username !== $scope.user.username && ($scope.user.json_metadata && $scope.user.json_metadata.profile.cover_image)) ? {'background': 'url('+$scope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;  
-      console.log($scope.css);
+      //console.log($scope.css);
     }, 10);
     
   });
