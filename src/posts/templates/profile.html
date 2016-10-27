@@ -33,7 +33,7 @@
             <span ng-bind-html="playlist.body.substring(0,100)|parseUrl"></span>
             </div>-->
             <div class="item" ng-repeat="playlist in profile | orderBy:'-created' | limitTo:25 track by $index" ng-class="{'item-thumbnail-left': playlist.json_metadata.image}">
-              <img ng-src="{{playlist.json_metadata.image[0]}}" ng-click="open(playlist)"/>
+              <img ng-src="{{playlist.json_metadata.image[0]}}" ng-click="open(playlist)" ng-if="playlist.json_metadata.image" onerror="this.src='img/noimage.png'"/>
                 <div ng-click="open(playlist)">
                 <div class="wrap">
                   <h2>{{playlist.root_title}}</h2>
@@ -46,7 +46,6 @@
                    <i class="icon ion-android-arrow-dropdown-circle" ng-click="downvotePost(playlist)" ng-if="!playlist.downvoted"></i><i class="icon ion-android-arrow-dropdown-circle positive" ng-click="unvotePost(playlist)" ng-if="playlist.downvoted"></i></div>
                   <div class="col col-33" ng-click="openTooltip($event,playlist)">&nbsp; <i class="ion-social-usd"></i>&nbsp;{{playlist | sumPostTotal | number}}</div>
                   <div class="col"><i class="icon ion-chatbubbles"></i>&nbsp;{{playlist.children}}</div>
-                  <div class="col" ng-if="active==='blog' && $root.$storage.user && playlist.author!==$root.$storage.user.username"><i class="icon ion-arrow-return-right"></i>&nbsp; you</div>
                   <div class="col" ng-if="playlist.author!==user.username"><i class="icon ion-arrow-return-right"></i>&nbsp;Resteemed</div>
                 </div>
             </div>
