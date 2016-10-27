@@ -1280,6 +1280,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $rootScope.$storage.sitem = result;
       }
       $rootScope.$broadcast('update:content');
+      console.log($scope.post);
       if (!$scope.$$phase) {
         $scope.$apply();
       }
