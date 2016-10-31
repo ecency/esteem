@@ -1202,9 +1202,6 @@ p.text-center {
 .posting input, .posting textarea, .posting button.button {
   border: 1px solid #ddd!important;
 }
-.posting textarea {
-
-}
 .posting select {
   min-height: 30px;
   font-size: 12px;

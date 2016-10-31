@@ -978,10 +978,14 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
 
   $scope.isImages = function() {
-    var len = $scope.post.json_metadata.image?$scope.post.json_metadata.image.length:0;
-    if (len > 0) {
-      $scope.images = $scope.post.json_metadata.image;
-      return true;
+    if ($scope.post) {
+      var len = $scope.post.json_metadata.image?$scope.post.json_metadata.image.length:0;
+      if (len > 0) {
+        $scope.images = $scope.post.json_metadata.image;
+        return true;
+      } else {
+        return false;
+      }  
     } else {
       return false;
     }
@@ -1303,22 +1307,27 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           }
         }
         result.json_metadata = angular.fromJson(result.json_metadata);
-        $scope.post = result;
         $rootScope.$storage.sitem = result;
+        $scope.post = result;
       }
       $rootScope.$broadcast('update:content');
+      $rootScope.$broadcast('hide:loading');
       //console.log($scope.post);
       if (!$scope.$$phase) {
         $scope.$apply();
       }
     });
-    $rootScope.$broadcast('hide:loading');
+    //$rootScope.$broadcast('hide:loading');
   };
 
   //$scope.post = {};
   $scope.$on('$ionicView.beforeEnter', function(){ 
     $rootScope.log('beforeEnter postctrl');
+    $rootScope.$broadcast('show:loading');
     if ($stateParams.author) {
+      if ($rootScope.$storage.sitem) {
+        $rootScope.$storage.sitem = undefined;
+      }
       $scope.getContent($stateParams.author, $stateParams.permlink);
     } else {
       setTimeout(function() {

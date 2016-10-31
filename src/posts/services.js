@@ -564,14 +564,16 @@ module.exports = function (app) {
 			    smartLists: true,
 			    smartypants: false
 			  };
-  			var textu = marked(textu, options);
-  			if (subpart) {
-  				var s = $sce.trustAsHtml(textu).toString();
-  				var text = s.substring(s.indexOf("<p>"), s.indexOf("</p>"));
-  				return text;
-  			} else {
-  				return $sce.trustAsHtml(textu);	
-  			}
+        if (textu) {
+          var textu = marked(textu, options);
+          if (subpart) {
+            var s = $sce.trustAsHtml(textu).toString();
+            var text = s.substring(s.indexOf("<p>"), s.indexOf("</p>"));
+            return text;
+          } else {
+            return $sce.trustAsHtml(textu); 
+          }  
+        }
 	    };
 	});
 
@@ -689,7 +691,9 @@ module.exports = function (app) {
 
   app.filter("sumPostTotal", function(){
     return function(value) {
-      return (parseFloat(value.total_payout_value.split(" ")[0])+parseFloat(value.total_pending_payout_value.split(" ")[0]));
+      if (value) {
+        return (parseFloat(value.total_payout_value.split(" ")[0])+parseFloat(value.total_pending_payout_value.split(" ")[0]));
+      }      
     }
   });
     
