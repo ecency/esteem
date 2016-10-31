@@ -4,7 +4,7 @@
     <h1 class="title">Submit a Story</h1>
     <button class="button button-positive button-primary" ng-disabled="disableBtn" ng-click="submitStory()">POST</button>
   </ion-header-bar>
-  <ion-content class="padding">
+  <ion-content class="padding posting">
     <input type="text" name="title" placeholder="Title" ng-model="spost.title" style="width:100%;">
     <br/>
     <wiz-markdown-editor content="spost.body">
@@ -21,16 +21,20 @@
       </wiz-markdown-editor>
 
       <input type="text" name="categories" placeholder="Tags" ng-model="spost.tags" ng-change="tagsChange()" style="width:100%;">
-      <hr>
       <div class="row">
-        <div class="col tcenter">
+        <div class="col">   
+           <select ng-model='spost.operation_type' style="width: 100%;">
+              <option selected value='default'>Default 50/50 %</option>
+              <option value='sp'>Power Up 100%</option>
+              <option value='dp'>Decline Payout</option>
+           </select>
         </div>
         <div class="col tcenter">
           <button class="button button-calm button-small" ng-click="savePost()">SAVE FOR LATER</button>
           <button class="button button-light button-small" ng-click="clearPost()">CLEAR</button>
         </div>
       </div>
-      <p>Preview</p>
+      <p ng-if="spost.body">Preview</p>
       <div ng-if="spost.body" class="padding bodytext" ng-bind-html="spost.body | parseUrl "></div>
 
       <!--undo, redo, bold, italic, heading, code, ullist, ollist, indent, outdent, link, img, hr, h0, h1, h2, h3, h4, h5, h6, tab, untab-->

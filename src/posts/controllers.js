@@ -583,7 +583,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       return permlink;
     }
   };
-
+  //$scope.operation_type = 'default';
   $scope.spost = {};
   $scope.tagsChange = function() {
     $rootScope.log("tagsChange");
@@ -614,17 +614,41 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         var tr = new window.steemJS.TransactionBuilder();
         var permlink = createPermlink($scope.spost.title);
         var json = $filter("metadata")($scope.spost.body);
-        angular.merge(json, {tags: $scope.spost.category});
+        angular.merge(json, {tags: $scope.spost.category, custom: { app: 'esteem', version: $rootScope.$storage.appversion } });
 
-        tr.add_type_operation("comment", {
-          parent_author: "",
-          parent_permlink: $scope.spost.category[0],
-          author: $rootScope.$storage.user.username,
-          permlink: permlink,
-          title: $scope.spost.title,
-          body: $scope.spost.body,
-          json_metadata: angular.toJson(json)
-        });
+        
+        if ($scope.spost.operation_type !== 'default') {
+          //console.log('NOT Default');
+          tr.add_type_operation("comment", {
+            parent_author: "",
+            parent_permlink: $scope.spost.category[0],
+            author: $rootScope.$storage.user.username,
+            permlink: permlink,
+            title: $scope.spost.title,
+            body: $scope.spost.body,
+            json_metadata: angular.toJson(json)
+          });
+          tr.add_type_operation("comment_options", {
+            allow_curation_rewards: true,
+            allow_votes: true,
+            author: $rootScope.$storage.user.username,
+            permlink: permlink,
+            max_accepted_payout: $scope.spost.operation_type==='sp'?"1000000.000 SBD":"0.000 SBD",
+            percent_steem_dollars: $scope.spost.operation_type==='sp'?0:10000
+          });  
+        } else {
+          //console.log('default');
+          tr.add_type_operation("comment", {
+            parent_author: "",
+            parent_permlink: $scope.spost.category[0],
+            author: $rootScope.$storage.user.username,
+            permlink: permlink,
+            title: $scope.spost.title,
+            body: $scope.spost.body,
+            json_metadata: angular.toJson(json)
+          });
+        }
+        
         localStorage.error = 0;
         tr.process_transaction($scope.mylogin, null, true);
         $scope.replying = false;
@@ -666,6 +690,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.openPostModal = function() {
     $rootScope.$broadcast('close:popover');
     $scope.spost = $rootScope.$storage.spost || {};
+    if (!$scope.spost.operation_type) {
+      $scope.spost.operation_type = 'default';
+    }
     $scope.modal.show();
   };
   $scope.closePostModal = function() {
@@ -1129,7 +1156,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         var permlink = $scope.spost.permlink;
         var jjson = $filter("metadata")($scope.spost.body);
         $scope.spost.tags = $filter('lowercase')($scope.spost.tags);
-        var json = angular.merge(jjson, {tags: $scope.spost.tags.split(" ")});
+        var json = angular.merge(jjson, {tags: $scope.spost.tags.split(" "), custom: { app: 'esteem', version: $rootScope.$storage.appversion } });
 
         tr.add_type_operation("comment", {
           parent_author: "",
@@ -1185,7 +1212,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         var tr = new window.steemJS.TransactionBuilder();
         var t = new Date();
         var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
-        var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ""};
+        var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "" , custom: { app: 'esteem', version: $rootScope.$storage.appversion } };
         tr.add_type_operation("comment", {
           parent_author: $scope.post.author,
           parent_permlink: $scope.post.permlink,

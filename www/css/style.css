@@ -1199,3 +1199,15 @@ p.text-center {
   font-style: bold;
   height: 50px;
 }
+.posting input, .posting textarea, .posting button.button {
+  border: 1px solid #ddd!important;
+}
+.posting select {
+  min-height: 30px;
+  font-size: 12px;
+  line-height: 26px; 
+}
+.posting .row, .posting .col {
+  margin: 0!important;
+  padding: 5px 0!important;
+}
