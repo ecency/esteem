@@ -4,7 +4,7 @@
     <h1 class="title">Reply to @{{post.author}}</h1>
     <button class="button button-positive button-primary" ng-click="reply()">POST</button>
   </ion-header-bar>
-  <ion-content class="padding">
+  <ion-content class="padding posting">
       <wiz-markdown-editor content="data.comment">
         <wiz-toolbar-button command="bold" class="button button-small"><b>B</b></wiz-toolbar-button>
         <wiz-toolbar-button command="italic" class="button button-small"><i>I</i></wiz-toolbar-button>
@@ -18,7 +18,7 @@
         <wiz-toolbar-button command="heading" class="button button-small">H</wiz-toolbar-button>
         <button class="button button-small" ng-click="showImg()"><i class="icon ion-image"></i></button>
       </wiz-markdown-editor>
-      <p>Preview</p>
+      <p ng-if="data.comment">Preview</p>
       <div ng-if="data.comment" class="padding bodytext" ng-bind-html="data.comment | parseUrl "></div>
       <!--undo, redo, bold, italic, heading, code, ullist, ollist, indent, outdent, link, img, hr, h0, h1, h2, h3, h4, h5, h6, tab, untab-->
   </ion-content>
