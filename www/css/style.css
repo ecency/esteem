@@ -1211,3 +1211,12 @@ p.text-center {
   margin: 0!important;
   padding: 5px 0!important;
 }
+.item-thumbnail-left > img:first-child,
+.item-thumbnail-left .item-image,
+.item-thumbnail-left .item-content > img:first-child {
+    max-width: 80px;
+    max-height: 80px;
+    width: 100%;
+    height: auto!important;
+}
+
