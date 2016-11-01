@@ -1220,3 +1220,7 @@ p.text-center {
     height: auto!important;
 }
 
+.row.profile {
+  padding: 3px 0px;
+}
+

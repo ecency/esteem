@@ -167,16 +167,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-    setTimeout(function() {
-      (new Steem(localStorage.socketUrl)).getFeedHistory(function(e,r){
-        //$rootScope.log(r);
-        $rootScope.$storage.base = r.current_median_history.base.split(" ")[0];
-        (new Steem(localStorage.socketUrl)).getDynamicGlobalProperties(function(e,r){
-          //$rootScope.log(r);
-          $rootScope.$storage.steem_per_mvests = (Number(r.total_vesting_fund_steem.substring(0, r.total_vesting_fund_steem.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;
-        });
-      });
-    }, 10);
 
     if (window.cordova) {
       if (ionic.Platform.isIPad() || ionic.Platform.isIOS()) {
@@ -456,27 +446,29 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     };
 
     $rootScope.getContentAndOpen = function(author, permlink) {
-      (new Steem(localStorage.socketUrl)).getContent(author, permlink, function(err, result){
-        if (!err) {
-          var _len = result.active_votes.length;
-          for (var j = _len - 1; j >= 0; j--) {
-            if (result.active_votes[j].voter === $rootScope.$storage.user.username) {
-              if (result.active_votes[j].percent > 0) {
-                result.upvoted = true;  
-              } else if (result.active_votes[j].percent < 0) {
-                result.downvoted = true;  
-              } else {
-                result.downvoted = false;  
-                result.upvoted = false;  
+      window.Api.initPromise.then(function(response) {
+        window.Api.database_api().exec("get_content", [author, permlink]).then(function(result){
+          if (!err) {
+            var _len = result.active_votes.length;
+            for (var j = _len - 1; j >= 0; j--) {
+              if (result.active_votes[j].voter === $rootScope.$storage.user.username) {
+                if (result.active_votes[j].percent > 0) {
+                  result.upvoted = true;  
+                } else if (result.active_votes[j].percent < 0) {
+                  result.downvoted = true;  
+                } else {
+                  result.downvoted = false;  
+                  result.upvoted = false;  
+                }
               }
             }
+            $rootScope.$storage.sitem = result;
+            $state.go('app.single');
           }
-          $rootScope.$storage.sitem = result;
-          $state.go('app.single');
-        }
-        if (!$rootScope.$$phase) {
-          $rootScope.$apply();
-        }
+          if (!$rootScope.$$phase) {
+            $rootScope.$apply();
+          }
+        });
       });
       $rootScope.$broadcast('hide:loading');
     };
@@ -721,6 +713,19 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.showAlert("Warning", "Please, login to Follow");
       }
     };
+
+    setTimeout(function() {
+      window.Api.initPromise.then(function(response) {
+        window.Api.database_api().exec("get_feed_history", []).then(function(r){
+        //$rootScope.log(r);
+          $rootScope.$storage.base = r.current_median_history.base.split(" ")[0];
+          window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(r){
+            //$rootScope.log(r);
+            $rootScope.$storage.steem_per_mvests = (Number(r.total_vesting_fund_steem.substring(0, r.total_vesting_fund_steem.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;
+          });
+        });
+      });
+    }, 10);
 
     if (window.cordova) {
       if (!ionic.Platform.isWindowsPhone()) {

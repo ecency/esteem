@@ -36,17 +36,17 @@
               <img ng-src="{{playlist.json_metadata.image[0]}}" ng-click="open(playlist)" ng-if="playlist.json_metadata.image" onerror="this.src='img/noimage.png'"/>
                 <div ng-click="open(playlist)">
                 <div class="wrap">
-                  <h2>{{playlist.root_title}}</h2>
+                  <h2><img style='display: inline-block;' src="img/steemicon.png" ng-if="playlist.percent_steem_dollars === 0" width="15" /><img style='display: inline-block;' src="img/steemDeclined.png" ng-if="playlist.max_accepted_payout === '0.000 SBD'" width="15" />{{playlist.root_title}}</h2>
                 </div>
                 <div class="postdetails"><i class="icon ion-android-time"></i>&nbsp;{{playlist.created|timeago}}&nbsp;by&nbsp;<i class="icon ion-android-person"></i>&nbsp;{{playlist.author}}&nbsp;<div class="reputation">{{playlist.author_reputation|reputation|number:0}}</div></div>
                 </div>
-                <div class="row gray">
-                  <div class="col col-25"><ion-spinner ng-if="playlist.invoting"></ion-spinner>
+                <div class="row gray profile">
+                  <div class="col"><ion-spinner ng-if="playlist.invoting"></ion-spinner>
                   <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost(playlist)" ng-if="!playlist.upvoted"></i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost(playlist)" ng-if="playlist.upvoted"></i>&nbsp;&nbsp;<span ng-click="$root.openInfo(playlist)">{{playlist.net_votes}}</span>&nbsp;&nbsp;
                    <i class="icon ion-android-arrow-dropdown-circle" ng-click="downvotePost(playlist)" ng-if="!playlist.downvoted"></i><i class="icon ion-android-arrow-dropdown-circle positive" ng-click="unvotePost(playlist)" ng-if="playlist.downvoted"></i></div>
-                  <div class="col col-33" ng-click="openTooltip($event,playlist)">&nbsp; <i class="ion-social-usd"></i>&nbsp;{{playlist | sumPostTotal | number}}</div>
-                  <div class="col"><i class="icon ion-chatbubbles"></i>&nbsp;{{playlist.children}}</div>
-                  <div class="col" ng-if="playlist.author!==user.username"><i class="icon ion-arrow-return-right"></i>&nbsp;Resteemed</div>
+                  <div class="col" ng-click="openTooltip($event,playlist)">&nbsp; <i class="ion-social-usd"></i>&nbsp;{{playlist | sumPostTotal | number}}</div>
+                  <div class="col">&nbsp; <i class="icon ion-chatbubbles"></i>&nbsp;{{playlist.children}}</div>
+                  <div class="col" ng-if="playlist.author!==user.username && active!=='recent-replies'">&nbsp; <i class="icon ion-arrow-return-right"></i></div>
                 </div>
             </div>
           </ion-list>

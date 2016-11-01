@@ -1036,7 +1036,6 @@ module.exports = function (app) {
                     $rootScope.log('toggleComment');
 
                     if (comment.children > 0){
-                      //(new Steem(localStorage.socketUrl)).getContentReplies(comment.author, comment.permlink, function(err, res1) {
                       window.Api.database_api().exec("get_content_replies", [comment.author, comment.permlink]).then(function(res1){
                         comment.replies = res1;
                         //$rootScope.log('result',res1);
