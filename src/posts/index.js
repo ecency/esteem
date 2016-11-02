@@ -446,7 +446,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     };
 
     $rootScope.getContentAndOpen = function(author, permlink) {
-      window.Api.initPromise.then(function(response) {
+      /*window.Api.initPromise.then(function(response) {
         window.Api.database_api().exec("get_content", [author, permlink]).then(function(result){  
           var _len = result.active_votes.length;
           for (var j = _len - 1; j >= 0; j--) {
@@ -463,12 +463,13 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           }
           $rootScope.$storage.sitem = result;
           $state.go('app.single', {category: result.category, author: result.author, permlink: result.permlink});
-          
+
           if (!$rootScope.$$phase) {
             $rootScope.$apply();
           }
         });
-      });
+      });*/
+      $state.go('app.single', {category: '', author: author, permlink: permlink});
       $rootScope.$broadcast('hide:loading');
     };
 
