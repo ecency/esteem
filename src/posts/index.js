@@ -462,8 +462,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
           }
           $rootScope.$storage.sitem = result;
-          $state.go('app.single');
-        
+          $state.go('app.single', {category: result.category, author: result.author, permlink: result.permlink});
+          
           if (!$rootScope.$$phase) {
             $rootScope.$apply();
           }
