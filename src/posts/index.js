@@ -447,24 +447,23 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     $rootScope.getContentAndOpen = function(author, permlink) {
       window.Api.initPromise.then(function(response) {
-        window.Api.database_api().exec("get_content", [author, permlink]).then(function(result){
-          if (!err) {
-            var _len = result.active_votes.length;
-            for (var j = _len - 1; j >= 0; j--) {
-              if (result.active_votes[j].voter === $rootScope.$storage.user.username) {
-                if (result.active_votes[j].percent > 0) {
-                  result.upvoted = true;  
-                } else if (result.active_votes[j].percent < 0) {
-                  result.downvoted = true;  
-                } else {
-                  result.downvoted = false;  
-                  result.upvoted = false;  
-                }
+        window.Api.database_api().exec("get_content", [author, permlink]).then(function(result){  
+          var _len = result.active_votes.length;
+          for (var j = _len - 1; j >= 0; j--) {
+            if (result.active_votes[j].voter === $rootScope.$storage.user.username) {
+              if (result.active_votes[j].percent > 0) {
+                result.upvoted = true;  
+              } else if (result.active_votes[j].percent < 0) {
+                result.downvoted = true;  
+              } else {
+                result.downvoted = false;  
+                result.upvoted = false;  
               }
             }
-            $rootScope.$storage.sitem = result;
-            $state.go('app.single');
           }
+          $rootScope.$storage.sitem = result;
+          $state.go('app.single');
+        
           if (!$rootScope.$$phase) {
             $rootScope.$apply();
           }
