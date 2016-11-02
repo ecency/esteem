@@ -1240,7 +1240,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
             $rootScope.showMessage("Success", "Comment is submitted!");
             window.Api.database_api().exec("get_content_replies", [$rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink]).then(function(result){
-              $scope.comments = result;
+              if (result)
+                $scope.comments = result;
               if (!$scope.$$phase) {
                 $scope.$apply();
               }
@@ -1260,7 +1261,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $rootScope.$on("update:content", function(){
     $rootScope.log("update:content");
     window.Api.database_api().exec("get_content_replies", [$scope.post.author, $scope.post.permlink]).then(function(result){
-      $scope.comments = result;
+      if (result)
+        $scope.comments = result;
       if (!$scope.$$phase) {
         $scope.$apply();
       }
@@ -1311,7 +1313,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         result.json_metadata = angular.fromJson(result.json_metadata);
         $rootScope.$storage.sitem = result;
         $scope.post = result;
-        $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
+        //$ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
       setTimeout(function() {
         $rootScope.$broadcast('update:content');  
       }, 10);

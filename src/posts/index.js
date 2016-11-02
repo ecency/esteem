@@ -586,12 +586,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             $rootScope.$broadcast('hide:loading');
             post.invoting = false;
           }
+          $rootScope.$broadcast('hide:loading');
         });
-        /*var wif = steem.auth.toWif($rootScope.$storage.user.username, $rootScope.$storage.user.password, 'posting');
-        steem.broadcast.vote(wif, $rootScope.$storage.user.username, post.author, post.permlink, $rootScope.$storage.voteWeight*tt, function(err, result) {
-            $rootScope.log(err, result);
-        });*/
-        $rootScope.$broadcast('hide:loading');
       } else {
         $rootScope.$broadcast('hide:loading');
         post.invoting = false;
