@@ -614,7 +614,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         var tr = new window.steemJS.TransactionBuilder();
         var permlink = createPermlink($scope.spost.title);
         var json = $filter("metadata")($scope.spost.body);
-        angular.merge(json, {tags: $scope.spost.category, custom: { app: 'esteem', version: $rootScope.$storage.appversion } });
+        angular.merge(json, {tags: $scope.spost.category, custom: { app: 'esteem', version: $rootScope.$storage.appversion, platform: ionic.Platform.platform() } });
 
         
         if ($scope.spost.operation_type !== 'default') {
@@ -1162,7 +1162,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         var permlink = $scope.spost.permlink;
         var jjson = $filter("metadata")($scope.spost.body);
         $scope.spost.tags = $filter('lowercase')($scope.spost.tags);
-        var json = angular.merge(jjson, {tags: $scope.spost.tags.split(" "), custom: { app: 'esteem', version: $rootScope.$storage.appversion } });
+        var json = angular.merge(jjson, {tags: $scope.spost.tags.split(" "), custom: { app: 'esteem', version: $rootScope.$storage.appversion, platform: ionic.Platform.platform() } });
 
         tr.add_type_operation("comment", {
           parent_author: "",
@@ -1218,7 +1218,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         var tr = new window.steemJS.TransactionBuilder();
         var t = new Date();
         var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
-        var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "" , custom: { app: 'esteem', version: $rootScope.$storage.appversion } };
+        var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "" , custom: { app: 'esteem', version: $rootScope.$storage.appversion, platform: ionic.Platform.platform() } };
         tr.add_type_operation("comment", {
           parent_author: $scope.post.author,
           parent_permlink: $scope.post.permlink,
