@@ -745,7 +745,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
         window.FirebasePlugin.onNotificationOpen(function(data) {
             $rootScope.log(angular.toJson(data));
-            //console.log(data.tap);
+            console.log(angular.toJson(data));
             if(data.tap){
               //Notification was received on device tray and tapped by the user.
               console.log(JSON.stringify(data));

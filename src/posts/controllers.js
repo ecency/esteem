@@ -616,7 +616,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         var json = $filter("metadata")($scope.spost.body);
         angular.merge(json, {tags: $scope.spost.category, custom: { app: 'esteem', version: $rootScope.$storage.appversion, platform: ionic.Platform.platform() } });
 
-        
+        if (!$scope.spost.operation_type) {
+          $scope.spost.operation_type = 'default';
+        }
         if ($scope.spost.operation_type !== 'default') {
           //console.log('NOT Default');
           tr.add_type_operation("comment", {
@@ -690,9 +692,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.openPostModal = function() {
     $rootScope.$broadcast('close:popover');
     $scope.spost = $rootScope.$storage.spost || {};
-    if (!$scope.spost.operation_type) {
-      $scope.spost.operation_type = 'default';
-    }
+    $scope.spost.operation_type = 'default';
+    
     $scope.modal.show();
   };
   $scope.closePostModal = function() {
