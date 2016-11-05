@@ -1,7 +1,7 @@
 module.exports = function (app) {
 //angular.module('steem.controllers', [])
 
-app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform, $filter, APIs) {
+app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform, $filter, APIs, $window) {
 
   $scope.loginData = {};  
 
@@ -92,12 +92,17 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
             $rootScope.$storage.mylogin = $scope.login;
             APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, {device: ionic.Platform.platform()}).then(function(res){
               $rootScope.$broadcast('hide:loading');
-              $state.go($state.current, {}, {reload: true});
+              //$state.go($state.current, {}, {reload: true});
               //$state.go('app.posts', {}, { reload: true });
               $scope.closeLogin();
-              $ionicHistory.clearCache();
-              $ionicHistory.clearHistory();
+              //$ionicHistory.clearCache();
+              //$ionicHistory.clearHistory();
               $rootScope.$broadcast('refreshLocalUserData');
+              
+              setTimeout(function() {
+                $window.location.reload(true);
+              }, 10);
+              
             });
           }
           /*if(!$scope.$$phase) {
@@ -154,21 +159,25 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     if ($rootScope.$storage.deviceid) {
       APIs.deleteSubscription($rootScope.$storage.deviceid).then(function(res){
         $ionicSideMenuDelegate.toggleLeft();
-        //$rootScope.$broadcast('fetchPosts');
-        $rootScope.$broadcast("user:logout");
-        $state.go('app.posts');
-        $state.go($state.current, {}, {reload: true});
+        $window.location.reload(true);
+
+        //$rootScope.$broadcast("user:logout");
+        //$state.go('app.posts');
+        //$state.go($state.current, {}, {reload: true});
       });  
     } else {
       $ionicSideMenuDelegate.toggleLeft();
-      //$rootScope.$broadcast('fetchPosts');
-      $rootScope.$broadcast("user:logout");
-      $state.go('app.posts');
-      $state.go($state.current, {}, {reload: true});
+      $window.location.reload(true);
+
+      //$rootScope.$broadcast("user:logout");
+      //$state.go('app.posts');
+      //$state.go($state.current, {}, {reload: true});
     }
-    //$ionicHistory.clearCache();
+    $ionicHistory.clearCache();
     $ionicHistory.clearHistory();
     //$rootScope.$broadcast('ngRepeatFinished');
+
+
   };
   $scope.data = {};
   $ionicModal.fromTemplateUrl('templates/search.html', {
