@@ -150,7 +150,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   //$sceDelegateProvider.resourceUrlWhitelist(['self', new RegExp('^(http[s]?):\/\/(w{3}.)?youtube\.com/.+$')]);
 });
 
-app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state, $log, $ionicScrollDelegate) {
+app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state, $log, $ionicScrollDelegate, $filter) {
   $rootScope.$storage = $localStorage;
   $rootScope.log = function(message) {
     $log.info(message);
@@ -726,7 +726,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     if (window.cordova) {
       if (!ionic.Platform.isWindowsPhone()) {
 
-        window.FirebasePlugin.getInstanceId(function(token) {
+        /*window.FirebasePlugin.getInstanceId(function(token) {
             // save this server-side and use it to push notifications to this device
             $rootScope.log("device "+token);
             $rootScope.$storage.deviceid = token;
@@ -784,19 +784,21 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
         }, function(error) {
             console.error(error);
-        });
+        });*/
         //FCMPlugin.getToken( successCallback(token), errorCallback(err) );
         //Keep in mind the function will return null if the token has not been established yet.
-        /*FCMPlugin.getToken(
+        FCMPlugin.getToken(
           function(token){
-            $rootScope.log("device "+token);
-            $rootScope.$storage.deviceid = token;
+            token = angular.fromJson(token);
+            console.log("deviceToken "+token);
+            $rootScope.$storage.deviceid = token.token;
+            $rootScope.$storage.token = token;
             if ($rootScope.$storage.user) {
-              APIs.saveSubscription(token, $rootScope.$storage.user.username, { device: ionic.Platform.platform() }).then(function(res){
+              APIs.saveSubscription(token.token, $rootScope.$storage.user.username, { device: ionic.Platform.platform(), appversion: token.appVersion, timestamp: $filter('date')(new Date(token.timestamp), 'medium') }).then(function(res){
                 $rootScope.log(angular.toJson(res));
               });
             } else {
-              APIs.saveSubscription(token, "", { device: ionic.Platform.platform() }).then(function(res){
+              APIs.saveSubscription(token.token, "", { device: ionic.Platform.platform(), appversion: token.appVersion, timestamp: $filter('date')(new Date(token.timestamp), 'medium') }).then(function(res){
                 $rootScope.log(angular.toJson(res));
               });
             }
@@ -853,7 +855,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           function(err){
             $rootScope.log('Error registering onNotification callback: ' + err);
           }
-        ); */ 
+        ); 
       }
       
     }

@@ -90,7 +90,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
             $rootScope.$storage.user = $scope.loginData;
             $rootScope.$broadcast('fetchPosts');
             $rootScope.$storage.mylogin = $scope.login;
-            APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, {device: ionic.Platform.platform()}).then(function(res){
+            APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date($rootScope.$storage.token.timestamp), 'medium'), appversion: $rootScope.$storage.token.appVersion}).then(function(res){
               $rootScope.$broadcast('hide:loading');
               //$state.go($state.current, {}, {reload: true});
               //$state.go('app.posts', {}, { reload: true });
@@ -2311,7 +2311,7 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope) {
 
 });
 
-app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionicHistory, $state, $ionicPopover, $ionicPopup, APIs) {
+app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionicHistory, $state, $ionicPopover, $ionicPopup, APIs, $filter) {
    
    $ionicPopover.fromTemplateUrl('popover.html', {
       scope: $scope
@@ -2392,7 +2392,9 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       follow: $scope.data.follow,
       mention: $scope.data.mention,
       resteem: $scope.data.resteem,
-      device: ionic.Platform.platform()
+      device: ionic.Platform.platform(),
+      timestamp: $filter('date')(new Date($rootScope.$storage.token.timestamp), 'medium'),
+      appversion: $rootScope.$storage.token.appVersion
     }
     APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, $rootScope.$storage.subscription).then(function(res){
       $rootScope.log(angular.toJson(res));
