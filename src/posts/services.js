@@ -499,12 +499,12 @@ module.exports = function (app) {
                     minutes: "%d mins",
                     hour: "an hr",
                     hours: "%d hrs",
-                    day: "a dy",
-                    days: "%d dys",
-                    month: "a mnth",
-                    months: "%d mnths",
-                    year: "a yr",
-                    years: "%d yrs"
+                    day: "a day",
+                    days: "%d days",
+                    month: "a month",
+                    months: "%d months",
+                    year: "a year",
+                    years: "%d years"
                 },
                 dateDifference = nowTime - date,
                 words,
@@ -750,7 +750,7 @@ module.exports = function (app) {
                         <ion-option-button ng-if="comment.author == $root.$storage.user.username && compateDate(comment)" ng-click="editComment(comment)"><span class="ion-ios-compose-outline" style="font-size:30px"></ion-option-button>\
                         <ion-option-button ng-if="comment.author == $root.$storage.user.username" ng-click="deleteComment(comment)"><span class="ion-ios-trash-outline" style="font-size:30px"></ion-option-button>\
                     </ion-item>',
-            controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopup) {
+            controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopup, $ionicActionSheet, $cordovaCamera) {
                 $scope.compateDate = function(comment) {
                     if (comment.last_payout == "1970-01-01T00:00:00") {
                         return true;
@@ -804,15 +804,101 @@ module.exports = function (app) {
                     $scope.post = cho;
                     if (xx) {
                         $scope.editc = false;
+                        $scope.edit = false;
                         $scope.data.comment = '';
                         $scope.openModal();
                     } else {
                         $scope.editc = true;
+                        $scope.edit = true;
                         $scope.data.comment = $scope.post.body;
                         $scope.patchbody = $scope.post.body;
                         $scope.openModal();
                     }
-                  }
+                  };
+
+                  $scope.showImg = function() {
+                   var hideSheet = $ionicActionSheet.show({
+                     buttons: [
+                       { text: 'Capture Picture' },
+                       { text: 'Select Picture' },
+                       { text: 'Set Custom URL' },
+                     ],
+                     titleText: 'Insert Picture',
+                     cancelText: 'Cancel',
+                     cancel: function() {
+                        // add cancel code..
+                      },
+                     buttonClicked: function(index) {
+                        $scope.insertImageC(index);  
+                        return true;
+                     }
+                   });
+                  };
+
+                  $scope.insertImageC = function(type) {
+                    var options = {};
+                    if (type == 0 || type == 1) {
+                      options = {
+                        quality: 50,
+                        destinationType: Camera.DestinationType.FILE_URI,
+                        sourceType: (type===0)?Camera.PictureSourceType.CAMERA:Camera.PictureSourceType.PHOTOLIBRARY,
+                        allowEdit: (type===0)?true:false,
+                        encodingType: Camera.EncodingType.JPEG,
+                        popoverOptions: CameraPopoverOptions,
+                        saveToPhotoAlbum: false
+                        //correctOrientation:true
+                      };
+                      $cordovaCamera.getPicture(options).then(function(imageData) {
+                        setTimeout(function() {
+                          ImageUploadService.uploadImage(imageData).then(function(result) {
+                            //var url = result.secure_url || '';
+                            var url = result.imageUrl || '';
+                            var final = " ![image](" + url + ")";
+                            $rootScope.log(final);
+                            if ($scope.data.comment) {
+                              $scope.data.comment += final;
+                            } else {
+                              $scope.data.comment = final;
+                            }
+                            if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
+                              $cordovaCamera.cleanup();
+                            }
+                          },
+                          function(err) {
+                            $rootScope.showAlert("Error", "Upload Error");
+                            if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
+                              $cordovaCamera.cleanup();
+                            }
+                          });    
+                        }, 10);
+                      }, function(err) {
+                        $rootScope.showAlert("Error", "Camera Cancelled");
+                      });
+                    } else {
+                      $ionicPopup.prompt({
+                        title: 'Set URL',
+                        template: 'Direct web link for the picture',
+                        inputType: 'text',
+                        inputPlaceholder: 'http://example.com/image.jpg'
+                      }).then(function(res) {
+                        $rootScope.log('Your url is' + res);
+                        if (res) {
+                          var url = res.trim();
+                          var final = " ![image](" + url + ")";
+                          $rootScope.log(final);
+                          if ($scope.data.comment) {
+                            $scope.data.comment += final;
+                          } else {
+                            $scope.data.comment = final;
+                          }
+                        }
+                      });
+                    }
+                  };
+
+
+
+
                   var dmp = new window.diff_match_patch();
                   function createPatch(text1, text2) {
                       if (!text1 && text1 === '') return undefined;

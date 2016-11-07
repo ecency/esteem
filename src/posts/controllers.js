@@ -782,8 +782,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     var lenn = newValue.length;
     var user = $rootScope.$storage.user || null;
     var view = $rootScope.$storage.view;
-    for (var i = 0; i < lenn; i++) {
-      if (user){
+    if (user){
+      for (var i = 0; i < lenn; i++) {
         var len = newValue[i].active_votes.length;
         for (var j = len - 1; j >= 0; j--) {
           if (newValue[i].active_votes[j].voter === user.username) {
@@ -797,9 +797,15 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             }
           }
         }
+        if (view === 'card') {
+          newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata?newValue[i].json_metadata:[]);
+        }
       }
-      if (view === 'card') {
-        newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata?newValue[i].json_metadata:[]);
+    } else {
+      for (var i = 0; i < lenn; i++) {
+        if (view === 'card') {
+          newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata?newValue[i].json_metadata:[]);
+        }
       }
     }
     //$rootScope.log(newValue);
@@ -830,7 +836,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.fetchPosts = function(type, limit, tag) {
     type = type || $rootScope.$storage.filter || "trending";
     tag = tag || $rootScope.$storage.tag || "";
-    limit = limit || $scope.limit || 5;
+    limit = limit || $scope.limit || 15;
 
     var params = {};
 
@@ -841,11 +847,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         $rootScope.$storage.filter = "trending";
         type = "trending";
       }
-      if ((type === "cashout" && !tag) || (type === "promoted" && !tag)) {
+      /*if ((type === "cashout" && !tag) || (type === "promoted" && !tag)) {
         params = {tag: "steemit", limit: limit, filter_tags: []};
       } else {
         params = {tag: tag, limit: limit, filter_tags: []};
-      }
+      }*/
+      params = {tag: tag, limit: limit, filter_tags: []};
     }
 
     if ($scope.error) {
@@ -853,15 +860,15 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     } else {
       $rootScope.log("fetching..."+type+" "+limit+" "+tag);
       if (typeof window.Api.database_api === "function") { 
-        /*window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
+        window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
           $rootScope.$broadcast('hide:loading');
-          console.log(params);
+          //console.log(params);
           $scope.data = $scope.dataChanged(response); 
           if (!$scope.$$phase) {
             $scope.$apply();
           }
-        });*/
-        window.Api.database_api().exec("get_state", ['/'+type]).then(function(response){
+        });
+        /*window.Api.database_api().exec("get_state", ['/'+type]).then(function(response){
           $rootScope.$broadcast('hide:loading');
           console.log(response);
           var log=[];
@@ -892,13 +899,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           if (!$scope.$$phase) {
             $scope.$apply();
           }
-        });    
+        });  */  
       }
     }
   };
   
   $scope.$on('$ionicView.loaded', function(){
-    $scope.limit = 5;
+    $scope.limit = 15;
     $rootScope.$broadcast('show:loading');
     if (!$rootScope.$storage.socket) {
       $rootScope.$storage.socket = localStorage.socketUrl;

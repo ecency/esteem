@@ -909,7 +909,12 @@ Renderer.prototype.link = function(href, title, text) {
   var out = "";
 
   if (href.match(imgs)){
-    out = href.replace(imgs, '<img src="$1" class="postimg" onerror="this.src=\'img/noimage.png\'" />');  
+    if (href.indexOf('http://dirtyimg.com/')>-1){
+      //href='https://img1.steemit.com/0x0/'+href;
+      out = href.replace(imgs, '<img src="https://img1.steemit.com/0x0/$1" class="postimg" onerror="this.src=\'img/noimage.png\'" />');  
+    } else {
+      out = href.replace(imgs, '<img src="$1" class="postimg" onerror="this.src=\'img/noimage.png\'" />');  
+    }
   } else {
     if (href.match(youtube)) {
       var YouTube1 = mediaParseIdFromUrl('youtube', href);
@@ -945,6 +950,10 @@ Renderer.prototype.link = function(href, title, text) {
 };
 
 Renderer.prototype.image = function(href, title, text) {
+  if (href.indexOf('http://dirtyimg.com/')>-1){
+    console.log(href);
+    href='https://img1.steemit.com/0x0/'+href;
+  }
   var out = '<img src="' + href + '" alt="' + text + '"';
   if (title) {
     out += ' title="' + title + '"';
