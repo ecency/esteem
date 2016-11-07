@@ -951,14 +951,14 @@ Renderer.prototype.link = function(href, title, text) {
 
 Renderer.prototype.image = function(href, title, text) {
   if (href.indexOf('http://dirtyimg.com/')>-1){
-    console.log(href);
+    //console.log(href);
     href='https://img1.steemit.com/0x0/'+href;
   }
   var out = '<img src="' + href + '" alt="' + text + '"';
   if (title) {
     out += ' title="' + title + '"';
   }
-  out += this.options.xhtml ? ' onerror="this.src=\'img/noimage.png\'"/>' : ' onerror="this.src=\'img/noimage.png\'">';
+  out += this.options.xhtml ? ' onerror="this.src=\'img/noimage.png\'"/>' : ' onerror="this.src=\'img/noimage.png\'">';//this.parentNode.removeChild(this);
   return out;
 };
 
