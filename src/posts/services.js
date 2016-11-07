@@ -494,17 +494,17 @@ module.exports = function (app) {
                     prefixFromNow: '',
                     suffixAgo: "ago",
                     suffixFromNow: "from now",
-                    seconds: "seconds",
-                    minute: "a minute",
-                    minutes: "%d minutes",
-                    hour: "an hour",
-                    hours: "%d hours",
-                    day: "a day",
-                    days: "%d days",
-                    month: "a month",
-                    months: "%d months",
-                    year: "a year",
-                    years: "%d years"
+                    seconds: "secs",
+                    minute: "a min",
+                    minutes: "%d mins",
+                    hour: "an hr",
+                    hours: "%d hrs",
+                    day: "a dy",
+                    days: "%d dys",
+                    month: "a mnth",
+                    months: "%d mnths",
+                    year: "a yr",
+                    years: "%d yrs"
                 },
                 dateDifference = nowTime - date,
                 words,
@@ -803,10 +803,11 @@ module.exports = function (app) {
                     $scope.replying = xx;
                     $scope.post = cho;
                     if (xx) {
-                        $scope.edit = false;
+                        $scope.editc = false;
+                        $scope.data.comment = '';
                         $scope.openModal();
                     } else {
-                        $scope.edit = true;
+                        $scope.editc = true;
                         $scope.data.comment = $scope.post.body;
                         $scope.patchbody = $scope.post.body;
                         $scope.openModal();
@@ -820,7 +821,7 @@ module.exports = function (app) {
                       return patch;
                   }
                   $scope.reply = function (xx) {
-                    if (!$scope.edit) {
+                    if (!$scope.editc) {
                         $rootScope.$broadcast('show:loading');
                         if ($rootScope.$storage.user) {
                           $scope.mylogin = new window.steemJS.Login();

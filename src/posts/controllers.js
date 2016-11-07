@@ -196,6 +196,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.openSmodal = function() {
     $rootScope.$broadcast('close:popover');
     $scope.data.type="tag";
+    $scope.data.searchResult = [];
     $scope.smodal.show();
   };
   $scope.clearSearch = function() {
@@ -840,7 +841,11 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         $rootScope.$storage.filter = "trending";
         type = "trending";
       }
-      params = {tag: tag, limit: limit, filter_tags: []};
+      if ((type === "cashout" && !tag) || (type === "promoted" && !tag)) {
+        params = {tag: "steemit", limit: limit, filter_tags: []};
+      } else {
+        params = {tag: tag, limit: limit, filter_tags: []};
+      }
     }
 
     if ($scope.error) {
@@ -848,9 +853,42 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     } else {
       $rootScope.log("fetching..."+type+" "+limit+" "+tag);
       if (typeof window.Api.database_api === "function") { 
-        window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
+        /*window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
           $rootScope.$broadcast('hide:loading');
+          console.log(params);
           $scope.data = $scope.dataChanged(response); 
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        });*/
+        window.Api.database_api().exec("get_state", ['/'+type]).then(function(response){
+          $rootScope.$broadcast('hide:loading');
+          console.log(response);
+          var log=[];
+          var view = $rootScope.$storage.view;
+          angular.forEach(response.content, function(value, key) {
+            if (view === "card") {
+              value.json_metadata = angular.fromJson(value.json_metadata);  
+            }
+            var user = $rootScope.$storage.user || null;
+            if (user){
+              for (var i = 0; i < value.active_votes.length; i++) {
+                if (value.active_votes[i].voter === user.username) {
+                  if (value.active_votes[i].percent > 0) {
+                    value.upvoted = true;  
+                  } else if (value.active_votes[i].percent < 0) {
+                    value.downvoted = true;  
+                  } else {
+                    value.downvoted = false;  
+                    value.upvoted = false;  
+                  }
+                }
+              }
+            }
+            this.push(value);
+          }, log);
+          $scope.data = log;//$scope.dataChanged(response.content); 
+          //console.log(log);
           if (!$scope.$$phase) {
             $scope.$apply();
           }
@@ -2208,8 +2246,11 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         } else {
           $scope.nonexist = true;
         }
+        if(!$scope.$$phase){
+          $scope.$apply();
+        }
       } 
-      if (type=="transfers" || type=="permissions") {
+      if (type==="transfers" || type==="permissions") {
         for (var property in res.accounts) {
           if (res.accounts.hasOwnProperty(property)) {
             $scope.accounts = res.accounts[property];
@@ -2217,10 +2258,10 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             $scope.transfers = res.accounts[property].transfer_history;
             $scope.nonexist = false;
           }
+        }
+        if(!$scope.$$phase){
+          $scope.$apply();
         } 
-      }
-      if(!$scope.$$phase){
-        $scope.$apply();
       }
     });
   }
