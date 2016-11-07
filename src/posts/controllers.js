@@ -98,7 +98,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
               //$ionicHistory.clearCache();
               //$ionicHistory.clearHistory();
               $rootScope.$broadcast('refreshLocalUserData');
-              
+
               setTimeout(function() {
                 $window.location.reload(true);
               }, 10);
@@ -1052,23 +1052,112 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   };
   $scope.insertImage = function(type) {
     var options = {};
-
-    if (type == 0 || type == 1) {
-      options = {
-        quality: 50,
-        destinationType: Camera.DestinationType.FILE_URI,
-        sourceType: (type===0)?Camera.PictureSourceType.CAMERA:Camera.PictureSourceType.PHOTOLIBRARY,
-        allowEdit: (type===0)?true:false,
-        encodingType: Camera.EncodingType.JPEG,
-        popoverOptions: CameraPopoverOptions,
-        saveToPhotoAlbum: false
-        //correctOrientation:true
-      };
-      $cordovaCamera.getPicture(options).then(function(imageData) {
-        setTimeout(function() {
-          ImageUploadService.uploadImage(imageData).then(function(result) {
-            //var url = result.secure_url || '';
-            var url = result.imageUrl || '';
+    if ($scope.edit) {
+      if (type == 0 || type == 1) {
+        options = {
+          quality: 50,
+          destinationType: Camera.DestinationType.FILE_URI,
+          sourceType: (type===0)?Camera.PictureSourceType.CAMERA:Camera.PictureSourceType.PHOTOLIBRARY,
+          allowEdit: (type===0)?true:false,
+          encodingType: Camera.EncodingType.JPEG,
+          popoverOptions: CameraPopoverOptions,
+          saveToPhotoAlbum: false
+          //correctOrientation:true
+        };
+        $cordovaCamera.getPicture(options).then(function(imageData) {
+          setTimeout(function() {
+            ImageUploadService.uploadImage(imageData).then(function(result) {
+              //var url = result.secure_url || '';
+              var url = result.imageUrl || '';
+              var final = " ![image](" + url + ")";
+              $rootScope.log(final);
+              if ($scope.spost.body) {
+                $scope.spost.body += final;
+              } else {
+                $scope.spost.body = final;
+              }
+              if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
+                $cordovaCamera.cleanup();
+              }
+            },
+            function(err) {
+              $rootScope.showAlert("Error", "Upload Error");
+              if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
+                $cordovaCamera.cleanup();
+              }
+            });    
+          }, 10);
+        }, function(err) {
+          $rootScope.showAlert("Error", "Camera Cancelled");
+        });
+      } else {
+        $ionicPopup.prompt({
+          title: 'Set URL',
+          template: 'Direct web link for the picture',
+          inputType: 'text',
+          inputPlaceholder: 'http://example.com/image.jpg'
+        }).then(function(res) {
+          $rootScope.log('Your url is' + res);
+          if (res) {
+            var url = res.trim();
+            var final = " ![image](" + url + ")";
+            $rootScope.log(final);
+            if ($scope.spost.body) {
+              $scope.spost.body += final;
+            } else {
+              $scope.spost.body = final;
+            }
+          }
+        });
+      }
+    } else {
+      if (type == 0 || type == 1) {
+        options = {
+          quality: 50,
+          destinationType: Camera.DestinationType.FILE_URI,
+          sourceType: (type===0)?Camera.PictureSourceType.CAMERA:Camera.PictureSourceType.PHOTOLIBRARY,
+          allowEdit: (type===0)?true:false,
+          encodingType: Camera.EncodingType.JPEG,
+          popoverOptions: CameraPopoverOptions,
+          saveToPhotoAlbum: false
+          //correctOrientation:true
+        };
+        $cordovaCamera.getPicture(options).then(function(imageData) {
+          setTimeout(function() {
+            ImageUploadService.uploadImage(imageData).then(function(result) {
+              //var url = result.secure_url || '';
+              var url = result.imageUrl || '';
+              var final = " ![image](" + url + ")";
+              $rootScope.log(final);
+              if ($scope.data.comment) {
+                $scope.data.comment += final;
+              } else {
+                $scope.data.comment = final;
+              }
+              if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
+                $cordovaCamera.cleanup();
+              }
+            },
+            function(err) {
+              $rootScope.showAlert("Error", "Upload Error");
+              if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
+                $cordovaCamera.cleanup();
+              }
+            });    
+          }, 10);
+        }, function(err) {
+          $rootScope.showAlert("Error", "Camera Cancelled");
+        });
+      } else {
+        $ionicPopup.prompt({
+          title: 'Set URL',
+          template: 'Direct web link for the picture',
+          inputType: 'text',
+          inputPlaceholder: 'http://example.com/image.jpg'
+        }).then(function(res) {
+          $rootScope.log('Your url is' + res);
+          if (res) {
+            var url = res.trim();
             var final = " ![image](" + url + ")";
             $rootScope.log(final);
             if ($scope.data.comment) {
@@ -1076,40 +1165,11 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             } else {
               $scope.data.comment = final;
             }
-            if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
-              $cordovaCamera.cleanup();
-            }
-          },
-          function(err) {
-            $rootScope.showAlert("Error", "Upload Error");
-            if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
-              $cordovaCamera.cleanup();
-            }
-          });    
-        }, 10);
-      }, function(err) {
-        $rootScope.showAlert("Error", "Camera Cancelled");
-      });
-    } else {
-      $ionicPopup.prompt({
-        title: 'Set URL',
-        template: 'Direct web link for the picture',
-        inputType: 'text',
-        inputPlaceholder: 'http://example.com/image.jpg'
-      }).then(function(res) {
-        $rootScope.log('Your url is' + res);
-        if (res) {
-          var url = res.trim();
-          var final = " ![image](" + url + ")";
-          $rootScope.log(final);
-          if ($scope.data.comment) {
-            $scope.data.comment += final;
-          } else {
-            $scope.data.comment = final;
           }
-        }
-      });
+        });
+      }
     }
+    
   };
 
   $ionicModal.fromTemplateUrl('templates/story.html', {
