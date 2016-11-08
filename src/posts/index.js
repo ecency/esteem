@@ -233,20 +233,23 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.showAlert(title, msg);
       }
     };
-    $rootScope.$storage.quotes = ['Thank you for using eSteem. We appreciate it!','What a day!', 'Steem on!', 'Having a great day?!', 'You are here! This day just got better!', 'More "holy moly!"', 'You could be writing right now!', 'We like you!', 'You are awesome!', 'High-five!','Be cool. But also be warm!', 'What are you sharing today?', 'We wish you well!', 'Steem rocks', '...', 'You got nice smile!'];
+    $rootScope.$storage.quotes = ['Thank you for using eSteem. We appreciate it.','What a day...', 'Steem on!', 'Having a great day?!', 'You are here! This day just got better.', 'More "holy moly!"', 'If you dream it, you can do it.', 'Never, never, never give up.', 'You are awesome!', 'High-five','Be cool. But also be warm!', 'We like you.', 'Everything you can imagine is real.', 'Steem rocks', '...', 'You got a nice smile!', 'Follow your bliss.', 'Wherever you go, go with all your heart.', 'Hope is a waking dream.', 'Don\'t regret the past, just learn from it.', 'A jug fills drop by drop.', 'The best way out is always through.', 'All you need is love.', 'We love you!'];
     $rootScope.$on('show:loading', function(event, args){
       var rand = $rootScope.$storage.quotes[Math.floor(Math.random() * $rootScope.$storage.quotes.length)];
       $rootScope.log('show:loading');
       $ionicLoading.show({
         //noBackdrop : true,
         showBackdrop: true,
-        duration: 3000,
+        //duration: 5000,
         template: '<ion-spinner icon="spiral"></ion-spinner>'+'<p>'+rand+'</p>'
       });
     });
     $rootScope.$on('hide:loading', function(event, args){
       $rootScope.log('hide:loading');
-      $ionicLoading.hide();
+      setTimeout(function() {
+        $ionicLoading.hide();
+      }, 1000);
+      
     });
 
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
