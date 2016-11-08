@@ -241,7 +241,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         //noBackdrop : true,
         showBackdrop: true,
         //duration: 5000,
-        template: '<ion-spinner icon="spiral"></ion-spinner>'+'<p>'+rand+'</p>'
+        template: '<ion-spinner icon="ripple"></ion-spinner>'+'<p>'+rand+'</p>'
       });
     });
     $rootScope.$on('hide:loading', function(event, args){
