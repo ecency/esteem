@@ -836,7 +836,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.fetchPosts = function(type, limit, tag) {
     type = type || $rootScope.$storage.filter || "trending";
     tag = tag || $rootScope.$storage.tag || "";
-    limit = limit || $scope.limit || 15;
+    limit = limit || $scope.limit || 10;
 
     var params = {};
 
@@ -905,7 +905,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   };
   
   $scope.$on('$ionicView.loaded', function(){
-    $scope.limit = 15;
+    $scope.limit = 10;
     $rootScope.$broadcast('show:loading');
     if (!$rootScope.$storage.socket) {
       $rootScope.$storage.socket = localStorage.socketUrl;
@@ -1526,8 +1526,6 @@ app.controller('BookmarkCtrl', function($scope, $stateParams, $rootScope, $state
       $rootScope.$storage.bookmark.splice(index,1);
     }
   };
-
-
 
 
 })

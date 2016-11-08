@@ -233,12 +233,15 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.showAlert(title, msg);
       }
     };
-   
+    $rootScope.$storage.quotes = ['Thank you for using eSteem. We appreciate it!','What a day!', 'Steem on!', 'Having a great day?!', 'You are here! This day just got better!', 'More "holy moly!"', 'You could be writing right now!', 'We like you!', 'You are awesome!', 'High-five!','Be cool. But also be warm!', 'What are you sharing today?', 'We wish you well!', 'Steem rocks', '...', 'You got nice smile!'];
     $rootScope.$on('show:loading', function(event, args){
+      var rand = $rootScope.$storage.quotes[Math.floor(Math.random() * $rootScope.$storage.quotes.length)];
       $rootScope.log('show:loading');
       $ionicLoading.show({
-        noBackdrop : true,
-        template: '<ion-spinner></ion-spinner>'
+        //noBackdrop : true,
+        showBackdrop: true,
+        duration: 3000,
+        template: '<ion-spinner icon="spiral"></ion-spinner>'+'<p>'+rand+'</p>'
       });
     });
     $rootScope.$on('hide:loading', function(event, args){
