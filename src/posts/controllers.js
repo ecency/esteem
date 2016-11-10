@@ -2391,11 +2391,11 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       mention: $scope.data.mention,
       resteem: $scope.data.resteem,
       device: ionic.Platform.platform(),
-      timestamp: $filter('date')(new Date($rootScope.$storage.token.timestamp), 'medium'),
-      appversion: $rootScope.$storage.token.appVersion
+      timestamp: $filter('date')(new Date(), 'medium'),
+      appversion: '1.3.1'
     }
     APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, $rootScope.$storage.subscription).then(function(res){
-      $rootScope.log(angular.toJson(res));
+      console.log(angular.toJson(res));
     });
     
   }
