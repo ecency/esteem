@@ -5,7 +5,7 @@
             <p style="text-align:center; text-transform: uppercase;">{{$root.pinsubtitle}}</p>
             <p style="text-align:center; color:red; text-transform: uppercase;">{{$root.pinerror}}</p>
             <br>
-            <div class="row" style="text-align: center;">
+            <div class="row" style="text-align: center;" ng-if="!$root.pincheck">
                 <div class="col col-10 col-offset-15" style="border-bottom: 1px solid black">
                     {{passcode.substring(0, 1)}}
                 </div>
@@ -17,6 +17,20 @@
                 </div>
                 <div class="col col-10 col-offset-10" style="border-bottom: 1px solid black">
                     {{passcode.substring(3, 4)}}
+                </div>
+            </div>
+            <div class="row" style="text-align: center;" ng-if="$root.pincheck">
+                <div class="col col-10 col-offset-15" style="border-bottom: 1px solid black">
+                    *
+                </div>
+                <div class="col col-10 col-offset-10" style="border-bottom: 1px solid black">
+                    *
+                </div>
+                <div class="col col-10 col-offset-10" style="border-bottom: 1px solid black">
+                    *
+                </div>
+                <div class="col col-10 col-offset-10" style="border-bottom: 1px solid black">
+                    *
                 </div>
             </div>
         </div>

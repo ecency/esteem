@@ -203,6 +203,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     $rootScope.log("app start ready");
     setTimeout(function() {
       if ($rootScope.$storage.pincode) {
+        $rootScope.pincheck = true;
         $rootScope.$broadcast("pin:check");
       }  
     }, 1000);
@@ -276,6 +277,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         });
       }
       if ($rootScope.$storage.pincode) {
+        $rootScope.pincheck = true;
         $rootScope.$broadcast("pin:check");
       }
 
@@ -347,6 +349,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             if ($rootScope.pintype == 0) {
               $rootScope.log("type 0: set pin");
               if ($rootScope.$storage.pincode) {
+                $rootScope.pincheck = true;
                 $rootScope.$broadcast("pin:check");
                 $rootScope.closePin();
               } else {
@@ -428,9 +431,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.pinmodal.show();
     };
     $rootScope.$on("pin:new", function(){
+      $rootScope.pincheck = false;
       $rootScope.openPin(0);
     });
     $rootScope.$on("pin:check", function(){
+      $rootScope.pincheck = true;
       $rootScope.openPin(1);
     });
 
@@ -451,6 +456,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       //$rootScope.infomodal.remove();
     };
 
+    String.prototype.replaceAt=function(index, character) {
+        return this.substr(0, index) + character + this.substr(index+character.length);
+    }
     $rootScope.getContentAndOpen = function(item) {
       
       window.Api.initPromise.then(function(response) {
