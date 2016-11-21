@@ -16,7 +16,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.open = function(item) {
     item.json_metadata = angular.fromJson(item.json_metadata);
     //$rootScope.$storage.sitem = item;
-    $state.go('app.single', {category: item.category, author:item.author, permlink: item.permlink});
+    $state.go('app.single', {postdata: angular.toJson(item)});
   };
   $scope.advancedChange = function() {
     $rootScope.log(angular.toJson($scope.loginData.advanced));
@@ -976,7 +976,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     if (bookm) {
       var len = bookm.length;
       for (var i = 0; i < len; i++) {
-        if (bookm[i] && bookm[i].permlink == bookm.permlink) {
+        if (bookm[i] && bookm[i].permlink === $rootScope.$storage.sitem.permlink) {
           return true;
         }
       }
@@ -987,7 +987,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     if ($scope.isBookmarked()) {
       var len = book.length;
       for (var i = 0; i < len; i++) {
-        if (book[i].permlink == $scope.post.permlink) {
+        if (book[i].permlink === $rootScope.$storage.sitem.permlink) {
           book.splice(i, 1);
         }
       }  
@@ -1035,10 +1035,10 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
 
   $scope.isImages = function() {
-    if ($scope.post) {
-      var len = $scope.post.json_metadata.image?$scope.post.json_metadata.image.length:0;
+    if ($rootScope.$storage.sitem) {
+      var len = $rootScope.$storage.sitem.json_metadata.image?$rootScope.$storage.sitem.json_metadata.image.length:0;
       if (len > 0) {
-        $scope.images = $scope.post.json_metadata.image;
+        $scope.images = $rootScope.$storage.sitem.json_metadata.image;
         return true;
       } else {
         return false;
@@ -1378,6 +1378,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     window.Api.database_api().exec("get_content_replies", [$scope.post.author, $scope.post.permlink]).then(function(result){
       if (result)
         $scope.comments = result;
+
+      $rootScope.$broadcast('hide:loading');
+      
       if (!$scope.$$phase) {
         $scope.$apply();
       }
@@ -1443,24 +1446,31 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
   //$scope.post = {};
   $scope.$on('$ionicView.beforeEnter', function(){ 
+    //console.dir(angular.fromJson($stateParams.postdata));
     $rootScope.log('beforeEnter postctrl');
     $rootScope.$broadcast('show:loading');
-    if ($stateParams.author) {
+    if ($stateParams.postdata) {
       if ($rootScope.$storage.sitem) {
         $rootScope.$storage.sitem = undefined;
       }
-      $scope.getContent($stateParams.author, $stateParams.permlink);
+      var ttemp = angular.fromJson($stateParams.postdata);
+
+      ttemp.json_metadata = angular.fromJson(ttemp.json_metadata);
+
+      $scope.post = ttemp;
+
+      $rootScope.$storage.sitem = $scope.post;
+      setTimeout(function() {
+        $rootScope.$broadcast('update:content');  
+      }, 100);
+      //$scope.getContent($scope.post.author, $scope.post.permlink);
     } else {
       setTimeout(function() {
         $scope.post = $rootScope.$storage.sitem;
-        $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
-        window.Api.database_api().exec("get_content", [$scope.post.author, $scope.post.permlink]).then(function(result){
-          $scope.comments = result;
-          if (!$scope.$$phase) {
-            $scope.$apply();
-          }
-          $rootScope.$broadcast('hide:loading');  
-        });
+        //$ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
+        setTimeout(function() {
+          $rootScope.$broadcast('update:content');  
+        }, 100);
       }, 1);
     }
   });
@@ -1494,32 +1504,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
 })
 app.controller('BookmarkCtrl', function($scope, $stateParams, $rootScope, $state, APIs, $interval, $ionicScrollDelegate) {
-
-  $scope.getContentAndOpen = function(author, permlink) {
-    window.Api.database_api().exec("get_content", [author, permlink]).then(function(result){
-      var len = result.active_votes.length;
-      for (var j = len - 1; j >= 0; j--) {
-        if (result.active_votes[j].voter === $rootScope.$storage.user.username) {
-          if (result.active_votes[j].percent > 0) {
-            result.upvoted = true;  
-          } else if (result.active_votes[j].percent < 0) {
-            result.downvoted = true;  
-          } else {
-            result.downvoted = false;  
-            result.upvoted = false;  
-          }
-        }
-      }
-      result.json_metadata = angular.fromJson(result.json_metadata);
-      $rootScope.$storage.sitem = result;
-
-      $state.go('app.single');
-      if (!$scope.$$phase) {
-        $scope.$apply();
-      }
-    });
-    $rootScope.$broadcast('hide:loading');
-  };
 
   $scope.removeBookmark = function(index) {
     if ($rootScope.$storage.bookmark) {

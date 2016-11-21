@@ -124,7 +124,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   })
 
   .state('app.single', {
-    url: '/single/:category/:author/:permlink',
+    url: '/single/:postdata',
     views: {
       'menuContent': {
         //templateUrl: 'templates/post.html',
@@ -233,15 +233,15 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.showAlert(title, msg);
       }
     };
-    $rootScope.$storage.quotes = ['Thank you for using eSteem. We appreciate it.','What a day...', 'Steem on!', 'Having a great day?!', 'You are here! This day just got better.', 'More "holy moly!"', 'If you dream it, you can do it.', 'Never, never, never give up.', 'You are awesome!', 'High-five','Be cool. But also be warm!', 'We like you.', 'Everything you can imagine is real.', 'Steem rocks', '...', 'You got a nice smile!', 'Follow your bliss.', 'Wherever you go, go with all your heart.', 'Hope is a waking dream.', 'Don\'t regret the past, just learn from it.', 'A jug fills drop by drop.', 'The best way out is always through.', 'All you need is love.', 'We love you!'];
+    //$rootScope.$storage.quotes = ['Thank you for using eSteem. We appreciate it.','What a day...', 'Steem on!', 'Having a great day?!', 'You are here! This day just got better.', 'More "holy moly!"', 'If you dream it, you can do it.', 'Never, never, never give up.', 'You are awesome!', 'High-five','Be cool. But also be warm!', 'We like you.', 'Everything you can imagine is real.', 'Steem rocks', '...', 'You got a nice smile!', 'Follow your bliss.', 'Wherever you go, go with all your heart.', 'Hope is a waking dream.', 'Don\'t regret the past, just learn from it.', 'A jug fills drop by drop.', 'The best way out is always through.', 'All you need is love.', 'We love you!'];
     $rootScope.$on('show:loading', function(event, args){
-      var rand = $rootScope.$storage.quotes[Math.floor(Math.random() * $rootScope.$storage.quotes.length)];
+      //var rand = $rootScope.$storage.quotes[Math.floor(Math.random() * $rootScope.$storage.quotes.length)];
       $rootScope.log('show:loading');
       $ionicLoading.show({
-        //noBackdrop : true,
-        showBackdrop: true,
+        noBackdrop : true,
+        //showBackdrop: true,
         //duration: 5000,
-        template: '<ion-spinner icon="ripple"></ion-spinner>'+'<p>'+rand+'</p>'
+        template: '<ion-spinner icon="ripple" class="spinner-energized"></ion-spinner>'
       });
     });
     $rootScope.$on('hide:loading', function(event, args){
@@ -451,9 +451,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       //$rootScope.infomodal.remove();
     };
 
-    $rootScope.getContentAndOpen = function(author, permlink) {
-      /*window.Api.initPromise.then(function(response) {
-        window.Api.database_api().exec("get_content", [author, permlink]).then(function(result){  
+    $rootScope.getContentAndOpen = function(item) {
+      
+      window.Api.initPromise.then(function(response) {
+        window.Api.database_api().exec("get_content", [item.author, item.permlink]).then(function(result){  
           var _len = result.active_votes.length;
           for (var j = _len - 1; j >= 0; j--) {
             if (result.active_votes[j].voter === $rootScope.$storage.user.username) {
@@ -467,15 +468,16 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               }
             }
           }
+          result.json_metadata = angular.fromJson(result.json_metadata);
           $rootScope.$storage.sitem = result;
-          $state.go('app.single', {category: result.category, author: result.author, permlink: result.permlink});
+          $state.go('app.single');
 
           if (!$rootScope.$$phase) {
             $rootScope.$apply();
           }
         });
-      });*/
-      $state.go('app.single', {category: '', author: author, permlink: permlink});
+      });
+      //$state.go('app.single');
       $rootScope.$broadcast('hide:loading');
     };
 
