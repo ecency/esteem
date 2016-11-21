@@ -37,7 +37,7 @@
       
       <div class="row gray">
         <div class="col col-33" ng-if="!$root.voiceOver"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
-        <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted"></i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted"></i>&nbsp;&nbsp;&nbsp;<span ng-click="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
+        <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted && !$root.$storage.sitem.invoting"></i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted && !$root.$storage.sitem.invoting"></i>&nbsp;&nbsp;&nbsp;<span ng-click="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
 
         <div class="col col-33" ng-if="$root.voiceOver"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
         <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted">Upvote</i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted">Unvote Upvoted</i>&nbsp;&nbsp;&nbsp;<span ng-click="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
