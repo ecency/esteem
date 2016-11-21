@@ -2294,7 +2294,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
    });
 
    $scope.openTooltip = function($event, d) {
-      var texth = "<div class='row'><div class='col'><b>Payout Circle</b></div><div class='col'>"+d.mode+"</div></div><div class='row'><div class='col'><b>Potential Payout</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Promoted </b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Past Payout</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Author Payout</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>Curation Payout</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Payout</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
+      var texth = d;
       $scope.tooltipText = texth;
       $scope.tooltip.show($event);
    };
