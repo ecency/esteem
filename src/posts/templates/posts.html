@@ -40,8 +40,11 @@
 	    	<ion-slide-box show-pager="false" on-slide-changed="slideHasChanged($index)">
 	            <ion-slide ng-repeat="i in mymenu track by $index" delegate-handle="{{$index}}" style="height:100%;">
 	            <!--<div ng-if="currentSlide !== $index"></div>-->
-	            	<div class="list" ng-if="$root.$storage.view=='compact' && data.length>0">
-				    	<div ng-repeat="d in data track by $index">
+	            	<div ng-if="$root.$storage.view=='compact' && data.length>0" class="masonry-layout">
+				    	<div ng-repeat="sd in data track by $index">
+				    	<div class="" ng-if="$even">
+				    	   <div ng-repeat="d in [data[$index],data[$index + 1]]" class="masonry-layout__panel">
+				    	   <div class="list masonry-layout__panel-content">
 					    	<div class="item">
 							    <div ng-click="open(d)">
 							    <span ng-if="d.first_reblogged_by"><i class="icon ion-arrow-return-right"></i> Resteemed by {{d.first_reblogged_by}}</span>
@@ -51,9 +54,9 @@
 							    <div class="row">
 							    <div class="col">
 							      <span ng-if="!$root.voiceOver">
-							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i></a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i></a>&nbsp;<span class="gray" ng-click="openTooltip($event,d)"><i class="ion-social-usd"></i>{{d | sumPostTotal | number}}</span></span>
+							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle" ng-if="!d.invoting"></i></a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive" ng-if="!d.invoting"></i></a>&nbsp;<span class="gray" ng-click="openTooltip($event,d)"><i class="ion-social-usd"></i>{{d | sumPostTotal | number}}</span></span>
 							      <span ng-if="$root.voiceOver">
-							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>Upvote</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>Unvote</a>&nbsp;<span class="gray" ng-click="openTooltip($event,d)"><i class="ion-social-usd"></i>{{d | sumPostTotal | number}}</span></span>
+							      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle" ng-if="!d.invoting"></i>Upvote</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive" ng-if="!d.invoting"></i>Unvote</a>&nbsp;<span class="gray" ng-click="openTooltip($event,d)"><i class="ion-social-usd"></i>{{d | sumPostTotal | number}}</span></span>
 							      </div>
 							      <div class="col col-25 tright">
 							      <a href="#" class="subdued" ng-click="$root.openInfo(d)"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
@@ -66,10 +69,17 @@
 							      </div>
 							      </div>
 						  	</div>
+						  	</div>
+						  	</div>
+						  	</div>
 						</div>
 					</div>
-					<div ng-if="$root.$storage.view=='card' && data.length>0">
-						<div class="list card" ng-repeat="ds in data track by $index">
+					<div ng-if="$root.$storage.view=='card' && data.length>0" class="masonry-layout">
+						<div ng-repeat="dds in data track by $index">
+						<div class="" ng-if="$even">
+				    	   <div class="masonry-layout__panel" ng-repeat="ds in [data[$index],data[$index + 1]]" >
+				    	   <div class="list card masonry-layout__panel-content" ng-if="ds">
+
 							<div class="item" ng-click="open(ds)">
 								<span ng-if="ds.first_reblogged_by"><i class="icon ion-arrow-return-right"></i> Resteemed by {{ds.first_reblogged_by}}</span>
 							    <h2><img style='display: inline-block;' src="img/steemicon.png" ng-if="ds.percent_steem_dollars === 0" width="15" /><img style='display: inline-block;' src="img/steemDeclined.png" ng-if="ds.max_accepted_payout === '0.000 SBD'" width="15" />{{ds.title}}</h2>
@@ -80,11 +90,11 @@
 							    <div class="row">
 								    <div class="col">
 								      <span ng-if="!$root.voiceOver">
-								      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i></a><a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i></a>&nbsp;<span class="gray" ng-click="openTooltip($event,ds)"><i class="ion-social-usd"></i>{{ds | sumPostTotal | number}}</span>
+								      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle" ng-if="!ds.invoting"></i></a><a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive" ng-if="!ds.invoting"></i></a>&nbsp;<span class="gray" ng-click="openTooltip($event,ds)"><i class="ion-social-usd"></i>{{ds | sumPostTotal | number}}</span>
 								      </span>
 								      <span ng-if="$root.voiceOver">
-								      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle"></i>Upvote</a>
-								      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive"></i>Unvote</a>&nbsp;<span class="gray" ng-click="openTooltip($event,ds)"><i class="ion-social-usd"></i>{{ds | sumPostTotal | number}}</span>
+								      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle" ng-if="!ds.invoting"></i>Upvote</a>
+								      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="icon ion-android-arrow-dropup-circle positive" ng-if="!ds.invoting"></i>Unvote</a>&nbsp;<span class="gray" ng-click="openTooltip($event,ds)"><i class="ion-social-usd"></i>{{ds | sumPostTotal | number}}</span>
 								      </span>
 								      </div>
 								      <div class="col col-25 tright">
@@ -98,6 +108,8 @@
 								      </div>
 							      </div>
 							</div>
+							</div>
+						</div></div>
 						</div>
 					</div>
 	            </ion-slide>

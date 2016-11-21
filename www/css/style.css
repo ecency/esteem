@@ -1161,15 +1161,26 @@ p.text-center {
   column-count: 1;
   column-gap: 0;
 }
+@media (min-width: 768px) {
+  .masonry-layout {
+    column-count: 2;
+  }
+}
+@media (min-width: 1200px) {
+  .masonry-layout {
+    column-count: 3;
+  }
+}
 
 .masonry-layout__panel {
   break-inside: avoid;
-  padding: 5px;
+  padding: 1px;
 }
 .masonry-layout__panel-content {
-  padding: 10px;
-  border-radius: 10px;
+  padding: 1px;
+  border-radius: 5px;
 }
+
 
 .bodytext table {
     border-collapse: collapse;

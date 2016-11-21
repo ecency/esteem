@@ -234,14 +234,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.showAlert(title, msg);
       }
     };
-    //$rootScope.$storage.quotes = ['Thank you for using eSteem. We appreciate it.','What a day...', 'Steem on!', 'Having a great day?!', 'You are here! This day just got better.', 'More "holy moly!"', 'If you dream it, you can do it.', 'Never, never, never give up.', 'You are awesome!', 'High-five','Be cool. But also be warm!', 'We like you.', 'Everything you can imagine is real.', 'Steem rocks', '...', 'You got a nice smile!', 'Follow your bliss.', 'Wherever you go, go with all your heart.', 'Hope is a waking dream.', 'Don\'t regret the past, just learn from it.', 'A jug fills drop by drop.', 'The best way out is always through.', 'All you need is love.', 'We love you!'];
     $rootScope.$on('show:loading', function(event, args){
-      //var rand = $rootScope.$storage.quotes[Math.floor(Math.random() * $rootScope.$storage.quotes.length)];
       $rootScope.log('show:loading');
       $ionicLoading.show({
         noBackdrop : true,
-        //showBackdrop: true,
-        //duration: 5000,
         template: '<ion-spinner icon="ripple" class="spinner-energized"></ion-spinner>'
       });
     });
@@ -250,7 +246,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       setTimeout(function() {
         $ionicLoading.hide();
       }, 1000);
-      
     });
 
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
@@ -404,7 +399,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           alertPopup.then(function(res) {
             $rootScope.log('Thank you for seeing alert from tray');
             if (res) {
-              $rootScope.getContentAndOpen($rootScope.$storage.notifData.author, $rootScope.$storage.notifData.permlink);  
+              $rootScope.getContentAndOpen({author:$rootScope.$storage.notifData.author, permlink:$rootScope.$storage.notifData.permlink});  
               $rootScope.$storage.notifData = undefined;
             } else {
               $rootScope.log("not sure to open alert");
@@ -531,6 +526,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                     //$scope.refreshFollowers();
                     $rootScope.showMessage('Success', 'Reblogged post!');
                   }
+                  $rootScope.$broadcast('hide:loading');
                 }, 3000);
               } else {
                 $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
@@ -547,10 +543,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     };
 
     $rootScope.votePost = function(post, type, afterward) {
-      //window.Api = window.steemWS.Client.get();
-      //$rootScope.log(window.Api);
-      //$rootScope.log(window.steemJS);
-
       post.invoting = true;
       var tt = 1;
       if (type === "upvote") {
@@ -563,7 +555,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         tt = 0;
       }
       $rootScope.log('voting '+tt);
-      $rootScope.$broadcast('show:loading');
 
       if ($rootScope.$storage.user) {
         window.Api.initPromise.then(function(response) {
@@ -594,8 +585,13 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               if (localStorage.error == 1) {
                 $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
               } else {
-                $rootScope.$broadcast(afterward);  
+                if (afterward === 'fetchContent') {
+                  $rootScope.$broadcast(afterward, { any: {author: post.author, permlink: post.permlink} });
+                } else {
+                  $rootScope.$broadcast(afterward);    
+                }                
               }
+              $rootScope.$broadcast('hide:loading');
             }, 3000);
           } else {
             $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
@@ -603,6 +599,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             post.invoting = false;
           }
           $rootScope.$broadcast('hide:loading');
+          if (!$rootScope.$$phase) {
+            $rootScope.$apply();
+          }
         });
       } else {
         $rootScope.$broadcast('hide:loading');
@@ -610,6 +609,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.showAlert("Warning", "Please, login to Vote");
       }
     };
+    
     $rootScope.isWitnessVoted = function() {
       if ($rootScope.$storage.user && $rootScope.$storage.user.witness_votes.indexOf("good-karma")>-1) {
         return true;
@@ -762,6 +762,24 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             console.error(error);
         });
 
+        window.FirebasePlugin.onTokenRefresh(function(token) {
+          var subs = {};
+          APIs.getSubscriptions($rootScope.$storage.deviceid).then(function(res){
+            $rootScope.log(angular.toJson(res.data));
+            angular.merge(subs, {vote: res.data[0].subscription.vote, follow: res.data[0].subscription.follow, comment: res.data[0].subscription.comment, mention: res.data[0].subscription.mention, resteem: res.data[0].subscription.resteem, token: token});
+            APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, subs).then(function(res){
+              console.log(angular.toJson(res));
+            });
+            if (!$scope.$$phase){
+              $scope.$apply();
+            }
+          });  
+          
+          //console.log(token);
+        }, function(error) {
+          console.error(error);
+        });
+
         window.FirebasePlugin.onNotificationOpen(function(data) {
             $rootScope.log(angular.toJson(data));
             console.log(angular.toJson(data));
@@ -780,7 +798,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                     $rootScope.log('Thank you for seeing alert from tray');
                     if (res) {
                       setTimeout(function() {
-                        $rootScope.getContentAndOpen(data.author, data.permlink);    
+                        $rootScope.getContentAndOpen({author:data.author, permlink:data.permlink});    
                       }, 10);
                     } else {
                       $rootScope.log("not sure to open alert");

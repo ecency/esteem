@@ -90,7 +90,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
             $rootScope.$storage.user = $scope.loginData;
             $rootScope.$broadcast('fetchPosts');
             $rootScope.$storage.mylogin = $scope.login;
-            APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date($rootScope.$storage.token.timestamp), 'medium'), appversion: $rootScope.$storage.token.appVersion}).then(function(res){
+            APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date(), 'medium'), appversion: $rootScope.$storage.appversion}).then(function(res){
               $rootScope.$broadcast('hide:loading');
               //$state.go($state.current, {}, {reload: true});
               //$state.go('app.posts', {}, { reload: true });
@@ -624,7 +624,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         var tr = new window.steemJS.TransactionBuilder();
         var permlink = createPermlink($scope.spost.title);
         var json = $filter("metadata")($scope.spost.body);
-        angular.merge(json, {tags: $scope.spost.category, custom: { app: 'esteem', version: $rootScope.$storage.appversion, platform: ionic.Platform.platform() } });
+        angular.merge(json, {tags: $scope.spost.category, app: 'esteem/'+$rootScope.$storage.appversion });
 
         if (!$scope.spost.operation_type) {
           $scope.spost.operation_type = 'default';
@@ -714,8 +714,17 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $scope.fetchPosts();
   });
 
+  $rootScope.$on('fetchContent', function(event, args) {
+    var post = args.any;
+    //console.log(post);
+    $scope.fetchContent(post.author, post.permlink);
+  });
+
   $scope.votePost = function(post) {
-    $rootScope.votePost(post, 'upvote', 'fetchPosts');
+    $rootScope.votePost(post, 'upvote', 'fetchContent');
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
   };
 
   $scope.downvotePost = function(post) {
@@ -727,7 +736,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     confirmPopup.then(function(res) {
       if(res) {
         $rootScope.log('You are sure');
-        $rootScope.votePost(post, 'downvote', 'fetchPosts');
+        $rootScope.votePost(post, 'downvote', 'fetchContent');
       } else {
         $rootScope.log('You are not sure');
       }
@@ -736,7 +745,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   };
 
   $scope.unvotePost = function(post) {
-    $rootScope.votePost(post, 'unvote', 'fetchPosts');
+    $rootScope.votePost(post, 'unvote', 'fetchContent');
   };
   
   $scope.refresh = function(){
@@ -784,8 +793,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     var view = $rootScope.$storage.view;
     if (user){
       for (var i = 0; i < lenn; i++) {
-        var len = newValue[i].active_votes.length;
-        for (var j = len - 1; j >= 0; j--) {
+        var len = newValue[i].active_votes.length-1;
+        for (var j = len; j >= 0; j--) {
           if (newValue[i].active_votes[j].voter === user.username) {
             if (newValue[i].active_votes[j].percent > 0) {
               newValue[i].upvoted = true;  
@@ -798,17 +807,18 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           }
         }
         if (view === 'card') {
-          newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata?newValue[i].json_metadata:[]);
+          if (newValue[i].json_metadata)
+            newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata);
         }
       }
     } else {
       for (var i = 0; i < lenn; i++) {
         if (view === 'card') {
-          newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata?newValue[i].json_metadata:[]);
+          if (newValue[i].json_metadata)
+            newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata);
         }
       }
     }
-    //$rootScope.log(newValue);
     return newValue;
   }
 
@@ -833,6 +843,37 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $scope.menupopover.remove();
   });
 
+  $scope.fetchContent = function(author, permlink) {
+    window.Api.database_api().exec("get_content", [author, permlink]).then(function(result){
+      var len = result.active_votes.length;
+      var user = $rootScope.$storage.user;
+      if (user) {
+        for (var j = len - 1; j >= 0; j--) {
+          if (result.active_votes[j].voter === user.username) {
+            if (result.active_votes[j].percent > 0) {
+              result.upvoted = true;  
+            } else if (result.active_votes[j].percent < 0) {
+              result.downvoted = true;  
+            } else {
+              result.downvoted = false;  
+              result.upvoted = false;  
+            }
+          }
+        }
+      }
+      result.json_metadata = angular.fromJson(result.json_metadata);
+      angular.forEach($scope.data, function(value, key) {
+        if (value.permlink === result.permlink) {
+          $scope.data[key] = result;
+        }
+      });  
+      $rootScope.$broadcast('hide:loading');
+      if (!$scope.$$phase) {
+        $scope.$apply();
+      }
+    });
+    
+  }
   $scope.fetchPosts = function(type, limit, tag) {
     type = type || $rootScope.$storage.filter || "trending";
     tag = tag || $rootScope.$storage.tag || "";
@@ -847,11 +888,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         $rootScope.$storage.filter = "trending";
         type = "trending";
       }
-      /*if ((type === "cashout" && !tag) || (type === "promoted" && !tag)) {
-        params = {tag: "steemit", limit: limit, filter_tags: []};
-      } else {
-        params = {tag: tag, limit: limit, filter_tags: []};
-      }*/
       params = {tag: tag, limit: limit, filter_tags: []};
     }
 
@@ -861,45 +897,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $rootScope.log("fetching..."+type+" "+limit+" "+tag);
       if (typeof window.Api.database_api === "function") { 
         window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
-          $rootScope.$broadcast('hide:loading');
-          //console.log(params);
           $scope.data = $scope.dataChanged(response); 
+          $rootScope.$broadcast('hide:loading');
           if (!$scope.$$phase) {
             $scope.$apply();
           }
         });
-        /*window.Api.database_api().exec("get_state", ['/'+type]).then(function(response){
-          $rootScope.$broadcast('hide:loading');
-          console.log(response);
-          var log=[];
-          var view = $rootScope.$storage.view;
-          angular.forEach(response.content, function(value, key) {
-            if (view === "card") {
-              value.json_metadata = angular.fromJson(value.json_metadata);  
-            }
-            var user = $rootScope.$storage.user || null;
-            if (user){
-              for (var i = 0; i < value.active_votes.length; i++) {
-                if (value.active_votes[i].voter === user.username) {
-                  if (value.active_votes[i].percent > 0) {
-                    value.upvoted = true;  
-                  } else if (value.active_votes[i].percent < 0) {
-                    value.downvoted = true;  
-                  } else {
-                    value.downvoted = false;  
-                    value.upvoted = false;  
-                  }
-                }
-              }
-            }
-            this.push(value);
-          }, log);
-          $scope.data = log;//$scope.dataChanged(response.content); 
-          //console.log(log);
-          if (!$scope.$$phase) {
-            $scope.$apply();
-          }
-        });  */  
       }
     }
   };
@@ -1277,7 +1280,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         var permlink = $scope.spost.permlink;
         var jjson = $filter("metadata")($scope.spost.body);
         $scope.spost.tags = $filter('lowercase')($scope.spost.tags);
-        var json = angular.merge(jjson, {tags: $scope.spost.tags.split(" "), custom: { app: 'esteem', version: $rootScope.$storage.appversion, platform: ionic.Platform.platform() } });
+        var json = angular.merge(jjson, {tags: $scope.spost.tags.split(" "), app: 'esteem/'+$rootScope.$storage.appversion });
 
         tr.add_type_operation("comment", {
           parent_author: "",
@@ -1333,7 +1336,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         var tr = new window.steemJS.TransactionBuilder();
         var t = new Date();
         var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
-        var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "" , custom: { app: 'esteem', version: $rootScope.$storage.appversion, platform: ionic.Platform.platform() } };
+        var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "" , app: 'esteem/'+$rootScope.$storage.appversion };
         tr.add_type_operation("comment", {
           parent_author: $scope.post.author,
           parent_permlink: $scope.post.permlink,
@@ -2368,7 +2371,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       resteem: $scope.data.resteem,
       device: ionic.Platform.platform(),
       timestamp: $filter('date')(new Date(), 'medium'),
-      appversion: '1.3.1'
+      appversion: '1.3.2'
     }
     APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, $rootScope.$storage.subscription).then(function(res){
       console.log(angular.toJson(res));
