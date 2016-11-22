@@ -41,7 +41,7 @@ gulp.task('scripts', function() {
     .pipe(gulp.dest('./www/js'));
 
   gulp.src([
-    './bower_components/ionic/release/js/ionic.bundle.js',
+    './bower_components/ionic/js/ionic.bundle.js',
     './bower_components/ngstorage/ngStorage.js',
     './bower_components/ngCordova/dist/ng-cordova.js',
     './bower_components/ion-floating-menu/dist/ion-floating-menu.js',
