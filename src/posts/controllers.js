@@ -124,7 +124,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       if (typeof window.Api.database_api === "function") { 
         window.Api.database_api().exec("get_accounts", [ [ $rootScope.$storage.user.username ] ]).then(function(dd){
           dd = dd[0];
-          if (dd.json_metadata) {
+          if (dd && dd.json_metadata) {
             dd.json_metadata = angular.fromJson(dd.json_metadata);
           }
           angular.merge($rootScope.$storage.user, dd);

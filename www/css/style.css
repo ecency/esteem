@@ -1235,3 +1235,6 @@ p.text-center {
   padding: 3px 0px;
 }
 
+.row.twrap {
+  font-size: 11pt;
+}

@@ -609,7 +609,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.showAlert("Warning", "Please, login to Vote");
       }
     };
-    
+
     $rootScope.isWitnessVoted = function() {
       if ($rootScope.$storage.user && $rootScope.$storage.user.witness_votes.indexOf("good-karma")>-1) {
         return true;
@@ -770,8 +770,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, subs).then(function(res){
               console.log(angular.toJson(res));
             });
-            if (!$scope.$$phase){
-              $scope.$apply();
+            if (!$rootScope.$$phase){
+              $rootScope.$apply();
             }
           });  
           
