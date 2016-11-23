@@ -46,6 +46,7 @@
         <div class="col" ng-click="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username">Reply</div>
         <div class="col" ng-click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode=='first_payout' && $root.$storage.sitem.author==$root.$storage.user.username">Edit</div>
       </div>
+      <p ng-if="comments" class="italic tcenter gray">Swipe left on comments to see options</p>
       <ion-thread comments="comments"></ion-thread>
     </div>
     <script id = "popoverTr.html" type="text/ng-template">
