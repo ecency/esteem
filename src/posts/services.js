@@ -990,7 +990,7 @@ module.exports = function (app) {
                             var t = new Date();
                             var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
                             
-                            var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion };
+                            var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
                             tr.add_type_operation("comment", {
                               parent_author: $scope.post.author,
                               parent_permlink: $scope.post.permlink,
@@ -1049,7 +1049,7 @@ module.exports = function (app) {
                           if (loginSuccess) {
                             var tr = new window.steemJS.TransactionBuilder();
                             
-                            var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", custom: { app: 'esteem', version: $rootScope.$storage.appversion, platform: ionic.Platform.platform() } };
+                            var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
                             tr.add_type_operation("comment", {
                               parent_author: $scope.post.parent_author,
                               parent_permlink: $scope.post.parent_permlink,
