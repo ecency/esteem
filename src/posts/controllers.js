@@ -237,7 +237,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         }
         if ($scope.data.type == "user"){
           var ee = [];
-          window.Api.database_api().exec("lookup_Accounts", [$scope.data.search, 15]).then(function(result){
+          window.Api.database_api().exec("lookup_accounts", [$scope.data.search, 15]).then(function(result){
             if (result){
               $scope.data.searchResult = result;
             }
@@ -254,6 +254,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   };
   $scope.typechange = function() {
     $scope.data.searchResult = undefined;
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
     $rootScope.log("changing search type");
   }
   $scope.openTag = function(xx, yy) {
