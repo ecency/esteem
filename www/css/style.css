@@ -1160,21 +1160,32 @@ p.text-center {
 .masonry-layout {
   column-count: 1;
   column-gap: 0;
+  -webkit-column-count: 1;
+  -moz-column-count: 1;
+  -webkit-column-gap: 0;
+  -moz-column-gap: 0;
 }
 @media (min-width: 768px) {
   .masonry-layout {
     column-count: 2;
+    -webkit-column-count: 2;
+    -moz-column-count: 2;
   }
 }
 @media (min-width: 1200px) {
   .masonry-layout {
     column-count: 3;
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
   }
 }
 
 .masonry-layout__panel {
+  /*padding: 0 0.5px;*/
+  margin-bottom: 0;
+  -webkit-break-inside: avoid;
+  -moz-break-inside: avoid;
   break-inside: avoid;
-  padding: 1px;
 }
 .masonry-layout__panel-content {
   padding: 1px;

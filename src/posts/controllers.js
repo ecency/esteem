@@ -450,7 +450,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
 app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService, $filter) {
   
   $scope.activeMenu = $rootScope.$storage.filter || "trending";
-  $scope.mymenu = $rootScope.$storage.user ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] : [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  $scope.mymenu = $rootScope.$storage.user ? [{text: 'Feed', custom:'feed'}, {text: 'Trending', custom:'trending'}, {text: 'Hot', custom:'hot'}, {text: 'New', custom:'created'}, {text: 'Active', custom:'active'}, {text: 'Promoted', custom: 'promoted'}, {text: 'Trending 30 days', custom:'trending30'}, {text:'Votes', custom:'votes'}, {text: 'Comments', custom:'children'}, {text: 'Payout', custom: 'payout'}] : [ {text: 'Trending', custom:'trending'}, {text: 'Hot', custom:'hot'}, {text: 'New', custom:'new'}, {text: 'Active', custom:'active'}, {text: 'Promoted', custom: 'promoted'}, {text: 'Trending 30 days', custom:'trending30'}, {text:'Votes', custom:'votes'}, {text: 'Comments', custom:'children'}, {text: 'Payout', custom: 'payout'}];
 
   $rootScope.$on('filter:change', function() {
     $rootScope.$broadcast('show:loading');
@@ -459,6 +459,26 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     var tag = $rootScope.$storage.tag || "";
     $scope.fetchPosts(type, $scope.limit, tag);  
   });
+
+  $scope.filterChanged = function(t) {
+    var fil = $scope.mymenu[t].custom;
+    $rootScope.$storage.filter = fil;
+    $rootScope.$broadcast('filter:change');  
+  }
+  $scope.showFilter = function() {
+    var filterSheet = $ionicActionSheet.show({
+     buttons: $scope.mymenu,
+     titleText: 'Filter',
+     cancelText: 'Cancel',
+     cancel: function() {
+        // add cancel code..
+      },
+     buttonClicked: function(index) {
+        $scope.filterChanged(index);
+        return true;
+     }
+    });    
+  }
 
   $ionicPopover.fromTemplateUrl('popoverT.html', {
       scope: $scope
@@ -807,15 +827,17 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           }
         }
         if (view === 'card') {
-          if (newValue[i].json_metadata)
+          if (newValue[i].json_metadata){
             newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata);
+          }
         }
       }
     } else {
-      for (var i = 0; i < lenn; i++) {
-        if (view === 'card') {
-          if (newValue[i].json_metadata)
+      if (view === 'card') {
+        for (var i = 0; i < lenn; i++) {
+          if (newValue[i].json_metadata){
             newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata);
+          }
         }
       }
     }
@@ -1384,9 +1406,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
       $rootScope.$broadcast('hide:loading');
       
-      if (!$scope.$$phase) {
-        $scope.$apply();
-      }
     });
   });
   $ionicModal.fromTemplateUrl('templates/reply.html', {

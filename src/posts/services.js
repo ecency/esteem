@@ -162,6 +162,19 @@ module.exports = function (app) {
           }
       }
   })
+  app.directive('clickHandler', function($timeout){
+      return{
+          restrict: 'A',
+          link: function($scope, $element,$attr){
+              $timeout(function(){
+                      $element.on('tap', function(){
+                        //the function you want to perform on tap
+        alert("Just been Clicked");
+                      });
+              });
+          }
+      };
+  })
   app.directive('tabSlideBox', [ '$timeout', '$window', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$rootScope',
     function($timeout, $window, $ionicSlideBoxDelegate, $ionicScrollDelegate, $rootScope) {
       'use strict';
