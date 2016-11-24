@@ -33,8 +33,12 @@
       <div class="bodytext selectable" ng-bind-html="$root.$storage.sitem.body | parseUrl ">
       </div>
 
-      <br>
-      
+      <div ng-if='$root.$storage.sitem.json_metadata.tags' class="tags">
+        <div ng-repeat='tag in $root.$storage.sitem.json_metadata.tags'>
+          <span><div class="tag" ng-click="openTag(tag, 5)">{{tag}}</div></li>
+        </div>
+      </div>
+
       <div class="row gray">
         <div class="col col-33" ng-if="!$root.voiceOver"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
         <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted && !$root.$storage.sitem.invoting"></i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted && !$root.$storage.sitem.invoting"></i>&nbsp;&nbsp;&nbsp;<span ng-click="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>

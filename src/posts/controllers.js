@@ -260,9 +260,11 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $rootScope.log("opening tag "+xx);
     $rootScope.$storage.tag = xx;
     $rootScope.$storage.taglimits = yy;
-    $scope.closeSmodal();
+    if ($scope.smodal.isShown()){
+      $scope.closeSmodal();
+    }
     $rootScope.$broadcast('close:popover');
-    $state.go("app.posts", {tags: xx}, {reload:true});
+    $state.go("app.posts", {tags: xx});
   };
   $scope.openUser = function(xy) {
     $rootScope.log("opening user "+xy);
@@ -447,7 +449,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   });
 
 });
-app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService, $filter) {
+app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService, $filter, $ionicHistory) {
   
   $scope.activeMenu = $rootScope.$storage.filter || "trending";
   $scope.mymenu = $rootScope.$storage.user ? [{text: 'Feed', custom:'feed'}, {text: 'Trending', custom:'trending'}, {text: 'Hot', custom:'hot'}, {text: 'New', custom:'created'}, {text: 'Active', custom:'active'}, {text: 'Promoted', custom: 'promoted'}, {text: 'Trending 30 days', custom:'trending30'}, {text:'Votes', custom:'votes'}, {text: 'Comments', custom:'children'}, {text: 'Payout', custom: 'payout'}] : [ {text: 'Trending', custom:'trending'}, {text: 'Hot', custom:'hot'}, {text: 'New', custom:'new'}, {text: 'Active', custom:'active'}, {text: 'Promoted', custom: 'promoted'}, {text: 'Trending 30 days', custom:'trending30'}, {text:'Votes', custom:'votes'}, {text: 'Comments', custom:'children'}, {text: 'Payout', custom: 'payout'}];
@@ -858,8 +860,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $scope.menupopover.hide();
   };
   $rootScope.$on('close:popover', function(){
+    $ionicHistory.nextViewOptions({
+      disableBack: true
+    });
     $scope.fetchPosts();
-    $scope.closeMenuPopover();
+    if ($scope.menupopover.isShown()){
+      $scope.closeMenuPopover();
+    }
   });
   $scope.$on('$destroy', function() {
     $scope.menupopover.remove();
