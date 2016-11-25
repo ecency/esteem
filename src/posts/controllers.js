@@ -630,8 +630,14 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $scope.disableBtn = false;
     }
   }
+  $scope.contentChanged = function (editor, html, text) {
+    console.log($scope.spost.body);
+    //console.log('editor: ', editor, 'html: ', html, 'text:', text);
+  };
 
   $scope.submitStory = function() {
+    console.log($scope.spost.body);
+
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user) {
       $scope.mylogin = new window.steemJS.Login();
@@ -724,12 +730,14 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     scope: $scope  }).then(function(modal) {
     $scope.modal = modal;
   });
+  
   $scope.openPostModal = function() {
     $rootScope.$broadcast('close:popover');
     $scope.spost = $rootScope.$storage.spost || {};
     $scope.spost.operation_type = 'default';
     
     $scope.modal.show();
+
   };
   $scope.closePostModal = function() {
     $scope.modal.hide();

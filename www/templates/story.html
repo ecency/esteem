@@ -7,18 +7,19 @@
   <ion-content class="padding posting">
     <input type="text" name="title" placeholder="Title" ng-model="spost.title" style="width:100%;">
     <br/>
-    <wiz-markdown-editor content="spost.body">
+    <div>
+    <ng-quill-editor ng-model="spost.body" class="selectable" formats='formatsArray' data-tap-disabled="true" toolbar="true" spellcheck=false on-content-changed="contentChanged(editor, html, text)"></ng-quill-editor>
+    <br/>
+      <!--<wiz-markdown-editor content="spost.body">
         <wiz-toolbar-button command="bold" class="button button-small"><b>B</b></wiz-toolbar-button>
         <wiz-toolbar-button command="italic" class="button button-small"><i>I</i></wiz-toolbar-button>
         <wiz-toolbar-button command="code" class="button button-small"><i class="icon ion-code"></i></wiz-toolbar-button>
         <wiz-toolbar-button command="ullist" class="button button-small"><img src="img/ullist.png"/></wiz-toolbar-button>
         <wiz-toolbar-button command="ollist" class="button button-small"><img src="img/ollist.png"/></wiz-toolbar-button>
-        <!--<wiz-toolbar-button command="link" class="button button-small"><i class="icon ion-link"></i></wiz-toolbar-button>
-        <wiz-toolbar-button command="img" class="button button-small"><i class="icon ion-image"></i></wiz-toolbar-button>-->
         <wiz-toolbar-button command="hr" class="button button-small">HR</wiz-toolbar-button>
         <wiz-toolbar-button command="heading" class="button button-small">H</wiz-toolbar-button>
         <button class="button button-small" ng-click="showImg()"><i class="icon ion-image"></i></button>
-      </wiz-markdown-editor>
+      </wiz-markdown-editor>-->
 
       <input type="text" name="categories" placeholder="Tags" ng-model="spost.tags" ng-change="tagsChange()" style="width:100%;">
       <div class="row">
@@ -34,15 +35,8 @@
           <button class="button button-light button-small" ng-click="clearPost()">CLEAR</button>
         </div>
       </div>
-      <p ng-if="spost.body">Preview</p>
-      <div ng-if="spost.body" class="padding bodytext" ng-bind-html="spost.body | parseUrl "></div>
-
-      <!--undo, redo, bold, italic, heading, code, ullist, ollist, indent, outdent, link, img, hr, h0, h1, h2, h3, h4, h5, h6, tab, untab-->
-
-      <!--<text-angular ng-model="spost.body" placeholder="Post content"></text-angular>-->
-
-
+      <!--<p ng-if="spost.body">Preview</p>
+      <div ng-if="spost.body" class="padding bodytext" ng-bind-html="spost.body | parseUrl "></div>-->
       <br/>
-      
   </ion-content>
 </ion-modal-view>

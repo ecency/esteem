@@ -794,6 +794,7 @@ module.exports = function (app) {
 		}
 	});
 
+      
     app.directive('ionComment', ionComment)
     app.directive('ionThread', ionThread);
 

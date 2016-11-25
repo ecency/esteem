@@ -41,18 +41,19 @@ gulp.task('scripts', function() {
     .pipe(gulp.dest('./www/js'));
 
   gulp.src([
-    './bower_components/ionic/release/js/ionic.bundle.js',
+    './bower_components/jquery/dist/jquery.js',
+    './bower_components/angular/angular.js',
+    './bower_components/angular-animate/angular-animate.js',
+    './bower_components/angular-sanitize/angular-sanitize.js',
+    './bower_components/angular-ui-router/release/angular-ui-router.js',
+    './bower_components/ionic/release/js/ionic.js',
+    './bower_components/ionic/release/js/ionic-angular.js',
     './bower_components/ngstorage/ngStorage.js',
     './bower_components/ngCordova/dist/ng-cordova.js',
     './bower_components/ion-floating-menu/dist/ion-floating-menu.js',
     './bower_components/qrcode.js/lib/qrcode.js',
     './bower_components/angular-qr/src/angular-qr.js',
-    //'./bower_components/textAngular/dist/textAngular-rangy.min.js',
-    //'./bower_components/textAngular/dist/textAngular-sanitize.min.js',
-    //'./bower_components/textAngular/dist/textAngular.min.js',
-    //'./bower_components/async/dist/async.js',
-    './bower_components/jquery/dist/jquery.js'
-    //'./bower_components/underscore/underscore.js'
+    './bower_components/ngQuill/src/ng-quill.js'
   ])
   .pipe(concat('lib.js'))
   .pipe(gulp.dest('./www/js'));
