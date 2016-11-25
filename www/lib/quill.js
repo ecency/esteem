@@ -10395,7 +10395,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					       processData: false,  // tell jQuery not to process the data
 					       contentType: false,  // tell jQuery not to set contentType
 					       success : function(data) {
-					           console.log(data);
+					           //console.log(data);
 					           var range = _this3.quill.getSelection(true);
 			                    _this3.quill.updateContents(new _quillDelta2.default().retain(range.index).delete(range.length).insert({ image: data.imageUrl }), _emitter2.default.sources.USER);
 			                    fileInput.value = "";

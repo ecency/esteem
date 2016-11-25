@@ -8,7 +8,7 @@
     <input type="text" name="title" placeholder="Title" ng-model="spost.title" style="width:100%;">
     <br/>
     <div>
-    <ng-quill-editor ng-model="spost.body" class="selectable" formats='formatsArray' data-tap-disabled="true" toolbar="true" spellcheck=false on-content-changed="contentChanged(editor, html, text)"></ng-quill-editor>
+    <ng-quill-editor ng-model="spost.body" class="selectable" toolbar="true" spellcheck=false on-content-changed="contentChanged(editor, html, text)"></ng-quill-editor>
     <br/>
       <!--<wiz-markdown-editor content="spost.body">
         <wiz-toolbar-button command="bold" class="button button-small"><b>B</b></wiz-toolbar-button>

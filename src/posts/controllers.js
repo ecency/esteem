@@ -194,7 +194,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
   // Open the login modal
   $scope.openSmodal = function() {
-    $rootScope.$broadcast('close:popover');
+    $scope.$broadcast('close:popover');
     $scope.data.type="tag";
     $scope.data.searchResult = [];
     $scope.smodal.show();
@@ -203,7 +203,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     if ($rootScope.$storage.tag) {
       $rootScope.$storage.tag = undefined;
       $rootScope.$storage.taglimits = undefined;
-      $rootScope.$broadcast('close:popover');
+      $scope.$broadcast('close:popover');
+      $rootScope.$broadcast('fetchPosts');
     }
   };
   $scope.showMeExtra = function() {
@@ -266,13 +267,13 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     if ($scope.smodal.isShown()){
       $scope.closeSmodal();
     }
-    $rootScope.$broadcast('close:popover');
+    $scope.$broadcast('close:popover');
     $state.go("app.posts", {tags: xx});
   };
   $scope.openUser = function(xy) {
     $rootScope.log("opening user "+xy);
     $scope.closeSmodal();
-    $rootScope.$broadcast('close:popover');
+    $scope.$broadcast('close:popover');
     $state.go("app.profile", {username: xy});
   };
   $scope.testfunction = function() {
@@ -732,14 +733,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   });
   
   $scope.openPostModal = function() {
-    $rootScope.$broadcast('close:popover');
-    $scope.spost = $rootScope.$storage.spost || {};
+    $scope.$broadcast('close:popover');
     $scope.spost.operation_type = 'default';
-    
+    $scope.spost = $rootScope.$storage.spost || $scope.spost;
     $scope.modal.show();
-
   };
   $scope.closePostModal = function() {
+    $scope.$broadcast('close:popover');
     $scope.modal.hide();
   };
 
@@ -870,15 +870,18 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.closeMenuPopover = function() {
     $scope.menupopover.hide();
   };
-  $rootScope.$on('close:popover', function(){
+
+  $scope.$on('close:popover', function(){
+    console.log('close:popover');
+    $scope.menupopover.hide();
+
     $ionicHistory.nextViewOptions({
       disableBack: true
     });
-    $scope.fetchPosts();
-    if ($scope.menupopover.isShown()){
-      $scope.closeMenuPopover();
-    }
+    $scope.closeMenuPopover();
+    //$scope.fetchPosts();
   });
+
   $scope.$on('$destroy', function() {
     $scope.menupopover.remove();
   });
