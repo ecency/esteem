@@ -160,7 +160,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
     //[{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
     //[{ 'direction': 'rtl' }],                         // text direction
     //[{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-    ['clean']                                         // remove formatting button
+    ['clean'],                                         // remove formatting button
+    ['image']
   ];
   var modules = { toolbar: toolbarOptions};
   ngQuillConfigProvider.set(modules, "snow", "Inser your content here", null, null, null)

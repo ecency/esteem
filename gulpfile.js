@@ -52,8 +52,7 @@ gulp.task('scripts', function() {
     './bower_components/ngCordova/dist/ng-cordova.js',
     './bower_components/ion-floating-menu/dist/ion-floating-menu.js',
     './bower_components/qrcode.js/lib/qrcode.js',
-    './bower_components/angular-qr/src/angular-qr.js',
-    './bower_components/ngQuill/src/ng-quill.js'
+    './bower_components/angular-qr/src/angular-qr.js'
   ])
   .pipe(concat('lib.js'))
   .pipe(gulp.dest('./www/js'));
