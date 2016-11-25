@@ -491,7 +491,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           }
           result.json_metadata = angular.fromJson(result.json_metadata);
           $rootScope.$storage.sitem = result;
-          $state.go('app.single');
+          setTimeout(function() {
+            $state.go('app.single');  
+          }, 5);
 
           if (!$rootScope.$$phase) {
             $rootScope.$apply();
