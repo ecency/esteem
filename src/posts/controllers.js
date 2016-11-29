@@ -1,13 +1,41 @@
 module.exports = function (app) {
 //angular.module('steem.controllers', [])
 
-app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform, $filter, APIs, $window) {
+app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform, $filter, APIs, $window, $ionicPopover) {
 
   $scope.loginData = {};  
 
   $ionicModal.fromTemplateUrl('templates/login.html', {
     scope: $scope  }).then(function(modal) {
     $scope.loginModal = modal;
+  });
+
+  $ionicPopover.fromTemplateUrl('templates/popover.html', {
+    scope: $scope,
+  }).then(function(popover) {
+    $scope.menupopover = popover;
+  });
+  
+  $scope.openMenuPopover = function($event) {
+    $scope.menupopover.show($event);
+  };
+  $scope.closeMenuPopover = function() {
+    $scope.menupopover.hide();
+  };
+
+  $scope.$on('close:popover', function(){
+    console.log('close:popover');
+    $scope.menupopover.hide();
+
+    $ionicHistory.nextViewOptions({
+      disableBack: true
+    });
+    $scope.closeMenuPopover();
+    //$scope.fetchPosts();
+  });
+
+  $scope.$on('$destroy', function() {
+    $scope.menupopover.remove();
   });
 
   $scope.changeUsername = function(){
@@ -29,7 +57,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   };
 
   $scope.login = function() {
-    $scope.loginModal.show();
+    setTimeout(function() {
+      $scope.loginModal.show();  
+    }, 10);
   };
   $scope.goProfile = function() {
     $state.go("app.profile", {username:$rootScope.$storage.user.username});
@@ -190,15 +220,20 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   // Triggered in the login modal to close it
   $scope.closeSmodal = function() {
     $scope.smodal.hide();
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
   };
 
   // Open the login modal
   $scope.openSmodal = function() {
     if(!$scope.smodal) return;   
     $scope.$broadcast('close:popover');
-    $scope.data.type="tag";
-    $scope.data.searchResult = [];
-    $scope.smodal.show();
+    setTimeout(function() {
+      $scope.data.type="tag";
+      $scope.data.searchResult = [];
+      $scope.smodal.show();
+    }, 10);
   };
   $scope.clearSearch = function() {
     if ($rootScope.$storage.tag) {
@@ -535,7 +570,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $scope.$broadcast('close:popover');
       $timeout(function(){
         $scope.modalp.show()
-      }, 0);
+      }, 10);
       $scope.spost.operation_type = 'default';
       $scope.spost = $rootScope.$storage.spost || $scope.spost;
       //$scope.modalp.show();
@@ -656,12 +691,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
   }
   $scope.contentChanged = function (editor, html, text) {
-    console.log($scope.spost.body);
+    //console.log($scope.spost.body);
     //console.log('editor: ', editor, 'html: ', html, 'text:', text);
   };
 
   $scope.submitStory = function() {
-    console.log($scope.spost.body);
+    //console.log($scope.spost.body);
 
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user) {
@@ -887,35 +922,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
   }
 
-
-  $ionicPopover.fromTemplateUrl('templates/popover.html', {
-    scope: $scope,
-  }).then(function(popover) {
-    $scope.menupopover = popover;
-  });
-  
-  $scope.openMenuPopover = function($event) {
-    $scope.menupopover.show($event);
-  };
-  $scope.closeMenuPopover = function() {
-    $scope.menupopover.hide();
-  };
-
-  $scope.$on('close:popover', function(){
-    console.log('close:popover');
-    $scope.menupopover.hide();
-
-    $ionicHistory.nextViewOptions({
-      disableBack: true
-    });
-    $scope.closeMenuPopover();
-    //$scope.fetchPosts();
-  });
-
-  $scope.$on('$destroy', function() {
-    $scope.menupopover.remove();
-  });
-
   $scope.fetchContent = function(author, permlink) {
     window.Api.database_api().exec("get_content", [author, permlink]).then(function(result){
       var len = result.active_votes.length;
@@ -973,7 +979,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $rootScope.log("fetching..."+type+" "+limit+" "+tag);
       if (typeof window.Api.database_api === "function") { 
         window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
-          console.log(response.length);
+          //console.log(response.length);
           if (response.length <= 1) {
             $scope.error = true;
           }
@@ -1315,7 +1321,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   });
   $scope.openPostModal = function() {
     if(!$scope.pmodal) return;   
-    $scope.pmodal.show();
+    setTimeout(function() {
+      $scope.pmodal.show();  
+    }, 10);
   };
   $scope.closePostModal = function() {
     $scope.pmodal.hide();
@@ -1485,7 +1493,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
   $scope.openModal = function(item) {
     if(!$scope.modal) return;   
-    $scope.modal.show();
+    setTimeout(function() {
+      $scope.modal.show();  
+    }, 10);
   };
 
   $scope.closeModal = function() {
