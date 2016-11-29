@@ -108,6 +108,7 @@ hr {
 	display: block;
 	text-align: center;
 	font-size: 3.0vw;
+  font-size: 12pt;
 }
 .profile.bar-footer .button-bar .button.icon:before {
 	display: block;
@@ -1150,6 +1151,16 @@ p.text-center {
   vertical-align: middle;
   display: block;
 }
+p.text-left {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  display: block;
+}
+div.text-left {
+  text-align: left;
+}
+
 
 .full-image {
 

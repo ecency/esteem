@@ -10394,6 +10394,24 @@ return /******/ (function(modules) { // webpackBootstrap
 					       data : formData,
 					       processData: false,  // tell jQuery not to process the data
 					       contentType: false,  // tell jQuery not to set contentType
+					       beforeSend: function(XMLHttpRequest) {
+							    //Upload progress
+							    XMLHttpRequest.upload.addEventListener("progress", function(evt){
+							      if (evt.lengthComputable) {  
+							        var percentComplete = evt.loaded / evt.total;
+							        //Do something with upload progress
+							        console.log('uploading '+percentComplete);
+							      }
+							    }, false); 
+							    //Download progress
+							    XMLHttpRequest.addEventListener("progress", function(evt){
+							      if (evt.lengthComputable) {  
+							        var percentComplete = evt.loaded / evt.total;
+							        //Do something with download progress
+							        console.log('downloading '+percentComplete);
+							      }
+							    }, false); 
+						   },
 					       success : function(data) {
 					           //console.log(data);
 					           var range = _this3.quill.getSelection(true);

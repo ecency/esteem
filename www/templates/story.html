@@ -4,7 +4,7 @@
     <h1 class="title">Submit a Story</h1>
     <button class="button button-positive button-primary" ng-disabled="disableBtn" ng-click="submitStory()">POST</button>
   </ion-header-bar>
-  <ion-content class="padding posting">
+  <ion-content class="padding posting" overflow-scroll="true">
     <input type="text" name="title" placeholder="Title" ng-model="spost.title" style="width:100%;">
     <br/>
     <div>

@@ -56,7 +56,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       $rootScope.$broadcast('show:loading');
       $scope.loginData.username = $scope.loginData.username.trim();
       if (!$rootScope.$storage.user) {
-
+        console.log('doLogin'+$scope.loginData.username+$rootScope.$storage.password);
         window.Api.database_api().exec("get_accounts", [[$scope.loginData.username]]).then(function(dd){
           dd = dd[0];
           $scope.loginData.id = dd.id;
@@ -68,8 +68,6 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
           $scope.loginData.post_count = dd.post_count;
           $scope.loginData.voting_power = dd.voting_power;
           $scope.loginData.witness_votes = dd.witness_votes;
-
-          
 
           $scope.login = new window.steemJS.Login();
           $scope.login.setRoles(["posting"]);
@@ -147,6 +145,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       cordova.getAppVersion.getVersionNumber(function (version) {
         $rootScope.$storage.appversion = version;
       });  
+    } else {
+      $rootScope.$storage.appversion = 'debug';
     }
   });
 
@@ -194,6 +194,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
   // Open the login modal
   $scope.openSmodal = function() {
+    if(!$scope.smodal) return;   
     $scope.$broadcast('close:popover');
     $scope.data.type="tag";
     $scope.data.searchResult = [];
@@ -453,7 +454,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   });
 
 });
-app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService, $filter, $ionicHistory) {
+app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService, $filter, $ionicHistory, $timeout) {
   
   $scope.activeMenu = $rootScope.$storage.filter || "trending";
   $scope.mymenu = $rootScope.$storage.user ? [{text: 'Feed', custom:'feed'}, {text: 'Trending', custom:'trending'}, {text: 'Hot', custom:'hot'}, {text: 'New', custom:'created'}, {text: 'Active', custom:'active'}, {text: 'Promoted', custom: 'promoted'}, {text: 'Trending 30 days', custom:'trending30'}, {text:'Votes', custom:'votes'}, {text: 'Comments', custom:'children'}, {text: 'Payout', custom: 'payout'}] : [ {text: 'Trending', custom:'trending'}, {text: 'Hot', custom:'hot'}, {text: 'New', custom:'new'}, {text: 'Active', custom:'active'}, {text: 'Promoted', custom: 'promoted'}, {text: 'Trending 30 days', custom:'trending30'}, {text:'Votes', custom:'votes'}, {text: 'Comments', custom:'children'}, {text: 'Payout', custom: 'payout'}];
@@ -520,6 +521,26 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
    $scope.$on('popover.removed', function() {
       // Execute action
    });
+
+   $ionicModal.fromTemplateUrl('templates/story.html', {
+    scope: $scope  }).then(function(modal) {
+      $scope.modalp = modal;
+    });
+    
+    $scope.openPostModal = function() {
+      if(!$scope.modalp) return;   
+      $scope.$broadcast('close:popover');
+      $timeout(function(){
+        $scope.modalp.show()
+      }, 0);
+      $scope.spost.operation_type = 'default';
+      $scope.spost = $rootScope.$storage.spost || $scope.spost;
+      //$scope.modalp.show();
+    };
+    $scope.closePostModal = function() {
+      //$scope.$broadcast('close:popover');
+      $scope.modalp.hide();
+    };
 
 
   $scope.showImg = function() {
@@ -700,10 +721,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           if (localStorage.error == 1) {
             $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
           } else {
-            $scope.closePostModal();
+            //$scope.closePostModal();
+            $scope.modalp.hide();
+            $scope.menupopover.hide();
             $scope.spost = {};
             $rootScope.showMessage("Success", "Post is submitted!");
-            $scope.closeMenuPopover();
+            //$scope.closeMenuPopover();
             $state.go("app.profile", {username: $rootScope.$storage.user.username});
           }
           $rootScope.$broadcast('hide:loading');
@@ -718,30 +741,18 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
   }
   $scope.savePost = function() {
+    console.log($scope.modalp);
     $rootScope.$storage.spost = $scope.spost;
-    $rootScope.showMessage("Saved", "Post for later submission!");
-    $scope.closePostModal();
+    $scope.$broadcast('close:popover');
+    $scope.modalp.hide();
+    $rootScope.showMessage("Saved", "Post for later submission!");  
   }
   $scope.clearPost = function() {
     $rootScope.$storage.spost = {};
     $scope.spost = {};
     $rootScope.showMessage("Cleared", "Post!");
   }
-  $ionicModal.fromTemplateUrl('templates/story.html', {
-    scope: $scope  }).then(function(modal) {
-    $scope.modal = modal;
-  });
   
-  $scope.openPostModal = function() {
-    $scope.$broadcast('close:popover');
-    $scope.spost.operation_type = 'default';
-    $scope.spost = $rootScope.$storage.spost || $scope.spost;
-    $scope.modal.show();
-  };
-  $scope.closePostModal = function() {
-    $scope.$broadcast('close:popover');
-    $scope.modal.hide();
-  };
 
   $rootScope.$on('fetchPosts', function(){
     $scope.fetchPosts();
@@ -1268,6 +1279,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     $scope.pmodal = modal;
   });
   $scope.openPostModal = function() {
+    if(!$scope.pmodal) return;   
     $scope.pmodal.show();
   };
   $scope.closePostModal = function() {
@@ -1285,12 +1297,14 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.edit = false;
   $scope.editPost = function(xx) {
     $scope.edit = true;
-    if (!$scope.spost.body) {
-      $scope.spost = xx;  
-      $scope.patchbody = xx.body;
-    }
-    $scope.spost.tags = angular.fromJson(xx.json_metadata).tags.join().replace(/\,/g,' ');
-    $scope.openPostModal();  
+    $scope.openPostModal();
+    setTimeout(function() {
+      if (!$scope.spost.body) {
+        $scope.spost = xx;  
+        $scope.patchbody = xx.body;
+      }
+      $scope.spost.tags = angular.fromJson(xx.json_metadata).tags.join().replace(/\,/g,' ');  
+    }, 10);
   }
   
   $scope.submitStory = function() {
@@ -1346,7 +1360,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             $scope.spost = {};
             $rootScope.showMessage("Success", "Post is submitted!");  
             //$scope.closePostPopover();
-            //$state.go("app.profile", {username: $rootScope.$storage.user.username});
+            $state.go("app.profile", {username: $rootScope.$storage.user.username});
           }
           $rootScope.$broadcast('hide:loading');
         }, 3000);
@@ -1435,6 +1449,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   });
 
   $scope.openModal = function(item) {
+    if(!$scope.modal) return;   
     $scope.modal.show();
   };
 
@@ -2081,7 +2096,9 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     $scope.following = [];
     $scope.limit = 100;
     $scope.tt = {duser: "", ruser: ""};
-
+    /*window.Api.database_api().exec("get_follow_count", [$stateParams.username]).then(function(res){
+      console.log(res);
+    });*/
     $scope.refresh = function() {  
       if (!$scope.active) {
         $scope.active = "blog";  
