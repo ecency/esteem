@@ -460,10 +460,11 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.mymenu = $rootScope.$storage.user ? [{text: 'Feed', custom:'feed'}, {text: 'Trending', custom:'trending'}, {text: 'Hot', custom:'hot'}, {text: 'New', custom:'created'}, {text: 'Active', custom:'active'}, {text: 'Promoted', custom: 'promoted'}, {text: 'Trending 30 days', custom:'trending30'}, {text:'Votes', custom:'votes'}, {text: 'Comments', custom:'children'}, {text: 'Payout', custom: 'payout'}] : [ {text: 'Trending', custom:'trending'}, {text: 'Hot', custom:'hot'}, {text: 'New', custom:'new'}, {text: 'Active', custom:'active'}, {text: 'Promoted', custom: 'promoted'}, {text: 'Trending 30 days', custom:'trending30'}, {text:'Votes', custom:'votes'}, {text: 'Comments', custom:'children'}, {text: 'Payout', custom: 'payout'}];
 
   $rootScope.$on('filter:change', function() {
-    $rootScope.$broadcast('show:loading');
+    //$rootScope.$broadcast('show:loading');
     $rootScope.log($rootScope.$storage.filter);
     var type = $rootScope.$storage.filter || "trending";
     var tag = $rootScope.$storage.tag || "";
+    console.log(type, $scope.limit, tag);
     $scope.fetchPosts(type, $scope.limit, tag);  
   });
 
@@ -804,12 +805,20 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   });
 
   $scope.loadMore = function() {
-    $rootScope.$broadcast('show:loading');
+    //$rootScope.$broadcast('show:loading');
     $scope.limit += 5;
-    if (!$scope.error) {
-      $scope.fetchPosts(null, $scope.limit, null);  
-    }
+    //if (!$scope.error) {
+    $scope.fetchPosts(null, $scope.limit, null);  
+    //}
   };
+
+  $scope.$on('$stateChangeSuccess', function() {
+    $scope.loadMore();
+  });
+
+  $scope.moreDataCanBeLoaded = function(){
+    return !$scope.error;
+  }
 
   $scope.changeView = function(view) {
     $rootScope.$storage.view = view; 
@@ -817,7 +826,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     if (!$scope.$$phase){
       $scope.$apply();
     }
-    $rootScope.$broadcast('show:loading');
+    //$rootScope.$broadcast('show:loading');
     $scope.refresh();
     /*setTimeout(function() {
       $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
@@ -837,16 +846,21 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     var view = $rootScope.$storage.view;
     if (user){
       for (var i = 0; i < lenn; i++) {
-        var len = newValue[i].active_votes.length-1;
-        for (var j = len; j >= 0; j--) {
-          if (newValue[i].active_votes[j].voter === user.username) {
-            if (newValue[i].active_votes[j].percent > 0) {
-              newValue[i].upvoted = true;  
-            } else if (newValue[i].active_votes[j].percent < 0) {
-              newValue[i].downvoted = true;  
-            } else {
-              newValue[i].downvoted = false;  
-              newValue[i].upvoted = false;  
+        if(newValue[i].hasOwnProperty("downvoted") || newValue[i].hasOwnProperty("upvoted")){
+            console.log('exist');
+            continue;
+        } else {
+          var len = newValue[i].active_votes.length-1;
+          for (var j = len; j >= 0; j--) {
+            if (newValue[i].active_votes[j].voter === user.username) {
+              if (newValue[i].active_votes[j].percent > 0) {
+                newValue[i].upvoted = true;  
+              } else if (newValue[i].active_votes[j].percent < 0) {
+                newValue[i].downvoted = true;  
+              } else {
+                newValue[i].downvoted = false;  
+                newValue[i].upvoted = false;  
+              }
             }
           }
         }
@@ -932,7 +946,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     type = type || $rootScope.$storage.filter || "trending";
     tag = tag || $rootScope.$storage.tag || "";
     limit = limit || $scope.limit || 10;
-
+    if (limit >= 100) {
+      $scope.error = true;
+      $scope.limit = 10;
+    } else {
+      $scope.error = false;
+    }
     var params = {};
 
     if (type === "feed" && $rootScope.$storage.user) {
@@ -946,12 +965,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
 
     if ($scope.error) {
-      $rootScope.showAlert("Error", "Server returned error, Plese try to change it from Settings");
+      $rootScope.showAlert("Error", "Fetching issue");
     } else {
       $rootScope.log("fetching..."+type+" "+limit+" "+tag);
       if (typeof window.Api.database_api === "function") { 
         window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
           $scope.data = $scope.dataChanged(response); 
+          $scope.$broadcast('scroll.infiniteScrollComplete');
           $rootScope.$broadcast('hide:loading');
           if (!$scope.$$phase) {
             $scope.$apply();
@@ -963,7 +983,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   
   $scope.$on('$ionicView.loaded', function(){
     $scope.limit = 10;
-    $rootScope.$broadcast('show:loading');
+    //$rootScope.$broadcast('show:loading');
     if (!$rootScope.$storage.socket) {
       $rootScope.$storage.socket = localStorage.socketUrl;
     }

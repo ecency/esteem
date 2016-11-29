@@ -21,9 +21,9 @@
 	    </nav>
 	</div>-->
   <ion-content class="has-header" scroll="true" delegate-handle="mainScroll" overflow-scroll="true">
-	<ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
+	<!--<ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
 	</ion-refresher>
-  		<!--<tab-slide-box>
+  		<tab-slide-box>
 	    	<div class="tsb-icons">
 	    		<div class="tsb-ic-wrp">
 					<ion-scroll direction="x" class="tsb-hscroll">
@@ -175,9 +175,11 @@
 				</div>
 			</div>
 		</div>
-	<p><center ng-if="data.length>0"><button class="button button-small button-positive icon ion-refresh" ng-click="loadMore()">
+	<!--<p><center ng-if="data.length>0"><button class="button button-small button-positive icon ion-refresh" ng-click="loadMore()">
       Load More
-    </button></center></p>
+    </button></center></p>-->
+
+    <ion-infinite-scroll ng-if="moreDataCanBeLoaded()" on-infinite="loadMore()" distance="5%"></ion-infinite-scroll>
     <br>
     <script id = "popoverT.html" type="text/ng-template">
       <ion-popover-view class="detailedPost">
