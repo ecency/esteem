@@ -472,6 +472,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     var fil = $scope.mymenu[t].custom;
     $rootScope.$storage.filter = fil;
     $scope.data = [];
+    $scope.error = false;
     $rootScope.$broadcast('filter:change');  
   }
   $scope.showFilter = function() {
@@ -972,7 +973,11 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $rootScope.log("fetching..."+type+" "+limit+" "+tag);
       if (typeof window.Api.database_api === "function") { 
         window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
-          
+          console.log(response.length);
+          if (response.length <= 1) {
+            $scope.error = true;
+          }
+
           var temp = $scope.dataChanged(response);
           for (var i=1; i<temp.length; i++){
             if ($scope.data.indexOf(temp[i])===-1) {
