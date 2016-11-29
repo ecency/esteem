@@ -23,14 +23,14 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $scope.menupopover.hide();
   };
 
-  $scope.$on('close:popover', function(){
+  $rootScope.$on('close:popover', function(){
     console.log('close:popover');
     $scope.menupopover.hide();
 
     $ionicHistory.nextViewOptions({
       disableBack: true
     });
-    $scope.closeMenuPopover();
+    //$scope.closeMenuPopover();
     //$scope.fetchPosts();
   });
 
@@ -165,6 +165,15 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     }
   })
 
+  $scope.openPostModal = function() {
+    $rootScope.$broadcast('openPostModal');
+  }
+
+  $scope.changeView = function(view) {
+    $rootScope.$storage.view = view; 
+    $rootScope.$broadcast('changeView');
+  }
+
   $scope.$on("$ionicView.enter", function(){
     $rootScope.$broadcast('refreshLocalUserData');
   });
@@ -228,7 +237,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   // Open the login modal
   $scope.openSmodal = function() {
     if(!$scope.smodal) return;   
-    $scope.$broadcast('close:popover');
+    $rootScope.$broadcast('close:popover');
     setTimeout(function() {
       $scope.data.type="tag";
       $scope.data.searchResult = [];
@@ -239,7 +248,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     if ($rootScope.$storage.tag) {
       $rootScope.$storage.tag = undefined;
       $rootScope.$storage.taglimits = undefined;
-      $scope.$broadcast('close:popover');
+      $rootScope.$broadcast('close:popover');
       $rootScope.$broadcast('fetchPosts');
     }
   };
@@ -303,13 +312,13 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     if ($scope.smodal.isShown()){
       $scope.closeSmodal();
     }
-    $scope.$broadcast('close:popover');
+    $rootScope.$broadcast('close:popover');
     $state.go("app.posts", {tags: xx});
   };
   $scope.openUser = function(xy) {
     $rootScope.log("opening user "+xy);
     $scope.closeSmodal();
-    $scope.$broadcast('close:popover');
+    $rootScope.$broadcast('close:popover');
     $state.go("app.profile", {username: xy});
   };
   $scope.testfunction = function() {
@@ -565,16 +574,17 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $scope.modalp = modal;
     });
     
-    $scope.openPostModal = function() {
+    $rootScope.$on('openPostModal', function() {
       if(!$scope.modalp) return;   
-      $scope.$broadcast('close:popover');
+      $rootScope.$broadcast('close:popover');
       $timeout(function(){
         $scope.modalp.show()
       }, 10);
       $scope.spost.operation_type = 'default';
       $scope.spost = $rootScope.$storage.spost || $scope.spost;
       //$scope.modalp.show();
-    };
+    });
+
     $scope.closePostModal = function() {
       //$scope.$broadcast('close:popover');
       $scope.modalp.hide();
@@ -761,7 +771,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           } else {
             //$scope.closePostModal();
             $scope.modalp.hide();
-            $scope.menupopover.hide();
+            //$scope.menupopover.hide();
+            $rootScope.$broadcast('close:popover');
             $scope.spost = {};
             $rootScope.showMessage("Success", "Post is submitted!");
             //$scope.closeMenuPopover();
@@ -781,7 +792,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.savePost = function() {
     console.log($scope.modalp);
     $rootScope.$storage.spost = $scope.spost;
-    $scope.$broadcast('close:popover');
+    $rootScope.$broadcast('close:popover');
     $scope.modalp.hide();
     $rootScope.showMessage("Saved", "Post for later submission!");  
   }
@@ -830,15 +841,10 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $rootScope.votePost(post, 'unvote', 'fetchContent');
   };
   
-  $scope.refresh = function(){
-    $scope.fetchPosts();
-    $scope.closeMenuPopover();
-    $rootScope.$broadcast('filter:change');
-    $scope.$broadcast('scroll.refreshComplete');
-  };
   
   $rootScope.$on("user:logout", function(){
-    $scope.refresh();
+    $scope.fetchPosts();
+    $rootScope.$broadcast('filter:change');
   });
 
   $scope.loadMore = function() {
@@ -857,19 +863,19 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     return !$scope.error;
   }
 
-  $scope.changeView = function(view) {
-    $rootScope.$storage.view = view; 
-    $scope.closeMenuPopover();
+  $rootScope.$on('changeView', function(){
+    //$scope.menupopover.hide();
+    $rootScope.$broadcast('close:popover');
     if (!$scope.$$phase){
       $scope.$apply();
     }
-    //$rootScope.$broadcast('show:loading');
-    $scope.refresh();
-    /*setTimeout(function() {
-      $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
-    }, 10);*/
-    
-  }
+    if ($rootScope.$storage.view === 'card') {
+      angular.forEach($scope.data, function(v,k){
+        v.json_metadata = angular.fromJson(v.json_metadata);
+      });  
+    }
+  });
+
   function arrayObjectIndexOf(myArray, searchTerm, property) {
     var llen = myArray.length;
     for(var i = 0; i < llen; i++) {
@@ -1057,11 +1063,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     if ($stateParams.tags) {
       $rootScope.$storage.tag = $stateParams.tags;
     }
-    //$rootScope.$broadcast('show:loading');
   });
-
   
-  //$scope.refresh();   
 })
 
 app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPopover, $filter) {
