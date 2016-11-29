@@ -6,10 +6,19 @@
   </ion-header-bar>
   <ion-content class="padding posting" overflow-scroll="true">
     <input type="text" name="title" placeholder="Title" ng-model="spost.title" style="width:100%;">
-    <br/>
-    <div>
-    <ng-quill-editor ng-model="spost.body" class="selectable" toolbar="true" spellcheck=false on-content-changed="contentChanged(editor, html, text)"></ng-quill-editor>
-    <br/>
+    <div class="button-bar">
+      <a class="button button-small" ng-click="insertText('**bold**')"><i class="fa fa-bold"></i></a>
+      <a class="button button-small" ng-click="insertText('*italic*')"><i class="fa fa-italic"></i></a>
+      <a class="button button-small" ng-click="insertText('# header')"><i class="fa fa-header"></i></a>
+      <a class="button button-small" ng-click="insertText('<code>code</code>')"><i class="fa fa-code"></i></a>
+      <a class="button button-small" ng-click="insertText('>quote')"><i class="fa fa-quote-right"></i></a>
+      <a class="button button-small" ng-click="insertText('1. item')"><i class='fa fa-list'></i></a>
+      <a class="button button-small" ng-click="insertText('* item')"><i class='fa fa-list-ol'></i></a>
+      <a class="button button-small" ng-click="insertText('<hr>')"><i class="fa ion-minus"></i></a>
+      <a class="button button-small" ng-click="showImg()"><i class="fa fa-picture-o"></i></a>
+    </div>
+    <textarea ng-model='spost.body' autofocus rows="15" placeholder="Post content" class="width100" ng-focus='cfocus()'></textarea>
+    <!--<ng-quill-editor ng-model="spost.body" class="selectable" toolbar="true" spellcheck=false on-content-changed="contentChanged(editor, html, text)"></ng-quill-editor><br/>-->
       <!--<wiz-markdown-editor content="spost.body">
         <wiz-toolbar-button command="bold" class="button button-small"><b>B</b></wiz-toolbar-button>
         <wiz-toolbar-button command="italic" class="button button-small"><i>I</i></wiz-toolbar-button>
@@ -35,8 +44,8 @@
           <button class="button button-light button-small" ng-click="clearPost()">CLEAR</button>
         </div>
       </div>
-      <!--<p ng-if="spost.body">Preview</p>
-      <div ng-if="spost.body" class="padding bodytext" ng-bind-html="spost.body | parseUrl "></div>-->
+      <p ng-if="spost.body">Preview</p>
+      <div ng-if="spost.body" class="padding bodytext" ng-bind-html="spost.body | parseUrl "></div>
       <br/>
   </ion-content>
 </ion-modal-view>

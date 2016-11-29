@@ -569,26 +569,79 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       // Execute action
    });
 
-   $ionicModal.fromTemplateUrl('templates/story.html', {
-    scope: $scope  }).then(function(modal) {
+  $ionicModal.fromTemplateUrl('templates/story.html', { scope: $scope  }).then(function(modal) {
       $scope.modalp = modal;
-    });
-    
-    $rootScope.$on('openPostModal', function() {
-      if(!$scope.modalp) return;   
-      $rootScope.$broadcast('close:popover');
-      $timeout(function(){
-        $scope.modalp.show()
-      }, 10);
-      $scope.spost.operation_type = 'default';
-      $scope.spost = $rootScope.$storage.spost || $scope.spost;
-      //$scope.modalp.show();
-    });
+  });
+  $scope.lastFocused;
 
-    $scope.closePostModal = function() {
-      //$scope.$broadcast('close:popover');
-      $scope.modalp.hide();
-    };
+  $rootScope.$on('openPostModal', function() {
+    if(!$scope.modalp) return;   
+    $rootScope.$broadcast('close:popover');
+    
+    $scope.spost = $rootScope.$storage.spost || $scope.post;
+
+    if (!$scope.spost.operation_type) {
+      $scope.spost.operation_type = 'default';
+    }
+    
+    $timeout(function(){
+      $scope.modalp.show();
+      angular.element("textarea").focus(function() {
+        $scope.lastFocused = document.activeElement;
+        console.log(document);
+      });
+
+    }, 10);
+    //$scope.modalp.show();
+  });
+
+  $scope.closePostModal = function() {
+    //$scope.$broadcast('close:popover');
+    $scope.modalp.hide();
+  };
+
+  
+  $scope.cfocus = function(){
+    $scope.lastFocused = document.activeElement;
+  }
+  //http://stackoverflow.com/questions/1064089/inserting-a-text-where-cursor-is-using-javascript-jquery
+  $scope.insertText = function(text) {
+    var input = $scope.lastFocused;
+    //console.log(input);
+    if (input == undefined) { return; }
+    var scrollPos = input.scrollTop;
+    var pos = 0;
+    var browser = ((input.selectionStart || input.selectionStart == "0") ? 
+                   "ff" : (document.selection ? "ie" : false ) );
+    if (browser == "ie") { 
+      input.focus();
+      var range = document.selection.createRange();
+      range.moveStart ("character", -input.value.length);
+      pos = range.text.length;
+    }
+    else if (browser == "ff") { pos = input.selectionStart };
+
+    var front = (input.value).substring(0, pos);  
+    var back = (input.value).substring(pos, input.value.length); 
+    input.value = front+text+back;
+    pos = pos + text.length;
+    if (browser == "ie") { 
+      input.focus();
+      var range = document.selection.createRange();
+      range.moveStart ("character", -input.value.length);
+      range.moveStart ("character", pos);
+      range.moveEnd ("character", 0);
+      range.select();
+    }
+    else if (browser == "ff") {
+      input.selectionStart = pos;
+      input.selectionEnd = pos;
+      input.focus();
+    }
+    input.scrollTop = scrollPos;
+    console.log(angular.element(input).val());
+    angular.element(input).trigger('input');
+  }
 
 
   $scope.showImg = function() {
@@ -629,11 +682,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             //var url = result.secure_url || '';
             var url = result.imageUrl || '';
             var final = " ![image](" + url + ")";
-            if ($scope.spost.body) {
+            /*if ($scope.spost.body) {
               $scope.spost.body += final;
             } else {
               $scope.spost.body = final;
-            }
+            }*/
+            $scope.insertText(final);
             if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
               $cordovaCamera.cleanup();  
             }
@@ -659,11 +713,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         if (res) {
           var url = res.trim();
           var final = " ![image](" + url + ")";
-          if ($scope.spost.body) {
+          /*if ($scope.spost.body) {
             $scope.spost.body += final;
           } else {
             $scope.spost.body = final;
-          }
+          }*/
+          $scope.insertText(final);
         }
       });
     }
@@ -1043,6 +1098,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
               }          
             });
           }, 15000);
+          $rootScope.$broadcast('fetchPosts');
           /*setTimeout(function() {
             $scope.fetchPosts(null, $scope.limit, null);  
           }, 10);*/
@@ -1099,6 +1155,49 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       $rootScope.showMessage("Success", "Post is added to bookmarks!");
     }
   };
+
+  $scope.lastFocused;
+
+
+  //http://stackoverflow.com/questions/1064089/inserting-a-text-where-cursor-is-using-javascript-jquery
+  $scope.insertText = function(text) {
+    var input = $scope.lastFocused;
+    //console.log(input);
+    if (input == undefined) { return; }
+    var scrollPos = input.scrollTop;
+    var pos = 0;
+    var browser = ((input.selectionStart || input.selectionStart == "0") ? 
+                   "ff" : (document.selection ? "ie" : false ) );
+    if (browser == "ie") { 
+      input.focus();
+      var range = document.selection.createRange();
+      range.moveStart ("character", -input.value.length);
+      pos = range.text.length;
+    }
+    else if (browser == "ff") { pos = input.selectionStart };
+
+    var front = (input.value).substring(0, pos);  
+    var back = (input.value).substring(pos, input.value.length); 
+    input.value = front+text+back;
+    pos = pos + text.length;
+    if (browser == "ie") { 
+      input.focus();
+      var range = document.selection.createRange();
+      range.moveStart ("character", -input.value.length);
+      range.moveStart ("character", pos);
+      range.moveEnd ("character", 0);
+      range.select();
+    }
+    else if (browser == "ff") {
+      input.selectionStart = pos;
+      input.selectionEnd = pos;
+      input.focus();
+    }
+    input.scrollTop = scrollPos;
+    console.log(angular.element(input).val());
+    angular.element(input).trigger('input');
+  }
+
   $ionicPopover.fromTemplateUrl('popoverTr.html', {
       scope: $scope
    }).then(function(popover) {
@@ -1213,11 +1312,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               var url = result.imageUrl || '';
               var final = " ![image](" + url + ")";
               $rootScope.log(final);
-              if ($scope.spost.body) {
+              /*if ($scope.spost.body) {
                 $scope.spost.body += final;
               } else {
                 $scope.spost.body = final;
-              }
+              }*/
+              $scope.insertText(final);
               if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
                 $cordovaCamera.cleanup();
               }
@@ -1244,11 +1344,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             var url = res.trim();
             var final = " ![image](" + url + ")";
             $rootScope.log(final);
-            if ($scope.spost.body) {
+            /*if ($scope.spost.body) {
               $scope.spost.body += final;
             } else {
               $scope.spost.body = final;
-            }
+            }*/
+            $scope.insertText(final);
           }
         });
       }
@@ -1271,11 +1372,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               var url = result.imageUrl || '';
               var final = " ![image](" + url + ")";
               $rootScope.log(final);
-              if ($scope.data.comment) {
+              /*if ($scope.data.comment) {
                 $scope.data.comment += final;
               } else {
                 $scope.data.comment = final;
-              }
+              }*/
+              $scope.insertText(final);
               if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
                 $cordovaCamera.cleanup();
               }
@@ -1302,11 +1404,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             var url = res.trim();
             var final = " ![image](" + url + ")";
             $rootScope.log(final);
-            if ($scope.data.comment) {
+            /*if ($scope.data.comment) {
               $scope.data.comment += final;
             } else {
               $scope.data.comment = final;
-            }
+            }*/
+            $scope.insertText(final);
           }
         });
       }
@@ -1321,8 +1424,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.openPostModal = function() {
     if(!$scope.pmodal) return;   
     setTimeout(function() {
-      $scope.pmodal.show();  
-    }, 5);
+      $scope.pmodal.show();
+      angular.element("textarea").focus(function() {
+        $scope.lastFocused = document.activeElement;
+        console.log(document);
+      });
+    }, 10);
   };
   $scope.closePostModal = function() {
     $scope.pmodal.hide();
@@ -1336,16 +1443,23 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       var patch = dmp.patch_toText(patches);
       return patch;
   }
+  $scope.cfocus = function(){
+    $scope.lastFocused = document.activeElement;
+  }
   $scope.edit = false;
   $scope.editPost = function(xx) {
     $scope.edit = true;
     $scope.openPostModal();
+    angular.element("textarea").focus(function() {
+      $scope.lastFocused = document.activeElement;
+      console.log(document);
+    });
     setTimeout(function() {
       if (!$scope.spost.body) {
         $scope.spost = xx;  
         $scope.patchbody = xx.body;
       }
-      $scope.spost.tags = angular.fromJson(xx.json_metadata).tags.join().replace(/\,/g,' ');  
+      $scope.spost.tags = angular.fromJson(xx.json_metadata).tags.join().replace(/\,/g,' ');
     }, 10);
   }
   

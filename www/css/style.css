@@ -1066,7 +1066,9 @@ textarea.markdown-input {
   background-color: #000!important;
   color: #fff!important;
 }
-
+.width100 {
+  width: 100%;
+}
 .image-list-thumb {
     padding: 2px 2px 2px 2px;
     height: 150px;
