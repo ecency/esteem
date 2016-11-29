@@ -755,7 +755,7 @@ module.exports = function (app) {
 
   app.filter("sumPostTotal", function(){
     return function(value) {
-      if (value) {
+      if (value && value.total_payout_value) {
         return (parseFloat(value.total_payout_value.split(" ")[0])+parseFloat(value.total_pending_payout_value.split(" ")[0]));
       }      
     }

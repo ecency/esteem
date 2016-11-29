@@ -471,6 +471,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.filterChanged = function(t) {
     var fil = $scope.mymenu[t].custom;
     $rootScope.$storage.filter = fil;
+    $scope.data = [];
     $rootScope.$broadcast('filter:change');  
   }
   $scope.showFilter = function() {
@@ -840,46 +841,49 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
     return -1;
   }
+  $scope.data = [];
+  $scope.tempData = [];
+  
   $scope.dataChanged = function(newValue) {
-    var lenn = newValue.length;
-    var user = $rootScope.$storage.user || null;
-    var view = $rootScope.$storage.view;
-    if (user){
-      for (var i = 0; i < lenn; i++) {
-        if(newValue[i].hasOwnProperty("downvoted") || newValue[i].hasOwnProperty("upvoted")){
-            console.log('exist');
-            continue;
-        } else {
-          var len = newValue[i].active_votes.length-1;
-          for (var j = len; j >= 0; j--) {
-            if (newValue[i].active_votes[j].voter === user.username) {
-              if (newValue[i].active_votes[j].percent > 0) {
-                newValue[i].upvoted = true;  
-              } else if (newValue[i].active_votes[j].percent < 0) {
-                newValue[i].downvoted = true;  
-              } else {
-                newValue[i].downvoted = false;  
-                newValue[i].upvoted = false;  
+    if (newValue) {
+      var lenn = newValue.length;
+      var user = $rootScope.$storage.user || null;
+      var view = $rootScope.$storage.view;
+
+      if (user){
+        for (var i = 0; i < lenn; i++) {
+          if (newValue[i] && newValue[i].active_votes) {
+            var len = newValue[i].active_votes.length-1;
+            for (var j = len; j >= 0; j--) {
+              if (newValue[i].active_votes[j].voter === user.username) {
+                if (newValue[i].active_votes[j].percent > 0) {
+                  newValue[i].upvoted = true;  
+                } else if (newValue[i].active_votes[j].percent < 0) {
+                  newValue[i].downvoted = true;  
+                } else {
+                  newValue[i].downvoted = false;  
+                  newValue[i].upvoted = false;  
+                }
               }
             }
           }
+          if (view === 'card') {
+            if (newValue[i].json_metadata){
+              newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata);
+            }
+          }
         }
+      } else {
         if (view === 'card') {
-          if (newValue[i].json_metadata){
-            newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata);
+          for (var i = 0; i < lenn; i++) {
+            if (newValue[i].json_metadata){
+              newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata);
+            }
           }
         }
       }
-    } else {
-      if (view === 'card') {
-        for (var i = 0; i < lenn; i++) {
-          if (newValue[i].json_metadata){
-            newValue[i].json_metadata = angular.fromJson(newValue[i].json_metadata);
-          }
-        }
-      }
+      return newValue;
     }
-    return newValue;
   }
 
 
@@ -939,19 +943,14 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       if (!$scope.$$phase) {
         $scope.$apply();
       }
-    });
-    
+    });  
   }
+  
   $scope.fetchPosts = function(type, limit, tag) {
     type = type || $rootScope.$storage.filter || "trending";
     tag = tag || $rootScope.$storage.tag || "";
-    limit = limit || $scope.limit || 10;
-    if (limit >= 100) {
-      $scope.error = true;
-      $scope.limit = 10;
-    } else {
-      $scope.error = false;
-    }
+    limit = 10;//limit || $scope.limit || 10;
+    
     var params = {};
 
     if (type === "feed" && $rootScope.$storage.user) {
@@ -963,19 +962,30 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       }
       params = {tag: tag, limit: limit, filter_tags: []};
     }
-
+    if ($scope.data && $scope.data.length>0) {
+      params.start_author = $scope.data[$scope.data.length-1].author;
+      params.start_permlink = $scope.data[$scope.data.length-1].permlink;
+    }
     if ($scope.error) {
-      $rootScope.showAlert("Error", "Fetching issue");
+      $rootScope.showAlert("Error", "Fetching limit has");
     } else {
       $rootScope.log("fetching..."+type+" "+limit+" "+tag);
       if (typeof window.Api.database_api === "function") { 
         window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
-          $scope.data = $scope.dataChanged(response); 
-          $scope.$broadcast('scroll.infiniteScrollComplete');
-          $rootScope.$broadcast('hide:loading');
+          
+          var temp = $scope.dataChanged(response);
+          for (var i=1; i<temp.length; i++){
+            if ($scope.data.indexOf(temp[i])===-1) {
+              $scope.data.push(temp[i]);  
+            }
+          }
+          
           if (!$scope.$$phase) {
             $scope.$apply();
           }
+          //console.log($scope.data.length);
+          $scope.$broadcast('scroll.infiniteScrollComplete');
+          $rootScope.$broadcast('hide:loading');
         });
       }
     }
@@ -1016,15 +1026,15 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
               }          
             });
           }, 15000);
-          setTimeout(function() {
+          /*setTimeout(function() {
             $scope.fetchPosts(null, $scope.limit, null);  
-          }, 10);
+          }, 10);*/
         });
-      } else {
+      } /*else {
         setTimeout(function() {
           $scope.fetchPosts(null, $scope.limit, null);    
         }, 10);
-      }  
+      }  */
     }
     
     setTimeout(function() {
