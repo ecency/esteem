@@ -43,8 +43,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   }
   $scope.open = function(item) {
     item.json_metadata = angular.fromJson(item.json_metadata);
-    //$rootScope.$storage.sitem = item;
-    $state.go('app.single', {postdata: angular.toJson(item)});
+    $rootScope.$storage.sitem = item;
+    $state.go('app.single', {postdata: 'something'});
   };
   $scope.advancedChange = function() {
     $rootScope.log(angular.toJson($scope.loginData.advanced));
@@ -59,7 +59,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.login = function() {
     setTimeout(function() {
       $scope.loginModal.show();  
-    }, 10);
+    }, 1);
   };
   $scope.goProfile = function() {
     $state.go("app.profile", {username:$rootScope.$storage.user.username});
@@ -242,7 +242,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       $scope.data.type="tag";
       $scope.data.searchResult = [];
       $scope.smodal.show();
-    }, 10);
+    }, 5);
   };
   $scope.clearSearch = function() {
     if ($rootScope.$storage.tag) {
@@ -295,7 +295,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         }
         
       }
-    }, 50);
+    }, 5);
     
   };
   $scope.typechange = function() {
@@ -1047,11 +1047,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             $scope.fetchPosts(null, $scope.limit, null);  
           }, 10);*/
         });
-      } /*else {
-        setTimeout(function() {
-          $scope.fetchPosts(null, $scope.limit, null);    
-        }, 10);
-      }  */
+      } 
     }
     
     setTimeout(function() {
@@ -1326,7 +1322,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     if(!$scope.pmodal) return;   
     setTimeout(function() {
       $scope.pmodal.show();  
-    }, 10);
+    }, 5);
   };
   $scope.closePostModal = function() {
     $scope.pmodal.hide();
@@ -1484,10 +1480,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     window.Api.database_api().exec("get_content_replies", [$scope.post.author, $scope.post.permlink]).then(function(result){
       if (result)
         $scope.comments = result;
-
       $rootScope.$broadcast('hide:loading');
-      
     });
+    $rootScope.$broadcast('hide:loading');
   });
   $ionicModal.fromTemplateUrl('templates/reply.html', {
     scope: $scope  }).then(function(modal) {
@@ -1498,7 +1493,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     if(!$scope.modal) return;   
     setTimeout(function() {
       $scope.modal.show();  
-    }, 10);
+    }, 5);
   };
 
   $scope.closeModal = function() {
@@ -1549,23 +1544,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     });
     //$rootScope.$broadcast('hide:loading');
   };
-
-  //$scope.post = {};
   $scope.$on('$ionicView.beforeEnter', function(){ 
-    //console.dir(angular.fromJson($stateParams.postdata));
     $rootScope.log('beforeEnter postctrl');
     $rootScope.$broadcast('show:loading');
     if ($stateParams.postdata) {
-      if ($rootScope.$storage.sitem) {
-        $rootScope.$storage.sitem = undefined;
-      }
-      var ttemp = angular.fromJson($stateParams.postdata);
-
-      ttemp.json_metadata = angular.fromJson(ttemp.json_metadata);
-
+      var ttemp = $rootScope.$storage.sitem;
       $scope.post = ttemp;
-
-      $rootScope.$storage.sitem = $scope.post;
       $rootScope.$broadcast('update:content');  
     } else {
       $scope.post = $rootScope.$storage.sitem;

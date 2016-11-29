@@ -138,7 +138,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $ionicConfigProvider.navBar.alignTitle('left')
   $ionicConfigProvider.backButton.text('').icon('ion-chevron-left');
   $ionicConfigProvider.views.swipeBackEnabled(false);
-  $ionicConfigProvider.views.maxCache(5);
+  $ionicConfigProvider.views.maxCache(2);
 
   $animateProvider.classNameFilter( /\banimated\b/ );
   $ionicConfigProvider.scrolling.jsScrolling(false);
