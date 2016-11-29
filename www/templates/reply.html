@@ -5,19 +5,6 @@
     <button class="button button-positive button-primary" ng-click="reply()">POST</button>
   </ion-header-bar>
   <ion-content class="padding posting">
-   <!--<ng-quill-editor ng-model="data.comment" class="selectable" toolbar="true" spellcheck=false></ng-quill-editor>-->
-      <!--<wiz-markdown-editor content="data.comment">
-        <wiz-toolbar-button command="bold" class="button button-small"><b>B</b></wiz-toolbar-button>
-        <wiz-toolbar-button command="italic" class="button button-small"><i>I</i></wiz-toolbar-button>
-
-        <wiz-toolbar-button command="code" class="button button-small"><i class="icon ion-code"></i></wiz-toolbar-button>
-        <wiz-toolbar-button command="ullist" class="button button-small"><img src="img/ullist.png"/></wiz-toolbar-button>
-        <wiz-toolbar-button command="ollist" class="button button-small"><img src="img/ollist.png"/></wiz-toolbar-button>
-        
-        <wiz-toolbar-button command="hr" class="button button-small">HR</wiz-toolbar-button>
-        <wiz-toolbar-button command="heading" class="button button-small">H</wiz-toolbar-button>
-        <button class="button button-small" ng-click="showImg()"><i class="icon ion-image"></i></button>
-      </wiz-markdown-editor>-->
     <div class="button-bar">
       <a class="button button-small" ng-click="insertText('**bold**')"><i class="fa fa-bold"></i></a>
       <a class="button button-small" ng-click="insertText('*italic*')"><i class="fa fa-italic"></i></a>
@@ -32,6 +19,5 @@
     <textarea autofocus ng-model='data.comment' rows="10" placeholder="Comment content" class="width100" ng-focus='cfocus()'></textarea>
       <p ng-if="data.comment">Preview</p>
       <div ng-if="data.comment" class="padding bodytext" ng-bind-html="data.comment | parseUrl "></div>
-      <!--undo, redo, bold, italic, heading, code, ullist, ollist, indent, outdent, link, img, hr, h0, h1, h2, h3, h4, h5, h6, tab, untab-->
   </ion-content>
 </ion-modal-view>

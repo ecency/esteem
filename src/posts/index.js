@@ -4,11 +4,9 @@ var app = angular.module('steem', [
 	'ionic', 
 	'ngStorage', 
 	'ngCordova',
-  'wiz.markdown',
   'rzModule',
   'ion-floating-menu',
-  'ja.qr',
-  'ngQuill'
+  'ja.qr'
 ]);
 
 if (localStorage.getItem("socketUrl") === null) {
@@ -23,7 +21,7 @@ window.diff_match_patch = require('diff-match-patch');
 require('./services')(app);
 require('./controllers')(app);
 
-app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $sceDelegateProvider, $logProvider, $compileProvider, $animateProvider, ngQuillConfigProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $sceDelegateProvider, $logProvider, $compileProvider, $animateProvider) {
   $stateProvider
 
   .state('app', {
@@ -148,23 +146,6 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
       $compileProvider.debugInfoEnabled(false);
   }
   
-  var toolbarOptions = [
-    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-    //[{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-    [{ 'header': 1 }, { 'header': 2 }], 
-    ['blockquote', 'code-block'],
-
-    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-    [{'align':'left'},{'align':'center'}, {'align':'right'}, {'align':'justify'}],
-    [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-    //[{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-    //[{ 'direction': 'rtl' }],                         // text direction
-    //[{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-    ['clean'],                                         // remove formatting button
-    ['image']
-  ];
-  var modules = { toolbar: toolbarOptions};
-  ngQuillConfigProvider.set(modules, "snow", "Inser your content here", null, null, null)
   //$sceDelegateProvider.resourceUrlWhitelist(['self', new RegExp('^(http[s]?):\/\/(w{3}.)?youtube\.com/.+$')]);
 });
 

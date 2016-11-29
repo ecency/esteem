@@ -18,18 +18,6 @@
       <a class="button button-small" ng-click="showImg()"><i class="fa fa-picture-o"></i></a>
     </div>
     <textarea ng-model='spost.body' autofocus rows="15" placeholder="Post content" class="width100" ng-focus='cfocus()'></textarea>
-    <!--<ng-quill-editor ng-model="spost.body" class="selectable" toolbar="true" spellcheck=false on-content-changed="contentChanged(editor, html, text)"></ng-quill-editor><br/>-->
-      <!--<wiz-markdown-editor content="spost.body">
-        <wiz-toolbar-button command="bold" class="button button-small"><b>B</b></wiz-toolbar-button>
-        <wiz-toolbar-button command="italic" class="button button-small"><i>I</i></wiz-toolbar-button>
-        <wiz-toolbar-button command="code" class="button button-small"><i class="icon ion-code"></i></wiz-toolbar-button>
-        <wiz-toolbar-button command="ullist" class="button button-small"><img src="img/ullist.png"/></wiz-toolbar-button>
-        <wiz-toolbar-button command="ollist" class="button button-small"><img src="img/ollist.png"/></wiz-toolbar-button>
-        <wiz-toolbar-button command="hr" class="button button-small">HR</wiz-toolbar-button>
-        <wiz-toolbar-button command="heading" class="button button-small">H</wiz-toolbar-button>
-        <button class="button button-small" ng-click="showImg()"><i class="icon ion-image"></i></button>
-      </wiz-markdown-editor>-->
-
       <input type="text" name="categories" placeholder="Tags" ng-model="spost.tags" ng-change="tagsChange()" style="width:100%;">
       <div class="row">
         <div class="col">   
