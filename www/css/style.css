@@ -356,6 +356,10 @@ textarea.markdown-input {
   font: 14px Sans-Serif;
   line-height: 14px;
 }
+.action-sheet-group{
+  overflow: scroll;
+  max-height: 400px;
+}
 .platform-android .action-sheet-backdrop.active {
   background-color: rgba(0, 0, 0, 0.1); 
 }
@@ -365,6 +369,10 @@ textarea.markdown-input {
   max-width: 96vw;
   border-radius: 5px;
   margin-bottom: 20px!important;
+}
+.action-sheet .action-sheet-title, .action-sheet .button {
+  text-align: left;
+  padding-left: 16px;
 }
 .platform-android .action-sheet .action-sheet-title, .platform-android .action-sheet .button {
   text-align: left;
@@ -380,13 +388,13 @@ textarea.markdown-input {
 .platform-android .action-sheet .button {
   border-color: #e2e2e2;
   padding-left: 16px;
-  color: #104e89;
+  color: rgb(21,126,201);
 }
 .platform-android .action-sheet .button.destructive {
   color: red;
 }
 .platform-android .action-sheet .button.active, .platform-android .action-sheet .button.activated {
-  background: #e8e8e8; 
+  background: rgb(241,242,243); 
 }
 .platform-android .action-sheet-group {
   border-radius: 0;

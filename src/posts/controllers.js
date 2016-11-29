@@ -457,7 +457,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
 app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService, $filter, $ionicHistory, $timeout) {
   
   $scope.activeMenu = $rootScope.$storage.filter || "trending";
-  $scope.mymenu = $rootScope.$storage.user ? [{text: 'Feed', custom:'feed'}, {text: 'Trending', custom:'trending'}, {text: 'Hot', custom:'hot'}, {text: 'New', custom:'created'}, {text: 'Active', custom:'active'}, {text: 'Promoted', custom: 'promoted'}, {text: 'Trending 30 days', custom:'trending30'}, {text:'Votes', custom:'votes'}, {text: 'Comments', custom:'children'}, {text: 'Payout', custom: 'payout'}] : [ {text: 'Trending', custom:'trending'}, {text: 'Hot', custom:'hot'}, {text: 'New', custom:'new'}, {text: 'Active', custom:'active'}, {text: 'Promoted', custom: 'promoted'}, {text: 'Trending 30 days', custom:'trending30'}, {text:'Votes', custom:'votes'}, {text: 'Comments', custom:'children'}, {text: 'Payout', custom: 'payout'}];
+  $scope.mymenu = $rootScope.$storage.user ? [{text: 'Feed', custom:'feed'}, {text: 'Trending', custom:'trending'}, {text: 'Hot', custom:'hot'}, {text: 'New', custom:'created'}, {text: 'Active', custom:'active'}, {text: 'Promoted', custom: 'promoted'}, {text: 'Trending for 30 days', custom:'trending30'}, {text:'Votes', custom:'votes'}, {text: 'Comments', custom:'children'}, {text: 'Payout', custom: 'payout'}] : [ {text: 'Trending', custom:'trending'}, {text: 'Hot', custom:'hot'}, {text: 'New', custom:'new'}, {text: 'Active', custom:'active'}, {text: 'Promoted', custom: 'promoted'}, {text: 'Trending 30 days', custom:'trending30'}, {text:'Votes', custom:'votes'}, {text: 'Comments', custom:'children'}, {text: 'Payout', custom: 'payout'}];
 
   $rootScope.$on('filter:change', function() {
     //$rootScope.$broadcast('show:loading');
@@ -476,7 +476,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.showFilter = function() {
     var filterSheet = $ionicActionSheet.show({
      buttons: $scope.mymenu,
-     titleText: 'Filter',
+     titleText: 'Sort Posts By:',
      cancelText: 'Cancel',
      cancel: function() {
         // add cancel code..
