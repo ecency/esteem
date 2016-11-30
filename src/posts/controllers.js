@@ -588,7 +588,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $scope.modalp.show();
       angular.element("textarea").focus(function() {
         $scope.lastFocused = document.activeElement;
-        console.log(document);
+        //console.log(document);
       });
 
     }, 10);
@@ -639,7 +639,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       input.focus();
     }
     input.scrollTop = scrollPos;
-    console.log(angular.element(input).val());
+    //console.log(angular.element(input).val());
     angular.element(input).trigger('input');
   }
 
@@ -1035,7 +1035,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       params.start_permlink = $scope.data[$scope.data.length-1].permlink;
     }
     if ($scope.error) {
-      $rootScope.showAlert("Error", "Fetching limit has");
+      $rootScope.showAlert("Error", "Request limit reached. Check out other trend/tags!");
     } else {
       $rootScope.log("fetching..."+type+" "+limit+" "+tag);
       if (typeof window.Api.database_api === "function") { 
@@ -2491,7 +2491,7 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope) {
 
 });
 
-app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionicHistory, $state, $ionicPopover, $ionicPopup, APIs, $filter) {
+app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionicHistory, $state, $ionicPopover, $ionicPopup, APIs, $filter, $translate) {
    
    $ionicPopover.fromTemplateUrl('popover.html', {
       scope: $scope
@@ -2523,6 +2523,10 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
    $scope.$on('popover.removed', function() {
       // Execute action
    });
+
+  $scope.changeLanguage = function(locale){
+    $translate.use(locale);
+  }
 
   $scope.$on('$ionicView.beforeEnter', function(){
     $rootScope.$storage.socket = localStorage.socketUrl;

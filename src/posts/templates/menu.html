@@ -42,7 +42,7 @@
         <ion-list>
           <ion-item menu-close href="#/app/profile/{{$root.$storage.user.username}}" class="item-icon-left" ng-if="$root.$storage.user">
             <i class="icon ion-person"></i>
-            Profile
+            {{'PROFILE'|translate}}
           </ion-item>
           <ion-item menu-close href="#/app/follow" class="item-icon-left" ng-if="$root.$storage.user">
             <i class="icon ion-person-stalker"></i>

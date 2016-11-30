@@ -6,6 +6,7 @@ var app = angular.module('steem', [
 	'ngCordova',
   'rzModule',
   'ion-floating-menu',
+  'pascalprecht.translate',
   'ja.qr'
 ]);
 
@@ -21,7 +22,8 @@ window.diff_match_patch = require('diff-match-patch');
 require('./services')(app);
 require('./controllers')(app);
 
-app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $sceDelegateProvider, $logProvider, $compileProvider, $animateProvider) {
+
+app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $sceDelegateProvider, $logProvider, $compileProvider, $animateProvider, $translateProvider) {
   $stateProvider
 
   .state('app', {
@@ -145,11 +147,22 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
       $logProvider.debugEnabled(false);
       $compileProvider.debugInfoEnabled(false);
   }
+
+  $translateProvider.translations('en', require('./locales/en'));
+  $translateProvider.translations('de', require('./locales/de'));
+  $translateProvider.translations('ru', require('./locales/ru'));
+  $translateProvider.translations('es', require('./locales/es'));
+  $translateProvider.translations('cn', require('./locales/cn'));
+  $translateProvider.translations('kr', require('./locales/kr'));
+  $translateProvider.translations('tr', require('./locales/tr'));
+
+  $translateProvider.preferredLanguage('en');  
+  $translateProvider.fallbackLanguage('en');
   
   //$sceDelegateProvider.resourceUrlWhitelist(['self', new RegExp('^(http[s]?):\/\/(w{3}.)?youtube\.com/.+$')]);
 });
 
-app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state, $log, $ionicScrollDelegate, $filter) {
+app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state, $log, $ionicScrollDelegate, $filter, $translate) {
   $rootScope.$storage = $localStorage;
   $rootScope.log = function(message) {
     $log.info(message);
@@ -165,6 +178,16 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
+    }
+
+    if(typeof navigator.globalization !== "undefined") {
+        navigator.globalization.getPreferredLanguage(function(language) {
+            $translate.use((language.value).split("-")[0]).then(function(data) {
+                console.log("SUCCESS -> " + data);
+            }, function(error) {
+                console.log("ERROR -> " + error);
+            });
+        }, null);
     }
 
     if (window.cordova) {

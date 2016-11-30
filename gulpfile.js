@@ -50,6 +50,7 @@ gulp.task('scripts', function() {
     './bower_components/ionic/release/js/ionic-angular.js',
     './bower_components/ngstorage/ngStorage.js',
     './bower_components/ngCordova/dist/ng-cordova.js',
+    './bower_components/angular-translate/angular-translate.js',
     './bower_components/ion-floating-menu/dist/ion-floating-menu.js',
     './bower_components/qrcode.js/lib/qrcode.js',
     './bower_components/angular-qr/src/angular-qr.js'

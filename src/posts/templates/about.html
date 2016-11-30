@@ -1,22 +1,22 @@
-<ion-view view-cache="false" view-title="About">
+<ion-view view-cache="false" view-title="{{'ABOUT' | translate}}">
   <ion-content class="padding">
     <center><img src="img/about.png"></center>
-    <p><b>eSteem</b> - where anyone can earn rewards for their content!</p>
-    <p><b>eSteem</b> is powered by Steem platform. App is created by <span ng-if="$root.$storage.user"><a href="#app/profile/good-karma">good-karma</a></span><span ng-if="!$root.$storage.user">good-karma</span> and it is open-source, community driven mobile project. It offers content access for reading, commenting, voting, posting, transfer earnings, etc. features offered by Steem blockchain and Steemit.
+    <p><b>eSteem</b> - {{'ABOUT_1'|translate}}</p>
+    <p><b>eSteem</b> {{'ABOUT_2'|translate}} <span ng-if="$root.$storage.user"><a href="#app/profile/good-karma">good-karma</a></span><span ng-if="!$root.$storage.user">good-karma</span> {{'ABOUT_3'|translate}}
     <br>
-    1. App never access or hold onto user funds.<br>
-    2. App offer a client-side security model, with private keys hosted locally and never sent to any servers.<br>
-    3. App offers simple, attractive user interfaces and experiences<br>
-    4. App never require users to input any personal information
+    {{'ABOUT_4'|translate}}<br>
+    {{'ABOUT_5'|translate}}<br>
+    {{'ABOUT_6'|translate}}<br>
+    {{'ABOUT_7'|translate}}
     </p>
-    <div class="tcenter" ng-if="$root.$storage.user"><span ng-if="!$root.isWitnessVoted()"><button class="button button-positive" ng-click="$root.voteWitness()">Vote good-karma as witness</button></span></div>
+    <div class="tcenter" ng-if="$root.$storage.user"><span ng-if="!$root.isWitnessVoted()"><button class="button button-positive" ng-click="$root.voteWitness()">{{'ABOUT_8'|translate}}</button></span></div>
     <p>
-    <b><u>Contact/Feedback:</u></b>
+    <b><u>{{'ABOUT_9'|translate}}</u></b>
     <br><a href="https://steemit.chat/direct/good-karma" target="_blank">steemit.chat/good-karma/</a>
     <br><a href="mailto:info@esteem.ws?Subject=Feedback">info@esteem.ws</a>
     </p>
     <p>
-    <b><u>More info:</u></b>
+    <b><u>{{'ABOUT_10'|translate}}</u></b>
     <br><a href="http://esteem.ws">http://esteem.ws</a>
     <br><a href="https://steem.io">https://steem.io</a>
     <br><a href="https://steemit.com">https://steemit.com</a>
