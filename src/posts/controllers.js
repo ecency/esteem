@@ -1044,7 +1044,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           if (response.length <= 1) {
             $scope.error = true;
           }
-
+          //console.log(response);
           var temp = $scope.dataChanged(response);
           for (var i=1; i<temp.length; i++){
             if ($scope.data.indexOf(temp[i])===-1) {

@@ -20,6 +20,18 @@ font-family: 'Source Serif Pro', serif; //'Gotham Rounded Book'!important;
 .item.comments p {white-space: pre-wrap !important; }
 .item.comments .nowrap {white-space: nowrap!important;}
 .item.comments h5 {white-space: nowrap!important;}
+.ion-comment.item {
+  border-top: solid 1px #ddd;
+}
+.ion-comment.item h1 {
+  white-space: pre-wrap;
+}
+.ion-comment.item h2 {
+  white-space: pre-wrap;
+}
+.ion-comment.item h3 {
+  white-space: pre-wrap;
+}
 
 .item-icon-left i.icon {
   font-size: 20px!important;
