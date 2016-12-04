@@ -575,7 +575,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.lastFocused;
 
   $rootScope.$on('openPostModal', function() {
-    if(!$scope.modalp) return;   
+    
     $rootScope.$broadcast('close:popover');
     
     $scope.spost = $rootScope.$storage.spost || $scope.post;
