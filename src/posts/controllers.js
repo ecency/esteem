@@ -236,7 +236,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
   // Open the login modal
   $scope.openSmodal = function() {
-    if(!$scope.smodal) return;   
+    //if(!$scope.smodal) return;   
     $rootScope.$broadcast('close:popover');
     setTimeout(function() {
       $scope.data.type="tag";
@@ -1422,7 +1422,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     $scope.pmodal = modal;
   });
   $scope.openPostModal = function() {
-    if(!$scope.pmodal) return;   
+    //if(!$scope.pmodal) return;   
     setTimeout(function() {
       $scope.pmodal.show();
       angular.element("textarea").focus(function() {
@@ -1604,7 +1604,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   });
 
   $scope.openModal = function(item) {
-    if(!$scope.modal) return;   
+    //if(!$scope.modal) return;   
     setTimeout(function() {
       $scope.modal.show();  
     }, 5);
