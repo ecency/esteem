@@ -490,7 +490,7 @@ module.exports = function (app) {
     } 
   ]);
 
-	app.filter('timeago', function() {
+	app.filter('timeago', function($filter) {
         return function(input, p_allowFuture) {
 		
             var substitute = function (stringOrFunction, number, strings) {
@@ -505,19 +505,19 @@ module.exports = function (app) {
                 strings= {
                     prefixAgo: '',
                     prefixFromNow: '',
-                    suffixAgo: "ago",
-                    suffixFromNow: "from now",
-                    seconds: "secs",
-                    minute: "a min",
-                    minutes: "%d mins",
-                    hour: "an hr",
-                    hours: "%d hrs",
-                    day: "a day",
-                    days: "%d days",
-                    month: "a month",
-                    months: "%d months",
-                    year: "a year",
-                    years: "%d years"
+                    suffixAgo: $filter('translate')('AGO'),
+                    suffixFromNow: $filter('translate')('FROM_NOW'),
+                    seconds: $filter('translate')('SECS'),
+                    minute: $filter('translate')('A_MIN'),
+                    minutes: "%d "+$filter('translate')('MINS'),
+                    hour: $filter('translate')('AN_HOUR'),
+                    hours: "%d "+$filter('translate')('HOURS'),
+                    day: $filter('translate')('A_DAY'),
+                    days: "%d "+$filter('translate')('DAYS'),
+                    month: $filter('translate')('A_MONTH'),
+                    months: "%d "+$filter('translate')('MONTHS'),
+                    year: $filter('translate')('A_YEAR'),
+                    years: "%d "+$filter('translate')('YEARS')
                 },
                 dateDifference = nowTime - date,
                 words,
@@ -828,7 +828,7 @@ module.exports = function (app) {
                         <ion-option-button ng-if="comment.author == $root.$storage.user.username && compateDate(comment)" ng-click="editComment(comment)"><span class="ion-ios-compose-outline" style="font-size:30px"></ion-option-button>\
                         <ion-option-button ng-if="comment.author == $root.$storage.user.username" ng-click="deleteComment(comment)"><span class="ion-ios-trash-outline" style="font-size:30px"></ion-option-button>\
                     </ion-item>',
-            controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopup, $ionicActionSheet, $cordovaCamera) {
+            controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopup, $ionicActionSheet, $cordovaCamera, $filter) {
                 $scope.compateDate = function(comment) {
                     if (comment.last_payout == "1970-01-01T00:00:00") {
                         return true;
@@ -846,8 +846,8 @@ module.exports = function (app) {
 
                   $scope.downvotePost = function(post) {
                     var confirmPopup = $ionicPopup.confirm({
-                      title: 'Are you sure?',
-                      template: 'Downvote or Flag'
+                      title: $filter('translate')('ARE_YOU_SURE'),
+                      template: $filter('translate')('DOWNVOTE_FLAG')
                     });
                     confirmPopup.then(function(res) {
                       if(res) {
@@ -897,12 +897,12 @@ module.exports = function (app) {
                   $scope.showImg = function() {
                    var hideSheet = $ionicActionSheet.show({
                      buttons: [
-                       { text: 'Capture Picture' },
-                       { text: 'Select Picture' },
-                       { text: 'Set Custom URL' },
+                       { text: $filter('translate')('CAPTURE_PICTURE') },
+                       { text: $filter('translate')('SELECT_PICTURE') },
+                       { text: $filter('translate')('SET_CUSTOM_URL') },
                      ],
-                     titleText: 'Insert Picture',
-                     cancelText: 'Cancel',
+                     titleText: $filter('translate')('INSERT_PICTURE'),
+                     cancelText: $filter('translate')('CANCEL'),
                      cancel: function() {
                         // add cancel code..
                       },
@@ -943,19 +943,19 @@ module.exports = function (app) {
                             }
                           },
                           function(err) {
-                            $rootScope.showAlert("Error", "Upload Error");
+                            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('UPLOAD_ERROR'));
                             if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
                               $cordovaCamera.cleanup();
                             }
                           });    
                         }, 10);
                       }, function(err) {
-                        $rootScope.showAlert("Error", "Camera Cancelled");
+                        $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('CAMERA_CANCELLED'));
                       });
                     } else {
                       $ionicPopup.prompt({
-                        title: 'Set URL',
-                        template: 'Direct web link for the picture',
+                        title: $filter('translate')('SET_URL'),
+                        template: $filter('translate')('DIRECT_LINK_PICTURE'),
                         inputType: 'text',
                         inputPlaceholder: 'http://example.com/image.jpg'
                       }).then(function(res) {
@@ -1021,22 +1021,22 @@ module.exports = function (app) {
                             $scope.replying = false;
                             setTimeout(function() {
                               if (localStorage.error == 1) {
-                                $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
                               } else {
                                 $scope.closeModal();
                                 $scope.data.comment = "";
-                                $rootScope.showMessage("Success", "Comment is submitted!");
+                                $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
                                 $rootScope.$broadcast("update:content");
                               }
                               $rootScope.$broadcast('hide:loading');
                             }, 3000);
                           } else {
                             $rootScope.$broadcast('hide:loading');
-                            $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
+                            $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
                           } 
                         } else {
                           $rootScope.$broadcast('hide:loading');
-                          $rootScope.showAlert("Warning", "Please, login to Comment");
+                          $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_COMMENT'));
                         }
                     } else {
                         
@@ -1081,21 +1081,21 @@ module.exports = function (app) {
                             $scope.replying = false;
                             setTimeout(function() {
                               if (localStorage.error == 1) {
-                                $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
                               } else {
                                 $scope.data.comment = "";
-                                $rootScope.showMessage("Success", "Comment is submitted!");
+                                $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
                                 $rootScope.$broadcast("update:content");
                               }
                               $rootScope.$broadcast('hide:loading');
                             }, 3000);
                           } else {
                             $rootScope.$broadcast('hide:loading');
-                            $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
+                            $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
                           } 
                         } else {
                           $rootScope.$broadcast('hide:loading');
-                          $rootScope.showAlert("Warning", "Please, login to Comment");
+                          $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_COMMENT'));
                         }
                     }
                   $rootScope.$broadcast('hide:loading');  
@@ -1113,8 +1113,8 @@ module.exports = function (app) {
                 $scope.deleteComment = function(comment) {
                     $rootScope.log('delete to comment '+ angular.toJson(comment));
                     var confirmPopup = $ionicPopup.confirm({
-                        title: 'Are you sure?',
-                        template: 'Deleting comments are irreversible...'
+                        title: $filter('translate')('ARE_YOU_SURE'),
+                        template: $filter('translate')('DELETE_COMMENT')
                     });
                     confirmPopup.then(function(res) {
                         if(res) {
@@ -1145,9 +1145,9 @@ module.exports = function (app) {
                                 
                                 setTimeout(function() {
                                   if (localStorage.error == 1) {
-                                    $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                                    $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
                                   } else {
-                                    $rootScope.showMessage("Success", "Deleted comment!");
+                                    $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('DELETED_COMMENT'));
                                     $rootScope.$broadcast("update:content");
                                   }
                                   $rootScope.$broadcast('hide:loading');
@@ -1157,7 +1157,7 @@ module.exports = function (app) {
                               } 
                             } else {
                               $rootScope.$broadcast('hide:loading');
-                              $rootScope.showAlert("Warning", "Please, login to Delete Comment");
+                              $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_DELETE_COMMENT'));
                             }
                         } else {
                           $rootScope.log('You are not sure');
@@ -1220,7 +1220,7 @@ module.exports = function (app) {
         }
     }
 
-    function ius($q, $ionicLoading, $cordovaFileTransfer, $ionicPlatform) {
+    function ius($q, $ionicLoading, $cordovaFileTransfer, $ionicPlatform, $filter) {
         var service = {};
         service.uploadImage = uploadImage;
         return service;
@@ -1238,7 +1238,7 @@ module.exports = function (app) {
             fileEntry.file(function(fileObj) {
               fileSize = fileObj.size;
               // Display a loading indicator reporting the start of the upload
-              $ionicLoading.show({template : 'Uploading Picture : ' + 0 + '%'});
+              $ionicLoading.show({template : $filter('translate')('UPLOADING_PICTURE') + 0 + '%'});
               // Trigger the upload
               uploadFile();
             });
@@ -1252,7 +1252,7 @@ module.exports = function (app) {
             $ionicPlatform.ready(function() {
                 $cordovaFileTransfer.upload("http://192.158.29.1:8080/api/upload", imageURI, uploadOptions).then(function(result) {
                     // Let the user know the upload is completed
-                    $ionicLoading.show({template : 'Upload Completed', duration: 1000});
+                    $ionicLoading.show({template : $filter('translate')('UPLOAD_COMPLETED'), duration: 1000});
                     // Result has a "response" property that is escaped
                     // FYI: The result will also have URLs for any new images generated with 
                     // eager transformations
@@ -1260,13 +1260,13 @@ module.exports = function (app) {
                     deferred.resolve(response);
                   }, function(err) {
                     // Uh oh!
-                    $ionicLoading.show({template : 'Upload Failed', duration: 2000});
+                    $ionicLoading.show({template : $filter('translate')('UPLOAD_FAILED'), duration: 2000});
                     deferred.reject(err);
                   }, function (progress) {
                     // The upload plugin gives you information about how much data has been transferred 
                     // on some interval.  Use this with the original file size to show a progress indicator.
                     percentage = Math.floor((progress.loaded / fileSize) * 100);
-                    $ionicLoading.show({template : 'Uploading Picture : ' + percentage + '%'});
+                    $ionicLoading.show({template : $filter('translate')('UPLOADING_PICTURE') + percentage + '%'});
                   });
             });
           }

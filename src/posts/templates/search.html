@@ -2,30 +2,30 @@
   <ion-header-bar>
     <label class="item item-input" style="width: 60%;">
       <i class="icon ion-search placeholder-icon"></i>
-      <input type="search" placeholder="Search" autofocus ng-model="data.search" ng-change="search()">
+      <input type="search" placeholder="{{'SEARCH'|translate}}" autofocus ng-model="data.search" ng-change="search()">
     </label>
     <label class="item item-input item-select">
       <div class="input-label">&nbsp;</div>
       <select ng-model="data.type" ng-change="typechange()">
-	      	<option value="tag">Tag</option>
-        	<option value="user">User</option>
+	      	<option value="tag">{{'TAG'|translate}}</option>
+        	<option value="user">{{'USER'|translate}}</option>
 	    </select>
     </label>
     <div class="buttons">
-      <button class="button button-clear button-dark fbold" ng-click="closeSmodal()">Done</button>
+      <button class="button button-clear button-dark fbold" ng-click="closeSmodal()">{{'CLOSE'|translate}}</button>
     </div>
   </ion-header-bar>
   <ion-content>
     <div class="list" ng-if="data.searchResult.length>0">
       <div ng-if="data.type=='tag'">
 	      <a class="item" ng-repeat="x in data.searchResult" ng-click="openTag(x.tag, x.top_posts)">
-	        <h2>Tag - {{x.tag}}</h2>
-	        <p>Posts - {{x.top_posts}}</p>
+	        <h2>{{'TAG'|translate}} - {{x.tag}}</h2>
+	        <p>{{'POSTS'|translate}} - {{x.top_posts}}</p>
 	      </a>
       </div>
       <div ng-if="data.type=='user'">
 	      <a class="item" ng-repeat="x in data.searchResult" ng-click="openUser(x)">
-	        <h2>User - {{x}}</h2>
+	        <h2>{{'USER'|translate}} - {{x}}</h2>
 	      </a>
       </div>
     </div>

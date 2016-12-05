@@ -113,7 +113,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
           if (!loginSuccess) {
               $rootScope.$broadcast('hide:loading');
-              $rootScope.showMessage("Error","The password or account name was incorrect");
+              $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('PASSWORD_INCORRECT'));
           } else {
             $rootScope.$storage.user = $scope.loginData;
             $rootScope.$broadcast('fetchPosts');
@@ -139,7 +139,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         });
       }
     } else {
-      $rootScope.showAlert("Info", "Please login either with your main password or private posting key!").then(function(){
+      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_FAIL')).then(function(){
         $rootScope.log("error login");
       });
     }
@@ -346,7 +346,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
       $cordovaBarcodeScanner.scan({
           "preferFrontCamera" : false, // iOS and Android
           "showFlipCameraButton" : false, // iOS and Android
-          "prompt" : "Place a QR code inside the scan area", // supported on Android only
+          "prompt" : $filter('translate')('QR_TEXT'), // supported on Android only
           "formats" : "QR_CODE" // default: all but PDF_417 and RSS_EXPANDED
           //"orientation" : "landscape" // Android only (portrait|landscape), default unset so it rotates with the device
         }).then(function(barcodeData) {
@@ -378,31 +378,31 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   $scope.transfer = function () {
     if ($rootScope.$storage.user) {
       if (!$rootScope.$storage.user.password && !$rootScope.$storage.user.privateActiveKey) {
-        $rootScope.showMessage("Error", "Please provide Active private key if you have chosen Advanced login mode!");
+        $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('ACTIVE_KEY_REQUIRED_TEXT'));
       } else {
         if ($scope.data.type === 'sbd') {
           if ($scope.data.amount > Number($scope.balance.sbd_balance.split(" ")[0])) {
-            $rootScope.showAlert("Warning", "Make sure you have enough balance for transaction!");          
+            $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('BALANCE_TEXT'));          
           } else {
             $scope.okbalance = true;
           }
         }
         if ($scope.data.type === 'sp' || $scope.data.type === 'steem') {
           if ($scope.data.amount > Number($scope.balance.balance.split(" ")[0])) {
-            $rootScope.showAlert("Warning", "Make sure you have enough balance for transaction!");          
+            $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('BALANCE_TEXT'));          
           } else {
             $scope.okbalance = true;
           }
         }
         if (!$scope.users || $scope.users.name !== $scope.data.username) {
-          $rootScope.showAlert("Warning", "User you are trying to transfer fund, doesn't exist!");
+          $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('NONEXIST_USER'));
         } else {
           $scope.okuser = true;
         }
         if ($scope.okbalance && $scope.okuser) {
           var confirmPopup = $ionicPopup.confirm({
-            title: 'Confirmation',
-            template: 'Are you sure you want to transfer?'
+            title: $filter('translate')('CONFIRMATION'),
+            template: $filter('translate')('TRANSFER_TEXT')
           });
 
           confirmPopup.then(function(res) {
@@ -435,9 +435,9 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
                   tr.process_transaction($scope.mylogin, null, true);  
                   setTimeout(function() {
                     if (localStorage.error == 1) {
-                      $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                      $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
                     } else {
-                      $rootScope.showAlert("Info", "Transaction is broadcasted").then(function(){
+                      $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
                         $scope.data = {type: "steem", amount: 0.001};
                       });
                     }
@@ -453,9 +453,9 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
                   tr.process_transaction($scope.mylogin, null, true);
                   setTimeout(function() {
                     if (localStorage.error == 1) {
-                      $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                      $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
                     } else {
-                      $rootScope.showAlert("Info", "Transaction is broadcasted").then(function(){
+                      $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
                         $scope.data = {type: "steem", amount: 0.001};
                       });
                     }
@@ -463,7 +463,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
                  
                 }
               } else {
-                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have chosen Advanced mode.");
+                $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL_A'));
               }
               $rootScope.$broadcast('hide:loading');
              } else {
@@ -474,7 +474,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
       }
     } else {
       $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert("Warning", "Please, login to Transfer");
+      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_TRANSFER'));
     }
   };
   $scope.refresh = function() {
@@ -501,7 +501,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
 app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService, $filter, $ionicHistory, $timeout) {
   
   $scope.activeMenu = $rootScope.$storage.filter || "trending";
-  $scope.mymenu = $rootScope.$storage.user ? [{text: 'Feed', custom:'feed'}, {text: 'Trending', custom:'trending'}, {text: 'Hot', custom:'hot'}, {text: 'New', custom:'created'}, {text: 'Active', custom:'active'}, {text: 'Promoted', custom: 'promoted'}, {text: 'Trending for 30 days', custom:'trending30'}, {text:'Votes', custom:'votes'}, {text: 'Comments', custom:'children'}, {text: 'Payout', custom: 'payout'}] : [ {text: 'Trending', custom:'trending'}, {text: 'Hot', custom:'hot'}, {text: 'New', custom:'new'}, {text: 'Active', custom:'active'}, {text: 'Promoted', custom: 'promoted'}, {text: 'Trending 30 days', custom:'trending30'}, {text:'Votes', custom:'votes'}, {text: 'Comments', custom:'children'}, {text: 'Payout', custom: 'payout'}];
+  $scope.mymenu = $rootScope.$storage.user ? [{text: $filter('translate')('FEED'), custom:'feed'}, {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'payout'}] : [ {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'new'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'payout'}];
 
   $rootScope.$on('filter:change', function() {
     //$rootScope.$broadcast('show:loading');
@@ -522,8 +522,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.showFilter = function() {
     var filterSheet = $ionicActionSheet.show({
      buttons: $scope.mymenu,
-     titleText: 'Sort Posts By:',
-     cancelText: 'Cancel',
+     titleText: $filter('translate')('SORT_POST_BY'),
+     cancelText: $filter('translate')('CANCEL'),
      cancel: function() {
         // add cancel code..
       },
@@ -541,7 +541,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
    });
 
   $scope.openTooltip = function($event, d) {
-      var texth = "<div class='row'><div class='col'><b>Payout Circle</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>Potential Payout</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Promoted </b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Past Payout</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Author Payout</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>Curation Payout</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Payout</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
+      var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CIRCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PROMOTED')+"</b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('AUTHOR_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('CURATION_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
       $scope.tooltipText = texth;
       if (!$scope.$$phase) {
         $scope.$apply();
@@ -647,12 +647,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.showImg = function() {
    var hideSheet = $ionicActionSheet.show({
      buttons: [
-       { text: 'Capture Picture' },
-       { text: 'Select Picture' },
-       { text: 'Set Custom URL' },
+       { text: $filter('translate')('CAPTURE_PICTURE') },
+       { text: $filter('translate')('SELECT_PICTURE') },
+       { text: $filter('translate')('SET_CUSTOM_URL') },
      ],
-     titleText: 'Insert Picture',
-     cancelText: 'Cancel',
+     titleText: $filter('translate')('INSERT_PICTURE'),
+     cancelText: $filter('translate')('CANCEL'),
      cancel: function() {
         // add cancel code..
       },
@@ -693,19 +693,19 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             }
           },
           function(err) {
-            $rootScope.showAlert("Error", "Upload Error");
+            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('UPLOAD_ERROR'));
             if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
               $cordovaCamera.cleanup();
             }
           });  
         }, 10);
       }, function(err) {
-        $rootScope.showAlert("Error", "Camera Cancelled");
+        $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('CAMERA_CANCELLED'));
       });
     } else {
       $ionicPopup.prompt({
-        title: 'Set URL',
-        template: 'Direct web link for the picture',
+        title: $filter('translate')('SET_URL'),
+        template: $filter('translate')('DIRECT_LINK_PICTURE'),
         inputType: 'text',
         inputPlaceholder: 'http://example.com/image.jpg'
       }).then(function(res) {
@@ -822,14 +822,14 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         $scope.replying = false;
         setTimeout(function() {
           if (localStorage.error == 1) {
-            $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
           } else {
             //$scope.closePostModal();
             $scope.modalp.hide();
             //$scope.menupopover.hide();
             $rootScope.$broadcast('close:popover');
             $scope.spost = {};
-            $rootScope.showMessage("Success", "Post is submitted!");
+            $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_SUBMITTED'));
             //$scope.closeMenuPopover();
             $state.go("app.profile", {username: $rootScope.$storage.user.username});
           }
@@ -837,11 +837,11 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         }, 3000);
       } else {
         $rootScope.$broadcast('hide:loading');
-        $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have chosen Advanced mode.");
+        $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
       }
     } else {
       $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert("Warning", "Please, login to Comment");
+      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_COMMENT'));
     }
   }
   $scope.savePost = function() {
@@ -849,12 +849,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $rootScope.$storage.spost = $scope.spost;
     $rootScope.$broadcast('close:popover');
     $scope.modalp.hide();
-    $rootScope.showMessage("Saved", "Post for later submission!");  
+    $rootScope.showMessage($filter('translate')('SAVED'), $filter('translate')('POST_LATER'));  
   }
   $scope.clearPost = function() {
     $rootScope.$storage.spost = {};
     $scope.spost = {};
-    $rootScope.showMessage("Cleared", "Post!");
+    $rootScope.showMessage($filter('translate')('CLEARED'), $filter('translate')('POST'));
   }
   
 
@@ -878,8 +878,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.downvotePost = function(post) {
     
     var confirmPopup = $ionicPopup.confirm({
-      title: 'Are you sure?',
-      template: 'Flagging a post can remove rewards and make this material less visible.<br><br>The flag should be used for the following: <ul><li>Fraud or Plagiarism</li><li>Hate Speech or Internet Trolling</li><li>Intentional miscategorized content or Spam</li></ul>'
+      title: $filter('translate')('ARE_YOU_SURE'),
+      template: $filter('translate')('FLAGGING_TEXT')
     });
     confirmPopup.then(function(res) {
       if(res) {
@@ -1035,7 +1035,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       params.start_permlink = $scope.data[$scope.data.length-1].permlink;
     }
     if ($scope.error) {
-      $rootScope.showAlert("Error", "Request limit reached. Check out other trend/tags!");
+      $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REQUEST_LIMIT_TEXT'));
     } else {
       $rootScope.log("fetching..."+type+" "+limit+" "+tag);
       if (typeof window.Api.database_api === "function") { 
@@ -1145,14 +1145,14 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         }
       }  
       $rootScope.$storage.bookmark = book;
-      $rootScope.showMessage("Success", "Post is removed from bookmarks!");  
+      $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_IS_UNBOOKMARK'));  
     } else {
       if (book) {
         $rootScope.$storage.bookmark.push({title: $rootScope.$storage.sitem.title, author:$rootScope.$storage.sitem.author, author_reputation: $rootScope.$storage.sitem.author_reputation, created: $rootScope.$storage.sitem.created, permlink:$rootScope.$storage.sitem.permlink});  
       } else {
         $rootScope.$storage.bookmark = [{title: $rootScope.$storage.sitem.title, author:$rootScope.$storage.sitem.author, author_reputation: $rootScope.$storage.sitem.author_reputation, created: $rootScope.$storage.sitem.created, permlink:$rootScope.$storage.sitem.permlink}];
       }
-      $rootScope.showMessage("Success", "Post is added to bookmarks!");
+      $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_IS_BOOKMARK'));
     }
   };
 
@@ -1205,7 +1205,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
    });
 
    $scope.openTooltip = function($event, d) {
-    var texth = "<div class='row'><div class='col'><b>Payout Circle</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>Potential Payout</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Promoted </b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Past Payout</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Author Payout</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>Curation Payout</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Payout</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
+    var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CIRCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PROMOTED')+"</b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('AUTHOR_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('CURATION_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
       $scope.tooltipText = texth;
       $scope.tooltip.show($event);
    };
@@ -1276,12 +1276,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.showImg = function() {
    var hideSheet = $ionicActionSheet.show({
      buttons: [
-       { text: 'Capture Picture' },
-       { text: 'Select Picture' },
-       { text: 'Set Custom URL' },
+       { text: $filter('translate')('CAPTURE_PICTURE') },
+       { text: $filter('translate')('SELECT_PICTURE') },
+       { text: $filter('translate')('SET_CUSTOM_URL') },
      ],
-     titleText: 'Insert Picture',
-     cancelText: 'Cancel',
+     titleText: $filter('translate')('INSERT_PICTURE'),
+     cancelText: $filter('translate')('CANCEL'),
      cancel: function() {
         // add cancel code..
       },
@@ -1323,19 +1323,19 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               }
             },
             function(err) {
-              $rootScope.showAlert("Error", "Upload Error");
+              $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('UPLOAD_ERROR'));
               if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
                 $cordovaCamera.cleanup();
               }
             });    
           }, 10);
         }, function(err) {
-          $rootScope.showAlert("Error", "Camera Cancelled");
+          $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('CAMERA_CANCELLED'));
         });
       } else {
         $ionicPopup.prompt({
-          title: 'Set URL',
-          template: 'Direct web link for the picture',
+          title: $filter('translate')('SET_URL'),
+          template: $filter('translate')('DIRECT_LINK_PICTURE'),
           inputType: 'text',
           inputPlaceholder: 'http://example.com/image.jpg'
         }).then(function(res) {
@@ -1383,19 +1383,19 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               }
             },
             function(err) {
-              $rootScope.showAlert("Error", "Upload Error");
+              $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('UPLOAD_ERROR'));
               if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
                 $cordovaCamera.cleanup();
               }
             });    
           }, 10);
         }, function(err) {
-          $rootScope.showAlert("Error", "Camera Cancelled");
+          $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('CAMERA_CANCELLED'));
         });
       } else {
         $ionicPopup.prompt({
-          title: 'Set URL',
-          template: 'Direct web link for the picture',
+          title: $filter('translate')('SET_URL'),
+          template: $filter('translate')('DIRECT_LINK_PICTURE'),
           inputType: 'text',
           inputPlaceholder: 'http://example.com/image.jpg'
         }).then(function(res) {
@@ -1510,11 +1510,11 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $scope.replying = false;
         setTimeout(function() {
           if (localStorage.error == 1) {
-            $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
           } else {
             $scope.closePostModal();
             $scope.spost = {};
-            $rootScope.showMessage("Success", "Post is submitted!");  
+            $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_SUBMITTED'));  
             //$scope.closePostPopover();
             $state.go("app.profile", {username: $rootScope.$storage.user.username});
           }
@@ -1522,11 +1522,11 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         }, 3000);
       } else {
         $rootScope.$broadcast('hide:loading');
-        $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have chosen Advanced mode.");
+        $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
       }
     } else {
       $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert("Warning", "Please, login to Comment");
+      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_COMMENT'));
     }
   }
 
@@ -1564,12 +1564,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $scope.replying = false;
         setTimeout(function() {
           if (localStorage.error == 1) {
-            $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
           } else {
             $scope.closeModal();
             $scope.data.comment = "";  
 
-            $rootScope.showMessage("Success", "Comment is submitted!");
+            $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
             window.Api.database_api().exec("get_content_replies", [$rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink]).then(function(result){
               if (result)
                 $scope.comments = result;
@@ -1582,11 +1582,11 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         }, 3000);
       } else {
         $rootScope.$broadcast('hide:loading');
-        $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have chosen Advanced mode.");
+        $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
       } 
     } else {
       $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert("Warning", "Please, login to Comment");
+      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_COMMENT'));
     }
   }
   $rootScope.$on("update:content", function(){
@@ -1681,8 +1681,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   });
   $scope.downvotePost = function(post) {
     var confirmPopup = $ionicPopup.confirm({
-      title: 'Are you sure?',
-      template: 'Flagging a post can remove rewards and make this material less visible.<br><br>The flag should be used for the following: <ul><li>Fraud or Plagiarism</li><li>Hate Speech or Internet Trolling</li><li>Intentional miscategorized content or Spam</li></ul>'
+      title: $filter('translate')('ARE_YOU_SURE'),
+      template: $filter('translate')('FLAGGING_TEXT')
     });
     confirmPopup.then(function(res) {
       if(res) {
@@ -1829,7 +1829,7 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
   
 })
 
-app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicActionSheet, $cordovaCamera, ImageUploadService, $ionicPopup, $ionicSideMenuDelegate, $ionicHistory, $state, APIs, $ionicPopover) {
+app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicActionSheet, $cordovaCamera, ImageUploadService, $ionicPopup, $ionicSideMenuDelegate, $ionicHistory, $state, APIs, $ionicPopover, $filter) {
   
   $scope.goBack = function() {
     var viewHistory = $ionicHistory.viewHistory();
@@ -1858,7 +1858,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
    });
 
    $scope.openTooltip = function($event, d) {
-    var texth = "<div class='row'><div class='col'><b>Payout Circle</b></div><div class='col'>"+d.mode+"</div></div><div class='row'><div class='col'><b>Potential Payout</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Promoted </b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Past Payout</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Author Payout</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>Curation Payout</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>Payout</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
+    var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CIRCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PROMOTED')+"</b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('AUTHOR_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('CURATION_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
       $scope.tooltipText = texth;
       $scope.tooltip.show($event);
    };
@@ -1885,19 +1885,19 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   $scope.showProfile = function() {
    var hideSheet = $ionicActionSheet.show({
      buttons: [
-       { text: 'Capture Picture' },
-       { text: 'Select Picture' },
-       { text: 'Set Custom URL' },
+       { text: $filter('translate')('CAPTURE_PICTURE') },
+       { text: $filter('translate')('SELECT_PICTURE') },
+       { text: $filter('translate')('SET_CUSTOM_URL') },
      ],
-     destructiveText: 'Reset',
-     titleText: 'Modify Profile Picture',
-     cancelText: 'Cancel',
+     destructiveText: $filter('translate')('RESET'),
+     titleText: $filter('translate')('MODIFY_PICTURE'),
+     cancelText: $filter('translate')('CANCEL'),
      cancel: function() {
         // add cancel code..
       },
      buttonClicked: function(index) {
       if (!$rootScope.$storage.user.password && !$rootScope.$storage.user.privateActiveKey) {
-        $rootScope.showMessage("Error", "Please provide Active private key if you have chosen Advanced login mode!");
+        $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL_A'));
       } else {
         $scope.changeProfileInfo(index, 'profile');  
       }
@@ -1905,13 +1905,13 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
      }, 
      destructiveButtonClicked: function(index){
       var confirmPopup = $ionicPopup.confirm({
-        title: 'Are you sure?',
-        template: 'This will reset user profile picture'
+        title: $filter('translate')('ARE_YOU_SURE'),
+        template: $filter('translate')('RESET_PICTURE_TEXT')
       });
       confirmPopup.then(function(res) {
         if(res) {
           if (!$rootScope.$storage.user.password && !$rootScope.$storage.user.privateActiveKey) {
-            $rootScope.showMessage("Error", "Please provide Active private key if you have chosen Advanced login mode!");
+            $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL_A'));
           } else {
             var update = {profile: {profile_image:""} };
             angular.merge(update, $rootScope.$storage.user.json_metadata);
@@ -1944,18 +1944,18 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 tr.process_transaction($scope.mylogin, null, true);
                 setTimeout(function() {
                   if (localStorage.error == 1) {
-                    $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                    $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
                   } else {
                     $rootScope.$broadcast('refreshLocalUserData');
                   }
                 }, 3000);
               } else {
-                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have chosen Advanced mode.");
+                $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL_A'));
               }
               $rootScope.$broadcast('hide:loading');
             } else {
               $rootScope.$broadcast('hide:loading');
-              $rootScope.showAlert("Warning", "Please, login to Update");
+              $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_UPDATE'));
             }
           }
         } else {
@@ -1970,7 +1970,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
 
   $scope.changeProfileInfo = function(type, which) {
     if (!$rootScope.$storage.user.password && !$rootScope.$storage.user.privateActiveKey) {
-      $rootScope.showMessage("Error", "Please provide Active private key if you have chosen Advanced login mode!");
+      $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL_A'));
     } else {
       var options = {};
       if (type == 0 || type == 1) {
@@ -2028,18 +2028,18 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
 
                   setTimeout(function() {
                     if (localStorage.error == 1) {
-                      $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage);
+                      $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage);
                     } else {
                       $rootScope.$broadcast('refreshLocalUserData');
                     }
                   }, 3000);
                 } else {
-                  $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have chosen Advanced mode.");
+                  $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL_A'));
                 }
               $rootScope.$broadcast('hide:loading');
               } else {
                 $rootScope.$broadcast('hide:loading');
-                $rootScope.showAlert("Warning", "Please, login to Update");
+                $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_UPDATE'));
               }
             }, 5);
             if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
@@ -2047,18 +2047,18 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             }
           },
           function(err) {
-            $rootScope.showAlert("Error", "Upload Error");
+            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('UPLOAD_ERROR'));
             if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
               $cordovaCamera.cleanup();
             }
           });
         }, function(err) {
-          $rootScope.showAlert("Error", "Camera Cancelled");
+          $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('CAMERA_CANCELLED'));
         });
       } else {
         $ionicPopup.prompt({
-          title: 'Set URL',
-          template: 'Direct web link for picture',
+          title: $filter('translate')('SET_URL'),
+          template: $filter('translate')('DIRECT_LINK_PICTURE'),
           inputType: 'text',
           inputPlaceholder: 'http://example.com/image.jpg'
         }).then(function(res) {
@@ -2098,19 +2098,19 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   tr.process_transaction($scope.mylogin, null, true);
                   setTimeout(function() {
                     if (localStorage.error == 1) {
-                      $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                      $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
                     } else {
                       //$scope.refreshLocalUserData();
                       $rootScope.$broadcast('refreshLocalUserData');
                     }
                   }, 3000);
                 } else {
-                  $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have chosen Advanced mode.");
+                  $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL_A'));
                 }
                 $rootScope.$broadcast('hide:loading');
               } else {
                 $rootScope.$broadcast('hide:loading');
-                $rootScope.showAlert("Warning", "Please, login to Update");
+                $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_UPDATE'));
               }
             }, 5);
           }
@@ -2122,19 +2122,19 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   $scope.showCover = function() {
    var hideSheet = $ionicActionSheet.show({
      buttons: [
-       { text: 'Capture Picture' },
-       { text: 'Select Picture' },
-       { text: 'Set Custom URL' },
+       { text: $filter('translate')('CAPTURE_PICTURE') },
+       { text: $filter('translate')('SELECT_PICTURE') },
+       { text: $filter('translate')('SET_CUSTOM_URL') },
      ],
-     destructiveText: 'Reset',
-     titleText: 'Modify Cover Picture',
-     cancelText: 'Cancel',
+     destructiveText: $filter('translate')('RESET'),
+     titleText: $filter('translate')('MODIFY_COVER_PICTURE'),
+     cancelText: $filter('translate')('CANCEL'),
      cancel: function() {
         // add cancel code..
       },
      buttonClicked: function(index) {
       if (!$rootScope.$storage.user.password && !$rootScope.$storage.user.privateActiveKey) {
-        $rootScope.showMessage("Error", "Please provide Active private key if you have chosen Advanced login mode!");
+        $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL_A'));
       } else {
         $scope.changeProfileInfo(index, 'cover');
       }
@@ -2142,13 +2142,13 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
      }, 
      destructiveButtonClicked: function(index){
       var confirmPopup = $ionicPopup.confirm({
-        title: 'Are you sure?',
-        template: 'This will reset user cover picture'
+        title: $filter('translate')('ARE_YOU_SURE'),
+        template: $filter('translate')('RESET_COVER_PICTURE_TEXT')
       });
       confirmPopup.then(function(res) {
         if(res) {
           if (!$rootScope.$storage.user.password && !$rootScope.$storage.user.privateActiveKey) {
-            $rootScope.showMessage("Error", "Please provide Active private key if you have chosen Advanced login mode!");
+            $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL_A'));
           } else {
             var update = {profile: {cover_image:""} };
             angular.merge(update, $rootScope.$storage.user.json_metadata);
@@ -2179,18 +2179,18 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 tr.process_transaction($scope.mylogin, null, true);
                 setTimeout(function() {
                   if (localStorage.error == 1) {
-                    $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                    $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
                   } else {
                     $rootScope.$broadcast('refreshLocalUserData');
                   }
                 }, 3000);
               } else {
-                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have chosen Advanced mode.");
+                $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL_A'));
               }
               $rootScope.$broadcast('hide:loading');
             } else {
               $rootScope.$broadcast('hide:loading');
-              $rootScope.showAlert("Warning", "Please, login to Update");
+              $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_UPDATE'));
             }
           }
         } else {
@@ -2211,8 +2211,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   };
   $scope.downvotePost = function(post) {
     var confirmPopup = $ionicPopup.confirm({
-      title: 'Are you sure?',
-      template: 'Flagging a post can remove rewards and make this material less visible.<br><br>The flag should be used for the following: <ul><li>Fraud or Plagiarism</li><li>Hate Speech or Internet Trolling</li><li>Intentional miscategorized content or Spam</li></ul>'
+      title: $filter('translate')('ARE_YOU_SURE'),
+      template: $filter('translate')('FLAGGING_TEXT')
     });
     confirmPopup.then(function(res) {
       if(res) {
@@ -2578,7 +2578,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       resteem: $scope.data.resteem,
       device: ionic.Platform.platform(),
       timestamp: $filter('date')(new Date(), 'medium'),
-      appversion: '1.3.2'
+      appversion: '1.3.3'
     }
     APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, $rootScope.$storage.subscription).then(function(res){
       console.log(angular.toJson(res));
@@ -2634,8 +2634,8 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
   $scope.save = function(){
     if (localStorage.socketUrl !== $rootScope.$storage.socket) {
       var confirmPopup = $ionicPopup.confirm({
-        title: 'Are you sure?',
-        template: 'Server update requires Restart!'
+        title: $filter('translate')('ARE_YOU_SURE'),
+        template: $filter('translate')('UPDATE_REQUIRES_RESTART')
       });
       confirmPopup.then(function(res) {
         if(res) {
@@ -2649,7 +2649,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
         }
       });
     };
-    $rootScope.showMessage("Success", "Settings are updated!");
+    $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('SETTINGS_UPDATED'));
     $ionicHistory.nextViewOptions({
       disableBack: true
     });

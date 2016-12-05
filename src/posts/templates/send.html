@@ -1,13 +1,13 @@
-<ion-view view-cache="false" view-title="Transfer">
+<ion-view view-cache="false" view-title="{{'TRANSFER'|translate}}">
   <ion-content class="padding">
     <div class="list">
       <div class="item item-input item-icon-right">
-        <span class="input-label">To</span>
-        <input type="text" ng-model="data.username" placeholder="User e.g. good-karma" ng-change="changeUsername()">
+        <span class="input-label">{{'TO'|translate}}</span>
+        <input type="text" ng-model="data.username" placeholder="{{'TO_DESC'|translate}}" ng-change="changeUsername()">
         <i class="icon ion-ios-camera-outline" ng-click="qrScan()"></i>
       </div>
       <label class="item item-input item-select">
-        <span class="input-label">Asset</span>
+        <span class="input-label">{{'ASSET'|translate}}</span>
         <select ng-model="data.type" ng-change="typechange()">
             <option value="steem">STEEM</option>
             <option value="sbd">SBD</option>
@@ -15,17 +15,17 @@
         </select>
       </label>
       <label class="item item-input">
-        <span class="input-label">Amount</span>
-        <input type="number" placeholder="amount" step="0.001" ng-model="data.amount">
+        <span class="input-label">{{'AMOUNT'|translate}}</span>
+        <input type="number" placeholder="{{'AMOUNT'|translate}}" step="0.001" ng-model="data.amount">
       </label>
       <label class="item item-input" ng-if="data.type != 'sp'">
-        <span class="input-label">Memo</span>
-        <textarea ng-model="data.memo" rows="3" placeholder="Public Memo"></textarea>
+        <span class="input-label">{{'MEMO'|translate}}</span>
+        <textarea ng-model="data.memo" rows="3" placeholder="{{'PUBLIC_MEMO'|translate}}"></textarea>
       </label>
-      <p class="item" ng-if="balance">Available: {{balance.balance}}, {{balance.sbd_balance}} <i class="icon ion-refresh pull-right" ng-click="refresh()"></i></p>
+      <p class="item" ng-if="balance">{{'AVAILABLE'|translate}}: {{balance.balance}}, {{balance.sbd_balance}} <i class="icon ion-refresh pull-right" ng-click="refresh()"></i></p>
       <br>
       <center><button class="button button-positive" ng-click="transfer()">
-        SEND
+        {{'SEND'|translate}}
       </button></center>
       <br>
       <center><qr text="$root.$storage.user.username"></qr></center>

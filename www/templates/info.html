@@ -1,7 +1,7 @@
 <ion-modal-view>
   <ion-header-bar class="bar bar-header bar-positive">
-    <h1 class="title">Voters info ({{$root.voters.active_votes.length}})</h1>
-    <button class="button button-positive button-primary" ng-click="closeInfo()">CLOSE</button>
+    <h1 class="title">{{'VOTER_INFO'|translate}} ({{$root.voters.active_votes.length}})</h1>
+    <button class="button button-positive button-primary" ng-click="closeInfo()">{{'CLOSE'|translate}}</button>
   </ion-header-bar>
   <ion-content class="padding" delegate-handle="modalContent">
     <div class="row" ng-repeat="v in $root.voters.active_votes">

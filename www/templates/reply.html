@@ -1,8 +1,8 @@
 <ion-modal-view>
   <ion-header-bar class="bar bar-header bar-positive">
     <button class="button button-clear button-icon ion-arrow-left-c" ng-click="closeModal()"></button>
-    <h1 class="title">Reply to @{{post.author}}</h1>
-    <button class="button button-positive button-primary" ng-click="reply()">POST</button>
+    <h1 class="title">{{'REPLY_TO'|translate}} @{{post.author}}</h1>
+    <button class="button button-positive button-primary" ng-click="reply()">{{'POST'|translate}}</button>
   </ion-header-bar>
   <ion-content class="padding posting">
     <div class="button-bar">
@@ -16,8 +16,8 @@
       <a class="button button-small" ng-click="insertText('<hr>')"><i class="fa ion-minus"></i></a>
       <a class="button button-small" ng-click="showImg()"><i class="fa fa-picture-o"></i></a>
     </div>
-    <textarea autofocus ng-model='data.comment' rows="10" placeholder="Comment content" class="width100" ng-focus='cfocus()'></textarea>
-      <p ng-if="data.comment">Preview</p>
+    <textarea autofocus ng-model='data.comment' rows="10" placeholder="{{'COMMENT_CONTENT'|translate}}" class="width100" ng-focus='cfocus()'></textarea>
+      <p ng-if="data.comment">{{'PREVIEW'|translate}}</p>
       <div ng-if="data.comment" class="padding bodytext" ng-bind-html="data.comment | parseUrl "></div>
   </ion-content>
 </ion-modal-view>

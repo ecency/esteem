@@ -354,7 +354,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 $rootScope.closePin();
               } else {
                 $rootScope.pintry += 1;
-                $rootScope.pinerror = "NOT MATCH"+"("+$rootScope.pintry+")"; 
+                $rootScope.pinerror = $filter('translate')('NOT_MATCH')+"("+$rootScope.pintry+")"; 
                 if ($rootScope.pintry>3) {
                   $rootScope.$storage.pincode = undefined;
                   $rootScope.pintry = 0;
@@ -371,7 +371,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 $rootScope.closePin();
               } else {
                 $rootScope.$storage.pincode = $rootScope.passcode;  
-                $rootScope.pinsubtitle = "Confirm PIN";
+                $rootScope.pinsubtitle = $filter('translate')('CONFIRM_PIN');
                 $rootScope.passcode = "";
                 $rootScope.pintype = 3;
                 $rootScope.pintry = 0;
@@ -385,7 +385,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 $rootScope.closePin();
               } else {
                 $rootScope.pintry += 1;
-                $rootScope.pinerror = "INCORRECT"+"("+$rootScope.pintry+")"; 
+                $rootScope.pinerror = $filter('translate')('INCORRECT')+"("+$rootScope.pintry+")"; 
                 if ($rootScope.pintry>3) {
                   $rootScope.$storage.$reset();
                   $rootScope.closePin();  
@@ -416,7 +416,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         if ($rootScope.$storage.notifData) {
           var alertPopup = $ionicPopup.confirm({
             title: $rootScope.$storage.notifData.title,
-            template: $rootScope.$storage.notifData.body + ", opening post"
+            template: $rootScope.$storage.notifData.body + $filter('translate')('OPENING_POST')
           });
           alertPopup.then(function(res) {
             $rootScope.log('Thank you for seeing alert from tray');
@@ -436,14 +436,14 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.passcode = "";
       if (type == 0) {
         $rootScope.pintype = 0;
-        $rootScope.pintitle = "Set PIN";
-        $rootScope.pinsubtitle = "Set PIN";
+        $rootScope.pintitle = $filter('translate')('SET_PIN');
+        $rootScope.pinsubtitle = $filter('translate')('SET_PIN');
       }
       if (type == 1) {
         $rootScope.pintype = 1;
         $rootScope.pintry = 0;
-        $rootScope.pintitle = "Enter PIN";
-        $rootScope.pinsubtitle = "Enter PIN";
+        $rootScope.pintitle = $filter('translate')('ENTER_PIN');
+        $rootScope.pinsubtitle = $filter('translate')('ENTER_PIN');
       }
       $rootScope.pinmodal.show();
     };
@@ -510,8 +510,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     $rootScope.reBlog = function(author, permlink) {
       var confirmPopup = $ionicPopup.confirm({
-        title: 'Are you sure?',
-        template: 'Resteem is irreversible, do you want to continue?'
+        title: $filter('translate')('ARE_YOU_SURE'),
+        template: $filter('translate')('REBLOG_TEXT')
       });
       confirmPopup.then(function(res) {
         if(res) {
@@ -545,20 +545,20 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
                 setTimeout(function() {
                   if (localStorage.error == 1) {
-                    $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                    $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REBLOG_TEXT')+" "+localStorage.errormessage)
                   } else {
                     //$scope.refreshFollowers();
-                    $rootScope.showMessage('Success', 'Reblogged post!');
+                    $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('REBLOGGED_TEXT'));
                   }
                   $rootScope.$broadcast('hide:loading');
                 }, 3000);
               } else {
-                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
+                $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
               }
             $rootScope.$broadcast('hide:loading');
           } else {
             $rootScope.$broadcast('hide:loading');
-            $rootScope.showAlert("Warning", "Please, login to Reblog");
+            $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_REBLOG'));
           }
         } else {
           $rootScope.log('You are not sure');
@@ -607,7 +607,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             setTimeout(function() {
               post.invoting = false;
               if (localStorage.error == 1) {
-                $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
               } else {
                 if (afterward === 'fetchContent') {
                   $rootScope.$broadcast(afterward, { any: {author: post.author, permlink: post.permlink} });
@@ -618,7 +618,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               $rootScope.$broadcast('hide:loading');
             }, 3000);
           } else {
-            $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
+            $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
             $rootScope.$broadcast('hide:loading');
             post.invoting = false;
           }
@@ -630,7 +630,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       } else {
         $rootScope.$broadcast('hide:loading');
         post.invoting = false;
-        $rootScope.showAlert("Warning", "Please, login to Vote");
+        $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_VOTE'));
       }
     };
 
@@ -643,8 +643,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     };
     $rootScope.voteWitness = function() {
         var confirmPopup = $ionicPopup.confirm({
-          title: 'Are you sure?',
-          template: 'Voting for witness @good-karma'
+          title: $filter('translate')('ARE_YOU_SURE'),
+          template: $filter('translate')('VOTE_FOR_WITNESS')+" @good-karma"
         });
         confirmPopup.then(function(res) {
           if(res) {
@@ -676,23 +676,23 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
                   setTimeout(function() {
                     if (localStorage.error === 1) {
-                      $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                      $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
                     } else {
                       //$scope.refreshFollowers();
-                      $rootScope.showMessage("Success",'Voted for witness @good-karma');
+                      $rootScope.showMessage($filter('translate')('SUCCESS'),$filter('translate')('VOTED_FOR_WITNESS')+' @good-karma');
                       $rootScope.$broadcast('refreshLocalUserData');
                     }
                   }, 3000);
                 } else {
-                  $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have choosed Advanced mode.");
+                  $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
                 }
               } else {
-                $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Active private key on Login if you have choosed Advanced mode.");
+                $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
               }
               $rootScope.$broadcast('hide:loading');
             } else {
               $rootScope.$broadcast('hide:loading');
-              $rootScope.showAlert("Warning", "Please, login to Vote Witness");
+              $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_VOTE_WITNESS'));
             }
           } else {
             $rootScope.log('You are not sure');
@@ -734,19 +734,19 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
             setTimeout(function() {
               if (localStorage.error == 1) {
-                $rootScope.showAlert("Error", "Broadcast error, try again!"+" "+localStorage.errormessage)
+                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
               } else {
                 //$scope.refreshFollowers();
                 $rootScope.$broadcast('current:reload');
               }
             }, 3000);
           } else {
-            $rootScope.showMessage("Error", "Login failed! Please make sure you have logged in with master password or provided Posting private key on Login if you have choosed Advanced mode.");
+            $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
           }
         $rootScope.$broadcast('hide:loading');
       } else {
         $rootScope.$broadcast('hide:loading');
-        $rootScope.showAlert("Warning", "Please, login to Follow");
+        $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_FOLLOW'));
       }
     };
 
@@ -815,7 +815,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
                   var alertPopup = $ionicPopup.confirm({
                     title: data.title,
-                    template: data.body + ", opening post"
+                    template: data.body + $filter('translate')('OPENING_POST')
                   });
 
                   alertPopup.then(function(res) {

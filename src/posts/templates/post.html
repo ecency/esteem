@@ -4,7 +4,7 @@
     	</ion-nav-back-button>
 	    <ion-nav-buttons side="left">
 	      <button class="button button-icon button-clear ion-navicon" ng-if="!$root.voiceOver" menu-toggle="left"></button>
-        <a href class="button button-icon ion-more" ng-if="$root.voiceOver" menu-toggle="left">Menu</a>
+        <a href class="button button-icon ion-more" ng-if="$root.voiceOver" menu-toggle="left">{{'MENU'|translate}}</a>
 	    </ion-nav-buttons>
 	    <ion-nav-buttons side="right">
       <span ng-if="!$root.voiceOver">
@@ -13,9 +13,9 @@
         <button class="button button-icon button-clear ion-arrow-return-right" ng-if="$root.$storage.user.username !== $root.$storage.sitem.author" ng-click="$root.reBlog($root.$storage.sitem.author, $root.$storage.sitem.permlink)"></button>
       </span>
       <span ng-if="$root.voiceOver">
-        <a href class="button button-icon button-clear" ng-click="bookmark()"><i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i>Bookmark</a> &nbsp; 
+        <a href class="button button-icon button-clear" ng-click="bookmark()"><i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i>{{'BOOKMARK'|translate}}</a> &nbsp; 
         <!--<a href class="button button-icon button-clear ion-android-share-alt" ng-click="share()">Share</a>-->
-        <a href class="button button-icon button-clear ion-arrow-return-right" ng-if="$root.$storage.user.username !== $root.$storage.sitem.author" ng-click="$root.reBlog($root.$storage.sitem.author, $root.$storage.sitem.permlink)">Reblog</a>
+        <a href class="button button-icon button-clear ion-arrow-return-right" ng-if="$root.$storage.user.username !== $root.$storage.sitem.author" ng-click="$root.reBlog($root.$storage.sitem.author, $root.$storage.sitem.permlink)">{{'REBLOG'|translate}}</a>
       </span>
 	    </ion-nav-buttons>
 	</ion-nav-bar>
@@ -28,7 +28,7 @@
   <ion-content class="padding has-header" delegate-handle="mainScroll" overflow-scroll="true"><!---->
     <div ng-if='$root.$storage.sitem'>
     	<p class="title h3">{{$root.$storage.sitem.title}}</p>
-    	<div class="stitle row gray"><div class="col"><i class="icon ion-android-time"></i> {{$root.$storage.sitem.created|timeago}} by <i class="icon ion-android-person"></i>&nbsp;<b><a href="#/app/profile/{{$root.$storage.sitem.author}}">{{$root.$storage.sitem.author}}</a></b>&nbsp;<div class="reputation">{{$root.$storage.sitem.author_reputation|reputation|number:0}}</div> in&nbsp;{{$root.$storage.sitem.category}}</div><div class="pull-right"><span ng-if="$root.voiceOver"><i class="icon ion-ios-flag" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted">Downvote</i><i class="icon ion-ios-flag positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted">Unvote Downvoted</i></span><span ng-if="!$root.voiceOver"><i class="icon ion-ios-flag" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted"></i><i class="icon ion-ios-flag positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted"></i></span></div></div>
+    	<div class="stitle row gray"><div class="col"><i class="icon ion-android-time"></i> {{$root.$storage.sitem.created|timeago}} {{'BY'|translate}} <i class="icon ion-android-person"></i>&nbsp;<b><a href="#/app/profile/{{$root.$storage.sitem.author}}">{{$root.$storage.sitem.author}}</a></b>&nbsp;<div class="reputation">{{$root.$storage.sitem.author_reputation|reputation|number:0}}</div> {{'IN'|translate}}&nbsp;{{$root.$storage.sitem.category}}</div><div class="pull-right"><span ng-if="$root.voiceOver"><i class="icon ion-ios-flag" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted">{{'DOWNVOTE'|translate}}</i><i class="icon ion-ios-flag positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted">{{'UNVOTE_DOWNVOTED'|translate}}</i></span><span ng-if="!$root.voiceOver"><i class="icon ion-ios-flag" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted"></i><i class="icon ion-ios-flag positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted"></i></span></div></div>
     	<br><!---->
       <div class="bodytext selectable" ng-bind-html="$root.$storage.sitem.body | parseUrl ">
       </div>
@@ -44,14 +44,14 @@
         <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted && !$root.$storage.sitem.invoting"></i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted && !$root.$storage.sitem.invoting"></i>&nbsp;&nbsp;&nbsp;<span ng-click="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
 
         <div class="col col-33" ng-if="$root.voiceOver"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
-        <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted">Upvote</i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted">Unvote Upvoted</i>&nbsp;&nbsp;&nbsp;<span ng-click="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
+        <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted">{{'UPVOTE'|translate}}</i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted">{{'UNVOTE_UPVOTED'|translate}}</i>&nbsp;&nbsp;&nbsp;<span ng-click="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
         <div class="col col-33" ng-click="openTooltip($event,$root.$storage.sitem)"><i class="ion-social-usd"></i>{{$root.$storage.sitem | sumPostTotal | number}}</div>
         <div class="col"><i class="icon ion-chatbubbles"></i>{{$root.$storage.sitem.children}}</div>
-        <div class="col" ng-click="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username">Reply</div>
-        <div class="col" ng-click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode=='first_payout' && $root.$storage.sitem.author==$root.$storage.user.username">Edit</div>
+        <div class="col" ng-click="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username">{{'REPLY'|translate}}</div>
+        <div class="col" ng-click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode=='first_payout' && $root.$storage.sitem.author==$root.$storage.user.username">{{'EDIT'|translate}}</div>
       </div>
-      <p ng-if="comments.length>0" class="italic tcenter gray">Swipe left on comments to see options</p>
-      <p ng-if="comments.length>0" class="italic tcenter gray">Tap on comments to see sub-comments</p>
+      <p ng-if="comments.length>0" class="italic tcenter gray">{{'POST_1'|translate}}</p>
+      <p ng-if="comments.length>0" class="italic tcenter gray">{{'POST_2'|translate}}</p>
       <ion-thread comments="comments"></ion-thread>
     </div>
     <script id = "popoverTr.html" type="text/ng-template">

@@ -46,42 +46,42 @@
           </ion-item>
           <ion-item menu-close href="#/app/follow" class="item-icon-left" ng-if="$root.$storage.user">
             <i class="icon ion-person-stalker"></i>
-            Follow
+            {{'FOLLOW'|translate}}
           </ion-item>
           <ion-item menu-close ng-click="logout()" class="item-icon-left" ng-if="$root.$storage.user">
             <i class="icon ion-log-out"></i>
-            Logout
+            {{'LOGOUT'|translate}}
           </ion-item>
         </ion-list>
       </div>
       <ion-list>
         <ion-item menu-close ng-click="login()" class="item-icon-left" ng-if="!$root.$storage.user">
           <i class="icon ion-log-in"></i>
-          Login
+          {{'LOGIN'|translate}}
         </ion-item>
         <ion-item menu-close href="#/app/posts/" class="item-icon-left">
           <i class="icon ion-home"></i>
-          Home
+          {{'HOME'|translate}}
         </ion-item>
         <ion-item menu-close href="#/app/bookmark" class="item-icon-left" ng-if="$root.$storage.bookmark && $root.$storage.bookmark.length>0">
           <i class="icon ion-bookmark"></i>
-          Bookmarks
+          {{'BOOKMARKS'|translate}}
         </ion-item>
         <ion-item menu-close href="#/app/send" class="item-icon-left" ng-if="$root.$storage.user">
           <i class="icon ion-android-send"></i>
-          Transfer
+          {{'TRANSFER'|translate}}
         </ion-item>
         <ion-item menu-close href="#/app/exchange/{{$root.$storage.user.username}}" class="item-icon-left" ng-if="$root.$storage.user">
           <i class="icon ion-arrow-swap"></i>
-          Market
+          {{'MARKET'|translate}}
         </ion-item>
         <ion-item menu-close href="#/app/settings" class="item-icon-left">
           <i class="icon ion-android-settings"></i>
-          Settings
+          {{'SETTINGS'|translate}}
         </ion-item>
         <ion-item menu-close href="#/app/about" class="item-icon-left">
           <i class="icon ion-information"></i>
-          About
+          {{'ABOUT'|translate}}
         </ion-item>
       </ion-list>
     </ion-content>

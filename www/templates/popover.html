@@ -7,15 +7,15 @@
     </a>-->
     <a class="item" href="#" ng-if="$root.$storage.view == 'compact'" ng-click="changeView('card')">
     <i class="icon ion-navicon-round"></i>
-      Card view
+      {{'CARD_VIEW'|translate}}
     </a>
     <a class="item" href="#" ng-if="$root.$storage.view == 'card'" ng-click="changeView('compact')">
     <i class="icon ion-navicon-round"></i>
-      Compact view
+      {{'COMPACT_VIEW'|translate}}
     </a>
     <a class="item" href="#"  ng-click="openSmodal()">
       <i class="icon ion-android-search"></i>
-      Search
+      {{'SEARCH'|translate}}
     </a>
     <a class="item" href="#"  ng-click="clearSearch()" ng-if="$root.$storage.tag">
       <i class="icon ion-close-round"></i>
@@ -23,7 +23,7 @@
     </a>
     <a class="item" href="#"  ng-click="openPostModal()">
       <i class="icon ion-android-create"></i>
-      Submit a story
+      {{'SUBMIT_A_STORY'|translate}}
     </a>
   </div>
 </ion-content>
