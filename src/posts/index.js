@@ -184,10 +184,13 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         navigator.globalization.getPreferredLanguage(function(language) {
             $translate.use((language.value).split("-")[0]).then(function(data) {
                 console.log("SUCCESS -> " + data);
+                $rootScope.$storage.language = language.value.split('-')[0];
             }, function(error) {
                 console.log("ERROR -> " + error);
             });
         }, null);
+    } else {
+      $rootScope.$storage.language = 'en';
     }
 
     if (window.cordova) {
@@ -558,7 +561,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             $rootScope.$broadcast('hide:loading');
           } else {
             $rootScope.$broadcast('hide:loading');
-            $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_REBLOG'));
+            $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
           }
         } else {
           $rootScope.log('You are not sure');
@@ -630,7 +633,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       } else {
         $rootScope.$broadcast('hide:loading');
         post.invoting = false;
-        $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_VOTE'));
+        $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
       }
     };
 
@@ -692,7 +695,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               $rootScope.$broadcast('hide:loading');
             } else {
               $rootScope.$broadcast('hide:loading');
-              $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_VOTE_WITNESS'));
+              $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
             }
           } else {
             $rootScope.log('You are not sure');
@@ -746,7 +749,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.$broadcast('hide:loading');
       } else {
         $rootScope.$broadcast('hide:loading');
-        $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_FOLLOW'));
+        $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
       }
     };
 

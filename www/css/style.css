@@ -1350,3 +1350,12 @@ em {
   -o-user-select: auto;
   user-select: auto;
 }
+.login button {
+    border: 1px solid #eee!important;
+}
+
+.story.bar.bar-footer {
+  margin: 0;
+  padding: 0;
+  height: auto;
+}

@@ -6,17 +6,7 @@
   </ion-header-bar>
   <ion-content class="padding posting" overflow-scroll="true">
     <input type="text" name="title" placeholder="{{'TITLE'|translate}}" ng-model="spost.title" style="width:100%;">
-    <div class="button-bar">
-      <a class="button button-small" ng-click="insertText('**bold**')"><i class="fa fa-bold"></i></a>
-      <a class="button button-small" ng-click="insertText('*italic*')"><i class="fa fa-italic"></i></a>
-      <a class="button button-small" ng-click="insertText('# header')"><i class="fa fa-header"></i></a>
-      <a class="button button-small" ng-click="insertText('<code>code</code>')"><i class="fa fa-code"></i></a>
-      <a class="button button-small" ng-click="insertText('>quote')"><i class="fa fa-quote-right"></i></a>
-      <a class="button button-small" ng-click="insertText('1. item')"><i class='fa fa-list'></i></a>
-      <a class="button button-small" ng-click="insertText('* item')"><i class='fa fa-list-ol'></i></a>
-      <a class="button button-small" ng-click="insertText('<hr>')"><i class="fa ion-minus"></i></a>
-      <a class="button button-small" ng-click="showImg()"><i class="fa fa-picture-o"></i></a>
-    </div>
+    
     <textarea ng-model='spost.body' autofocus rows="15" placeholder="{{'POST_CONTENT'|translate}}" class="width100" ng-focus='cfocus()'></textarea>
       <input type="text" name="categories" placeholder="{{'TAGS'|translate}}" ng-model="spost.tags" ng-change="tagsChange()" style="width:100%;">
       <div class="row">
@@ -36,4 +26,17 @@
       <div ng-if="spost.body" class="padding bodytext" ng-bind-html="spost.body | parseUrl "></div>
       <br/>
   </ion-content>
+  <ion-footer-bar align-title="left" keyboard-attach class="story">
+   <div class="button-bar">
+      <a class="button button-small" ng-click="insertText('**bold**')"><i class="fa fa-bold"></i></a>
+      <a class="button button-small" ng-click="insertText('*italic*')"><i class="fa fa-italic"></i></a>
+      <a class="button button-small" ng-click="insertText('# header')"><i class="fa fa-header"></i></a>
+      <a class="button button-small" ng-click="insertText('<code>code</code>')"><i class="fa fa-code"></i></a>
+      <a class="button button-small" ng-click="insertText('>quote')"><i class="fa fa-quote-right"></i></a>
+      <a class="button button-small" ng-click="insertText('1. item')"><i class='fa fa-list'></i></a>
+      <a class="button button-small" ng-click="insertText('* item')"><i class='fa fa-list-ol'></i></a>
+      <a class="button button-small" ng-click="insertText('<hr>')"><i class="fa ion-minus"></i></a>
+      <a class="button button-small" ng-click="showImg()"><i class="fa fa-picture-o"></i></a>
+    </div>
+  </ion-footer-bar>
 </ion-modal-view>

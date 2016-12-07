@@ -122,7 +122,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
               $rootScope.$broadcast('hide:loading');
               //$state.go($state.current, {}, {reload: true});
               //$state.go('app.posts', {}, { reload: true });
-              $scope.closeLogin();
+              //$scope.closeLogin();
+              $scope.loginModal.hide();
               //$ionicHistory.clearCache();
               //$ionicHistory.clearHistory();
               $rootScope.$broadcast('refreshLocalUserData');
@@ -139,11 +140,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         });
       }
     } else {
-      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_FAIL')).then(function(){
-        $rootScope.log("error login");
-      });
+      $scope.loginModal.hide();
+      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_FAIL'));  
     }
-    
   };
 
   $rootScope.$on('refreshLocalUserData', function() {
@@ -474,7 +473,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
       }
     } else {
       $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_TRANSFER'));
+      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
     }
   };
   $scope.refresh = function() {
@@ -501,7 +500,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
 app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService, $filter, $ionicHistory, $timeout) {
   
   $scope.activeMenu = $rootScope.$storage.filter || "trending";
-  $scope.mymenu = $rootScope.$storage.user ? [{text: $filter('translate')('FEED'), custom:'feed'}, {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'payout'}] : [ {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'new'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'payout'}];
+  $scope.mymenu = $rootScope.$storage.user ? [{text: $filter('translate')('FEED'), custom:'feed'}, {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}] : [ {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}];
 
   $rootScope.$on('filter:change', function() {
     //$rootScope.$broadcast('show:loading');
@@ -512,9 +511,20 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $scope.fetchPosts(type, $scope.limit, tag);  
   });
 
+  angular.forEach($scope.mymenu, function(v,k){
+    if (v.custom === $rootScope.$storage.filter) {
+      $rootScope.$storage.filterName = v.text;
+    }
+  });
+
   $scope.filterChanged = function(t) {
     var fil = $scope.mymenu[t].custom;
     $rootScope.$storage.filter = fil;
+    angular.forEach($scope.mymenu, function(v,k){
+      if (v.custom == fil) {
+        $rootScope.$storage.filterName = v.text;
+      }
+    });
     $scope.data = [];
     $scope.error = false;
     $rootScope.$broadcast('filter:change');  
@@ -841,7 +851,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       }
     } else {
       $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_COMMENT'));
+      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
     }
   }
   $scope.savePost = function() {
@@ -1526,7 +1536,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       }
     } else {
       $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_COMMENT'));
+      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
     }
   }
 
@@ -1586,7 +1596,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       } 
     } else {
       $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_COMMENT'));
+      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
     }
   }
   $rootScope.$on("update:content", function(){
@@ -1955,7 +1965,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               $rootScope.$broadcast('hide:loading');
             } else {
               $rootScope.$broadcast('hide:loading');
-              $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_UPDATE'));
+              $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
             }
           }
         } else {
@@ -2039,7 +2049,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               $rootScope.$broadcast('hide:loading');
               } else {
                 $rootScope.$broadcast('hide:loading');
-                $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_UPDATE'));
+                $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
               }
             }, 5);
             if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
@@ -2110,7 +2120,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 $rootScope.$broadcast('hide:loading');
               } else {
                 $rootScope.$broadcast('hide:loading');
-                $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_UPDATE'));
+                $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
               }
             }, 5);
           }
@@ -2190,7 +2200,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               $rootScope.$broadcast('hide:loading');
             } else {
               $rootScope.$broadcast('hide:loading');
-              $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_UPDATE'));
+              $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
             }
           }
         } else {
