@@ -2,7 +2,7 @@
   <ion-content class="padding">
     <center><img src="img/about.png"></center>
     <p><b>eSteem</b> - {{'ABOUT_1'|translate}}</p>
-    <p><b>eSteem</b> {{'ABOUT_2'|translate}} <span ng-if="$root.$storage.user"><a href="#app/profile/good-karma">good-karma</a></span><span ng-if="!$root.$storage.user">good-karma</span> {{'ABOUT_3'|translate}}
+    <p><b>eSteem</b> {{'ABOUT_2'|translate:'{ platformname: "Steem" }' }} <span ng-if="$root.$storage.user"><a href="#app/profile/good-karma">good-karma</a></span><span ng-if="!$root.$storage.user">good-karma</span> {{'ABOUT_3'|translate:'{ platformname: "Steem", sitename: "Steemit" }' }}
     <br>
     {{'ABOUT_4'|translate}}<br>
     {{'ABOUT_5'|translate}}<br>

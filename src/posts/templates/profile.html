@@ -58,7 +58,7 @@
           </p>
           <div class="row">
             <div class="col col-67">
-            STEEM <br><span class="gray wrap">{{'PROFILE_1'|translate}}</span>
+            STEEM <br><span class="gray wrap">{{'PROFILE_1'|translate:'{ platformname: "Steem", platformpower:"Steem Power" }' }}</span>
             </div>
             <div class="col col-33">
             {{accounts.balance | st | number}} STEEM
@@ -66,7 +66,7 @@
           </div>
           <div class="row">
             <div class="col col-67">
-            STEEM POWER <br><span class="gray wrap">{{'PROFILE_2'|translate}}</span>
+            STEEM POWER <br><span class="gray wrap">{{'PROFILE_2'|translate:'{ platformpower: "Steem Power" }'}}</span>
             </div>
             <div class="col col-33">
             {{accounts.vesting_shares | sp | number}} SP
@@ -74,7 +74,7 @@
           </div>
           <div class="row">
             <div class="col col-67">
-            STEEM DOLLARS <br><span class="gray wrap">{{'PROFILE_3'|translate}}</span>
+            STEEM DOLLARS <br><span class="gray wrap">{{'PROFILE_3'|translate:'{ platformname: "Steem", platformsunit:"$1.00" }'}}</span>
             </div>
             <div class="col col-33">
             {{accounts.sbd_balance | sbd | number}} SBD
@@ -82,7 +82,7 @@
           </div>
           <div class="row">
             <div class="col col-67">
-            {{'ESTIMATED_VALUE'|translate}} <br><span class="gray wrap">{{'PROFILE_4'|translate}}</span>
+            {{'ESTIMATED_VALUE'|translate}} <br><span class="gray wrap">{{'PROFILE_4'|translate:'{ platformname: "Steem" }'}}</span>
             </div>
             <div class="col col-33">
             ${{accounts.vesting_shares | sd:accounts.balance:accounts.sbd_balance | number}}
