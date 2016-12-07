@@ -21,15 +21,16 @@
           <label class="item item-input">
             <input type="password" placeholder="{{'POSTING_PRIKEY'|translate}}" ng-model="loginData.privatePostingKey" ng-disabled="!loginData.advanced" ng-required="loginData.advanced">
           </label>
-          <p class="padding gray"><i class="icon ion-ios-information-outline"></i> {{'LOGIN_2'|translate}}</p>
           <label class="item item-input">
             <input type="password" placeholder="{{'ACTIVE_PRIKEY'|translate}}" ng-model="loginData.privateActiveKey" ng-disabled="!loginData.advanced">
           </label>
-          <p class="padding gray"><i class="icon ion-ios-information-outline"></i> {{'LOGIN_3'|translate}}</p>
+          <p class="padding gray"><i class="icon ion-ios-information-outline"></i> {{'LOGIN_2'|translate}} <br>
+          <i class="icon ion-ios-information-outline"></i> {{'LOGIN_3'|translate}}</p>
         </div>
         <ion-toggle ng-model="loginData.advanced" toggle-class="toggle-calm" ng-change="advancedChange()">{{'ADVANCED'|translate}}</ion-toggle>
         <p class="gray padding"><i class="icon ion-ios-information-outline"></i> {{'LOGIN_4'|translate}}</p>
-        
+        </div>
+      </form>
         <div class="row">
         <div class="col">
         <button class="button button-block button-light" ng-click="closeLogin()">{{'CANCEL'|translate}}</button>
@@ -37,7 +38,5 @@
         </div>
         <p class="tcenter">{{'DONT_HAVE'|translate}} <a href onClick="window.open('https://steemit.com/create_account', '_blank', 'location=yes');return false;">{{'SIGN_UP_NOW'|translate}}</a></p>
         <br/>
-      </div>
-    </form>
   </ion-content>
 </ion-modal-view>

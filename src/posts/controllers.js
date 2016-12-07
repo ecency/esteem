@@ -122,7 +122,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
               $rootScope.$broadcast('hide:loading');
               //$state.go($state.current, {}, {reload: true});
               //$state.go('app.posts', {}, { reload: true });
-              $scope.closeLogin();
+              //$scope.closeLogin();
+              $scope.loginModal.hide();
               //$ionicHistory.clearCache();
               //$ionicHistory.clearHistory();
               $rootScope.$broadcast('refreshLocalUserData');
@@ -139,11 +140,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         });
       }
     } else {
-      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_FAIL')).then(function(){
-        $rootScope.log("error login");
-      });
+      $scope.loginModal.hide();
+      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_FAIL'));  
     }
-    
   };
 
   $rootScope.$on('refreshLocalUserData', function() {
