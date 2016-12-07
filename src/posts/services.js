@@ -1036,7 +1036,7 @@ module.exports = function (app) {
                           } 
                         } else {
                           $rootScope.$broadcast('hide:loading');
-                          $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_COMMENT'));
+                          $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
                         }
                     } else {
                         
@@ -1095,7 +1095,7 @@ module.exports = function (app) {
                           } 
                         } else {
                           $rootScope.$broadcast('hide:loading');
-                          $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_COMMENT'));
+                          $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
                         }
                     }
                   $rootScope.$broadcast('hide:loading');  
@@ -1157,7 +1157,7 @@ module.exports = function (app) {
                               } 
                             } else {
                               $rootScope.$broadcast('hide:loading');
-                              $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_DELETE_COMMENT'));
+                              $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
                             }
                         } else {
                           $rootScope.log('You are not sure');

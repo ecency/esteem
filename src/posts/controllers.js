@@ -473,7 +473,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
       }
     } else {
       $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_TRANSFER'));
+      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
     }
   };
   $scope.refresh = function() {
@@ -851,7 +851,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       }
     } else {
       $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_COMMENT'));
+      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
     }
   }
   $scope.savePost = function() {
@@ -1536,7 +1536,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       }
     } else {
       $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_COMMENT'));
+      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
     }
   }
 
@@ -1596,7 +1596,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       } 
     } else {
       $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_COMMENT'));
+      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
     }
   }
   $rootScope.$on("update:content", function(){
@@ -1965,7 +1965,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               $rootScope.$broadcast('hide:loading');
             } else {
               $rootScope.$broadcast('hide:loading');
-              $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_UPDATE'));
+              $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
             }
           }
         } else {
@@ -2049,7 +2049,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               $rootScope.$broadcast('hide:loading');
               } else {
                 $rootScope.$broadcast('hide:loading');
-                $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_UPDATE'));
+                $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
               }
             }, 5);
             if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
@@ -2120,7 +2120,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 $rootScope.$broadcast('hide:loading');
               } else {
                 $rootScope.$broadcast('hide:loading');
-                $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_UPDATE'));
+                $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
               }
             }, 5);
           }
@@ -2200,7 +2200,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               $rootScope.$broadcast('hide:loading');
             } else {
               $rootScope.$broadcast('hide:loading');
-              $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_UPDATE'));
+              $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
             }
           }
         } else {
