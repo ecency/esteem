@@ -25092,7 +25092,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
    });
 
   $scope.openTooltip = function($event, d) {
-      var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CIRCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PROMOTED')+"</b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('AUTHOR_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('CURATION_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
+      var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CYCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PROMOTED')+"</b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('AUTHOR_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('CURATION_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
       $scope.tooltipText = texth;
       if (!$scope.$$phase) {
         $scope.$apply();
@@ -25756,7 +25756,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
    });
 
    $scope.openTooltip = function($event, d) {
-    var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CIRCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PROMOTED')+"</b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('AUTHOR_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('CURATION_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
+    var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CYCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PROMOTED')+"</b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('AUTHOR_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('CURATION_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
       $scope.tooltipText = texth;
       $scope.tooltip.show($event);
    };
@@ -26409,7 +26409,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
    });
 
    $scope.openTooltip = function($event, d) {
-    var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CIRCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PROMOTED')+"</b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('AUTHOR_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('CURATION_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
+    var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CYCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PROMOTED')+"</b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('AUTHOR_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('CURATION_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
       $scope.tooltipText = texth;
       $scope.tooltip.show($event);
    };
@@ -28365,7 +28365,7 @@ module.exports={
 	"COMMENTS": "Comments",
 	"TRENDING_30": "Trending for 30 days",
 	"SORT_POST_BY": "Sort Posts By:",
-	"PAYOUT_CIRCLE": "Payout Circle",
+	"PAYOUT_CYCLE": "Payout Cycle",
 	"POTENTIAL_PAYOUT": "Potential Payout",
 	"PAST_PAYOUT": "Past Payout",
 	"AUTHOR_PAYOUT": "Author Payout",
@@ -28597,7 +28597,7 @@ module.exports={
 	"COMMENTS": "Comments",
 	"TRENDING_30": "Trending for 30 days",
 	"SORT_POST_BY": "Sort Posts By:",
-	"PAYOUT_CIRCLE": "Payout Circle",
+	"PAYOUT_CYCLE": "Payout Cycle",
 	"POTENTIAL_PAYOUT": "Potential Payout",
 	"PAST_PAYOUT": "Past Payout",
 	"AUTHOR_PAYOUT": "Author Payout",
@@ -28823,7 +28823,7 @@ module.exports={
 	"COMMENTS": "Comments",
 	"TRENDING_30": "Trending for 30 days",
 	"SORT_POST_BY": "Sort Posts By:",
-	"PAYOUT_CIRCLE": "Payout Circle",
+	"PAYOUT_CYCLE": "Payout Cycle",
 	"POTENTIAL_PAYOUT": "Potential Payout",
 	"PAST_PAYOUT": "Past Payout",
 	"AUTHOR_PAYOUT": "Author Payout",
