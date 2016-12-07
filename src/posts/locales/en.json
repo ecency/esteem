@@ -219,5 +219,6 @@
 	"SETTINGS_UPDATED": "Settings are updated!",
 	"LANGUAGES": "Languages",
 	"LANGUAGES_TEXT": "Here you can change language of the app.",
-	"LOGIN_TO_X": "This operation requires user to be logged in with main password, active/posting key. Plase login and try again."
+	"LOGIN_TO_X": "This operation requires user to be logged in with main password, active/posting key. Plase login and try again.",
+	"GALLERY": "Gallery"
 }
