@@ -20,10 +20,10 @@
 	    </ion-nav-buttons>
 	</ion-nav-bar>
   <ion-floating-menu menu-color="#387ef5" menu-open-color="#387ef5" has-footer="true">
-    <ion-floating-item icon="ion-chatbubbles" click="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username" button-color="#387ef5" icon-color="#fff" text="Reply" text-class="text-class"></ion-floating-item>
-    <ion-floating-item icon="ion-android-arrow-dropup-circle" click="upvotePost($root.$storage.sitem)" button-color="#387ef5" icon-color="#fff" text="Upvote" text-class="text-class"></ion-floating-item>
-    <ion-floating-item icon="ion-edit" click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode!=='archived' && $root.$storage.sitem.author==$root.$storage.user.username" button-color="#387ef5" icon-color="#fff" text="Edit" text-class="text-class"></ion-floating-item>
-    <ion-floating-item icon="ion-image" click="showImages(0)" ng-if="isImages()" button-color="#387ef5" icon-color="#fff" text="Gallery" text-class="text-class"></ion-floating-item>
+    <ion-floating-item icon="ion-chatbubbles" click="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username" button-color="#387ef5" icon-color="#fff" text="{{'REPLY'|translate}}" text-class="text-class"></ion-floating-item>
+    <ion-floating-item icon="ion-android-arrow-dropup-circle" click="upvotePost($root.$storage.sitem)" button-color="#387ef5" icon-color="#fff" text="{{'UPVOTE'|translate}}" text-class="text-class"></ion-floating-item>
+    <ion-floating-item icon="ion-edit" click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode!=='archived' && $root.$storage.sitem.author==$root.$storage.user.username" button-color="#387ef5" icon-color="#fff" text="{{'EDIT'|translate}}" text-class="text-class"></ion-floating-item>
+    <ion-floating-item icon="ion-image" click="showImages(0)" ng-if="isImages()" button-color="#387ef5" icon-color="#fff" text="{{'GALLERY'|translate}}" text-class="text-class"></ion-floating-item>
   </ion-floating-menu>
   <ion-content class="padding has-header" delegate-handle="mainScroll" overflow-scroll="true"><!---->
     <div ng-if='$root.$storage.sitem'>

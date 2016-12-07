@@ -214,8 +214,6 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $ionicHistory.clearCache();
     $ionicHistory.clearHistory();
     //$rootScope.$broadcast('ngRepeatFinished');
-
-
   };
   $scope.data = {};
   $ionicModal.fromTemplateUrl('templates/search.html', {
