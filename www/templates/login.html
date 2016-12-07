@@ -3,14 +3,14 @@
     <h1 class="title">Login</h1>
     <button class="button button-clear button-primary button-icon ion-close-round" ng-click="closeLogin()"></button>
   </ion-header-bar>-->
-  <ion-content>
+  <ion-content class="login">
     <br>
     <center><img ng-src="img/logo.png" width="100" /></center>
     <center><h1>{{'WELCOME_BACK'|translate}}</h1></center>
     <center><p class="gray fsmaller padding">{{'LOGIN_1'|translate}}</p></center>
     <br/>
     <form ng-submit="doLogin()" name="login" novalidate>
-      <div class="list">
+      <div class="list list-inset">
         <label class="item item-input">
           <input type="text" ng-model="loginData.username" placeholder="{{'USERNAME'|translate}}" ng-change="changeUsername()" required>
         </label>

@@ -1350,3 +1350,6 @@ em {
   -o-user-select: auto;
   user-select: auto;
 }
+.login button {
+    border: 1px solid #eee!important;
+}
