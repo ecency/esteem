@@ -89,7 +89,7 @@
 	"NOTIFICATIONS": "Notifications",
 	"VOTE_TEXT": "You will get notification when someone votes your content! <br/> <b>Note:</b> Notifications include voting weight as well in alert message. (be it up-vote, down-vote, un-vote).",
 	"VOTE": "Vote",
-	"COMMENT_TEXT": "You will get notification when someone comments on your posts or comments!<br/> <b>Note:</b> Nofications include when someone <b>edits</b> their comments as well.",
+	"COMMENT_TEXT": "You will get notification when someone comments on your posts or comments!<br/> <b>Note:</b> Notifications include when someone <b>edits</b> their comments as well.",
 	"COMMENT": "Comment",
 	"FOLLOW_TEXT": "You will get notification when someone Follow or Unfollow you!",
 	"MENTIONS": "Mentions",
