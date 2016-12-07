@@ -184,10 +184,13 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         navigator.globalization.getPreferredLanguage(function(language) {
             $translate.use((language.value).split("-")[0]).then(function(data) {
                 console.log("SUCCESS -> " + data);
+                $rootScope.$storage.language = language.value.split('-')[0];
             }, function(error) {
                 console.log("ERROR -> " + error);
             });
         }, null);
+    } else {
+      $rootScope.$storage.language = 'en';
     }
 
     if (window.cordova) {

@@ -1353,3 +1353,9 @@ em {
 .login button {
     border: 1px solid #eee!important;
 }
+
+.story.bar.bar-footer {
+  margin: 0;
+  padding: 0;
+  height: auto;
+}
