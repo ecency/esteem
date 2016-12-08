@@ -149,12 +149,11 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   }
 
   $translateProvider.translations('en', require('./locales/en'));
-  $translateProvider.translations('de', require('./locales/de'));
   $translateProvider.translations('ru', require('./locales/ru'));
-  $translateProvider.translations('es', require('./locales/es'));
-  $translateProvider.translations('cn', require('./locales/cn'));
-  $translateProvider.translations('kr', require('./locales/kr'));
-  $translateProvider.translations('tr', require('./locales/tr'));
+  $translateProvider.translations('de', require('./locales/de'));
+  $translateProvider.translations('fr', require('./locales/fr'));
+  
+  $translateProvider.useSanitizeValueStrategy(null);
 
   $translateProvider.preferredLanguage('en');  
   $translateProvider.fallbackLanguage('en');
@@ -179,19 +178,24 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-
-    if(typeof navigator.globalization !== "undefined") {
-        navigator.globalization.getPreferredLanguage(function(language) {
-            $translate.use((language.value).split("-")[0]).then(function(data) {
-                console.log("SUCCESS -> " + data);
-                $rootScope.$storage.language = language.value.split('-')[0];
-            }, function(error) {
-                console.log("ERROR -> " + error);
-            });
-        }, null);
+    if (!angular.isDefined($rootScope.$storage.language)) {
+      if(typeof navigator.globalization !== "undefined") {
+          navigator.globalization.getPreferredLanguage(function(language) {
+              $translate.use((language.value).split("-")[0]).then(function(data) {
+                  console.log("SUCCESS -> " + data);
+                  $rootScope.$storage.language = language.value.split('-')[0];
+              }, function(error) {
+                  console.log("ERROR -> " + error);
+              });
+          }, null);
+      } else {
+        $rootScope.$storage.language = 'en';
+      }  
     } else {
-      $rootScope.$storage.language = 'en';
+      $translate.use($rootScope.$storage.language);
     }
+    
+    $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'ru', name: 'Russian'}, {id:'fr', name: 'French'}, {id:'de', name: 'German'}];
 
     if (window.cordova) {
       if (ionic.Platform.isIPad() || ionic.Platform.isIOS()) {

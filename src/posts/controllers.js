@@ -509,12 +509,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $scope.fetchPosts(type, $scope.limit, tag);  
   });
 
-  angular.forEach($scope.mymenu, function(v,k){
-    if (v.custom === $rootScope.$storage.filter) {
-      $rootScope.$storage.filterName = v.text;
-    }
-  });
-
   $scope.filterChanged = function(t) {
     var fil = $scope.mymenu[t].custom;
     $rootScope.$storage.filter = fil;
@@ -1123,6 +1117,14 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     if ($stateParams.tags) {
       $rootScope.$storage.tag = $stateParams.tags;
     }
+    $scope.mymenu = $rootScope.$storage.user ? [{text: $filter('translate')('FEED'), custom:'feed'}, {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}] : [ {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}];
+    
+    angular.forEach($scope.mymenu, function(v,k){
+      if (v.custom === $rootScope.$storage.filter) {
+        $rootScope.$storage.filterName = v.text;
+      }
+    });
+
   });
   
 })
@@ -2499,7 +2501,7 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope) {
 
 });
 
-app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionicHistory, $state, $ionicPopover, $ionicPopup, APIs, $filter, $translate) {
+app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionicHistory, $state, $ionicPopover, $ionicPopup, APIs, $filter, $translate, $window) {
    
    $ionicPopover.fromTemplateUrl('popover.html', {
       scope: $scope
@@ -2533,7 +2535,12 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
    });
 
   $scope.changeLanguage = function(locale){
-    $translate.use(locale);
+    setTimeout(function() {
+      $translate.use(locale);
+      if (!$scope.$$phase) {
+        $scope.$apply();
+      }
+    }, 1);
   }
 
   $scope.$on('$ionicView.beforeEnter', function(){
@@ -2661,7 +2668,10 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     $ionicHistory.nextViewOptions({
       disableBack: true
     });
-    $state.go('app.posts', {tags:""});
+    //$state.go('app.posts', {tags:""});
+    setTimeout(function() {
+      $window.location.reload(true);
+    }, 10);
   };
 
 });
