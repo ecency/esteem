@@ -218,5 +218,6 @@
     "LANGUAGES_TEXT": "Vous pouvez changer ici la langue de l'application",
     "LOGIN_TO_X": "Cette opération requiert que l'utilisateur soit connecté avec le mot de passe principal, la clé de post/clé active. Veuillez vous connecter et réessayer.",
     "GALLERY": "Gallerie",
-    "PAYOUT_CYCLE": "Cycle de Paiement"
+    "PAYOUT_CYCLE": "Cycle de Paiement",
+    "TRANSLATIONS": "Contributeurs de traduction"
 }
