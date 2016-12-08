@@ -1,6 +1,6 @@
 ## eSteem (Android and iOS)
 
-eSteem mobile application offers functionality targetted to mobile device users, powered by Steem blockchain.
+eSteem mobile application offers functionality targeted to mobile device users, powered by Steem blockchain.
 
 
 
@@ -20,6 +20,8 @@ Please use [issue tracker](https://github.com/feruzm/esteem/issues) for question
 ### What's Steem?
 
 Steem is a blockchain-based social media platform where anyone can earn rewards.
+
+Visit: http://www.esteem.ws
 
 more info: http://steem.io
 

@@ -114,7 +114,7 @@
       </div>
       <div class="col">
         <select ng-model="$root.$storage.language" ng-change='changeLanguage($root.$storage.language)'>
-          <option ng-repeat="option in $root.$storage.languages" value="{{option.id}}" translate-language="language" translate="LANG.{{option.id}}">{{option.name}}</option>
+          <option ng-repeat="option in $root.$storage.languages" value="{{option.id}}">{{option.name}}</option>
         </select>
         <!--<div class="capital">{{$root.$storage.language}} <div class="pull-right"><i class="icon ion-chevron-right"></i></div></div>-->
       </div>
