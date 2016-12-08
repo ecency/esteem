@@ -83,7 +83,7 @@
     "PUBLIC_MEMO": "Mémo publique",
     "TO_DESC": "Utilisateur par ex. good-karma",
     "PIN_CODE": "Code PIN",
-    "PIN_TEXT": "Le code PIN vous aide à sécuriser l'application et vos données. <br/><br/><b>Note:</b> Une fois activé, vous avez 4 tentatives maximum pour déverrouiller, si vous avez oublié le pin ou si vous échouez, l'application supprimera les données utilisateur enregistrées. Vous pouvez vous reconnecter et continuer à utiliser l'application.",
+    "PIN_TEXT": "Le code PIN vous aide à s\écuriser l'application et vos donn\ées. <br/><br/><b>Note:</b> Une fois activ\é, vous avez 4 tentatives maximum pour d\éverrouiller, si vous avez oubli\é le pin ou si vous \échouez, l'application supprimera les donn\ées utilisateur enregistr\ées. Vous pouvez vous reconnecter et continuer à utiliser l'application.",
     "NOTIFICATIONS": "Notifications",
     "VOTE_TEXT": "Vous recevrez une notification quand quelqu'un votera pour un des vos contenus! <br/> <b>Note:</b> Les notifications incluent le poids du vote dans le message d'alerte. (Qu'il s'agisse d'un upvote, d' un downvote ou d'un vote retiré).",
     "VOTE": "Vote",
