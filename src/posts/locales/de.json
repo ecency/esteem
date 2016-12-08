@@ -218,5 +218,6 @@
     "LANGUAGES_TEXT": "Hier kann die Sprache der Anwendung geändert werden.",
     "LOGIN_TO_X": "Für die gewünschte Operation müssen Sie angemeldet sein. Bitte melden Sie sich mit Ihrem Passwort oder dem \"active/posting\"-Schlüssel sein",
     "GALLERY": "Gallerie",
-    "PAYOUT_CYCLE": "Auszahlungskreislauf"
+    "PAYOUT_CYCLE": "Auszahlungskreislauf",
+    "TRANSLATIONS": "Übersetzung Mitwirkende"
 }
