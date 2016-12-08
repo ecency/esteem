@@ -148,11 +148,11 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
       $compileProvider.debugInfoEnabled(false);
   }
 
-  $translateProvider.translations('de', require('./locales/de'));
   $translateProvider.translations('en', require('./locales/en'));
-  $translateProvider.translations('fr', require('./locales/fr'));
   $translateProvider.translations('ru', require('./locales/ru'));
-
+  $translateProvider.translations('de', require('./locales/de'));
+  $translateProvider.translations('fr', require('./locales/fr'));
+  
   $translateProvider.useSanitizeValueStrategy(null);
 
   $translateProvider.preferredLanguage('en');  
