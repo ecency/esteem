@@ -60,9 +60,7 @@ hr {
 	font-size: 3.5vw;
 	width: 100%;
 }
-.postdetails {
-  font-size: 14px;
-}
+
 .mpb {
   -webkit-background-size: cover!important;
   -moz-background-size: cover!important;
@@ -1358,4 +1356,8 @@ em {
   margin: 0;
   padding: 0;
   height: auto;
+}
+
+.row.postdetails {
+  font-size: 10pt;
 }
