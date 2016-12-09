@@ -1,9 +1,12 @@
-/* Empty. Add your own CSS if you like */
-/*
-* {
-font-family: 'Source Serif Pro', serif; //'Gotham Rounded Book'!important;
+
+/* night mode colors
+body .pane {
+  background: #222;
+  color: #aaa;
 }
-*/
+.pane .title {
+  color: #ddca7e;
+}*/
 .wrap {
 	text-overflow: wrap!important;
 	white-space: normal!important;
@@ -67,6 +70,10 @@ hr {
   -o-background-size: cover!important;
   background-size: cover!important;
 }
+.platform-browser .mysubheader {
+  top: 0px;
+  height: 187px!important;
+}
 .platform-android .mysubheader {
   top: 0px;
   height: 187px!important;
@@ -76,11 +83,17 @@ hr {
   top: 0px!important;
   height: 207px!important;
 }
+.platform-browser .has-mysubheader {
+  padding-top: 210px!important;
+}
 .platform-android .has-mysubheader {
   padding-top: 210px!important;
 }
 .platform-ios .has-mysubheader {
   padding-top: 230px!important;
+}
+.platform-browser .footprofileinfo {
+  margin-top: 50px!important;
 }
 .platform-android .footprofileinfo {
   margin-top: 50px!important;
@@ -1066,6 +1079,9 @@ textarea.markdown-input {
 
 .menuPopover {
   height: 170px!important;
+}
+.menuPopoverLog {
+  height: 120px!important;
 }
 
 .detailedPost {

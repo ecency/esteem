@@ -211,6 +211,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       //$state.go('app.posts');
       //$state.go($state.current, {}, {reload: true});
     }
+    $rootScope.$storage.filter = undefined;
+    $rootScope.$storage.tag = undefined;
+    
     $ionicHistory.clearCache();
     $ionicHistory.clearHistory();
     //$rootScope.$broadcast('ngRepeatFinished');
