@@ -196,7 +196,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $translate.use($rootScope.$storage.language);
     }
     
-    $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'ru', name: 'Русский'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'es', name: 'Español'}];
+    $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'ru', name: 'Русский'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'es', name: 'Español'}, {id:'gr', name: 'Ελληνικά'}];
 
     if (window.cordova) {
       if (ionic.Platform.isIPad() || ionic.Platform.isIOS()) {

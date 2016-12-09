@@ -93,13 +93,13 @@ hr {
   padding-top: 230px!important;
 }
 .platform-browser .footprofileinfo {
-  margin-top: 50px!important;
+  margin-top: 15px!important;
 }
 .platform-android .footprofileinfo {
-  margin-top: 50px!important;
+  margin-top: 15px!important;
 }
 .platform-ios .footprofileinfo {
-  margin-top: 60px!important;
+  margin-top: 25px!important;
 }
 .footprofileinfomenu div {
   color: #fff;

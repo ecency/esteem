@@ -11,7 +11,7 @@
             <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.profilePicUrl}}" ng-if="$root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image" ng-click="showProfile()" />
             <div class="footprofileinfo">
               <h4 class="center"><span class="light">@{{$root.$storage.user.username}}</span>&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation}}</div></h4>
-              <p>$root.$storage.user.json_metadata.profile.about</p>
+              <p>{{$root.$storage.user.json_metadata.profile.about}}</p>
               <div class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}}&nbsp;|&nbsp;<i class="icon ion-ios-people"></i>&nbsp;{{follower.length}}&nbsp;|&nbsp;<i class="ion-person-add"></i>&nbsp;{{following.length}}</div>
             </div>
           </div>
@@ -20,6 +20,7 @@
             <img ng-src="{{user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image}}" ng-if="user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image" />
             <div class="footprofileinfo">
               <h4 class="center"><span class="light">@{{user.username}}</span>&nbsp;<div class="reputation">{{user.reputation|reputation}}</div></h4>
+              <p>{{user.json_metadata.profile.about}}</p>
               <div class="padding"><i class="icon ion-android-list"></i>&nbsp;{{user.post_count}}&nbsp;{{'POSTS'|translate}}&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{user.voting_power/100|number:2}}&nbsp;voting</div>
             </div>
           </div>
