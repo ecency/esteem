@@ -96,4 +96,5 @@
     <plugin name="phonegap-plugin-mobile-accessibility" spec="https://github.com/phonegap/phonegap-mobile-accessibility.git" />
     <plugin name="ionic-plugin-keyboard" spec="~2.2.1" />
     <plugin name="cordova-plugin-globalization" spec="~1.0.4" />
+    <plugin name="cordova-plugin-firebase" spec="https://github.com/arnesson/cordova-plugin-firebase" />
 </widget>

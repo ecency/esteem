@@ -18,11 +18,10 @@
     </ion-header-bar>-->
     <ion-content>
       <div ng-if="!$root.$storage.user">
-        <br>
         <center>
-          <div class="item-myavater">
-            <img ng-src="img/logo.png" width="80" />
-          </div>
+          <p>
+            <img ng-src="img/about.png" width="200" />
+          </p>
         </center>
       </div>
       <div ng-if="$root.$storage.user" ng-style="$root.$storage.user.json_metadata.profile.cover_image ? mcss : null">
