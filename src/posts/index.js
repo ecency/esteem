@@ -153,6 +153,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('de', require('./locales/de'));
   $translateProvider.translations('fr', require('./locales/fr'));
   $translateProvider.translations('es', require('./locales/es'));
+  $translateProvider.translations('gr', require('./locales/gr'));
   
   $translateProvider.useSanitizeValueStrategy(null);
 
@@ -196,7 +197,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $translate.use($rootScope.$storage.language);
     }
     
-    $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'ru', name: 'Русский'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'es', name: 'Español'}, {id:'gr', name: 'Ελληνικά'}];
+    $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'es', name: 'Español'}, {id:'gr', name: 'Ελληνικά'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'ru', name: 'Русский'}];
 
     if (window.cordova) {
       if (ionic.Platform.isIPad() || ionic.Platform.isIOS()) {
