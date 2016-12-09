@@ -58,7 +58,7 @@
     "PROFILE_2": "{{platformpower}}, tokens die sich automatisch vermehren, wenn Sie besessen werden und beeinflussen, wie viel Ihre Stimme wert ist. Desto mehr Sie besitzen, desto mehr Einfluss hat Ihre Stimme.",
     "PROFILE_3": "Tokens mit einem Wert von etwa {{platformsunit}} in {{platformname}}.",
     "ESTIMATED_VALUE": "Erwarteter Wert",
-    "PROFILE_4": "Der erwartete Wert basiert auf einem 7 Tage Durchschnittswert von {{platformname}}.",
+    "PROFILE_4": "Der erwartete Wert basiert auf einem 3.5 Tage Durchschnittswert von {{platformname}}.",
     "TRANSACTION_HISTORY": "Transaktions Historie",
     "POSTING": "Beitrag",
     "PROFILE_5": "Der \"posting key\" wird für das Veröffentlichen und Abstimmen benötigt. Er sollte sich vom \"active key\" und vom \"owner key\" unterscheiden.",

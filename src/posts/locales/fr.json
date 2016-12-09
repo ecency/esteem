@@ -58,7 +58,7 @@
     "PROFILE_2": "{{platformpower}}, jetons d'influence, vous gagnez plus de Steem Power en le concervant à long terme et en votant sur les postes. Plus on le conserve, plus on a d'influence sur les récompenses des autres et dans l'obtention de récompense pour un vote en particulier.",
     "PROFILE_3": "Jetons d'une valeur d'environ {{platformsunit}} de {{platformname}}.",
     "ESTIMATED_VALUE": "Valeur estimée",
-    "PROFILE_4": "La valeur estimée est calculée sur une moyenne de 7 jours de la valeur du {{platformname}}.",
+    "PROFILE_4": "La valeur estimée est calculée sur une moyenne de 3.5 jours de la valeur du {{platformname}}.",
     "TRANSACTION_HISTORY": "Historique des Transactions",
     "POSTING": "Poste",
     "PROFILE_5": "La clé de post est utilisée pour poster et voter. Elle doit être différente des clés actives et propriétaires.",
