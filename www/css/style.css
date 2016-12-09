@@ -1080,6 +1080,9 @@ textarea.markdown-input {
 .menuPopover {
   height: 170px!important;
 }
+.menuPopoverLog {
+  height: 120px!important;
+}
 
 .detailedPost {
   width: 80%!important;

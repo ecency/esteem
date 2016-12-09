@@ -1,4 +1,4 @@
-<ion-popover-view class="menuPopover">
+<ion-popover-view ng-class="{'menuPopover':$root.$storage.user,'menuPopoverLog':!$root.$storage.user}">
 <ion-content>
   <div class="list">
     <!--<a class="item" href="#"  ng-click="showFilter()">
@@ -21,7 +21,7 @@
       <i class="icon ion-close-round"></i>
       #{{$root.$storage.tag}}
     </a>
-    <a class="item" href="#"  ng-click="openPostModal()">
+    <a class="item" href="#" ng-if="$root.$storage.user" ng-click="openPostModal()">
       <i class="icon ion-android-create"></i>
       {{'SUBMIT_A_STORY'|translate}}
     </a>
