@@ -253,16 +253,18 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       });*/
     };
     $rootScope.showMessage = function(title, msg) {
-      if (window.cordova) {
-        $cordovaToast.showLongBottom(title+": "+msg).then(function(success) {
-          // success
-          $rootScope.log("toast"+success);
-        }, function (error) {
-          // error
-          $rootScope.log("toast"+error);
-        });  
-      } else {
-        $rootScope.showAlert(title, msg);
+      if (title) {
+        if (window.cordova) {
+          $cordovaToast.showLongBottom(title+": "+msg).then(function(success) {
+            // success
+            $rootScope.log("toast"+success);
+          }, function (error) {
+            // error
+            $rootScope.log("toast"+error);
+          });  
+        } else {
+          $rootScope.showAlert(title, msg);
+        }  
       }
     };
     $rootScope.$on('show:loading', function(event, args){

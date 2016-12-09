@@ -213,7 +213,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     }
     $rootScope.$storage.filter = undefined;
     $rootScope.$storage.tag = undefined;
-    
+
     $ionicHistory.clearCache();
     $ionicHistory.clearHistory();
     //$rootScope.$broadcast('ngRepeatFinished');
@@ -583,7 +583,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     
     $rootScope.$broadcast('close:popover');
     
-    $scope.spost = $rootScope.$storage.spost || $scope.post;
+    $scope.spost = $rootScope.$storage.spost || $scope.spost;
 
     if (!$scope.spost.operation_type) {
       $scope.spost.operation_type = 'default';
@@ -2255,9 +2255,9 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     $scope.following = [];
     $scope.limit = 100;
     $scope.tt = {duser: "", ruser: ""};
-    /*window.Api.database_api().exec("get_follow_count", [$stateParams.username]).then(function(res){
+    window.Api.follow_api().exec("get_follow_count", [$stateParams.username]).then(function(res){
       console.log(res);
-    });*/
+    });
     $scope.refresh = function() {  
       if (!$scope.active) {
         $scope.active = "blog";  
@@ -2672,9 +2672,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       disableBack: true
     });
     //$state.go('app.posts', {tags:""});
-    setTimeout(function() {
-      $window.location.reload(true);
-    }, 10);
+    $window.location.reload(true);
   };
 
 });
