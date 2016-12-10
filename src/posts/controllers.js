@@ -1737,7 +1737,7 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
         if (res && res.length===$scope.limit) {
           $scope.tt.ruser = res[res.length-1].follower;
         }
-        console.log(res);
+        //console.log(res);
         var ll = res.length;
         for (var i = 0; i < ll; i++) {
           res[i].id += 1;
@@ -1761,7 +1761,7 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
         }
         var ll = res.length;
 
-        console.log(res);
+        //console.log(res);
         for (var i = 0; i < ll; i++) {
           res[i].id += 1;
           $scope.following.push(res[i]);
@@ -2257,9 +2257,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     $scope.following = [];
     $scope.limit = 100;
     $scope.tt = {duser: "", ruser: ""};
-    window.Api.follow_api().exec("get_follow_count", [$stateParams.username]).then(function(res){
-      console.log(res);
-    });
+    
     $scope.refresh = function() {  
       if (!$scope.active) {
         $scope.active = "blog";  
@@ -2352,6 +2350,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       if (r) {
         $rootScope.log("rfetching");
         $scope.rfetching();
+       
       }
       if (d) {
         $rootScope.log("dfetching");
@@ -2388,7 +2387,11 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         $scope.getOtherUsersData();  
       } else {
           $rootScope.log("get follows");
-          $scope.getFollows("r","d");
+          window.Api.follow_api().exec("get_follow_count", [$stateParams.username]).then(function(res){
+            console.log(res);
+            $scope.followdetails = res;
+          });
+          //$scope.getFollows("r","d");
       }
     } else {
       if ($stateParams.username) {
