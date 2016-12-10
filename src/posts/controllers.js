@@ -2388,7 +2388,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       } else {
           $rootScope.log("get follows");
           window.Api.follow_api().exec("get_follow_count", [$stateParams.username]).then(function(res){
-            console.log(res);
+            //console.log(res);
             $scope.followdetails = res;
           });
           //$scope.getFollows("r","d");
