@@ -1737,9 +1737,10 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
         if (res && res.length===$scope.limit) {
           $scope.tt.ruser = res[res.length-1].follower;
         }
+        console.log(res);
         var ll = res.length;
         for (var i = 0; i < ll; i++) {
-          res[i].id = res[i].id.replace(/\./g,'');
+          res[i].id += 1;
           $scope.followers.push(res[i]);
         }
         if (res.length < $scope.limit) {
@@ -1759,9 +1760,10 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
           $scope.tt.duser = res[res.length-1].following;
         }
         var ll = res.length;
-        //console.log(res);
+
+        console.log(res);
         for (var i = 0; i < ll; i++) {
-          res[i].id = res[i].id.replace(/\./g,'');
+          res[i].id += 1;
           $scope.following.push(res[i]);
         }
         if (res.length<$scope.limit) {
