@@ -2611,10 +2611,11 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
   }
   
   $scope.$watch('slider', function(newValue, oldValue){
+    //console.log(newValue.value);
     if (newValue.value) {
       $rootScope.$storage.voteWeight = newValue.value*100; 
     }
-  });
+  }, true);
 
   $scope.pinChange = function() {
     $rootScope.log("pinChange");
