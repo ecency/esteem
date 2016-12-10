@@ -2677,8 +2677,8 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     $ionicHistory.nextViewOptions({
       disableBack: true
     });
-    //$state.go('app.posts', {tags:""});
-    $window.location.reload(true);
+    $state.go('app.posts', {}, {reload: true});
+    //$window.location.reload(true);
   };
 
 });
