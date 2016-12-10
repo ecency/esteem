@@ -153,6 +153,9 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('de', require('./locales/de'));
   $translateProvider.translations('fr', require('./locales/fr'));
   $translateProvider.translations('es', require('./locales/es'));
+  $translateProvider.translations('gr', require('./locales/gr'));
+  $translateProvider.translations('bg', require('./locales/bg'));
+  $translateProvider.translations('nl', require('./locales/nl'));
   
   $translateProvider.useSanitizeValueStrategy(null);
 
@@ -196,7 +199,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $translate.use($rootScope.$storage.language);
     }
     
-    $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'ru', name: 'Русский'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'es', name: 'Español'}];
+    $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'es', name: 'Español'}, {id:'gr', name: 'Ελληνικά'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'ru', name: 'Русский'}, {id:'bg', name: 'Български'}, {id:'nl', name: 'Nederlands'}];
 
     if (window.cordova) {
       if (ionic.Platform.isIPad() || ionic.Platform.isIOS()) {
@@ -252,16 +255,18 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       });*/
     };
     $rootScope.showMessage = function(title, msg) {
-      if (window.cordova) {
-        $cordovaToast.showLongBottom(title+": "+msg).then(function(success) {
-          // success
-          $rootScope.log("toast"+success);
-        }, function (error) {
-          // error
-          $rootScope.log("toast"+error);
-        });  
-      } else {
-        $rootScope.showAlert(title, msg);
+      if (title) {
+        if (window.cordova) {
+          $cordovaToast.showLongBottom(title+": "+msg).then(function(success) {
+            // success
+            $rootScope.log("toast"+success);
+          }, function (error) {
+            // error
+            $rootScope.log("toast"+error);
+          });  
+        } else {
+          $rootScope.showAlert(title, msg);
+        }  
       }
     };
     $rootScope.$on('show:loading', function(event, args){
