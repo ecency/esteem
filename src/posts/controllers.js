@@ -2418,12 +2418,13 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       $scope.rest = "";
     }
     window.Api.database_api().exec("get_state", ["/@"+$stateParams.username+$scope.rest]).then(function(res){
+      //console.log(res);
       if (res.content) {
         if (Object.keys(res.content).length>0) {
           for (var property in res.content) {
             if (res.content.hasOwnProperty(property)) {
               var ins = res.content[property];
-              ins.json_metadata = angular.fromJson(ins.json_metadata);
+              ins.json_metadata = ins.json_metadata?angular.fromJson(ins.json_metadata):null;
               if ($rootScope.$storage.user){
                 if (type==="blog") {
                   if ($rootScope.$storage.user.username !== ins.author) {
