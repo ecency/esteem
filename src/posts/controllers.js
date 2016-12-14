@@ -2418,12 +2418,13 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       $scope.rest = "";
     }
     window.Api.database_api().exec("get_state", ["/@"+$stateParams.username+$scope.rest]).then(function(res){
+      //console.log(res);
       if (res.content) {
         if (Object.keys(res.content).length>0) {
           for (var property in res.content) {
             if (res.content.hasOwnProperty(property)) {
               var ins = res.content[property];
-              ins.json_metadata = angular.fromJson(ins.json_metadata);
+              ins.json_metadata = ins.json_metadata?angular.fromJson(ins.json_metadata):null;
               if ($rootScope.$storage.user){
                 if (type==="blog") {
                   if ($rootScope.$storage.user.username !== ins.author) {
@@ -2610,10 +2611,11 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
   }
   
   $scope.$watch('slider', function(newValue, oldValue){
+    //console.log(newValue.value);
     if (newValue.value) {
       $rootScope.$storage.voteWeight = newValue.value*100; 
     }
-  });
+  }, true);
 
   $scope.pinChange = function() {
     $rootScope.log("pinChange");
@@ -2676,8 +2678,8 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     $ionicHistory.nextViewOptions({
       disableBack: true
     });
-    //$state.go('app.posts', {tags:""});
-    $window.location.reload(true);
+    $state.go('app.posts', {}, {reload: true});
+    //$window.location.reload(true);
   };
 
 });
