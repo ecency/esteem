@@ -267,15 +267,18 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         if ($scope.data.type == "tag"){
           window.Api.database_api().exec("get_trending_tags", [$scope.data.search, 15]).then(function(result){
             var ee = [];
-            if (result){
+            //console.log(result);
+            /*if (result){
               var ll = result.length;
               for (var i = ll - 1; i >= 0; i--) {
-                if (result[i].tag.indexOf($scope.data.search) > -1){
+                if (result[i].name.indexOf($scope.data.search) > -1){
                   ee.push(result[i]);
                 }
               }
               $scope.data.searchResult = ee;
-            }
+            }*/
+            $scope.data.searchResult = result;
+
             if (!$scope.$$phase) {
               $scope.$apply();
             }
