@@ -21,16 +21,16 @@
             </div>
             <div class="row" style="text-align: center;" ng-if="$root.pincheck">
                 <div class="col col-10 col-offset-15" style="border-bottom: 1px solid black">
-                    *
+                    <span ng-if="passcode.length>=1">*</span>
                 </div>
                 <div class="col col-10 col-offset-10" style="border-bottom: 1px solid black">
-                    *
+                    <span ng-if="passcode.length>=2">*</span>
                 </div>
                 <div class="col col-10 col-offset-10" style="border-bottom: 1px solid black">
-                    *
+                    <span ng-if="passcode.length>=3">*</span>
                 </div>
                 <div class="col col-10 col-offset-10" style="border-bottom: 1px solid black">
-                    *
+                    <span ng-if="passcode.length>=4">*</span>
                 </div>
             </div>
         </div>

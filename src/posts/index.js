@@ -148,14 +148,17 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
       $compileProvider.debugInfoEnabled(false);
   }
 
-  $translateProvider.translations('en', require('./locales/en'));
-  $translateProvider.translations('ru', require('./locales/ru'));
-  $translateProvider.translations('de', require('./locales/de'));
-  $translateProvider.translations('fr', require('./locales/fr'));
-  $translateProvider.translations('es', require('./locales/es'));
-  $translateProvider.translations('gr', require('./locales/gr'));
-  $translateProvider.translations('bg', require('./locales/bg'));
-  $translateProvider.translations('nl', require('./locales/nl'));
+  $translateProvider.translations('en', require('./locales/en')); //English
+  $translateProvider.translations('ru', require('./locales/ru')); //Russian
+  $translateProvider.translations('de', require('./locales/de')); //German
+  $translateProvider.translations('fr', require('./locales/fr')); //French
+  $translateProvider.translations('es', require('./locales/es')); //Spanish
+  $translateProvider.translations('gr', require('./locales/gr')); //Greek
+  $translateProvider.translations('bg', require('./locales/bg')); //Bulgarian
+  $translateProvider.translations('nl', require('./locales/nl')); //Dutch
+  $translateProvider.translations('hu', require('./locales/hu')); //Hungarian
+  $translateProvider.translations('cs', require('./locales/cs')); //Czech
+  $translateProvider.translations('iw', require('./locales/iw')); //Hebrew
   
   $translateProvider.useSanitizeValueStrategy(null);
 
@@ -199,7 +202,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $translate.use($rootScope.$storage.language);
     }
     
-    $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'es', name: 'Español'}, {id:'gr', name: 'Ελληνικά'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'ru', name: 'Русский'}, {id:'bg', name: 'Български'}, {id:'nl', name: 'Nederlands'}];
+    $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'es', name: 'Español'}, {id:'gr', name: 'Ελληνικά'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'ru', name: 'Русский'}, {id:'bg', name: 'Български'}, {id:'nl', name: 'Nederlands'}, {id:'hu', name: 'Magyar'}, {id:'cs', name: 'Čeština'}, {id:'iw', name: 'עברית‎'}];
 
     if (window.cordova) {
       if (ionic.Platform.isIPad() || ionic.Platform.isIOS()) {
