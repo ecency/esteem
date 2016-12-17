@@ -44,6 +44,23 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.open = function(item) {
     item.json_metadata = angular.fromJson(item.json_metadata);
     $rootScope.$storage.sitem = item;
+    /*window.Api.database_api().exec("get_state", ['/'+item.category+'/@'+item.author+'/'+item.permlink]).then(function(dd){
+
+      //console.log(dd);
+      var state = dd.current_route.split('@')[1];
+      angular.forEach(dd.content, function(v,k){
+        angular.forEach(v.replies, function(vv,kk){
+          var t = dd.content[vv];
+          v.replies[kk] = t;
+        });
+      });
+      
+      var content = dd.content[state];
+      console.log(content);
+      $rootScope.$storage.sitem = content;
+    });
+
+    $state.go('app.single');*/
     $state.go('app.single', {postdata: 'something'});
   };
   $scope.advancedChange = function() {
@@ -594,13 +611,17 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     
     $timeout(function(){
       $scope.modalp.show();
-      angular.element("textarea").focus(function() {
+      /*angular.element("textarea").focus(function() {
         $scope.lastFocused = document.activeElement;
         //console.log(document);
-      });
+      });*/
 
     }, 10);
     //$scope.modalp.show();
+  });
+
+  $rootScope.$on('closePostModal', function() {
+    $scope.modalp.hide();
   });
 
   $scope.closePostModal = function() {
@@ -833,7 +854,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
           } else {
             //$scope.closePostModal();
-            $scope.modalp.hide();
+            $rootScope.$broadcast('closePostModal');
+
             //$scope.menupopover.hide();
             $rootScope.$broadcast('close:popover');
             $scope.spost = {};
@@ -1135,7 +1157,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   
 })
 
-app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPopover, $filter) {
+app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPopover, $filter, $state) {
   $scope.post = $rootScope.$storage.sitem;
   $scope.data = {};
   $scope.spost = {};  
@@ -1441,16 +1463,18 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     //if(!$scope.pmodal) return;   
     setTimeout(function() {
       $scope.pmodal.show();
-      angular.element("textarea").focus(function() {
+      /*angular.element("textarea").focus(function() {
         $scope.lastFocused = document.activeElement;
         console.log(document);
-      });
+      });*/
     }, 10);
   };
   $scope.closePostModal = function() {
     $scope.pmodal.hide();
   };
-  
+  $rootScope.$on('closePostModal', function(){
+    $scope.pmodal.hide();
+  });
   var dmp = new window.diff_match_patch();
 
   function createPatch(text1, text2) {
@@ -1461,6 +1485,60 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
   $scope.cfocus = function(){
     $scope.lastFocused = document.activeElement;
+  }
+  $scope.deletePost = function(xx) {
+    $rootScope.log('delete post '+ angular.toJson(xx));
+    var confirmPopup = $ionicPopup.confirm({
+        title: $filter('translate')('ARE_YOU_SURE'),
+        template: $filter('translate')('DELETE_COMMENT')
+    });
+    confirmPopup.then(function(res) {
+        if(res) {
+            $rootScope.log('You are sure');
+            $rootScope.$broadcast('show:loading');
+            if ($rootScope.$storage.user) {
+              $scope.mylogin = new window.steemJS.Login();
+              $scope.mylogin.setRoles(["posting"]);
+              var loginSuccess = $scope.mylogin.checkKeys({
+                  accountName: $rootScope.$storage.user.username,    
+                  password: $rootScope.$storage.user.password || null,
+                  auths: {
+                      posting: $rootScope.$storage.user.posting.key_auths
+                  },
+                  privateKey: $rootScope.$storage.user.privatePostingKey || null
+                }
+              );
+              if (loginSuccess) {
+                var tr = new window.steemJS.TransactionBuilder();
+                
+                tr.add_type_operation("delete_comment", {
+                  author: xx.author,
+                  permlink: xx.permlink
+                });
+                //$rootScope.log(my_pubkeys);
+                localStorage.error = 0;
+                tr.process_transaction($scope.mylogin, null, true);
+                
+                setTimeout(function() {
+                  if (localStorage.error == 1) {
+                    $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
+                  } else {
+                    $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('DELETED_COMMENT'));
+                    $state.go('app.posts');
+                  }
+                  $rootScope.$broadcast('hide:loading');
+                }, 3000);
+              } else {
+                $rootScope.$broadcast('hide:loading');
+              } 
+            } else {
+              $rootScope.$broadcast('hide:loading');
+              $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
+            }
+        } else {
+          $rootScope.log('You are not sure');
+        }
+    });
   }
   $scope.edit = false;
   $scope.editPost = function(xx) {
@@ -1508,9 +1586,10 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         var tr = new window.steemJS.TransactionBuilder();
         var permlink = $scope.spost.permlink;
         var jjson = $filter("metadata")($scope.spost.body);
-        $scope.spost.tags = $filter('lowercase')($scope.spost.tags);
+        //console.log(jjson);
+        //$scope.spost.tags = $filter('lowercase')($scope.spost.tags);
         var json = angular.merge(jjson, {tags: $scope.spost.tags.split(" "), app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' });
-
+        //console.log(json);
         tr.add_type_operation("comment", {
           parent_author: "",
           parent_permlink: $scope.spost.parent_permlink,
@@ -1528,11 +1607,16 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           if (localStorage.error == 1) {
             $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
           } else {
-            $scope.closePostModal();
-            $scope.spost = {};
-            $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_SUBMITTED'));  
+            //$scope.closePostModal();
+            
+            $rootScope.$broadcast('closePostModal');
+
+            setTimeout(function() {
+              $scope.spost = {};
+              $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_SUBMITTED'));  
             //$scope.closePostPopover();
-            $state.go("app.profile", {username: $rootScope.$storage.user.username});
+              $state.go("app.profile", {username: $rootScope.$storage.user.username});  
+            }, 1);
           }
           $rootScope.$broadcast('hide:loading');
         }, 3000);
@@ -1608,8 +1692,31 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $rootScope.$on("update:content", function(){
     $rootScope.log("update:content");
     window.Api.database_api().exec("get_content_replies", [$scope.post.author, $scope.post.permlink]).then(function(result){
-      if (result)
+      //todo fix active_votes
+      //console.log(result);
+      if (result) {
+        /*angular.forEach(result, function(v,k){
+          var len = v.active_votes.length;
+          var user = $rootScope.$storage.user;
+          if (user) {
+            for (var j = len - 1; j >= 0; j--) {
+              if (v.active_votes[j].voter === user.username) {
+                if (v.active_votes[j].percent > 0) {
+                  v.upvoted = true;  
+                } else if (v.active_votes[j].percent < 0) {
+                  v.downvoted = true;  
+                } else {
+                  v.downvoted = false;  
+                  v.upvoted = false;  
+                }
+              }
+            }
+          }
+        });*/
         $scope.comments = result;
+        //console.log(result);
+      }
+      
       $rootScope.$broadcast('hide:loading');
     });
     $rootScope.$broadcast('hide:loading');
