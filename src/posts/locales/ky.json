@@ -220,5 +220,16 @@
   "LOGIN_TO_X":"This operation requires user to be logged in with main password, active/posting key. Please login and try again.",
   "GALLERY":"Gallery",
   "TRANSLATIONS":"Translation contributors",
-  "SHARE":"Share"
+  "RUSSIAN":"Russian",
+  "GERMAN":"German",
+  "FRENCH":"French",
+  "ENGLISH":"English",
+  "ROMANIAN":"Romanian",
+  "DUTCH":"Dutch",
+  "PORTUGUESE":"Portuguese",
+  "VIETNAMESE":"Vietnamese",
+  "POLISH":"Polish",
+  "GREEK":"Greek",
+  "BULGARIAN":"Bulgarian",
+  "ARABIC":"Arabic"
 }
