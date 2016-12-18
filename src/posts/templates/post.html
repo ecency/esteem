@@ -9,13 +9,11 @@
 	    <ion-nav-buttons side="right">
       <span ng-if="!$root.voiceOver">
         <button class="button button-icon button-clear" ng-click="bookmark()"><i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i></button> &nbsp; 
-	      <!--<button class="button button-icon button-clear ion-android-share-alt" ng-click="share()"></button>-->
-        <button class="button button-icon button-clear ion-arrow-return-right" ng-if="$root.$storage.user.username !== $root.$storage.sitem.author" ng-click="$root.reBlog($root.$storage.sitem.author, $root.$storage.sitem.permlink)"></button>
+	      <button class="button button-icon button-clear ion-android-share-alt" ng-click="share()"></button>
       </span>
       <span ng-if="$root.voiceOver">
         <a href class="button button-icon button-clear" ng-click="bookmark()"><i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i>{{'BOOKMARK'|translate}}</a> &nbsp; 
-        <!--<a href class="button button-icon button-clear ion-android-share-alt" ng-click="share()">Share</a>-->
-        <a href class="button button-icon button-clear ion-arrow-return-right" ng-if="$root.$storage.user.username !== $root.$storage.sitem.author" ng-click="$root.reBlog($root.$storage.sitem.author, $root.$storage.sitem.permlink)">{{'REBLOG'|translate}}</a>
+        <a href class="button button-icon button-clear ion-android-share-alt" ng-click="share()">{{'SHARE'|translate}}</a>
       </span>
 	    </ion-nav-buttons>
 	</ion-nav-bar>
@@ -24,6 +22,7 @@
     <ion-floating-item icon="ion-android-arrow-dropup-circle" click="upvotePost($root.$storage.sitem)" button-color="#387ef5" icon-color="#fff" text="{{'UPVOTE'|translate}}" text-class="text-class"></ion-floating-item>
     <ion-floating-item icon="ion-edit" click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode!=='archived' && $root.$storage.sitem.author==$root.$storage.user.username" button-color="#387ef5" icon-color="#fff" text="{{'EDIT'|translate}}" text-class="text-class"></ion-floating-item>
     <ion-floating-item icon="ion-image" click="showImages(0)" ng-if="isImages()" button-color="#387ef5" icon-color="#fff" text="{{'GALLERY'|translate}}" text-class="text-class"></ion-floating-item>
+    <ion-floating-item icon="ion-arrow-return-right" ng-if="$root.$storage.user.username !== $root.$storage.sitem.author" click="$root.reBlog($root.$storage.sitem.author, $root.$storage.sitem.permlink)" button-color="#387ef5" icon-color="#fff" text="{{'REBLOG'|translate}}" text-class="text-class"></ion-floating-item>
   </ion-floating-menu>
   <ion-content class="padding has-header" delegate-handle="mainScroll" overflow-scroll="true"><!---->
     <div ng-if='$root.$storage.sitem'>

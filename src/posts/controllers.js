@@ -83,10 +83,10 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     //$ionicSideMenuDelegate.toggleLeft();
   }
   $scope.share = function() {
-    var message = "Hey! Checkout blog post on Steemit.com";
-    var subject = "Via Steem Mobile";
+    var link = "http://steemit.com/"+$rootScope.$storage.sitem.category+"/"+$rootScope.$storage.sitem.author+"/"+$rootScope.$storage.sitem.permlink;
+    var message = "Hey! Checkout blog post on Steem "+link;
+    var subject = "Via eSteem Mobile";
     var file = null;
-    var link = "http://steemit.com"+$rootScope.$storage.sitem?$rootScope.$storage.sitem.url:"";
     $cordovaSocialSharing.share(message, subject, file, link) // Share via native share sheet
     .then(function(result) {
       // Success!
