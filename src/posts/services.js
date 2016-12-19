@@ -825,9 +825,9 @@ module.exports = function (app) {
                         <div class="ion-comment--score"><i class="icon ion-social-usd"></i> {{comment.total_pending_payout_value.split(" ")[0]|number}}</div>\
                         <div class="ion-comment--text bodytext selectable" ng-bind-html="comment.body | parseUrl "></div>\
                         <div class="ion-comment--replies">{{comment.net_votes || 0}} votes, {{comment.children || 0}} replies</div>\
-                        <ion-option-button ng-click="upvotePost(comment)"><span class="ion-android-arrow-dropup" style="font-size:30px"></ion-option-button>\
-                        <ion-option-button ng-click="downvotePost(comment)"><span class="ion-android-arrow-dropdown" style="font-size:30px"></ion-option-button>\
-                        <ion-option-button ng-click="replyToComment(comment)"><span class="ion-ios-chatbubble-outline" style="font-size:30px"></ion-option-button>\
+                        <ion-option-button ng-click="upvotePost(comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></ion-option-button>\
+                        <ion-option-button ng-click="replyToComment(comment)"><span class="fa fa-reply"></ion-option-button>\
+                        <ion-option-button ng-click="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></ion-option-button>\
                         <ion-option-button ng-if="comment.author == $root.$storage.user.username && compateDate(comment)" ng-click="editComment(comment)"><span class="ion-ios-compose-outline" style="font-size:30px"></ion-option-button>\
                         <ion-option-button ng-if="comment.author == $root.$storage.user.username" ng-click="deleteComment(comment)"><span class="ion-ios-trash-outline" style="font-size:30px"></ion-option-button>\
                     </ion-item>',
@@ -1205,6 +1205,7 @@ module.exports = function (app) {
 
                     if (comment.children > 0){
                       window.Api.database_api().exec("get_content_replies", [comment.author, comment.permlink]).then(function(res1){
+                        //todo fix active_votes
                         comment.replies = res1;
                         //$rootScope.log('result',res1);
                         if (comment.showChildren) {
