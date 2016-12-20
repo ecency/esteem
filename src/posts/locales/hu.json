@@ -219,5 +219,6 @@
     "LOGIN_TO_X": "Ez a művelet megköveteli, hogy a felhasználó a fő jelszavával, aktív/posztoló kulcsával legyen bejelentkezve. Kérlek lépj be és próbáld újra.",
     "GALLERY": "Galéria",
     "PAYOUT_CYCLE": "Kifizetési Ciklus",
-    "TRANSLATIONS": "A fordítás közreműködői"
+    "TRANSLATIONS": "A fordítás közreműködői",
+    "SHARE": "Megosztás"
 }
