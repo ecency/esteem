@@ -58,7 +58,7 @@
     "PROFILE_2": "{{platformpower}}, invloedseenheden that earn more power for holding long term and voting on posts. Hoe meer u vasthoudt, hoe meer invloed u heeft op andermans opbrengsten en opbrengsten door stemmen.",
     "PROFILE_3": "Eenheden zijn ongeveer {{platformsunit}} {{platformname}} waard.",
     "ESTIMATED_VALUE": "Geschatte waarde",
-    "PROFILE_4": "De geschatte waarde wordt gebaseerd op een 3.5 dag gemiddelde van {{platformname}}.",
+    "PROFILE_4": "De geschatte waarde wordt gebaseerd op een 7 dag gemiddelde van {{platformname}}.",
     "TRANSACTION_HISTORY": "Transactiegeschiedenis",
     "POSTING": "Plaatsen",
     "PROFILE_5": "De posting sleutel wordt gebruikt voor het plaatsen van posts en voor het stemmen op posts. Deze zou anders moeten zijn dan de actieve- en eigennaarssleutels.",
@@ -219,5 +219,6 @@
     "LOGIN_TO_X": "Om dit te doen dient u in te loggen met uw hoofdwachtwoord, actieve/posting key. Log alstublieft in en probeer opnieuw.",
     "GALLERY": "Gallerij",
     "PAYOUT_CYCLE": "Uitbetalingscyclus",
-    "TRANSLATIONS": "Vertalingsbijdragers"
+    "TRANSLATIONS": "Vertalingsbijdragers",
+    "SHARE": "Delen"
 }
