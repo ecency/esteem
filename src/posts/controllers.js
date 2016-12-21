@@ -83,7 +83,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     //$ionicSideMenuDelegate.toggleLeft();
   }
   $scope.share = function() {
-    var link = "http://steemit.com/"+$rootScope.$storage.sitem.category+"/"+$rootScope.$storage.sitem.author+"/"+$rootScope.$storage.sitem.permlink;
+    var link = "http://steemit.com/"+$rootScope.$storage.sitem.category+"/@"+$rootScope.$storage.sitem.author+"/"+$rootScope.$storage.sitem.permlink;
     var message = "Hey! Checkout blog post on Steem "+link;
     var subject = "Via eSteem Mobile";
     var file = null;
