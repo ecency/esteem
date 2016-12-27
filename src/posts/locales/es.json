@@ -58,7 +58,7 @@
     "PROFILE_2": "{{platformpower}}, fichas de influencia que consiguen más poder por mantenerlas a largo plazo y votar en los posts. Cuantas más tengas más influencia tendrás en las recompensas que le das al resto de gente y más recompensas obtendrás por tus votos.",
     "PROFILE_3": "Valor de las fichas {{platformsunit}} de {{platformname}}.",
     "ESTIMATED_VALUE": "Valor Estimado",
-    "PROFILE_4": "El valor estimado se basa en el promedio durante 3.5 días de {{platformname}}.",
+    "PROFILE_4": "El valor estimado se basa en el promedio durante 7 días de {{platformname}}.",
     "TRANSACTION_HISTORY": "Historial de Transacciones",
     "POSTING": "Publicación",
     "PROFILE_5": "La clave de publicación es utilizada para publicar y votar. Tiene que ser diferente a la clave activa y a la clave de propietario.",
@@ -219,5 +219,6 @@
     "LOGIN_TO_X": "Esta operación requiere que el usuario inicie sesión con la contraseña principal, clave activa/publicar. Por favor inicia sesión y vuelve a intentarlo.",
     "GALLERY": "Galería",
     "PAYOUT_CYCLE": "Ciclo de Pago",
-    "TRANSLATIONS": "Colaboradores de traducciones"
+    "TRANSLATIONS": "Colaboradores de traducciones",
+    "SHARE": "Compartir"
 }
