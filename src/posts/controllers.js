@@ -1043,7 +1043,14 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       }
     });  
   }
-  
+  $scope.ifExists = function(xx){
+    for (var i = 0; i < $scope.data.length; i++) {
+      if ($scope.data[i].permlink === xx){
+        return true;
+      }
+    }
+    return false;
+  }
   $scope.fetchPosts = function(type, limit, tag) {
     type = type || $rootScope.$storage.filter || "trending";
     tag = tag || $rootScope.$storage.tag || "";
@@ -1074,12 +1081,33 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           if (response.length <= 1) {
             $scope.error = true;
           }
-          //console.log(response);
-          var temp = $scope.dataChanged(response);
-          for (var i=1; i<temp.length; i++){
-            if ($scope.data.indexOf(temp[i])===-1) {
-              $scope.data.push(temp[i]);  
-            }
+          if (response) {
+            for (var i = 0; i < response.length; i++) {
+              response[i].json_metadata = response[i].json_metadata?angular.fromJson(response[i].json_metadata):response[i].json_metadata;
+              var permlink = response[i].permlink;
+              if (!$scope.ifExists(permlink)) {
+                var user = $rootScope.$storage.user || undefined;
+                if (user) {
+                  //console.log('exist');
+                  if (response[i] && response[i].active_votes) {
+                    var len = response[i].active_votes.length-1;
+                    for (var j = 0; j < len; j++) {
+                      if (response[i].active_votes[j].voter === user.username) {
+                        if (response[i].active_votes[j].percent > 0) {
+                          response[i].upvoted = true;  
+                        } else if (response[i].active_votes[j].percent < 0) {
+                          response[i].downvoted = true;  
+                        } else {
+                          response[i].downvoted = false;  
+                          response[i].upvoted = false;  
+                        }
+                      }
+                    }
+                  }
+                }
+                $scope.data.push(response[i]);  
+              }
+            }  
           }
           
           if (!$scope.$$phase) {
