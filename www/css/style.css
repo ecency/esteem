@@ -1246,17 +1246,26 @@ div.text-left {
     border: 1px solid #ddd;
 }
 
-.bodytext td{
-    display:inline-block;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    word-break: break-word;
-    hyphens: auto;
-}
-
 .bodytext tr{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 5px;
   width: 100%;
-  display:block;
+}
+.bodytext td{
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  -moz-box-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: block;
+  padding: 5px;
+  width: 100%;
 }
 .bodytext tr:hover{background-color:#f5f5f5}
 .bodytext tr:nth-child(even) {background-color: #f2f2f2}
