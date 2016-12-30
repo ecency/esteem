@@ -61,7 +61,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     });
 
     $state.go('app.single');*/
-    $state.go('app.single', {postdata: 'something'});
+    $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});
   };
   $scope.advancedChange = function() {
     $rootScope.log(angular.toJson($scope.loginData.advanced));
@@ -1812,13 +1812,14 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.$on('$ionicView.beforeEnter', function(){ 
     $rootScope.log('beforeEnter postctrl');
     $rootScope.$broadcast('show:loading');
-    if ($stateParams.postdata) {
+    if ($stateParams.category === '111') {
       var ttemp = $rootScope.$storage.sitem;
       $scope.post = ttemp;
       $rootScope.$broadcast('update:content');  
     } else {
-      $scope.post = $rootScope.$storage.sitem;
-      $rootScope.$broadcast('update:content');  
+      $scope.getContent($stateParams.author, $stateParams.permlink);
+      //$scope.post = $rootScope.$storage.sitem;
+      //$rootScope.$broadcast('update:content');  
     }
   });
 

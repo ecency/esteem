@@ -123,8 +123,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
     }
   })
 
-  .state('app.single', {
-    url: '/single/:postdata',
+  .state('app.post', {
+    url: '/post/:category/:author/:permlink',
     views: {
       'menuContent': {
         //templateUrl: 'templates/post.html',
@@ -513,9 +513,12 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
           }
           result.json_metadata = angular.fromJson(result.json_metadata);
-          $rootScope.$storage.sitem = result;
+          var item = result;
+          $rootScope.$storage.sitem = item;
           setTimeout(function() {
-            $state.go('app.single');  
+            //$state.go('app.post');  
+            $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});
+
           }, 5);
 
           if (!$rootScope.$$phase) {
@@ -523,7 +526,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           }
         });
       });
-      //$state.go('app.single');
       $rootScope.$broadcast('hide:loading');
     };
 
