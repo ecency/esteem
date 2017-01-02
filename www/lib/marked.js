@@ -923,7 +923,7 @@ Renderer.prototype.link = function(href, title, text) {
         var parts = href.split('/');
         //console.log(parts);
           if (parts.length===6) {
-            console.log(parts);
+            //console.log(parts);
             //out = '<a href ng-click=\"$root.getContentAndOpen(\'' + parts[4].substr(1) + '\', \''+parts[5]+'\')\" >'+text+'</a>';
             out = '<a href="#/app/post/'+parts[3]+'/'+parts[4].substr(1)+'/'+parts[5]+'">'+text+'</a>';
           } else {

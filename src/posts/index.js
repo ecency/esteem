@@ -123,6 +123,18 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
     }
   })
 
+  .state('app.notifications', {
+    url: '/notifications',
+    views: {
+      'menuContent': {
+        //templateUrl: 'templates/post.html',
+        template: fs.readFileSync(__dirname + '/templates/notifications.html', 'utf8'),
+        controller: 'NotificationsCtrl'
+      }
+    }
+  })
+
+
   .state('app.post', {
     url: '/post/:category/:author/:permlink',
     views: {
@@ -206,7 +218,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $translate.use($rootScope.$storage.language);
     }
     
-    $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'es', name: 'Español'}, {id:'gr', name: 'Ελληνικά'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'ru', name: 'Русский'}, {id:'bg', name: 'Български'}, {id:'nl', name: 'Nederlands'}, {id:'hu', name: 'Magyar'}, {id:'cs', name: 'Čeština'}, {id:'iw', name: 'עברית‎'}, {id:'pl', name: 'Polski‎'}, {id:'pt', name: 'Português'}, {id:'id', name:'Bahasa Indonesia'}, {id:'zh', name:'汉语'}];
+    $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'es', name: 'Español'}, {id:'gr', name: 'Ελληνικά'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'ru', name: 'Русский'}, {id:'bg', name: 'Български'}, {id:'nl', name: 'Nederlands'}, {id:'hu', name: 'Magyar'}, {id:'cs', name: 'Čeština'}, {id:'iw', name: 'עברית‎'}, {id:'pl', name: 'Polski‎'}, {id:'pt', name: 'Português'}, {id:'id', name:'Bahasa Indonesia'}, {id:'zh', name:'繁體中文'}];
 
     if (window.cordova) {
       if (ionic.Platform.isIPad() || ionic.Platform.isIOS()) {
@@ -313,6 +325,48 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           }, 15000);
         });
       }
+      window.FirebasePlugin.onNotificationOpen(function(data) {
+        $rootScope.log(angular.toJson(data));
+        if(data.tap){
+          //Notification was received on device tray and tapped by the user.
+          //console.log(JSON.stringify(data));
+          if (data.author && data.permlink) {
+            if (!$rootScope.$storage.pincode) {
+
+              var alertPopup = $ionicPopup.confirm({
+                title: data.title,
+                template: data.body + $filter('translate')('OPENING_POST')
+              });
+
+              alertPopup.then(function(res) {
+                $rootScope.log('Thank you for seeing alert from tray');
+                if (res) {
+                  setTimeout(function() {
+                    $rootScope.getContentAndOpen({author:data.author, permlink:data.permlink});    
+                  }, 10);
+                } else {
+                  $rootScope.log("not sure to open alert");
+                }
+              });
+
+            } else {
+              $rootScope.$storage.notifData = {title:data.title, body: data.body, author: data.author, permlink: data.permlink};
+              $rootScope.pinenabled = true;
+            }
+          }
+        } else{
+          //Notification was received in foreground. Maybe the user needs to be notified.
+          //alert( JSON.stringify(data) );
+          if (data.author && data.permlink) {
+            $rootScope.showMessage(data.title, data.body+" "+data.permlink);
+          } else {
+            $rootScope.showMessage(data.title, data.body);
+          }
+        }
+      }, function(error) {
+          console.error(error);
+      });
+      
       if ($rootScope.$storage.pincode) {
         $rootScope.pincheck = true;
         $rootScope.$broadcast("pin:check");
@@ -784,7 +838,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         });
       });
     }, 10);
-
+    if (!angular.isDefined($rootScope.$storage.notifications)) {
+      $rootScope.$storage.notifications = [];  
+    }
+    
     if (window.cordova) {
       if (!ionic.Platform.isWindowsPhone()) {
         if (ionic.Platform.isIOS() || ionic.Platform.isIPad()) {
@@ -828,10 +885,13 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
         window.FirebasePlugin.onNotificationOpen(function(data) {
             $rootScope.log(angular.toJson(data));
-            console.log(angular.toJson(data));
+
+            //console.log(angular.toJson(data));
+
+            //$rootScope.$storage.notifications.push({title:data.title, message: data.body, author: data.author, permlink: data.permlink, created: new Date()});
+
             if(data.tap){
               //Notification was received on device tray and tapped by the user.
-              console.log(JSON.stringify(data));
               if (data.author && data.permlink) {
                 if (!$rootScope.$storage.pincode) {
 
@@ -868,95 +928,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         }, function(error) {
             console.error(error);
         });
-        //FCMPlugin.getToken( successCallback(token), errorCallback(err) );
-        //Keep in mind the function will return null if the token has not been established yet.
-        /*FCMPlugin.getToken(
-          function(token){
-            if (ionic.Platform.isAndroid()) {
-              console.log("deviceToken "+token);
-              token = angular.fromJson(token);
-              $rootScope.$storage.deviceid = token.token;
-              $rootScope.$storage.token = token;
-              if ($rootScope.$storage.user) {
-                APIs.saveSubscription(token.token, $rootScope.$storage.user.username, { device: ionic.Platform.platform(), appversion: token.appVersion, timestamp: $filter('date')(new Date(token.timestamp), 'medium') }).then(function(res){
-                  $rootScope.log(angular.toJson(res));
-                });
-              } else {
-                APIs.saveSubscription(token.token, "", { device: ionic.Platform.platform(), appversion: token.appVersion, timestamp: $filter('date')(new Date(token.timestamp), 'medium') }).then(function(res){
-                  $rootScope.log(angular.toJson(res));
-                });
-              }
-            }
-            if (ionic.Platform.isIOS() || ionic.Platform.isIPad()) {
-              console.log("deviceToken "+token);
-              if (token) {
-                $rootScope.$storage.deviceid = token;
-                $rootScope.$storage.token = token;
-                if ($rootScope.$storage.user) {
-                  APIs.saveSubscription(token, $rootScope.$storage.user.username, { device: ionic.Platform.platform(), appversion: '1.3.1', timestamp: $filter('date')(new Date(), 'medium') }).then(function(res){
-                    $rootScope.log(angular.toJson(res));
-                  });
-                } else {
-                  APIs.saveSubscription(token, "", { device: ionic.Platform.platform(), appversion: '1.3.1', timestamp: $filter('date')(new Date(), 'medium') }).then(function(res){
-                    $rootScope.log(angular.toJson(res));
-                  });
-                }    
-              }
-            }
-          },
-          function(err){
-            $rootScope.log('error retrieving token: ' + err);
-          }
-        );
-
-
-        //FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
-        //Here you define your application behaviour based on the notification data.
-        FCMPlugin.onNotification(
-          function(data){
-            if(data.wasTapped){
-              //Notification was received on device tray and tapped by the user.
-              //alert( JSON.stringify(data) );
-              if (data.author && data.permlink) {
-                if (!$rootScope.$storage.pincode) {
-
-                  var alertPopup = $ionicPopup.confirm({
-                    title: data.title,
-                    template: data.body + ", opening post"
-                  });
-
-                  alertPopup.then(function(res) {
-                    $rootScope.log('Thank you for seeing alert from tray');
-                    if (res) {
-                      $rootScope.getContentAndOpen(data.author, data.permlink);  
-                    } else {
-                      $rootScope.log("not sure to open alert");
-                    }
-                  });
-
-                } else {
-                  $rootScope.$storage.notifData = {title:data.title, body: data.body, author: data.author, permlink: data.permlink};
-                  $rootScope.pinenabled = true;
-                }
-              }
-            } else{
-              //Notification was received in foreground. Maybe the user needs to be notified.
-              //alert( JSON.stringify(data) );
-              if (data.author && data.permlink) {
-                $rootScope.showMessage(data.title, data.body+" "+data.permlink);
-              } else {
-                $rootScope.showMessage(data.title, data.body);
-              }
-            }
-          },
-          function(msg){
-            $rootScope.log('onNotification callback successfully registered: ' + msg);
-            //alert("msg "+JSON.stringify(msg));
-          },
-          function(err){
-            $rootScope.log('Error registering onNotification callback: ' + err);
-          }
-        ); */
       }
       
     }

@@ -1861,6 +1861,16 @@ app.controller('BookmarkCtrl', function($scope, $stateParams, $rootScope, $state
 
 
 })
+app.controller('NotificationsCtrl', function($scope, $stateParams, $rootScope, $state, APIs, $interval, $ionicScrollDelegate) {
+
+  $scope.removeNotification = function(index) {
+    if ($rootScope.$storage.notifications) {
+      $rootScope.$storage.notifications.splice(index,1);
+    }
+  };
+
+
+})
 app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, APIs, $interval, $ionicScrollDelegate) {
   $scope.searchu = {};
 
@@ -2381,7 +2391,6 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     $rootScope.votePost(post, 'unvote', 'profileRefresh');
   };
 
-  
   $scope.isFollowing = function(xx) {
     if ($scope.following && $scope.following.indexOf(xx)!==-1) {
       return true;
@@ -2411,12 +2420,35 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       
       window.Api.database_api().exec("get_state", ["/@"+$stateParams.username+$scope.rest]).then(function(res){
         $scope.profile = [];
+        //console.log(res);
         if (Object.keys(res.content).length>0) {
-          for (var property in res.content) {
+          angular.forEach(res.content, function(v,k){
+            v.json_metadata = angular.fromJson(v.json_metadata);
+            if ($rootScope.$storage.user){
+              if ($rootScope.$storage.user.username !== v.author) {
+                v.reblogged = true;
+              }
+              var len = v.active_votes.length;
+              for (var j = len - 1; j >= 0; j--) {
+                if (v.active_votes[j].voter === $rootScope.$storage.user.username) {
+                  if (v.active_votes[j].percent > 0) {
+                    v.upvoted = true;  
+                  } else if (v.active_votes[j].percent < 0) {
+                    v.downvoted = true;  
+                  } else {
+                    v.upvoted = false;
+                    v.downvoted = false;    
+                  }
+                }
+              }
+            }
+            $scope.profile.push(v);
+          });
+          /*for (var property in res.content) {
             if (res.content.hasOwnProperty(property)) {
               // do stuff
               var ins = res.content[property];
-              ins.json_metadata = angular.fromJson(ins.json_metadata);
+              //ins.json_metadata = angular.fromJson(ins.json_metadata);
               if ($rootScope.$storage.user){
                 if ($rootScope.$storage.user.username !== ins.author) {
                   ins.reblogged = true;
@@ -2437,7 +2469,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               }
               $scope.profile.push(ins);
             }
-          }
+          }*/
           //console.log($scope.profile);
           $scope.nonexist = false;
           if(!$scope.$$phase){
@@ -2500,7 +2532,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       //console.log("getOtherUsersData");
       window.Api.database_api().exec("get_accounts", [[$stateParams.username]]).then(function(dd){
         dd = dd[0];
-        if (dd.json_metadata) {
+        if (dd && dd.json_metadata) {
           dd.json_metadata = angular.fromJson(dd.json_metadata);
         }
         angular.merge($scope.user, dd);
@@ -2525,7 +2557,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       if ($rootScope.$storage.user.username !== $stateParams.username) {
         $scope.getOtherUsersData();  
       } else {
-          $rootScope.log("get follows");
+          $rootScope.log("get follows counts");
           window.Api.follow_api().exec("get_follow_count", [$stateParams.username]).then(function(res){
             //console.log(res);
             $scope.followdetails = res;
@@ -2538,10 +2570,10 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       }
     }
     
-    setTimeout(function() {
+    //setTimeout(function() {
       $scope.css = ($rootScope.$storage.user.username === $scope.user.username && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : ($rootScope.$storage.user.username !== $scope.user.username && ($scope.user.json_metadata && $scope.user.json_metadata.profile.cover_image)) ? {'background': 'url('+$scope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;  
       //console.log($scope.css);
-    }, 1);
+    //}, 1);
     
   });
   $scope.openMenu = function() {
@@ -2560,10 +2592,32 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       //console.log(res);
       if (res.content) {
         if (Object.keys(res.content).length>0) {
-          for (var property in res.content) {
+          angular.forEach(res.content, function(v,k){
+            v.json_metadata = angular.fromJson(v.json_metadata);
+            if ($rootScope.$storage.user){
+              if ($rootScope.$storage.user.username !== v.author) {
+                v.reblogged = true;
+              }
+              var len = v.active_votes.length;
+              for (var j = len - 1; j >= 0; j--) {
+                if (v.active_votes[j].voter === $rootScope.$storage.user.username) {
+                  if (v.active_votes[j].percent > 0) {
+                    v.upvoted = true;  
+                  } else if (v.active_votes[j].percent < 0) {
+                    v.downvoted = true;  
+                  } else {
+                    v.upvoted = false;
+                    v.downvoted = false;    
+                  }
+                }
+              }
+            }
+            $scope.profile.push(v);
+          });
+          /*for (var property in res.content) {
             if (res.content.hasOwnProperty(property)) {
               var ins = res.content[property];
-              ins.json_metadata = ins.json_metadata?angular.fromJson(ins.json_metadata):null;
+              //ins.json_metadata = ins.json_metadata?angular.fromJson(ins.json_metadata):null;
               if ($rootScope.$storage.user){
                 if (type==="blog") {
                   if ($rootScope.$storage.user.username !== ins.author) {
@@ -2586,7 +2640,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               }
               $scope.profile.push(ins);
             }
-          }    
+          }*/    
           $scope.nonexist = false;
         } else {
           $scope.nonexist = true;

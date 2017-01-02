@@ -1224,7 +1224,7 @@ module.exports = function (app) {
         }
     }
 
-    function ius($q, $ionicLoading, $cordovaFileTransfer, $ionicPlatform, $filter) {
+    function ius($q, $ionicLoading, $cordovaFileTransfer, $ionicPlatform, $filter, $rootScope) {
         var service = {};
         service.uploadImage = uploadImage;
         return service;
@@ -1251,7 +1251,7 @@ module.exports = function (app) {
             // Add the Cloudinary "upload preset" name to the headers
             // "https://api.cloudinary.com/v1_1/esteem/image/upload"
             var uploadOptions = {
-              params : { 'upload_preset': "profilePics"}
+              params : { 'username': $rootScope.$storage.user.username}
             };
             $ionicPlatform.ready(function() {
                 $cordovaFileTransfer.upload("http://192.158.29.1:8080/api/upload", imageURI, uploadOptions).then(function(result) {
