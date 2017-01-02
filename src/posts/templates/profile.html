@@ -45,7 +45,7 @@
                 <div class="row gray profile">
                   <div class="col"><ion-spinner ng-if="playlist.invoting"></ion-spinner>
                   <i class="fa fa-chevron-circle-up fa-lg" ng-click="upvotePost(playlist)" ng-if="!playlist.upvoted"></i><i class="fa fa-chevron-circle-up fa-lg positive" ng-click="unvotePost(playlist)" ng-if="playlist.upvoted"></i>&nbsp;&nbsp;<span ng-click="$root.openInfo(playlist)">{{playlist.net_votes}}</span>&nbsp;&nbsp;
-                   <i class="fa fa-chevron-circle-down fa-lg" ng-click="downvotePost(playlist)" ng-if="!playlist.downvoted"></i><i class="fa fa-chevron-circle-down fa-lg positive" ng-click="unvotePost(playlist)" ng-if="playlist.downvoted"></i></div>
+                   <!--<i class="fa fa-chevron-circle-down fa-lg" ng-click="downvotePost(playlist)" ng-if="!playlist.downvoted"></i><i class="fa fa-chevron-circle-down fa-lg positive" ng-click="unvotePost(playlist)" ng-if="playlist.downvoted"></i>--></div>
                   <div class="col" ng-click="openTooltip($event,playlist)">&nbsp; <i class="ion-social-usd"></i>&nbsp;{{playlist | sumPostTotal | number}}</div>
                   <div class="col">&nbsp; <i class="icon ion-chatbubbles"></i>&nbsp;{{playlist.children}}</div>
                   <div class="col" ng-if="playlist.author!==user.username && active!=='recent-replies'">&nbsp; <i class="icon ion-arrow-return-right"></i></div>

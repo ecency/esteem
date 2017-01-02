@@ -2423,7 +2423,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         //console.log(res);
         if (Object.keys(res.content).length>0) {
           angular.forEach(res.content, function(v,k){
-            v.json_metadata = angular.fromJson(v.json_metadata);
+            v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
             if ($rootScope.$storage.user){
               if ($rootScope.$storage.user.username !== v.author) {
                 v.reblogged = true;
@@ -2593,7 +2593,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       if (res.content) {
         if (Object.keys(res.content).length>0) {
           angular.forEach(res.content, function(v,k){
-            v.json_metadata = angular.fromJson(v.json_metadata);
+            v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
             if ($rootScope.$storage.user){
               if ($rootScope.$storage.user.username !== v.author) {
                 v.reblogged = true;
