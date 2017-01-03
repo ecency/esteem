@@ -366,7 +366,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       }, function(error) {
           console.error(error);
       });
-      
+
       if ($rootScope.$storage.pincode) {
         $rootScope.pincheck = true;
         $rootScope.$broadcast("pin:check");
