@@ -868,8 +868,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           var subs = {};
           APIs.getSubscriptions($rootScope.$storage.deviceid).then(function(res){
             $rootScope.log(angular.toJson(res.data));
-            angular.merge(subs, {vote: res.data[0].subscription.vote, follow: res.data[0].subscription.follow, comment: res.data[0].subscription.comment, mention: res.data[0].subscription.mention, resteem: res.data[0].subscription.resteem, token: token});
-            APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, subs).then(function(res){
+            angular.merge(subs, {vote: res.data[0].subscription.vote||false, follow: res.data[0].subscription.follow||false, comment: res.data[0].subscription.comment||false, mention: res.data[0].subscription.mention||false, resteem: res.data[0].subscription.resteem||false, token: token});
+            APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username||undefined, subs).then(function(res){
               console.log(angular.toJson(res));
             });
             if (!$rootScope.$$phase){
