@@ -44,6 +44,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.open = function(item) {
     item.json_metadata = angular.fromJson(item.json_metadata);
     $rootScope.$storage.sitem = item;
+    console.log(item);
     /*window.Api.database_api().exec("get_state", ['/'+item.category+'/@'+item.author+'/'+item.permlink]).then(function(dd){
 
       //console.log(dd);
@@ -939,6 +940,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $scope.fetchPosts(null, $scope.limit, null);
     //}
   };
+  $scope.refresh = function(){
+    $scope.limit = 10;
+    //if (!$scope.error) {
+    $scope.fetchPosts(null, $scope.limit, null);
+    $scope.$broadcast('scroll.refreshComplete');
+  }
 
   $scope.$on('$stateChangeSuccess', function() {
     $scope.loadMore();
@@ -1072,7 +1079,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       params.start_permlink = $scope.data[$scope.data.length-1].permlink;
     }
     if ($scope.error) {
-      $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REQUEST_LIMIT_TEXT'));
+      //$rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REQUEST_LIMIT_TEXT'));
     } else {
       $rootScope.log("fetching..."+type+" "+limit+" "+tag);
       if (typeof window.Api.database_api === "function") {

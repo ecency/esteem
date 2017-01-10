@@ -16,22 +16,26 @@
 	    </ion-nav-buttons>
 	</ion-nav-bar>
   <ion-content class="has-header" scroll="true" delegate-handle="mainScroll" overflow-scroll="true">
-	
+		<ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
+  	</ion-refresher>
   		<div ng-if="$root.$storage.view=='compact' && data.length>0" class="masonry-layout">
-	    	<div ng-repeat="d in data track by $index" class="masonry-layout__panel">				    
+	    	<div ng-repeat="d in data track by $index" class="masonry-layout__panel">
 	    	   <div class="list masonry-layout__panel-content">
 		    	<div class="item">
 				    <div ng-click="open(d)">
 				    <span ng-if="d.first_reblogged_by"><i class="icon ion-arrow-return-right"></i> {{'RESTEEMED_BY'|translate}} {{d.first_reblogged_by}}</span>
-				    <p><h2><img style='display: inline-block;' src="img/steemicon.png" ng-if="d.percent_steem_dollars === 0" width="15" /><img style='display: inline-block;' src="img/steemDeclined.png" ng-if="d.max_accepted_payout === '0.000 SBD'" width="15" />{{d.title}}</h2></p>
+				    <p><h2><i class="fa fa-free-code-camp" ng-if="d.promoted.split(' ')[0]>0"></i>
+							<i class="fa fa-fire" ng-if="d.percent_steem_dollars === 0"></i><img style='display: inline-block;' src="img/steemDeclined.png" ng-if="d.max_accepted_payout === '0.000 SBD'" width="15" />{{d.title}}</h2></p>
 				    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;{{'BY'|translate}}&nbsp;<b>{{d.author}}</b>&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div> &middot; {{d.body|readingtime}} {{'MIN_READ'|translate}}</div></div>
 				    </div>
 				    <div class="row">
 				    <div class="col">
 				      <span ng-if="!$root.voiceOver">
-				      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!d.invoting"></i></a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!d.invoting"></i></a>&nbsp;<span class="gray" ng-click="openTooltip($event,d)"><i class="ion-social-usd"></i>{{d | sumPostTotal | number}}</span></span>
+				      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!d.invoting"></i></a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner>
+								<i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!d.invoting"></i></a>&nbsp;<span class="gray" ng-click="openTooltip($event,d)"><i class="ion-social-usd"></i><span ng-if="d.max_accepted_payout.split(' ')[0] === '0.000'"><del>0.000</del></span><span ng-if="d.max_accepted_payout.split(' ')[0] !== '0.000'">{{d | sumPostTotal | number}}</span></span></span>
 				      <span ng-if="$root.voiceOver">
-				      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!d.invoting"></i>{{'UPVOTE'|translate}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!d.invoting"></i>{{'UNVOTE'|translate}}</a>&nbsp;<span class="gray" ng-click="openTooltip($event,d)"><i class="ion-social-usd"></i>{{d | sumPostTotal | number}}</span></span>
+				      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!d.invoting"></i>{{'UPVOTE'|translate}}</a><a href="#" class="subdued" ng-if="d.upvoted" ng-click="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner>
+								<i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!d.invoting"></i>{{'UNVOTE'|translate}}</a>&nbsp;<span class="gray" ng-click="openTooltip($event,d)"><i class="ion-social-usd"></i><span ng-if="d.max_accepted_payout.split(' ')[0] === '0.000'"><del>0.000</del></span><span ng-if="d.max_accepted_payout.split(' ')[0] !== '0.000'">{{d | sumPostTotal | number}}</span></span></span>
 				      </div>
 				      <div class="col col-25 tright">
 				      <a href="#" class="subdued" ng-click="$root.openInfo(d)"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
@@ -53,7 +57,7 @@
 
 				<div class="item" ng-click="open(ds)">
 					<span ng-if="ds.first_reblogged_by"><i class="icon ion-arrow-return-right"></i> {{'RESTEEMED_BY'|translate}} {{ds.first_reblogged_by}}</span>
-				    <h2><img style='display: inline-block;' src="img/steemicon.png" ng-if="ds.percent_steem_dollars === 0" width="15" /><img style='display: inline-block;' src="img/steemDeclined.png" ng-if="ds.max_accepted_payout === '0.000 SBD'" width="15" />{{ds.title}}</h2>
+				    <h2><i class="fa fa-free-code-camp" ng-if="ds.promoted.split(' ')[0]>0"></i> <i class="fa fa-fire" ng-if="ds.percent_steem_dollars === 0"></i>{{ds.title}}</h2>
 				    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{ds.created|timeago}}&nbsp;{{'BY'|translate}}&nbsp;<b>{{ds.author}}</b>&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div> &middot; {{ds.body|readingtime}} {{'MIN_READ'|translate}}</div></div>
 				</div>
 				<div class="item-body">
@@ -61,11 +65,14 @@
 				    <div class="row">
 					    <div class="col">
 					      <span ng-if="!$root.voiceOver">
-					      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!ds.invoting"></i></a><a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!ds.invoting"></i></a>&nbsp;<span class="gray" ng-click="openTooltip($event,ds)"><i class="ion-social-usd"></i>{{ds | sumPostTotal | number}}</span>
+					      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!ds.invoting"></i></a><a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner>
+									<i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!ds.invoting"></i></a>&nbsp;<span class="gray" ng-click="openTooltip($event,ds)"><i class="ion-social-usd"></i><span ng-if="ds.max_accepted_payout.split(' ')[0] === '0.000'"><del>0.000</del></span><span ng-if="ds.max_accepted_payout.split(' ')[0] !== '0.000'">{{ds | sumPostTotal | number}}</span></span>
 					      </span>
 					      <span ng-if="$root.voiceOver">
 					      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!ds.invoting"></i>{{'UPVOTE'|translate}}</a>
-					      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!ds.invoting"></i>{{'UNVOTE'|translate}}</a>&nbsp;<span class="gray" ng-click="openTooltip($event,ds)"><i class="ion-social-usd"></i>{{ds | sumPostTotal | number}}</span>
+					      <a href="#" class="subdued" ng-if="ds.upvoted" ng-click="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!ds.invoting"></i>{{'UNVOTE'|translate}}</a>&nbsp;<span class="gray" ng-click="openTooltip($event,ds)">
+									<i class="ion-social-usd"></i>
+									<span ng-if="ds.max_accepted_payout.split(' ')[0] === '0.000'"><del>0.000</del></span><span ng-if="ds.max_accepted_payout.split(' ')[0] !== '0.000'">{{ds | sumPostTotal | number}}</span></span>
 					      </span>
 					      </div>
 					      <div class="col col-25 tright">
