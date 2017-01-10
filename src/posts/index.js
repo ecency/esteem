@@ -60,7 +60,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
 		views: {
 			'menuContent': {
 				//templateUrl: 'templates/settings.html'
-				template: fs.readFileSync(__dirname + '/templates/market.html', 'utf8')
+				template: fs.readFileSync(__dirname + '/templates/market.html', 'utf8'),
+				controller: 'MarketCtrl'
 			}
 		}
 	})
@@ -72,7 +73,6 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
         //templateUrl: 'templates/settings.html'
         template: fs.readFileSync(__dirname + '/templates/send.html', 'utf8'),
         controller: 'SendCtrl'
-
       }
     }
   })
