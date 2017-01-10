@@ -2709,40 +2709,33 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope) {
   });
 
 });
-app.controller('MarketCtrl', function($scope, $rootScope, $state, $ionicPopover, $ionicPopup, $filter, $translate, $cordovaEmailComposer) {
-  $scope.requestApp = function(name) {
-    if (name == 'New') {
-      $cordovaEmailComposer.isAvailable().then(function() {
-       // is available
-       var email = {
-         to: 'info@esteem.ws',
-         subject: 'eSteem: Suggest New App',
-         body: 'Hello eSteem, <br> App Name: <br> App Link: <br> App Author: <br>',
-         isHtml: true
-       };
+app.controller('MarketCtrl', function($scope, $rootScope, $state, $ionicPopover, $ionicPopup, $filter, $translate, $ionicPlatform, $window) {
 
-       $cordovaEmailComposer.open(email).then(null, function () {
-        // user cancelled email
-       });
-      }, function () {
-       // not available
-      });
-    }
-    if (ionic.Platform.isIOS() || ionic.Platform.isIPad()) {
-      if (name == 'SteemMonitor') {
-        cordova.plugins.market.open('id1158918690');
+  $scope.requestApp = function(name) {
+    $ionicPlatform.ready(function() {
+      if (name == 'New') {
+        window.open("mailto:info@esteem.ws?subject=Suggesting%20New%20App%20for%20Market%20Place&body=Hello!%0D%0A%0D%0AAppName:%0D%0AAppAuthor:%0D%0AAppLink:%0D%0A%0D%0A", "_system");
       }
-      if (name == 'SteemFest') {
-        cordova.plugins.market.open('id1171371708');
+      if (ionic.Platform.isIOS() || ionic.Platform.isIPad()) {
+        if (name == 'SteemMonitor') {
+          //cordova.plugins.market.open('id1158918690');
+          window.open("itms-apps://itunes.apple.com/app/id1158918690", "_system");
+        }
+        if (name == 'SteemFest') {
+          //cordova.plugins.market.open('id1171371708');
+          window.open("itms-apps://itunes.apple.com/app/id1171371708", "_system");
+        }
+      } else {
+        if (name == 'SteemMonitor') {
+          //cordova.plugins.market.open('com.netsolutions.esteemwitness');
+          window.open("market://details?id=com.netsolutions.esteemwitness", "_system");
+        }
+        if (name == 'SteemFest') {
+          //cordova.plugins.market.open('com.netsolutions.steemfest');
+          window.open("market://details?id=com.netsolutions.steemfest", "_system");
+        }
       }
-    } else {
-      if (name == 'SteemMonitor') {
-        cordova.plugins.market.open('com.netsolutions.esteemwitness');
-      }
-      if (name == 'SteemFest') {
-        cordova.plugins.market.open('com.netsolutions.steemfest');
-      }
-    }
+    });
   }
 
 });

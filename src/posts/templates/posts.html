@@ -24,8 +24,8 @@
 		    	<div class="item">
 				    <div ng-click="open(d)">
 				    <span ng-if="d.first_reblogged_by"><i class="icon ion-arrow-return-right"></i> {{'RESTEEMED_BY'|translate}} {{d.first_reblogged_by}}</span>
-				    <p><h2><i class="fa fa-free-code-camp" ng-if="d.promoted.split(' ')[0]>0"></i>
-							<i class="fa fa-fire" ng-if="d.percent_steem_dollars === 0"></i><img style='display: inline-block;' src="img/steemDeclined.png" ng-if="d.max_accepted_payout === '0.000 SBD'" width="15" />{{d.title}}</h2></p>
+				    <p><h2><i class="fa fa-money positive" ng-if="d.promoted.split(' ')[0] !== '0.000'"></i>
+							<i class="fa fa-fire positive" ng-if="d.percent_steem_dollars === 0"></i> {{d.title}}</h2></p>
 				    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;{{'BY'|translate}}&nbsp;<b>{{d.author}}</b>&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div> &middot; {{d.body|readingtime}} {{'MIN_READ'|translate}}</div></div>
 				    </div>
 				    <div class="row">
@@ -57,7 +57,7 @@
 
 				<div class="item" ng-click="open(ds)">
 					<span ng-if="ds.first_reblogged_by"><i class="icon ion-arrow-return-right"></i> {{'RESTEEMED_BY'|translate}} {{ds.first_reblogged_by}}</span>
-				    <h2><i class="fa fa-free-code-camp" ng-if="ds.promoted.split(' ')[0]>0"></i> <i class="fa fa-fire" ng-if="ds.percent_steem_dollars === 0"></i>{{ds.title}}</h2>
+				    <h2><i class="fa fa-money positive" ng-if="ds.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="ds.percent_steem_dollars === 0"></i>{{ds.title}}</h2>
 				    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{ds.created|timeago}}&nbsp;{{'BY'|translate}}&nbsp;<b>{{ds.author}}</b>&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div> &middot; {{ds.body|readingtime}} {{'MIN_READ'|translate}}</div></div>
 				</div>
 				<div class="item-body">
