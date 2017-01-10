@@ -210,8 +210,8 @@
 	"POST_IS_UNBOOKMARK": "Post is removed from bookmarks!",
 	"POST_IS_BOOKMARK": "Post is added to bookmarks!",
 	"RESET": "Reset",
-	"MODIFY_PICTURE": "Modify Profile Picture",	
-	"MODIFY_COVER_PICTURE": "Modify Cover Picture",	
+	"MODIFY_PICTURE": "Modify Profile Picture",
+	"MODIFY_COVER_PICTURE": "Modify Cover Picture",
 	"ACTIVE_KEY_REQUIRED_TEXT": "Please provide Active private key if you have chosen Advanced login mode!",
 	"RESET_PICTURE_TEXT": "This will reset user profile picture",
 	"RESET_COVER_PICTURE_TEXT": "This will reset user cover picture",
@@ -221,5 +221,7 @@
 	"LANGUAGES_TEXT": "Here you can change language of the app.",
 	"LOGIN_TO_X": "This operation requires user to be logged in with main password, active/posting key. Please login and try again.",
 	"GALLERY": "Gallery",
-	"TRANSLATIONS": "Translation contributors"
+	"TRANSLATIONS": "Translation contributors",
+	"SHARE": "Share",
+	"MARKETPLACE": "Market Place"
 }

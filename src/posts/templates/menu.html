@@ -78,6 +78,10 @@
           <i class="icon ion-arrow-swap"></i>
           {{'MARKET'|translate}}
         </ion-item>
+        <ion-item menu-close href="#/app/market" class="item-icon-left" ng-if="$root.$storage.user">
+          <i class="icon ion-cube"></i>
+          {{'MARKETPLACE'|translate}}
+        </ion-item>
         <ion-item menu-close href="#/app/settings" class="item-icon-left">
           <i class="icon ion-android-settings"></i>
           {{'SETTINGS'|translate}}
