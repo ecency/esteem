@@ -66,6 +66,10 @@
           <i class="icon ion-bookmark"></i>
           {{'BOOKMARKS'|translate}}
         </ion-item>
+        <ion-item menu-close href="#/app/drafts" class="item-icon-left" ng-if="$root.$storage.draft">
+          <i class="icon ion-bookmark"></i>
+          {{'DRAFTS'|translate}}
+        </ion-item>
         <!--<ion-item menu-close href="#/app/notifications" class="item-icon-left" ng-if="$root.$storage.notifications && $root.$storage.notifications.length>0">
           <i class="icon ion-bookmark"></i>
           {{'NOTIFICATIONS'|translate}}

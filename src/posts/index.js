@@ -19,6 +19,7 @@ window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
 window.steemJS = require("steemjs-lib");
 window.diff_match_patch = require('diff-match-patch');
 
+require('./config')(app);
 require('./services')(app);
 require('./controllers')(app);
 
@@ -129,6 +130,17 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
         //templateUrl: 'templates/post.html',
         template: fs.readFileSync(__dirname + '/templates/bookmarks.html', 'utf8'),
         controller: 'BookmarkCtrl'
+      }
+    }
+  })
+
+	.state('app.drafts', {
+    url: '/drafts',
+    views: {
+      'menuContent': {
+        //templateUrl: 'templates/post.html',
+        template: fs.readFileSync(__dirname + '/templates/drafts.html', 'utf8'),
+        controller: 'DraftsCtrl'
       }
     }
   })

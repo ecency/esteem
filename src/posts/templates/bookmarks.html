@@ -2,8 +2,9 @@
   <ion-content class="has-header">
 	<ion-list ng-if="$root.$storage.bookmark" can-swipe="true">
   		<ion-item ng-repeat="item in $root.$storage.bookmark" ng-click="$root.getContentAndOpen(item)">
-		    <p><h2>{{item.title}}</h2></p>
-			    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{item.created|timeago}}&nbsp;{{'BY' | translate}}&nbsp;<b>{{item.author}}&nbsp;<div class="reputation">{{item.author_reputation|reputation|number:0}}</div></b></div></div>
+		    <p><h2>{{item.author}}</h2></p>
+        <p>{{item.permlink}}</p>
+		    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{item.created|timeago}}</div></div>
 		    <ion-option-button class="button-assertive" ng-click="removeBookmark($index)">{{'REMOVE' | translate}}
 		    </ion-option-button>
     	</ion-item>

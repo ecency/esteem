@@ -44,7 +44,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.open = function(item) {
     item.json_metadata = angular.fromJson(item.json_metadata);
     $rootScope.$storage.sitem = item;
-    console.log(item);
+    //console.log(item);
+
     /*window.Api.database_api().exec("get_state", ['/'+item.category+'/@'+item.author+'/'+item.permlink]).then(function(dd){
 
       //console.log(dd);
@@ -1192,13 +1193,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
 })
 
-app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPopover, $filter, $state) {
+app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPopover, $filter, $state, APIs) {
   $scope.post = $rootScope.$storage.sitem;
   $scope.data = {};
   $scope.spost = {};
   $scope.replying = false;
   $scope.isBookmarked = function() {
-    var bookm = $rootScope.$storage.bookmark || null;
+    var bookm = $rootScope.$storage.bookmark || undefined;
     if (bookm) {
       var len = bookm.length;
       for (var i = 0; i < len; i++) {
@@ -1206,26 +1207,43 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           return true;
         }
       }
+    } else {
+      return false;
     }
   };
   $scope.bookmark = function() {
     var book = $rootScope.$storage.bookmark;
     if ($scope.isBookmarked()) {
       var len = book.length;
+      var id = undefined;
       for (var i = 0; i < len; i++) {
         if (book[i].permlink === $rootScope.$storage.sitem.permlink) {
+          id = book[i]._id;
           book.splice(i, 1);
         }
       }
-      $rootScope.$storage.bookmark = book;
-      $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_IS_UNBOOKMARK'));
+      if (id){
+        APIs.removeBookmark(id,$rootScope.$storage.user.username).then(function(res){
+          $rootScope.$storage.bookmark = book;
+          $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_IS_UNBOOKMARK'));
+        });
+      }
     } else {
       if (book) {
-        $rootScope.$storage.bookmark.push({title: $rootScope.$storage.sitem.title, author:$rootScope.$storage.sitem.author, author_reputation: $rootScope.$storage.sitem.author_reputation, created: $rootScope.$storage.sitem.created, permlink:$rootScope.$storage.sitem.permlink});
+        var oo = { author:$rootScope.$storage.sitem.author,permlink:$rootScope.$storage.sitem.permlink};
+        $rootScope.$storage.bookmark.push(oo);
+        APIs.addBookmark($rootScope.$storage.user.username, oo ).then(function(res){
+          $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_IS_BOOKMARK'));
+        });
       } else {
-        $rootScope.$storage.bookmark = [{title: $rootScope.$storage.sitem.title, author:$rootScope.$storage.sitem.author, author_reputation: $rootScope.$storage.sitem.author_reputation, created: $rootScope.$storage.sitem.created, permlink:$rootScope.$storage.sitem.permlink}];
+        var oo = { author:$rootScope.$storage.sitem.author,permlink:$rootScope.$storage.sitem.permlink};
+        $rootScope.$storage.bookmark = [oo];
+
+        APIs.addBookmark($rootScope.$storage.user.username, oo ).then(function(res){
+          $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_IS_BOOKMARK'));
+        });
       }
-      $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_IS_BOOKMARK'));
+      //$rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_IS_BOOKMARK'));
     }
   };
 
@@ -1858,13 +1876,23 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
 
 })
-app.controller('BookmarkCtrl', function($scope, $stateParams, $rootScope, $state, APIs, $interval, $ionicScrollDelegate) {
+app.controller('BookmarkCtrl', function($scope, $stateParams, $rootScope, $state, APIs, $interval, $ionicScrollDelegate, $filter) {
 
   $scope.removeBookmark = function(index) {
     if ($rootScope.$storage.bookmark) {
-      $rootScope.$storage.bookmark.splice(index,1);
+      APIs.removeBookmark($rootScope.$storage.bookmark[index]._id,$rootScope.$storage.user.username).then(function(res){
+        $rootScope.$storage.bookmark.splice(index,1);
+        $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_IS_UNBOOKMARK'));
+      });
     }
   };
+
+  $scope.$on('$ionicView.beforeEnter', function(){
+    APIs.getBookmarks($rootScope.$storage.user.username).then(function(res){
+      //console.log(res);
+      $rootScope.$storage.bookmark = res.data;
+    });
+  });
 
 
 })
