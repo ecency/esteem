@@ -1386,3 +1386,16 @@ em {
 .row.postdetails {
   font-size: 10pt;
 }
+
+.drawer {
+	height: 20vh;
+	text-align: center;
+	bottom: 0;
+	position: absolute;
+}
+.drawer img {
+	/*height: 19%;
+	height: 19vh;
+	width: auto;
+	max-width: 100%;*/
+}

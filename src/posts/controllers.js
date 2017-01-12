@@ -525,6 +525,34 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.activeMenu = $rootScope.$storage.filter || "trending";
   $scope.mymenu = $rootScope.$storage.user ? [{text: $filter('translate')('FEED'), custom:'feed'}, {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}] : [ {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}];
 
+  $scope.options = {
+    loop: false,
+    speed: 500,
+    /*pagination: false,*/
+    showPager: false,
+    slidesPerView: 3,
+    spaceBetween: 20,
+    breakpoints: {
+      1024: {
+          slidesPerView: 5,
+          spaceBetween: 15
+      },
+      768: {
+          slidesPerView: 4,
+          spaceBetween: 10
+      },
+      640: {
+          slidesPerView: 3,
+          spaceBetween: 5
+      },
+      320: {
+          slidesPerView: 3,
+          spaceBetween: 3
+      }
+    }
+  }
+
+
   $rootScope.$on('filter:change', function() {
     //$rootScope.$broadcast('show:loading');
     $rootScope.log($rootScope.$storage.filter);
@@ -681,6 +709,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
        { text: $filter('translate')('CAPTURE_PICTURE') },
        { text: $filter('translate')('SELECT_PICTURE') },
        { text: $filter('translate')('SET_CUSTOM_URL') },
+       { text: $filter('translate')('GALLERY') }
      ],
      titleText: $filter('translate')('INSERT_PICTURE'),
      cancelText: $filter('translate')('CANCEL'),
@@ -733,7 +762,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       }, function(err) {
         $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('CAMERA_CANCELLED'));
       });
-    } else {
+    } else if (type == 2){
       $ionicPopup.prompt({
         title: $filter('translate')('SET_URL'),
         template: $filter('translate')('DIRECT_LINK_PICTURE'),
@@ -752,9 +781,28 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           $scope.insertText(final);
         }
       });
+    } else {
+      $scope.gallery = [];
+      APIs.fetchImages($rootScope.$storage.user.username).then(function(res){
+        var imgs = res.data;
+        if (imgs.length>0){
+          $scope.showgallery = true;
+          $scope.gallery.images = imgs;
+        } else {
+          $scope.showgallery = false;
+          console.log('no images available')
+        }
+
+      });
+
     }
   };
-
+  $scope.addMyImage = function(img){
+    $scope.spost.body += " ![image]("+img.url+") ";
+  }
+  $scope.closeGallery = function(){
+    $scope.showgallery = false;
+  }
   function slug(text) {
     return getSlug(text, {truncate: 128});
   };
