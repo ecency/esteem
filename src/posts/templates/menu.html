@@ -62,12 +62,12 @@
           <i class="icon ion-home"></i>
           {{'HOME'|translate}}
         </ion-item>
-        <ion-item menu-close href="#/app/bookmark" class="item-icon-left" ng-if="$root.$storage.bookmark && $root.$storage.bookmark.length>0">
+        <ion-item menu-close href="#/app/bookmark" class="item-icon-left" ng-if="$root.$storage.user">
           <i class="icon ion-bookmark"></i>
           {{'BOOKMARKS'|translate}}
         </ion-item>
-        <ion-item menu-close href="#/app/drafts" class="item-icon-left" ng-if="$root.$storage.draft">
-          <i class="icon ion-bookmark"></i>
+        <ion-item menu-close href="#/app/drafts" ng-if="$root.$storage.user" class="item-icon-left">
+          <i class="icon ion-compose"></i>
           {{'DRAFTS'|translate}}
         </ion-item>
         <!--<ion-item menu-close href="#/app/notifications" class="item-icon-left" ng-if="$root.$storage.notifications && $root.$storage.notifications.length>0">

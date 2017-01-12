@@ -35,6 +35,15 @@ module.exports = function (app) {
       },
 			removeBookmark: function(id, user) {
         return $http.delete(API_END_POINT+"/api/bookmarks/"+user+"/"+id);
+      },
+			addDraft: function(user, draft) {
+        return $http.post(API_END_POINT+"/api/draft", {username: user, title: draft.title, body: draft.body, tags: draft.tags, post_type: draft.post_type});
+      },
+			getDrafts: function(user) {
+        return $http.get(API_END_POINT+"/api/drafts/"+user);
+      },
+			removeDraft: function(id, user) {
+        return $http.delete(API_END_POINT+"/api/drafts/"+user+"/"+id);
       }
 		};
 	}])

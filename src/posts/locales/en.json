@@ -225,5 +225,8 @@
 	"SHARE": "Share",
 	"MARKETPLACE": "Market Place",
 	"EXCHANGE": "Exchange",
-	"DRAFTS": "Drafts"
+	"DRAFTS": "Drafts",
+	"POST_IS_UNDRAFT": "Post is removed from drafts!",
+	"POST_IS_DRAFT": "Post is added to drafts!",
+	"SWIPE_LEFT": "Swipe left to see options"
 }

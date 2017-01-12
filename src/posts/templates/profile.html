@@ -38,7 +38,7 @@
               <img ng-src="{{playlist.json_metadata.image[0]}}" ng-click="open(playlist)" ng-if="playlist.json_metadata.image" onerror="this.src='img/noimage.png'"/>
                 <div ng-click="open(playlist)">
                 <div class="wrap">
-                  <h2><img style='display: inline-block;' src="img/steemicon.png" ng-if="playlist.percent_steem_dollars === 0" width="15" /><img style='display: inline-block;' src="img/steemDeclined.png" ng-if="playlist.max_accepted_payout === '0.000 SBD'" width="15" />{{playlist.root_title}}</h2>
+                  <h2><i class="fa fa-money positive" ng-if="playlist.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="playlist.percent_steem_dollars === 0"></i>{{playlist.root_title}}</h2>
                 </div>
                 <div class="postdetails"><i class="icon ion-android-time"></i>&nbsp;{{playlist.created|timeago}}&nbsp;{{'BY'|translate}}&nbsp;<i class="icon ion-android-person"></i>&nbsp;{{playlist.author}}&nbsp;<div class="reputation">{{playlist.author_reputation|reputation|number:0}}</div></div>
                 </div>
@@ -46,14 +46,14 @@
                   <div class="col"><ion-spinner ng-if="playlist.invoting"></ion-spinner>
                   <i class="fa fa-chevron-circle-up fa-lg" ng-click="upvotePost(playlist)" ng-if="!playlist.upvoted"></i><i class="fa fa-chevron-circle-up fa-lg positive" ng-click="unvotePost(playlist)" ng-if="playlist.upvoted"></i>&nbsp;&nbsp;<span ng-click="$root.openInfo(playlist)">{{playlist.net_votes}}</span>&nbsp;&nbsp;
                    <!--<i class="fa fa-chevron-circle-down fa-lg" ng-click="downvotePost(playlist)" ng-if="!playlist.downvoted"></i><i class="fa fa-chevron-circle-down fa-lg positive" ng-click="unvotePost(playlist)" ng-if="playlist.downvoted"></i>--></div>
-                  <div class="col" ng-click="openTooltip($event,playlist)">&nbsp; <i class="ion-social-usd"></i>&nbsp;{{playlist | sumPostTotal | number}}</div>
+                  <div class="col" ng-click="openTooltip($event,playlist)">&nbsp; <i class="ion-social-usd"></i><span ng-if="playlist.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{playlist | sumPostTotal | number}}</del></span><span ng-if="playlist.max_accepted_payout.split(' ')[0] !== '0.000'">{{playlist | sumPostTotal | number}}</span></div>
                   <div class="col">&nbsp; <i class="icon ion-chatbubbles"></i>&nbsp;{{playlist.children}}</div>
                   <div class="col" ng-if="playlist.author!==user.username && active!=='recent-replies'">&nbsp; <i class="icon ion-arrow-return-right"></i></div>
                 </div>
             </div>
           </ion-list>
         </div>
-      
+
         <div class="padding" ng-if="active=='transfers'">
           <p class="bold uppercase">
             {{'BALANCES'|translate}}
@@ -100,7 +100,7 @@
               <div ng-if="tr[1].op[0]=='transfer'">{{tr[1].op[1].amount}} | {{tr[1].op[1].memo}}</div>
               <div ng-if="tr[1].op[0]=='transfer_to_vesting'">{{tr[1].op[1].amount}} | {{tr[1].op[1].memo}}</div>
               <div ng-if="tr[1].op[0]=='withdraw_vesting'">{{tr[1].op[1].vesting_shares}} | {{tr[1].op[1].memo}}</div>
-              
+
               <p ng-if="tr[1].op[0]=='comment_reward'">@{{tr[1].op[1].author}}/{{tr[1].op[1].permlink}}</p>
               <p ng-if="tr[1].op[0]=='author_reward'">@{{tr[1].op[1].author}}/{{tr[1].op[1].permlink}}</p>
               <p ng-if="tr[1].op[0]=='curation_reward'">@{{tr[1].op[1].comment_author}}/{{tr[1].op[1].comment_permlink}}</p>
@@ -111,7 +111,7 @@
             </div>
           </div>
         </div>
-      
+
         <div class="box pink" ng-if="active=='permissions'">
           <div class="list card">
             <div class="item">

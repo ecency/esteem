@@ -520,7 +520,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   });
 
 });
-app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService, $filter, $ionicHistory, $timeout) {
+app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService, $filter, $ionicHistory, $timeout, APIs) {
 
   $scope.activeMenu = $rootScope.$storage.filter || "trending";
   $scope.mymenu = $rootScope.$storage.user ? [{text: $filter('translate')('FEED'), custom:'feed'}, {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}] : [ {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}];
@@ -879,6 +879,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.savePost = function() {
     console.log($scope.modalp);
     $rootScope.$storage.spost = $scope.spost;
+    //adddraft
+    var dr = {title:$scope.spost.title, body: $scope.spost.body, tags: $scope.spost.tags, post_type: $scope.spost.operation_type};
+    APIs.addDraft($rootScope.$storage.user.username, dr).then(function(res){
+      console.log(res.data);
+      //$scope.drafts = res.data;
+    });
+    $rootScope.$broadcast('closePostModal');
     $rootScope.$broadcast('close:popover');
     $scope.modalp.hide();
     $rootScope.showMessage($filter('translate')('SAVED'), $filter('translate')('POST_LATER'));
@@ -1893,9 +1900,28 @@ app.controller('BookmarkCtrl', function($scope, $stateParams, $rootScope, $state
       $rootScope.$storage.bookmark = res.data;
     });
   });
+});
 
+app.controller('DraftsCtrl', function($scope, $stateParams, $rootScope, $state, APIs, $interval, $ionicScrollDelegate, $filter) {
+  //JSON.stringify({
+  $scope.removeDraft = function(_id) {
+    APIs.removeDraft(_id,$rootScope.$storage.user.username).then(function(res){
+      APIs.getDrafts($rootScope.$storage.user.username).then(function(res){
+        //console.log(res);
+        $scope.drafts = res.data;
+      });
+      $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_IS_UNDRAFT'));
+    });
+  };
 
-})
+  $scope.$on('$ionicView.beforeEnter', function(){
+    APIs.getDrafts($rootScope.$storage.user.username).then(function(res){
+      //console.log(res);
+      $scope.drafts = res.data;
+    });
+  });
+});
+
 app.controller('NotificationsCtrl', function($scope, $stateParams, $rootScope, $state, APIs, $interval, $ionicScrollDelegate) {
 
   $scope.removeNotification = function(index) {
@@ -1903,8 +1929,6 @@ app.controller('NotificationsCtrl', function($scope, $stateParams, $rootScope, $
       $rootScope.$storage.notifications.splice(index,1);
     }
   };
-
-
 })
 app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, APIs, $interval, $ionicScrollDelegate) {
   $scope.searchu = {};

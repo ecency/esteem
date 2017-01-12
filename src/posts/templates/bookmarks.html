@@ -9,5 +9,8 @@
 		    </ion-option-button>
     	</ion-item>
     </ion-list>
+    <p class="tcenter gray padding" ng-if="$root.$storage.bookmark.length>0">{{'SWIPE_LEFT'|translate}}</p>
+    <p class="tcenter gray padding" ng-if="$root.$storage.bookmark.length==0">{{'NOTHING_HERE'|translate}}</p>
+
   </ion-content>
 </ion-view>

@@ -571,6 +571,12 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     String.prototype.replaceAt=function(index, character) {
         return this.substr(0, index) + character + this.substr(index+character.length);
     }
+		$rootScope.openDraft = function(item){
+			item.operation_type = item.post_type;
+			$rootScope.$storage.spost = item;
+			$state.go('app.posts');
+			$rootScope.$broadcast('openPostModal');
+		}
     $rootScope.getContentAndOpen = function(item) {
 
       window.Api.initPromise.then(function(response) {
