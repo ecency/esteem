@@ -1,6 +1,6 @@
 <ion-view view-title="" hide-nav-bar="true"><!--ng-class="{'mpb':$root.$storage.user.json_metadata.profile.cover_image}"-->
   <ion-content class="has-footer" overflow-scroll="true">
-    <div class="bar bar-subheader mysubheader bar-positive" ng-style="css">
+    <div class="bar bar-subheader mysubheader bar-positive" ng-style="css||mcss">
       <button class="button button-icon button-clear ion-ios-arrow-back profilebtn" ng-click="goBack()"></button>
       <button class="button button-outline button-light profilebtn_follow" ng-click="followUser(user.username)" ng-if="$root.$storage.user && $root.$storage.user.username != user.username && !isFollowing(user.username)"><!--<i class="fa fa-user-plus fa-lg"></i>-->{{'FOLLOW'|translate}}</button>
       <button class="button button-clear profilebtn_follow button-icon ion-camera" ng-click="showCover()" ng-if="$root.$storage.user && $root.$storage.user.username === user.username"></button>
