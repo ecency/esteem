@@ -228,5 +228,9 @@
 	"DRAFTS": "Drafts",
 	"POST_IS_UNDRAFT": "Post is removed from drafts!",
 	"POST_IS_DRAFT": "Post is added to drafts!",
-	"SWIPE_LEFT": "Swipe left to see options"
+	"SWIPE_LEFT": "Swipe left to see options",
+	"MANAGE": "Manage",
+	"IMAGE_REMOVED": "Image is removed",
+	"COPY": "Copy",
+	"NO_IMAGE": "You have not uploaded any image, yet!"
 }

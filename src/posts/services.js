@@ -45,6 +45,9 @@ module.exports = function (app) {
 			removeDraft: function(id, user) {
         return $http.delete(API_END_POINT+"/api/drafts/"+user+"/"+id);
       },
+			removeImage: function(id, user) {
+        return $http.delete(API_END_POINT+"/api/images/"+user+"/"+id);
+      },
 			fetchImages: function(user) {
         return $http.get(API_END_POINT+"/api/images/"+user);
       }

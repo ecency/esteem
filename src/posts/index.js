@@ -145,6 +145,17 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
     }
   })
 
+	.state('app.images', {
+    url: '/images',
+    views: {
+      'menuContent': {
+        //templateUrl: 'templates/post.html',
+        template: fs.readFileSync(__dirname + '/templates/images.html', 'utf8'),
+        controller: 'ImagesCtrl'
+      }
+    }
+  })
+
   .state('app.notifications', {
     url: '/notifications',
     views: {

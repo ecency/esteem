@@ -790,18 +790,18 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           $scope.gallery.images = imgs;
         } else {
           $scope.showgallery = false;
+          $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('NO_IMAGE'));
           console.log('no images available')
         }
-
       });
-
     }
   };
-  $scope.addMyImage = function(img){
-    $scope.spost.body += " ![image]("+img.url+") ";
-  }
   $scope.closeGallery = function(){
     $scope.showgallery = false;
+  }
+  $scope.manageGallery = function(){
+    $rootScope.$broadcast('closePostModal');
+    $state.go('app.images');
   }
   function slug(text) {
     return getSlug(text, {truncate: 128});
@@ -1266,6 +1266,32 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       return false;
     }
   };
+  $scope.options = {
+    loop: false,
+    speed: 500,
+    /*pagination: false,*/
+    showPager: false,
+    slidesPerView: 3,
+    spaceBetween: 20,
+    breakpoints: {
+      1024: {
+          slidesPerView: 5,
+          spaceBetween: 15
+      },
+      768: {
+          slidesPerView: 4,
+          spaceBetween: 10
+      },
+      640: {
+          slidesPerView: 3,
+          spaceBetween: 5
+      },
+      320: {
+          slidesPerView: 3,
+          spaceBetween: 3
+      }
+    }
+  }
   $scope.bookmark = function() {
     var book = $rootScope.$storage.bookmark;
     if ($scope.isBookmarked()) {
@@ -1425,6 +1451,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
        { text: $filter('translate')('CAPTURE_PICTURE') },
        { text: $filter('translate')('SELECT_PICTURE') },
        { text: $filter('translate')('SET_CUSTOM_URL') },
+       { text: $filter('translate')('GALLERY') }
      ],
      titleText: $filter('translate')('INSERT_PICTURE'),
      cancelText: $filter('translate')('CANCEL'),
@@ -1478,7 +1505,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         }, function(err) {
           $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('CAMERA_CANCELLED'));
         });
-      } else {
+      } else if (type == 2){
         $ionicPopup.prompt({
           title: $filter('translate')('SET_URL'),
           template: $filter('translate')('DIRECT_LINK_PICTURE'),
@@ -1496,6 +1523,19 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               $scope.spost.body = final;
             }*/
             $scope.insertText(final);
+          }
+        });
+      } else {
+        $scope.gallery = [];
+        APIs.fetchImages($rootScope.$storage.user.username).then(function(res){
+          var imgs = res.data;
+          if (imgs.length>0){
+            $scope.showgallery = true;
+            $scope.gallery.images = imgs;
+          } else {
+            $scope.showgallery = false;
+            $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('NO_IMAGE'));
+            console.log('no images available')
           }
         });
       }
@@ -1538,7 +1578,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         }, function(err) {
           $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('CAMERA_CANCELLED'));
         });
-      } else {
+      } else if (type == 2){
         $ionicPopup.prompt({
           title: $filter('translate')('SET_URL'),
           template: $filter('translate')('DIRECT_LINK_PICTURE'),
@@ -1558,9 +1598,21 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             $scope.insertText(final);
           }
         });
+      } else {
+        $scope.gallery = [];
+        APIs.fetchImages($rootScope.$storage.user.username).then(function(res){
+          var imgs = res.data;
+          if (imgs.length>0){
+            $scope.showgallery = true;
+            $scope.gallery.images = imgs;
+          } else {
+            $scope.showgallery = false;
+            $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('NO_IMAGE'));
+            console.log('no images available')
+          }
+        });
       }
     }
-
   };
 
   $ionicModal.fromTemplateUrl('templates/story.html', {
@@ -1577,12 +1629,18 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       });*/
     }, 10);
   };
-  $scope.closePostModal = function() {
-    $scope.pmodal.hide();
-  };
+
   $rootScope.$on('closePostModal', function(){
     $scope.pmodal.hide();
   });
+
+  $scope.closeGallery = function(){
+    $scope.showgallery = false;
+  }
+  $scope.manageGallery = function(){
+    $scope.modal.hide();
+    $state.go('app.images');
+  }
   var dmp = new window.diff_match_patch();
 
   function createPatch(text1, text2) {
@@ -1737,7 +1795,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
     }
   }
-
+  $scope.addImage = function(url) {
+    $scope.data.comment += ' ![image]('+url+') ';
+  }
   $scope.reply = function (xx) {
     //$rootScope.log(xx);
     $rootScope.$broadcast('show:loading');
@@ -1966,6 +2026,28 @@ app.controller('DraftsCtrl', function($scope, $stateParams, $rootScope, $state, 
     APIs.getDrafts($rootScope.$storage.user.username).then(function(res){
       //console.log(res);
       $scope.drafts = res.data;
+    });
+  });
+});
+
+app.controller('ImagesCtrl', function($scope, $stateParams, $rootScope, $state, APIs, $interval, $ionicScrollDelegate, $filter) {
+  //JSON.stringify({
+  $scope.removeImage = function(_id) {
+    APIs.removeImage(_id,$rootScope.$storage.user.username).then(function(res){
+      APIs.fetchImages($rootScope.$storage.user.username).then(function(res){
+        //console.log(res);
+        $scope.images = res.data;
+      });
+      $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('IMAGE_REMOVED'));
+    });
+  };
+  $scope.copyImage = function(url){
+    cordova.plugins.clipboard.copy(url);
+  };
+  $scope.$on('$ionicView.beforeEnter', function(){
+    APIs.fetchImages($rootScope.$storage.user.username).then(function(res){
+      //console.log(res);
+      $scope.images = res.data;
     });
   });
 });

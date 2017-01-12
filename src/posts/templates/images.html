@@ -1,0 +1,17 @@
+<ion-view view-title="{{'MANAGE' | translate}} {{'GALLERY' | translate}}">
+  <ion-content class="has-header">
+	<ion-list ng-if="images" can-swipe="true">
+  		<ion-item ng-repeat="item in images" class="item-thumbnail-left">
+        <img ng-src="{{item.url}}"/>
+        <p><h2>{{item.url}}</h2></p>
+			  <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{item.created|timeago}}&nbsp;</div></div>
+        <ion-option-button class="button-assertive" ng-click="removeImage(item._id)">{{'REMOVE' | translate}}
+		    </ion-option-button>
+		    <ion-option-button class="button-calm" ng-click="copyImage(item.url)">{{'COPY' | translate}}
+		    </ion-option-button>
+    	</ion-item>
+    </ion-list>
+    <p class="tcenter gray" ng-if="images.length>0">{{'SWIPE_LEFT'|translate}}</p>
+    <p class="tcenter gray" ng-if="images.length==0">{{'NOTHING_HERE'|translate}}</p>
+  </ion-content>
+</ion-view>

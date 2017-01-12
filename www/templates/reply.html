@@ -9,7 +9,21 @@
       <p ng-if="data.comment">{{'PREVIEW'|translate}}</p>
       <div ng-if="data.comment" class="padding bodytext" ng-bind-html="data.comment | parseUrl "></div>
   </ion-content>
-  <ion-footer-bar align-title="left" keyboard-attach class="story">
+  <ion-slides options="options" class="drawer" ng-if="showgallery" slider="gallery.slider">
+    <ion-slide-page ng-repeat="image in gallery.images" ng-if="image.url" ng-click="addImage(image.url)">
+      <!--<div ng-if="offer.Image.length>0">
+        <img src="{{offer.Image[0].src}}" alt="" />
+      </div>-->
+      <img ng-src = "{{image.url}}" />
+    </ion-slide-page>
+  </ion-slides>
+  <ion-footer-bar align-title="left" ng-if="showgallery" class="story">
+    <div class="button-bar">
+       <a class="button button-small" ng-click="closeGallery()"><i class="icon ion-ios-close-empty"></i>{{'CLOSE'|translate}}</a>
+       <a class="button button-small" ng-click="manageGallery()"><i class="icon ion-ios-cog-outline"></i>{{'MANAGE'|translate}}</a>
+     </div>
+  </ion-footer-bar>
+  <ion-footer-bar align-title="left" ng-if="!showgallery" keyboard-attach class="story">
     <div class="button-bar">
       <a class="button button-small" ng-click="insertText('**bold**')"><i class="fa fa-bold"></i></a>
       <a class="button button-small" ng-click="insertText('*italic*')"><i class="fa fa-italic"></i></a>
