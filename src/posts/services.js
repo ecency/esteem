@@ -1,8 +1,7 @@
 //angular.module('steem.services', [])
 module.exports = function (app) {
-	app.service('APIs', ['$http', '$rootScope', function ($http, $rootScope) {
+	app.service('APIs', ['$http', '$rootScope', 'API_END_POINT', function ($http, $rootScope, API_END_POINT) {
 		'use strict';
-		
 		return {
 			login: function (data) {
 				return $http.post('', data);
@@ -17,16 +16,40 @@ module.exports = function (app) {
         return window.Api.follow_api().exec("get_following", [user, follower, what, limit]);
       },
       saveSubscription: function(deviceid, username, subscription) {
-        return $http.post("http://192.158.29.1:8080/api/devices", {deviceid: deviceid, username: username, subscription: subscription});
+        return $http.post(API_END_POINT+"/api/devices", {deviceid: deviceid, username: username, subscription: subscription});
       },
       updateSubscription: function(deviceid, username, subscription) {
-        return $http.put("http://192.158.29.1:8080/api/devices", {deviceid: deviceid, username: username, subscription: subscription});
+        return $http.put(API_END_POINT+"/api/devices", {deviceid: deviceid, username: username, subscription: subscription});
       },
       deleteSubscription: function(deviceid) {
-        return $http.delete("http://192.158.29.1:8080/api/devices/"+deviceid);
+        return $http.delete(API_END_POINT+"/api/devices/"+deviceid);
       },
       getSubscriptions: function(deviceid) {
-        return $http.get("http://192.158.29.1:8080/api/devices/"+deviceid);
+        return $http.get(API_END_POINT+"/api/devices/"+deviceid);
+      },
+			addBookmark: function(user, bookmark) {
+        return $http.post(API_END_POINT+"/api/bookmark", {username: user, author: bookmark.author, permlink: bookmark.permlink});
+      },
+			getBookmarks: function(user) {
+        return $http.get(API_END_POINT+"/api/bookmarks/"+user);
+      },
+			removeBookmark: function(id, user) {
+        return $http.delete(API_END_POINT+"/api/bookmarks/"+user+"/"+id);
+      },
+			addDraft: function(user, draft) {
+        return $http.post(API_END_POINT+"/api/draft", {username: user, title: draft.title, body: draft.body, tags: draft.tags, post_type: draft.post_type});
+      },
+			getDrafts: function(user) {
+        return $http.get(API_END_POINT+"/api/drafts/"+user);
+      },
+			removeDraft: function(id, user) {
+        return $http.delete(API_END_POINT+"/api/drafts/"+user+"/"+id);
+      },
+			removeImage: function(id, user) {
+        return $http.delete(API_END_POINT+"/api/images/"+user+"/"+id);
+      },
+			fetchImages: function(user) {
+        return $http.get(API_END_POINT+"/api/images/"+user);
       }
 		};
 	}])
@@ -76,12 +99,12 @@ module.exports = function (app) {
         var nav = document.getElementById("nav1");
         var navWidth = document.getElementById("nav2").offsetWidth;
         var currentElement = document.querySelectorAll('[name="'+menuItem+'"]');
-        currentElement = menuItem ? currentElement[0] : document.getElementsByClassName('active')[0]; 
+        currentElement = menuItem ? currentElement[0] : document.getElementsByClassName('active')[0];
         if(currentElement) {
           var margin = 0;
           var lenm = nav.children.length;
           for(var i =0; i<lenm; i++){
-            
+
             if(currentElement == nav.children[i]){
               break;
             }else {
@@ -98,13 +121,13 @@ module.exports = function (app) {
       for (var i = 0; i < _len; i++) {
         if ($rootScope.$storage.filter) {
           if ($scope.menulinks[i].href == $rootScope.$storage.filter) {
-            $scope.activeMenu = $scope.menulinks[i].name;      
+            $scope.activeMenu = $scope.menulinks[i].name;
           }
         } else {
-          $scope.activeMenu = "Trending";    
+          $scope.activeMenu = "Trending";
         }
       }
-      
+
       //$scope.center();
       setTimeout(function() {
         $scope.center();
@@ -149,7 +172,7 @@ module.exports = function (app) {
           }
       };
   };
-  
+
   app.directive('onFinishRender', function ($timeout) {
       return {
           restrict: 'A',
@@ -182,30 +205,30 @@ module.exports = function (app) {
       return {
         restrict : 'A, E, C',
         link : function(scope, element, attrs, ngModel) {
-          
+
           var ta = element[0], $ta = element;
           $ta.addClass("tabbed-slidebox");
           if(attrs.tabsPosition === "bottom"){
             $ta.addClass("btm");
           }
-          
+
           //Handle multiple slide/scroll boxes
           var handle = ta.querySelector('.slider').getAttribute('delegate-handle');
-          
+
           var ionicSlideBoxDelegate = $ionicSlideBoxDelegate;
           if(handle){
             ionicSlideBoxDelegate = ionicSlideBoxDelegate.$getByHandle(handle);
           }
-          
+
           var ionicScrollDelegate = $ionicScrollDelegate;
           if(handle){
             ionicScrollDelegate = ionicScrollDelegate.$getByHandle(handle);
           }
-          
+
           function renderScrollableTabs(){
             var iconsDiv = angular.element(ta.querySelector(".tsb-icons")), icons = iconsDiv.find("a"), wrap = iconsDiv[0].querySelector(".tsb-ic-wrp"), totalTabs = icons.length;
             var scrollDiv = wrap.querySelector(".scroll");
-            
+
             angular.forEach(icons, function(value, key){
                  var a = angular.element(value);
                  a.on('click', function(){
@@ -216,14 +239,14 @@ module.exports = function (app) {
                 a.attr("class", a.attr('icon-off'));
               }
             });
-            
+
             var initialIndex = attrs.tab;
             //Initializing the middle tab
             if(typeof attrs.tab === 'undefined' || (totalTabs <= initialIndex) || initialIndex < 0){
               initialIndex = Math.floor(icons.length/2);
             }
-            
-            //If initial element is 0, set position of the tab to 0th tab 
+
+            //If initial element is 0, set position of the tab to 0th tab
             if(initialIndex == 0){
               setPosition(0);
             }
@@ -244,7 +267,7 @@ module.exports = function (app) {
                 }
                 if ($rootScope.$storage.filter === 'created'){
                   //$scope.events.trigger("slideChange", {"index" : 2});
-                  initialIndex = 3; 
+                  initialIndex = 3;
                 }
                 if ($rootScope.$storage.filter === 'active'){
                   //$scope.events.trigger("slideChange", {"index" : 3});
@@ -252,7 +275,7 @@ module.exports = function (app) {
                 }
                 if ($rootScope.$storage.filter === 'promoted'){
                   //$scope.events.trigger("slideChange", {"index" : 4});
-                  initialIndex = 5; 
+                  initialIndex = 5;
                 }
                 if ($rootScope.$storage.filter === 'trending30'){
                   //$scope.events.trigger("slideChange", {"index" : 5});
@@ -281,7 +304,7 @@ module.exports = function (app) {
                 }
                 if ($rootScope.$storage.filter === 'created'){
                   //$scope.events.trigger("slideChange", {"index" : 2});
-                  initialIndex = 2; 
+                  initialIndex = 2;
                 }
                 if ($rootScope.$storage.filter === 'active'){
                   //$scope.events.trigger("slideChange", {"index" : 3});
@@ -289,7 +312,7 @@ module.exports = function (app) {
                 }
                 if ($rootScope.$storage.filter === 'promoted'){
                   //$scope.events.trigger("slideChange", {"index" : 4});
-                  initialIndex = 4; 
+                  initialIndex = 4;
                 }
                 if ($rootScope.$storage.filter === 'trending30'){
                   //$scope.events.trigger("slideChange", {"index" : 5});
@@ -317,7 +340,7 @@ module.exports = function (app) {
           function setPosition(index){
             var iconsDiv = angular.element(ta.querySelector(".tsb-icons")), icons = iconsDiv.find("a"), wrap = iconsDiv[0].querySelector(".tsb-ic-wrp"), totalTabs = icons.length;
             var scrollDiv = wrap.querySelector(".scroll");
-            
+
             var middle = iconsDiv[0].offsetWidth/2;
             var curEl = angular.element(icons[index]);
             var prvEl = angular.element(iconsDiv[0].querySelector(".active"));
@@ -333,7 +356,7 @@ module.exports = function (app) {
                 curEl.attr("class", curEl.attr('icon-on'));
               }
               curEl.addClass("active");
-            
+
               var leftStr = (middle  - (curElLeft) -  curElWidth/2 + 5);
               //If tabs are not scrollable
               if(!scrollDiv){
@@ -354,7 +377,7 @@ module.exports = function (app) {
                   setTimeout(function() {
                     ionicScrollDelegate.scrollTo(Math.abs(leftStr), 0, true);
                   }, 10);
-                  
+
                 } else {
                   if(leftStr > 0){
                     leftStr = 0;
@@ -380,9 +403,9 @@ module.exports = function (app) {
             renderScrollableTabs();
           });
           setTimeout(function() {
-            renderScrollableTabs();    
+            renderScrollableTabs();
           }, 10);
-          
+
         },
         controller : function($scope, $attrs, $element, $rootScope) {
           $scope.events = new SimplePubSub();
@@ -476,10 +499,10 @@ module.exports = function (app) {
               }
               if (!$rootScope.$$phase){
                 $rootScope.$apply();
-              }            
+              }
             }, 10);
           };
-          
+
           $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
             $rootScope.log('ngRepeatFinished');
             $scope.events.trigger("ngRepeatFinished", {"event" : ngRepeatFinishedEvent});
@@ -487,11 +510,11 @@ module.exports = function (app) {
         }
       };
 
-    } 
+    }
   ]);
 
 	app.filter('timeago', function($filter, $translate, $rootScope) {
-      
+
       function TimeAgo(input, p_allowFuture) {
         var substitute = function (stringOrFunction, number, strings) {
                 var string = angular.isFunction(stringOrFunction) ? stringOrFunction(number, dateDifference) : stringOrFunction;
@@ -527,11 +550,11 @@ module.exports = function (app) {
             days = hours / 24,
             years = days / 365,
             separator = strings.wordSeparator === undefined ?  " " : strings.wordSeparator,
-        
-           
+
+
             prefix = strings.prefixAgo,
             suffix = strings.suffixAgo;
-            
+
         if (allowFuture) {
             if (dateDifference < 0) {
                 prefix = strings.prefixFromNow;
@@ -555,7 +578,7 @@ module.exports = function (app) {
         words.replace(/ /g, '')
         suffix.replace(/ /g, '')
         return (prefix+' '+words+' '+suffix+' '+separator);
-              
+
       };
 
       TimeAgo.$stateful = true;
@@ -568,7 +591,7 @@ module.exports = function (app) {
   	 	var imgs = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/gim;
   		var youtube = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
   		var youtubeid = /(?:(?:youtube.com\/watch\?v=)|(?:youtu.be\/))([A-Za-z0-9\_\-]+)/i;
-		
+
 	    return function(textu, subpart) {
         var options = {
         	gfm: true,
@@ -587,8 +610,8 @@ module.exports = function (app) {
             var text = s.substring(s.indexOf("<p>"), s.indexOf("</p>"));
             return text;
           } else {
-            return $sce.trustAsHtml(textu); 
-          }  
+            return $sce.trustAsHtml(textu);
+          }
         }
 	    };
 	});
@@ -599,7 +622,7 @@ module.exports = function (app) {
         var imgs = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/gim;
         var youtube = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
         var youtubeid = /(?:(?:youtube.com\/watch\?v=)|(?:youtu.be\/))([A-Za-z0-9\_\-]+)/i;
-        
+
         return function(textu) {
             var out = {};
             var murls = textu.match(urls);
@@ -617,10 +640,10 @@ module.exports = function (app) {
                     }
                 }
                 if (mlinks) {
-                    angular.merge(out, {links: mlinks});    
+                    angular.merge(out, {links: mlinks});
                 }
                 if (mimgs) {
-                    angular.merge(out, {image: mimgs});    
+                    angular.merge(out, {image: mimgs});
                 }
             }
             if (musers) {
@@ -629,7 +652,7 @@ module.exports = function (app) {
                     musers[i] = musers[i].trim().substring(1);
                 }
                 if (musers) {
-                    angular.merge(out, {users: musers});    
+                    angular.merge(out, {users: musers});
                 }
             }
             return out;
@@ -642,14 +665,14 @@ module.exports = function (app) {
           if (textu) {
             var out = {};
             var musers = textu.match(users);
-            
+
             $rootScope.log(angular.toJson(musers));
 
-            return textu;            
+            return textu;
           }
         };
     });
-    
+
   function ansiWordBound(c) {
     return (
       (' ' === c) ||
@@ -697,7 +720,7 @@ module.exports = function (app) {
   app.filter('readingtime', function($sce, $rootScope) {
       return function(text) {
         if (text) {
-          return readingTime(text).minutes;  
+          return readingTime(text).minutes;
         }
       };
   })
@@ -705,28 +728,28 @@ module.exports = function (app) {
 	app.filter('sp', function($sce, $rootScope) {
 	    return function(text) {
 	    	if (text) {
-	    		return (Number(text.split(" ")[0])/1e6*$rootScope.$storage.steem_per_mvests).toFixed(3);	
+	    		return (Number(text.split(" ")[0])/1e6*$rootScope.$storage.steem_per_mvests).toFixed(3);
 	    	}
 	    };
 	})
 	app.filter('sd', function($sce, $rootScope) {
 	    return function(text, balance, sbd) {
 	    	if (text) {
-	    		return (Number(text.split(" ")[0])/1e6*$rootScope.$storage.steem_per_mvests*$rootScope.$storage.base + Number(balance.split(" ")[0])*$rootScope.$storage.base + Number(sbd.split(" ")[0])).toFixed(3);	
+	    		return (Number(text.split(" ")[0])/1e6*$rootScope.$storage.steem_per_mvests*$rootScope.$storage.base + Number(balance.split(" ")[0])*$rootScope.$storage.base + Number(sbd.split(" ")[0])).toFixed(3);
 	    	}
 	    };
 	})
 	app.filter('sbd', function($sce, $rootScope) {
 	    return function(text) {
 	    	if (text) {
-	    		return (Number(text.split(" ")[0]).toFixed(3));	
+	    		return (Number(text.split(" ")[0]).toFixed(3));
 	    	}
 	    };
 	})
 	app.filter('st', function($sce, $rootScope) {
 	    return function(text) {
 	    	if (text) {
-	    		return (Number(text.split(" ")[0]).toFixed(3));	
+	    		return (Number(text.split(" ")[0]).toFixed(3));
 	    	}
 	    };
 	})
@@ -741,12 +764,12 @@ module.exports = function (app) {
 			if (value != 0) {
 				reputation_level = Math.log10(Math.abs(value));
 				reputation_level = Math.max(reputation_level - 9, 0);
-			
-				if (reputation_level < 0) 
+
+				if (reputation_level < 0)
 					reputation_level = 0;
-				if (neg) 
+				if (neg)
 					reputation_level *= -1;
-				
+
 				reputation_level = (reputation_level*9) + 25;
 			} else {
 				return 0;
@@ -760,10 +783,10 @@ module.exports = function (app) {
     return function(value) {
       if (value && value.total_payout_value) {
         return (parseFloat(value.total_payout_value.split(" ")[0])+parseFloat(value.total_pending_payout_value.split(" ")[0]));
-      }      
+      }
     }
   });
-    
+
     app.filter('hrefToJS', function ($sce, $sanitize) {
         return function (text) {
             var regex = /href="([\S]+)"/g;
@@ -783,8 +806,8 @@ module.exports = function (app) {
         }
       };
     }]);
-  
-	app.directive('qrcode', function($interpolate) {  
+
+	app.directive('qrcode', function($interpolate) {
 		return {
 		    restrict: 'E',
 		    link: function($scope, $element, $attrs) {
@@ -810,7 +833,7 @@ module.exports = function (app) {
 		}
 	});
 
-      
+
     app.directive('ionComment', ionComment)
     app.directive('ionThread', ionThread);
 
@@ -910,7 +933,7 @@ module.exports = function (app) {
                         // add cancel code..
                       },
                      buttonClicked: function(index) {
-                        $scope.insertImageC(index);  
+                        $scope.insertImageC(index);
                         return true;
                      }
                    });
@@ -950,7 +973,7 @@ module.exports = function (app) {
                             if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
                               $cordovaCamera.cleanup();
                             }
-                          });    
+                          });
                         }, 10);
                       }, function(err) {
                         $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('CAMERA_CANCELLED'));
@@ -994,7 +1017,7 @@ module.exports = function (app) {
                           $scope.mylogin = new window.steemJS.Login();
                           $scope.mylogin.setRoles(["posting"]);
                           var loginSuccess = $scope.mylogin.checkKeys({
-                              accountName: $rootScope.$storage.user.username,    
+                              accountName: $rootScope.$storage.user.username,
                               password: $rootScope.$storage.user.password || null,
                               auths: {
                                   posting: $rootScope.$storage.user.posting.key_auths
@@ -1006,7 +1029,7 @@ module.exports = function (app) {
                             var tr = new window.steemJS.TransactionBuilder();
                             var t = new Date();
                             var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
-                            
+
                             var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
                             tr.add_type_operation("comment", {
                               parent_author: $scope.post.author,
@@ -1020,7 +1043,7 @@ module.exports = function (app) {
                             //$rootScope.log(my_pubkeys);
                             localStorage.error = 0;
                             tr.process_transaction($scope.mylogin, null, true);
-                            
+
                             $scope.replying = false;
                             setTimeout(function() {
                               if (localStorage.error == 1) {
@@ -1036,13 +1059,13 @@ module.exports = function (app) {
                           } else {
                             $rootScope.$broadcast('hide:loading');
                             $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
-                          } 
+                          }
                         } else {
                           $rootScope.$broadcast('hide:loading');
                           $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
                         }
                     } else {
-                        
+
                         var patch = createPatch($scope.patchbody, $scope.data.comment)
                         // Putting body into buffer will expand Unicode characters into their true length
                         if (patch && patch.length < new Buffer($scope.data.comment, 'utf-8').length) {
@@ -1055,7 +1078,7 @@ module.exports = function (app) {
                           $scope.mylogin = new window.steemJS.Login();
                           $scope.mylogin.setRoles(["posting"]);
                           var loginSuccess = $scope.mylogin.checkKeys({
-                              accountName: $rootScope.$storage.user.username,    
+                              accountName: $rootScope.$storage.user.username,
                               password: $rootScope.$storage.user.password || null,
                               auths: {
                                   posting: $rootScope.$storage.user.posting.key_auths
@@ -1065,7 +1088,7 @@ module.exports = function (app) {
                           );
                           if (loginSuccess) {
                             var tr = new window.steemJS.TransactionBuilder();
-                            
+
                             var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
                             tr.add_type_operation("comment", {
                               parent_author: $scope.post.parent_author,
@@ -1079,7 +1102,7 @@ module.exports = function (app) {
                             //$rootScope.log(my_pubkeys);
                             localStorage.error = 0;
                             tr.process_transaction($scope.mylogin, null, true);
-                            
+
                             $scope.closeModal();
                             $scope.replying = false;
                             setTimeout(function() {
@@ -1095,13 +1118,13 @@ module.exports = function (app) {
                           } else {
                             $rootScope.$broadcast('hide:loading');
                             $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
-                          } 
+                          }
                         } else {
                           $rootScope.$broadcast('hide:loading');
                           $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
                         }
                     }
-                  $rootScope.$broadcast('hide:loading');  
+                  $rootScope.$broadcast('hide:loading');
                 }
                 $scope.replyToComment = function(comment) {
                     $rootScope.log('reply to comment')
@@ -1127,7 +1150,7 @@ module.exports = function (app) {
                               $scope.mylogin = new window.steemJS.Login();
                               $scope.mylogin.setRoles(["posting"]);
                               var loginSuccess = $scope.mylogin.checkKeys({
-                                  accountName: $rootScope.$storage.user.username,    
+                                  accountName: $rootScope.$storage.user.username,
                                   password: $rootScope.$storage.user.password || null,
                                   auths: {
                                       posting: $rootScope.$storage.user.posting.key_auths
@@ -1137,7 +1160,7 @@ module.exports = function (app) {
                               );
                               if (loginSuccess) {
                                 var tr = new window.steemJS.TransactionBuilder();
-                                
+
                                 tr.add_type_operation("delete_comment", {
                                   author: comment.author,
                                   permlink: comment.permlink
@@ -1145,7 +1168,7 @@ module.exports = function (app) {
                                 //$rootScope.log(my_pubkeys);
                                 localStorage.error = 0;
                                 tr.process_transaction($scope.mylogin, null, true);
-                                
+
                                 setTimeout(function() {
                                   if (localStorage.error == 1) {
                                     $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
@@ -1157,7 +1180,7 @@ module.exports = function (app) {
                                 }, 3000);
                               } else {
                                 $rootScope.$broadcast('hide:loading');
-                              } 
+                              }
                             } else {
                               $rootScope.$broadcast('hide:loading');
                               $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
@@ -1198,9 +1221,9 @@ module.exports = function (app) {
                           </ul>\
                         </ion-list>',
             controller: function($scope, $rootScope) {
-                
+
                 $scope.toggleComment = function(comment) {
-                    
+
                     $rootScope.log('toggleComment');
 
                     if (comment.children > 0){
@@ -1219,12 +1242,12 @@ module.exports = function (app) {
                       });
                       //$rootScope.$broadcast('hide:loading');
                     }
-                };           
+                };
             }
         }
     }
 
-    function ius($q, $ionicLoading, $cordovaFileTransfer, $ionicPlatform, $filter) {
+    function ius($q, $ionicLoading, $cordovaFileTransfer, $ionicPlatform, $filter, $rootScope) {
         var service = {};
         service.uploadImage = uploadImage;
         return service;
@@ -1251,14 +1274,14 @@ module.exports = function (app) {
             // Add the Cloudinary "upload preset" name to the headers
             // "https://api.cloudinary.com/v1_1/esteem/image/upload"
             var uploadOptions = {
-              params : { 'upload_preset': "profilePics"}
+              params : { 'username': $rootScope.$storage.user.username}
             };
             $ionicPlatform.ready(function() {
                 $cordovaFileTransfer.upload("http://192.158.29.1:8080/api/upload", imageURI, uploadOptions).then(function(result) {
                     // Let the user know the upload is completed
                     $ionicLoading.show({template : $filter('translate')('UPLOAD_COMPLETED'), duration: 1000});
                     // Result has a "response" property that is escaped
-                    // FYI: The result will also have URLs for any new images generated with 
+                    // FYI: The result will also have URLs for any new images generated with
                     // eager transformations
                     var response = JSON.parse(decodeURIComponent(result.response));
                     deferred.resolve(response);
@@ -1267,7 +1290,7 @@ module.exports = function (app) {
                     $ionicLoading.show({template : $filter('translate')('UPLOAD_FAILED'), duration: 2000});
                     deferred.reject(err);
                   }, function (progress) {
-                    // The upload plugin gives you information about how much data has been transferred 
+                    // The upload plugin gives you information about how much data has been transferred
                     // on some interval.  Use this with the original file size to show a progress indicator.
                     percentage = Math.floor((progress.loaded / fileSize) * 100);
                     $ionicLoading.show({template : $filter('translate')('UPLOADING_PICTURE') + percentage + '%'});
@@ -1424,7 +1447,7 @@ module.exports = function (app) {
         };
     }]);
     /**
-     * Get the random colors 
+     * Get the random colors
      * @returns {String}
      */
     function getRandomColors() {

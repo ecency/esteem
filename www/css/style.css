@@ -18,7 +18,7 @@ body .pane {
 }
 .item .wrap {
 	text-overflow: wrap!important;
-	white-space: normal!important;	
+	white-space: normal!important;
 }
 .item.comments p {white-space: pre-wrap !important; }
 .item.comments .nowrap {white-space: nowrap!important;}
@@ -72,25 +72,25 @@ hr {
 }
 .platform-browser .mysubheader {
   top: 0px;
-  height: 187px!important;
+  height: 227px!important;
 }
 .platform-android .mysubheader {
   top: 0px;
-  height: 187px!important;
+  height: 227px!important;
 }
 .platform-ios .mysubheader {
   padding-top: 20px!important;
   top: 0px!important;
-  height: 207px!important;
+  height: 247px!important;
 }
 .platform-browser .has-mysubheader {
-  padding-top: 210px!important;
+  padding-top: 227px!important;
 }
 .platform-android .has-mysubheader {
-  padding-top: 210px!important;
+  padding-top: 227px!important;
 }
 .platform-ios .has-mysubheader {
-  padding-top: 230px!important;
+  padding-top: 247px!important;
 }
 .platform-browser .footprofileinfo {
   margin-top: 15px!important;
@@ -263,10 +263,10 @@ textarea.markdown-input {
 }
 .spinner svg {
   width: 16px;
-  height: 16px; 
+  height: 16px;
 }
 
-@media only screen and (min-device-width:320px) { 
+@media only screen and (min-device-width:320px) {
   img {
     max-width: 100%;
     height: auto;
@@ -274,7 +274,7 @@ textarea.markdown-input {
     /*max-height: 35vh!important;*/
   }
 }
-@media only screen and (min-device-width:768px) { 
+@media only screen and (min-device-width:768px) {
   img {
     max-width: 100%;
     display: block;
@@ -364,7 +364,7 @@ textarea.markdown-input {
   height: 100%;
   margin-right: auto;
   margin-left: auto;
-  border-radius: 50%!important; 
+  border-radius: 50%!important;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   -webkit-box-shadow: 0 0 0 1px #fff, 0 0 0 1px #999, 0 1px 1px 1px rgba(0,0,0,.2);
@@ -372,19 +372,19 @@ textarea.markdown-input {
   box-shadow: 0 0 0 1px #fff, 0 0 0 1px #999, 0 1px 1px 1px rgba(0,0,0,.2);
 }
 .item-myavatar .footprofileinfo {
-  background: rgba(0, 0, 0, 0.5);
+  /*background: rgba(0, 0, 0, 0.5);*/
   color: white;
-  border-radius: 5px;
+  /*border-radius: 5px;*/
   margin: 0;
   font: 14px Sans-Serif;
-  line-height: 14px;
+  line-height: 8pt;
 }
 .action-sheet-group{
   overflow: scroll;
   max-height: 400px;
 }
 .platform-android .action-sheet-backdrop.active {
-  background-color: rgba(0, 0, 0, 0.1); 
+  background-color: rgba(0, 0, 0, 0.1);
 }
 .platform-android .action-sheet {
   align-content: center;
@@ -406,7 +406,7 @@ textarea.markdown-input {
 .platform-android .action-sheet .action-sheet-title {
   font-size: 14px;
   padding: 16px;
-  color: #666; 
+  color: #666;
 }
 .platform-android .action-sheet .button {
   border-color: #e2e2e2;
@@ -417,17 +417,17 @@ textarea.markdown-input {
   color: red;
 }
 .platform-android .action-sheet .button.active, .platform-android .action-sheet .button.activated {
-  background: rgb(241,242,243); 
+  background: rgb(241,242,243);
 }
 .platform-android .action-sheet-group {
   border-radius: 0;
-  background-color: #fafafa; 
+  background-color: #fafafa;
 }
 .platform-android .action-sheet-cancel {
   display: block!important;
 }
 .platform-android .action-sheet-has-icons .button {
-  padding-left: 56px; 
+  padding-left: 56px;
 }
 
 .rzslider {
@@ -702,7 +702,7 @@ textarea.markdown-input {
   font-size: 18px!important;
 }
 .settings .row .slabel {
-  
+
 }
 
 #floating-button {
@@ -728,7 +728,7 @@ textarea.markdown-input {
 }
 
 #floating-button.center{
-    margin-left: auto !important; 
+    margin-left: auto !important;
     margin-right: auto !important;
     left: 0 !important;
     right: 0 !important;
@@ -809,10 +809,10 @@ textarea.markdown-input {
 }
 
 #floating-menu .center{
-    margin-left: auto; 
-    margin-right: auto; 
-    left: 0; 
-    right: 0; 
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
 }
 
 #floating-menu .icon.menu-icon{
@@ -1099,23 +1099,23 @@ textarea.markdown-input {
     padding: 2px 2px 2px 2px;
     height: 150px;
 }
- 
+
 .image-modal {
     width: 100% !important;
     height: 100%;
     top: 0 !important;
     left: 0 !important;
 }
- 
+
 .gallery-transparent {
   background: rgba(0,0,0,0.7);
 }
- 
+
 .galler-slider {
     width: 100%;
     height: 100%;
 }
- 
+
 .gallery-image {
     width: 100%;
     height: 600px;
@@ -1246,17 +1246,26 @@ div.text-left {
     border: 1px solid #ddd;
 }
 
-.bodytext td{
-    display:inline-block;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    word-break: break-word;
-    hyphens: auto;
-}
-
 .bodytext tr{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 5px;
   width: 100%;
-  display:block;
+}
+.bodytext td{
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  -moz-box-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: block;
+  padding: 5px;
+  width: 100%;
 }
 .bodytext tr:hover{background-color:#f5f5f5}
 .bodytext tr:nth-child(even) {background-color: #f2f2f2}
@@ -1272,7 +1281,7 @@ div.text-left {
 .posting select {
   min-height: 30px;
   font-size: 12px;
-  line-height: 26px; 
+  line-height: 26px;
 }
 .posting .row, .posting .col {
   margin: 0!important;
@@ -1303,7 +1312,7 @@ div.text-left {
 }
 
 .tags span {
-  float: left; 
+  float: left;
 }
 
 .tag {
@@ -1349,7 +1358,7 @@ div.text-left {
 }
 
 .tag:hover::after {
-   border-left-color: crimson; 
+   border-left-color: crimson;
 }
 
 em {
@@ -1376,4 +1385,17 @@ em {
 
 .row.postdetails {
   font-size: 10pt;
+}
+
+.drawer {
+	height: 20vh;
+	text-align: center;
+	bottom: 0;
+	position: absolute;
+}
+.drawer img {
+	/*height: 19%;
+	height: 19vh;
+	width: auto;
+	max-width: 100%;*/
 }

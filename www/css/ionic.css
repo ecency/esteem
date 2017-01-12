@@ -5338,7 +5338,7 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
   position: absolute;
   top: 0;
   z-index: 10;
-  overflow: hidden;
+  overflow: auto;
   min-height: 100%;
   width: 100%;
   background-color: #fff; }

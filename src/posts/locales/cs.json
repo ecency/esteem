@@ -219,5 +219,7 @@
     "LOGIN_TO_X": "Tato operace vyžaduje přihlášení uživatele hlavním heslem, Aktivním/Odesílacím klíčem. Prosím přihlašte se a opakujte pokus.",
     "GALLERY": "Galerie",
     "PAYOUT_CYCLE": "Cyklus výplaty",
-    "TRANSLATIONS": "Přeložili"
+    "TRANSLATIONS": "Přeložili",
+    "SHARE": "Share",
+    "MARKETPLACE": "Market Place"
 }

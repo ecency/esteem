@@ -1,8 +1,8 @@
 var fs = require('fs');
 
 var app = angular.module('steem', [
-	'ionic', 
-	'ngStorage', 
+	'ionic',
+	'ngStorage',
 	'ngCordova',
   'rzModule',
   'ion-floating-menu',
@@ -19,6 +19,7 @@ window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
 window.steemJS = require("steemjs-lib");
 window.diff_match_patch = require('diff-match-patch');
 
+require('./config')(app);
 require('./services')(app);
 require('./controllers')(app);
 
@@ -55,6 +56,17 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
     }
   })
 
+	.state('app.market', {
+		url: '/market',
+		views: {
+			'menuContent': {
+				//templateUrl: 'templates/settings.html'
+				template: fs.readFileSync(__dirname + '/templates/market.html', 'utf8'),
+				controller: 'MarketCtrl'
+			}
+		}
+	})
+
   .state('app.send', {
     url: '/send',
     views: {
@@ -62,7 +74,6 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
         //templateUrl: 'templates/settings.html'
         template: fs.readFileSync(__dirname + '/templates/send.html', 'utf8'),
         controller: 'SendCtrl'
-
       }
     }
   })
@@ -111,7 +122,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
       }
     }
   })
-  
+
   .state('app.bookmark', {
     url: '/bookmark',
     views: {
@@ -123,8 +134,42 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
     }
   })
 
-  .state('app.single', {
-    url: '/single/:postdata',
+	.state('app.drafts', {
+    url: '/drafts',
+    views: {
+      'menuContent': {
+        //templateUrl: 'templates/post.html',
+        template: fs.readFileSync(__dirname + '/templates/drafts.html', 'utf8'),
+        controller: 'DraftsCtrl'
+      }
+    }
+  })
+
+	.state('app.images', {
+    url: '/images',
+    views: {
+      'menuContent': {
+        //templateUrl: 'templates/post.html',
+        template: fs.readFileSync(__dirname + '/templates/images.html', 'utf8'),
+        controller: 'ImagesCtrl'
+      }
+    }
+  })
+
+  .state('app.notifications', {
+    url: '/notifications',
+    views: {
+      'menuContent': {
+        //templateUrl: 'templates/post.html',
+        template: fs.readFileSync(__dirname + '/templates/notifications.html', 'utf8'),
+        controller: 'NotificationsCtrl'
+      }
+    }
+  })
+
+
+  .state('app.post', {
+    url: '/post/:category/:author/:permlink',
     views: {
       'menuContent': {
         //templateUrl: 'templates/post.html',
@@ -142,7 +187,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
 
   $animateProvider.classNameFilter( /\banimated\b/ );
   $ionicConfigProvider.scrolling.jsScrolling(false);
-  
+
   if (window.cordova) {
       $logProvider.debugEnabled(false);
       $compileProvider.debugInfoEnabled(false);
@@ -161,13 +206,14 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('iw', require('./locales/iw')); //Hebrew
   $translateProvider.translations('pl', require('./locales/pl')); //Polish
   $translateProvider.translations('pt', require('./locales/pt')); //Portuguese
+  $translateProvider.translations('id', require('./locales/id')); //Indonesian
+  $translateProvider.translations('zh', require('./locales/zh')); //Chinese traditional
 
   $translateProvider.useSanitizeValueStrategy(null);
 
-  $translateProvider.preferredLanguage('en');  
+  $translateProvider.preferredLanguage('en');
   $translateProvider.fallbackLanguage('en');
-  
-  //$sceDelegateProvider.resourceUrlWhitelist(['self', new RegExp('^(http[s]?):\/\/(w{3}.)?youtube\.com/.+$')]);
+
 });
 
 app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state, $log, $ionicScrollDelegate, $filter, $translate) {
@@ -199,12 +245,12 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           }, null);
       } else {
         $rootScope.$storage.language = 'en';
-      }  
+      }
     } else {
       $translate.use($rootScope.$storage.language);
     }
-    
-    $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'es', name: 'Español'}, {id:'gr', name: 'Ελληνικά'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'ru', name: 'Русский'}, {id:'bg', name: 'Български'}, {id:'nl', name: 'Nederlands'}, {id:'hu', name: 'Magyar'}, {id:'cs', name: 'Čeština'}, {id:'iw', name: 'עברית‎'}, {id:'pl', name: 'Polski‎'}, {id:'pt', name: 'Português'}];
+
+    $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'es', name: 'Español'}, {id:'gr', name: 'Ελληνικά'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'ru', name: 'Русский'}, {id:'bg', name: 'Български'}, {id:'nl', name: 'Nederlands'}, {id:'hu', name: 'Magyar'}, {id:'cs', name: 'Čeština'}, {id:'iw', name: 'עברית‎'}, {id:'pl', name: 'Polski‎'}, {id:'pt', name: 'Português'}, {id:'id', name:'Bahasa Indonesia'}, {id:'zh', name:'繁體中文'}];
 
     if (window.cordova) {
       if (ionic.Platform.isIPad() || ionic.Platform.isIOS()) {
@@ -217,8 +263,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               $rootScope.log("Screen reader: OFF");
               $rootScope.voiceOver = bool;
               //$ionicConfigProvider.navBar.alignTitle('left');
-          } 
-        });    
+          }
+        });
 
       } else {
         $rootScope.voiceOver = false;
@@ -235,7 +281,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     }
     if (navigator.splashscreen) {
       setTimeout(function() {
-        navigator.splashscreen.hide();  
+        navigator.splashscreen.hide();
       }, 1000);
     }
     $rootScope.log("app start ready");
@@ -243,7 +289,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       if ($rootScope.$storage.pincode) {
         $rootScope.pincheck = true;
         $rootScope.$broadcast("pin:check");
-      }  
+      }
     }, 1000);
     $rootScope.showAlert = function(title, msg) {
       var alertPopup = $ionicPopup.alert({
@@ -268,10 +314,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           }, function (error) {
             // error
             $rootScope.log("toast"+error);
-          });  
+          });
         } else {
           $rootScope.showAlert(title, msg);
-        }  
+        }
       }
     };
     $rootScope.$on('show:loading', function(event, args){
@@ -288,7 +334,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       }, 1000);
     });
 
-    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
       $rootScope.log("from "+fromState.name+" to "+toState.name);
     });
 
@@ -311,6 +357,48 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           }, 15000);
         });
       }
+      window.FirebasePlugin.onNotificationOpen(function(data) {
+        $rootScope.log(angular.toJson(data));
+        if(data.tap){
+          //Notification was received on device tray and tapped by the user.
+          //console.log(JSON.stringify(data));
+          if (data.author && data.permlink) {
+            if (!$rootScope.$storage.pincode) {
+
+              var alertPopup = $ionicPopup.confirm({
+                title: data.title,
+                template: data.body + $filter('translate')('OPENING_POST')
+              });
+
+              alertPopup.then(function(res) {
+                $rootScope.log('Thank you for seeing alert from tray');
+                if (res) {
+                  setTimeout(function() {
+                    $rootScope.getContentAndOpen({author:data.author, permlink:data.permlink});
+                  }, 10);
+                } else {
+                  $rootScope.log("not sure to open alert");
+                }
+              });
+
+            } else {
+              $rootScope.$storage.notifData = {title:data.title, body: data.body, author: data.author, permlink: data.permlink};
+              $rootScope.pinenabled = true;
+            }
+          }
+        } else{
+          //Notification was received in foreground. Maybe the user needs to be notified.
+          //alert( JSON.stringify(data) );
+          if (data.author && data.permlink) {
+            $rootScope.showMessage(data.title, data.body+" "+data.permlink);
+          } else {
+            $rootScope.showMessage(data.title, data.body);
+          }
+        }
+      }, function(error) {
+          console.error(error);
+      });
+
       if ($rootScope.$storage.pincode) {
         $rootScope.pincheck = true;
         $rootScope.$broadcast("pin:check");
@@ -328,8 +416,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 $rootScope.log("Screen reader: OFF");
                 $rootScope.voiceOver = bool;
                 //$ionicConfigProvider.navBar.alignTitle('left');
-            } 
-          });    
+            }
+          });
         } else {
           $rootScope.voiceOver = false;
         }
@@ -347,7 +435,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         window.Api.close();
       }
     });
-    
+
     $ionicPlatform.on('offline', function(){
       $rootScope.log("app offline");
     });
@@ -358,7 +446,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.$apply();
       }
     };
- 
+
     $rootScope.add = function(value) {
       $rootScope.pinerror = "";
       if($rootScope.passcode.length < 4) {
@@ -372,12 +460,12 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 $rootScope.closePin();
               } else {
                 $rootScope.pintry += 1;
-                $rootScope.pinerror = $filter('translate')('NOT_MATCH')+"("+$rootScope.pintry+")"; 
+                $rootScope.pinerror = $filter('translate')('NOT_MATCH')+"("+$rootScope.pintry+")";
                 if ($rootScope.pintry>3) {
                   $rootScope.$storage.pincode = undefined;
                   $rootScope.pintry = 0;
                   $rootScope.$broadcast("pin:failed");
-                  $rootScope.closePin();  
+                  $rootScope.closePin();
                 }
               }
             }
@@ -388,7 +476,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 $rootScope.$broadcast("pin:check");
                 $rootScope.closePin();
               } else {
-                $rootScope.$storage.pincode = $rootScope.passcode;  
+                $rootScope.$storage.pincode = $rootScope.passcode;
                 $rootScope.pinsubtitle = $filter('translate')('CONFIRM_PIN');
                 $rootScope.passcode = "";
                 $rootScope.pintype = 3;
@@ -396,26 +484,26 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               }
             }
             if ($rootScope.pintype == 1) {
-              $rootScope.log("type 1: check pin");                  
+              $rootScope.log("type 1: check pin");
               if ($rootScope.$storage.pincode == $rootScope.passcode){
                 $rootScope.$broadcast('pin:correct');
                 $rootScope.passcode = "";
                 $rootScope.closePin();
               } else {
                 $rootScope.pintry += 1;
-                $rootScope.pinerror = $filter('translate')('INCORRECT')+"("+$rootScope.pintry+")"; 
+                $rootScope.pinerror = $filter('translate')('INCORRECT')+"("+$rootScope.pintry+")";
                 if ($rootScope.pintry>3) {
                   $rootScope.$storage.$reset();
-                  $rootScope.closePin();  
+                  $rootScope.closePin();
                 }
               }
             }
-            
+
           }, 50);
         }
       }
     };
- 
+
     $rootScope.delete = function() {
       $rootScope.pinerror = "";
       if($rootScope.passcode.length > 0) {
@@ -439,14 +527,14 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           alertPopup.then(function(res) {
             $rootScope.log('Thank you for seeing alert from tray');
             if (res) {
-              $rootScope.getContentAndOpen({author:$rootScope.$storage.notifData.author, permlink:$rootScope.$storage.notifData.permlink});  
+              $rootScope.getContentAndOpen({author:$rootScope.$storage.notifData.author, permlink:$rootScope.$storage.notifData.permlink});
               $rootScope.$storage.notifData = undefined;
             } else {
               $rootScope.log("not sure to open alert");
               $rootScope.$storage.notifData = undefined;
             }
             $rootScope.pinenabled = false;
-          });    
+          });
         }
       }
     };
@@ -494,27 +582,36 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     String.prototype.replaceAt=function(index, character) {
         return this.substr(0, index) + character + this.substr(index+character.length);
     }
+		$rootScope.openDraft = function(item){
+			item.operation_type = item.post_type;
+			$rootScope.$storage.spost = item;
+			$state.go('app.posts');
+			$rootScope.$broadcast('openPostModal');
+		}
     $rootScope.getContentAndOpen = function(item) {
-      
+
       window.Api.initPromise.then(function(response) {
-        window.Api.database_api().exec("get_content", [item.author, item.permlink]).then(function(result){  
+        window.Api.database_api().exec("get_content", [item.author, item.permlink]).then(function(result){
           var _len = result.active_votes.length;
           for (var j = _len - 1; j >= 0; j--) {
             if (result.active_votes[j].voter === $rootScope.$storage.user.username) {
               if (result.active_votes[j].percent > 0) {
-                result.upvoted = true;  
+                result.upvoted = true;
               } else if (result.active_votes[j].percent < 0) {
-                result.downvoted = true;  
+                result.downvoted = true;
               } else {
-                result.downvoted = false;  
-                result.upvoted = false;  
+                result.downvoted = false;
+                result.upvoted = false;
               }
             }
           }
           result.json_metadata = angular.fromJson(result.json_metadata);
-          $rootScope.$storage.sitem = result;
+          var item = result;
+          $rootScope.$storage.sitem = item;
           setTimeout(function() {
-            $state.go('app.single');  
+            //$state.go('app.post');
+            $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});
+
           }, 5);
 
           if (!$rootScope.$$phase) {
@@ -522,7 +619,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           }
         });
       });
-      //$state.go('app.single');
       $rootScope.$broadcast('hide:loading');
     };
 
@@ -539,7 +635,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               $rootScope.mylogin = new window.steemJS.Login();
               $rootScope.mylogin.setRoles(["posting"]);
               var loginSuccess = $rootScope.mylogin.checkKeys({
-                  accountName: $rootScope.$storage.user.username,    
+                  accountName: $rootScope.$storage.user.username,
                   password: $rootScope.$storage.user.password || null,
                   auths: {
                       posting: $rootScope.$storage.user.posting.key_auths
@@ -550,8 +646,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               if (loginSuccess) {
                 var tr = new window.steemJS.TransactionBuilder();
                 var json;
-                
-                json = ["reblog",{account:$rootScope.$storage.user.username, author:author, permlink:permlink}];  
+
+                json = ["reblog",{account:$rootScope.$storage.user.username, author:author, permlink:permlink}];
 
                 tr.add_type_operation("custom_json", {
                   id: 'follow',
@@ -566,7 +662,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                     $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REBLOG_TEXT')+" "+localStorage.errormessage)
                   } else {
                     //$scope.refreshFollowers();
-                    $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('REBLOGGED_TEXT'));
+                    $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('REBLOGGED_POST'));
                   }
                   $rootScope.$broadcast('hide:loading');
                 }, 3000);
@@ -604,7 +700,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           $rootScope.mylogin = new window.steemJS.Login();
           $rootScope.mylogin.setRoles(["posting"]);
           var loginSuccess = $rootScope.mylogin.checkKeys({
-              accountName: $rootScope.$storage.user.username,    
+              accountName: $rootScope.$storage.user.username,
               password: $rootScope.$storage.user.password || null,
               auths: {
                   posting: $rootScope.$storage.user.posting.key_auths
@@ -630,8 +726,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 if (afterward === 'fetchContent') {
                   $rootScope.$broadcast(afterward, { any: {author: post.author, permlink: post.permlink} });
                 } else {
-                  $rootScope.$broadcast(afterward);    
-                }                
+                  $rootScope.$broadcast(afterward);
+                }
               }
               $rootScope.$broadcast('hide:loading');
             }, 3000);
@@ -673,7 +769,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 $rootScope.mylogin = new window.steemJS.Login();
                 $rootScope.mylogin.setRoles(["active"]);
                 var loginSuccess = $rootScope.mylogin.checkKeys({
-                    accountName: $rootScope.$storage.user.username,    
+                    accountName: $rootScope.$storage.user.username,
                     password: $rootScope.$storage.user.password || null,
                     auths: {
                         active: $rootScope.$storage.user.active.key_auths
@@ -725,7 +821,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           $rootScope.mylogin = new window.steemJS.Login();
           $rootScope.mylogin.setRoles(["posting"]);
           var loginSuccess = $rootScope.mylogin.checkKeys({
-              accountName: $rootScope.$storage.user.username,    
+              accountName: $rootScope.$storage.user.username,
               password: $rootScope.$storage.user.password || null,
               auths: {
                   posting: $rootScope.$storage.user.posting.key_auths
@@ -741,7 +837,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             } else {
               json = ['follow',{follower:$rootScope.$storage.user.username, following:xx, what: []}];
             }
-            
+
             tr.add_type_operation("custom_json", {
               id: 'follow',
               required_posting_auths: [$rootScope.$storage.user.username],
@@ -780,6 +876,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         });
       });
     }, 10);
+    if (!angular.isDefined($rootScope.$storage.notifications)) {
+      $rootScope.$storage.notifications = [];
+    }
 
     if (window.cordova) {
       if (!ionic.Platform.isWindowsPhone()) {
@@ -808,15 +907,15 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           var subs = {};
           APIs.getSubscriptions($rootScope.$storage.deviceid).then(function(res){
             $rootScope.log(angular.toJson(res.data));
-            angular.merge(subs, {vote: res.data[0].subscription.vote, follow: res.data[0].subscription.follow, comment: res.data[0].subscription.comment, mention: res.data[0].subscription.mention, resteem: res.data[0].subscription.resteem, token: token});
-            APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, subs).then(function(res){
+            angular.merge(subs, {vote: res.data[0].subscription.vote||false, follow: res.data[0].subscription.follow||false, comment: res.data[0].subscription.comment||false, mention: res.data[0].subscription.mention||false, resteem: res.data[0].subscription.resteem||false, token: token});
+            APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username||undefined, subs).then(function(res){
               console.log(angular.toJson(res));
             });
             if (!$rootScope.$$phase){
               $rootScope.$apply();
             }
-          });  
-          
+          });
+
           //console.log(token);
         }, function(error) {
           console.error(error);
@@ -824,10 +923,13 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
         window.FirebasePlugin.onNotificationOpen(function(data) {
             $rootScope.log(angular.toJson(data));
-            console.log(angular.toJson(data));
+
+            //console.log(angular.toJson(data));
+
+            //$rootScope.$storage.notifications.push({title:data.title, message: data.body, author: data.author, permlink: data.permlink, created: new Date()});
+
             if(data.tap){
               //Notification was received on device tray and tapped by the user.
-              console.log(JSON.stringify(data));
               if (data.author && data.permlink) {
                 if (!$rootScope.$storage.pincode) {
 
@@ -840,7 +942,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                     $rootScope.log('Thank you for seeing alert from tray');
                     if (res) {
                       setTimeout(function() {
-                        $rootScope.getContentAndOpen({author:data.author, permlink:data.permlink});    
+                        $rootScope.getContentAndOpen({author:data.author, permlink:data.permlink});
                       }, 10);
                     } else {
                       $rootScope.log("not sure to open alert");
@@ -864,97 +966,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         }, function(error) {
             console.error(error);
         });
-        //FCMPlugin.getToken( successCallback(token), errorCallback(err) );
-        //Keep in mind the function will return null if the token has not been established yet.
-        /*FCMPlugin.getToken(
-          function(token){
-            if (ionic.Platform.isAndroid()) {
-              console.log("deviceToken "+token);
-              token = angular.fromJson(token);
-              $rootScope.$storage.deviceid = token.token;
-              $rootScope.$storage.token = token;
-              if ($rootScope.$storage.user) {
-                APIs.saveSubscription(token.token, $rootScope.$storage.user.username, { device: ionic.Platform.platform(), appversion: token.appVersion, timestamp: $filter('date')(new Date(token.timestamp), 'medium') }).then(function(res){
-                  $rootScope.log(angular.toJson(res));
-                });
-              } else {
-                APIs.saveSubscription(token.token, "", { device: ionic.Platform.platform(), appversion: token.appVersion, timestamp: $filter('date')(new Date(token.timestamp), 'medium') }).then(function(res){
-                  $rootScope.log(angular.toJson(res));
-                });
-              }
-            }
-            if (ionic.Platform.isIOS() || ionic.Platform.isIPad()) {
-              console.log("deviceToken "+token);
-              if (token) {
-                $rootScope.$storage.deviceid = token;
-                $rootScope.$storage.token = token;
-                if ($rootScope.$storage.user) {
-                  APIs.saveSubscription(token, $rootScope.$storage.user.username, { device: ionic.Platform.platform(), appversion: '1.3.1', timestamp: $filter('date')(new Date(), 'medium') }).then(function(res){
-                    $rootScope.log(angular.toJson(res));
-                  });
-                } else {
-                  APIs.saveSubscription(token, "", { device: ionic.Platform.platform(), appversion: '1.3.1', timestamp: $filter('date')(new Date(), 'medium') }).then(function(res){
-                    $rootScope.log(angular.toJson(res));
-                  });
-                }    
-              }
-            }
-          },
-          function(err){
-            $rootScope.log('error retrieving token: ' + err);
-          }
-        );
-
-
-        //FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
-        //Here you define your application behaviour based on the notification data.
-        FCMPlugin.onNotification(
-          function(data){
-            if(data.wasTapped){
-              //Notification was received on device tray and tapped by the user.
-              //alert( JSON.stringify(data) );
-              if (data.author && data.permlink) {
-                if (!$rootScope.$storage.pincode) {
-
-                  var alertPopup = $ionicPopup.confirm({
-                    title: data.title,
-                    template: data.body + ", opening post"
-                  });
-
-                  alertPopup.then(function(res) {
-                    $rootScope.log('Thank you for seeing alert from tray');
-                    if (res) {
-                      $rootScope.getContentAndOpen(data.author, data.permlink);  
-                    } else {
-                      $rootScope.log("not sure to open alert");
-                    }
-                  });
-
-                } else {
-                  $rootScope.$storage.notifData = {title:data.title, body: data.body, author: data.author, permlink: data.permlink};
-                  $rootScope.pinenabled = true;
-                }
-              }
-            } else{
-              //Notification was received in foreground. Maybe the user needs to be notified.
-              //alert( JSON.stringify(data) );
-              if (data.author && data.permlink) {
-                $rootScope.showMessage(data.title, data.body+" "+data.permlink);
-              } else {
-                $rootScope.showMessage(data.title, data.body);
-              }
-            }
-          },
-          function(msg){
-            $rootScope.log('onNotification callback successfully registered: ' + msg);
-            //alert("msg "+JSON.stringify(msg));
-          },
-          function(err){
-            $rootScope.log('Error registering onNotification callback: ' + err);
-          }
-        ); */
       }
-      
+
     }
 
   });

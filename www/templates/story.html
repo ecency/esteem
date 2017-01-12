@@ -6,11 +6,11 @@
   </ion-header-bar>
   <ion-content class="padding posting" overflow-scroll="true">
     <input type="text" name="title" placeholder="{{'TITLE'|translate}}" ng-model="spost.title" style="width:100%;">
-    
+
     <textarea ng-model='spost.body' autofocus rows="15" placeholder="{{'POST_CONTENT'|translate}}" class="width100" ng-focus='cfocus()'></textarea>
       <input type="text" name="categories" placeholder="{{'TAGS'|translate}}" ng-model="spost.tags" ng-change="tagsChange()" style="width:100%;">
       <div class="row">
-        <div class="col">   
+        <div class="col">
            <select ng-model='spost.operation_type' style="width: 100%;" ng-if='!edit'>
               <option selected value='default'>{{'DEFAULT'|translate}}</option>
               <option value='sp'>{{'POWERUP'|translate:'{ platformpower:"Steem Power" }' }}</option>
@@ -26,7 +26,21 @@
       <div ng-if="spost.body" class="padding bodytext" ng-bind-html="spost.body | parseUrl "></div>
       <br/>
   </ion-content>
-  <ion-footer-bar align-title="left" keyboard-attach class="story">
+  <ion-slides options="options" class="drawer" ng-if="showgallery" slider="gallery.slider">
+    <ion-slide-page ng-repeat="image in gallery.images" ng-if="image.url" ng-click="insertText('![image]('+image.url+')')">
+      <!--<div ng-if="offer.Image.length>0">
+        <img src="{{offer.Image[0].src}}" alt="" />
+      </div>-->
+      <img ng-src = "{{image.url}}" />
+    </ion-slide-page>
+  </ion-slides>
+  <ion-footer-bar align-title="left" ng-if="showgallery" class="story">
+    <div class="button-bar">
+       <a class="button button-small" ng-click="closeGallery()"><i class="icon ion-ios-close-empty"></i>{{'CLOSE'|translate}}</a>
+       <a class="button button-small" ng-click="manageGallery()"><i class="icon ion-ios-cog-outline"></i>{{'MANAGE'|translate}}</a>
+     </div>
+  </ion-footer-bar>
+  <ion-footer-bar align-title="left" keyboard-attach ng-if="!showgallery" class="story">
    <div class="button-bar">
       <a class="button button-small" ng-click="insertText('**bold**')"><i class="fa fa-bold"></i></a>
       <a class="button button-small" ng-click="insertText('*italic*')"><i class="fa fa-italic"></i></a>

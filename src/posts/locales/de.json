@@ -219,5 +219,7 @@
     "LOGIN_TO_X": "Für die gewünschte Operation müssen Sie angemeldet sein. Bitte melden Sie sich mit Ihrem Passwort oder dem \"active/posting\"-Schlüssel sein",
     "GALLERY": "Gallerie",
     "PAYOUT_CYCLE": "Auszahlungskreislauf",
-    "TRANSLATIONS": "Übersetzung Mitwirkende"
+    "TRANSLATIONS": "Übersetzung Mitwirkende",
+    "SHARE": "Share",
+    "MARKETPLACE": "Market Place"
 }

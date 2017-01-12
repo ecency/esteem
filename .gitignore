@@ -8,4 +8,6 @@ bower_components/
 platforms/
 plugins/
 res/
+temp/
+config.js
 resources/*.xcf

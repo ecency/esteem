@@ -1,6 +1,6 @@
 <ion-view view-title="" hide-nav-bar="true"><!--ng-class="{'mpb':$root.$storage.user.json_metadata.profile.cover_image}"-->
   <ion-content class="has-footer" overflow-scroll="true">
-    <div class="bar bar-subheader mysubheader bar-positive" ng-style="css">
+    <div class="bar bar-subheader mysubheader bar-positive" ng-style="css||mcss">
       <button class="button button-icon button-clear ion-ios-arrow-back profilebtn" ng-click="goBack()"></button>
       <button class="button button-outline button-light profilebtn_follow" ng-click="followUser(user.username)" ng-if="$root.$storage.user && $root.$storage.user.username != user.username && !isFollowing(user.username)"><!--<i class="fa fa-user-plus fa-lg"></i>-->{{'FOLLOW'|translate}}</button>
       <button class="button button-clear profilebtn_follow button-icon ion-camera" ng-click="showCover()" ng-if="$root.$storage.user && $root.$storage.user.username === user.username"></button>
@@ -10,9 +10,39 @@
             <span class="item-myavatar" ng-if="!($root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image)"><img src="img/photo.png" ng-click="showProfile()"></span>
             <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.profilePicUrl}}" ng-if="$root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image" ng-click="showProfile()" />
             <div class="footprofileinfo">
-              <h4 class="center"><span class="light">@{{$root.$storage.user.username}}</span>&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation}}</div></h4>
+              <h4 class="center">
+                <span class="light">@{{$root.$storage.user.username}}</span>
+                &nbsp;
+                <div class="reputation">{{$root.$storage.user.reputation|reputation}}
+                </div>
+              </h4>
               <p>{{$root.$storage.user.json_metadata.profile.about}}</p>
-              <div class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}}&nbsp;|&nbsp;<i class="icon ion-ios-people"></i>&nbsp;{{followdetails.follower_count}}&nbsp;|&nbsp;<i class="ion-person-add"></i>&nbsp;{{followdetails.following_count}}</div>
+              <div class="padding">
+                <i class="icon ion-android-list"></i>&nbsp;
+                {{$root.$storage.user.post_count}}&nbsp;
+                |&nbsp;
+                <i class="icon ion-arrow-graph-up-right"></i>&nbsp;
+                {{$root.$storage.user.voting_power/100|number:2}}&nbsp;
+                |&nbsp;<i class="icon ion-ios-people"></i>&nbsp;
+                {{followdetails.follower_count}}&nbsp;
+                |&nbsp;<i class="ion-person-add"></i>&nbsp;
+                {{followdetails.following_count}}
+              </div>
+              <p><span ng-if="$root.$storage.user.json_metadata.profile && $root.$storage.user.json_metadata.profile.location">
+                <i class="icon ion-location"></i>&nbsp;
+                {{$root.$storage.user.json_metadata.profile.location}}
+                &nbsp;
+              </span>&nbsp;
+              <span ng-if="$root.$storage.user.json_metadata.profile && $root.$storage.user.json_metadata.profile.website">
+                <i class="icon ion-link"></i>&nbsp;
+                <a ng-click="window.open('{{$root.$storage.user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</a>
+                &nbsp;
+              </span>
+              <span ng-if="$root.$storage.user.created">
+                <i class="icon ion-calendar"></i>&nbsp;
+                {{$root.$storage.user.created|date}}
+                &nbsp;
+              </span></p>
             </div>
           </div>
           <div class="item-myavatar" ng-if="$root.$storage.user.username !== user.username">
@@ -21,7 +51,25 @@
             <div class="footprofileinfo">
               <h4 class="center"><span class="light">@{{user.username}}</span>&nbsp;<div class="reputation">{{user.reputation|reputation}}</div></h4>
               <p>{{user.json_metadata.profile.about}}</p>
-              <div class="padding"><i class="icon ion-android-list"></i>&nbsp;{{user.post_count}}&nbsp;{{'POSTS'|translate}}&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{user.voting_power/100|number:2}}&nbsp;voting</div>
+              <div class="padding"><i class="icon ion-android-list"></i>&nbsp;{{user.post_count}}&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{user.voting_power/100|number:2}}&nbsp;|&nbsp;<i class="icon ion-ios-people"></i>&nbsp;
+              {{followdetails.follower_count}}&nbsp;
+              |&nbsp;<i class="ion-person-add"></i>&nbsp;
+              {{followdetails.following_count}}</div>
+              <p><span ng-if="user.json_metadata.profile && user.json_metadata.profile.location">
+                <i class="icon ion-location"></i>&nbsp;
+                {{user.json_metadata.profile.location}}
+                &nbsp;
+              </span>&nbsp;
+              <span ng-if="user.json_metadata.profile && user.json_metadata.profile.website">
+                <i class="icon ion-link"></i>&nbsp;
+                <a ng-click="window.open('{{user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</a>
+                &nbsp;
+              </span>
+              <span ng-if="user.created">
+                <i class="icon ion-calendar"></i>&nbsp;
+                {{user.created|date}}
+                &nbsp;
+              </span></p>
             </div>
           </div>
       </div>
@@ -38,22 +86,22 @@
               <img ng-src="{{playlist.json_metadata.image[0]}}" ng-click="open(playlist)" ng-if="playlist.json_metadata.image" onerror="this.src='img/noimage.png'"/>
                 <div ng-click="open(playlist)">
                 <div class="wrap">
-                  <h2><img style='display: inline-block;' src="img/steemicon.png" ng-if="playlist.percent_steem_dollars === 0" width="15" /><img style='display: inline-block;' src="img/steemDeclined.png" ng-if="playlist.max_accepted_payout === '0.000 SBD'" width="15" />{{playlist.root_title}}</h2>
+                  <h2><i class="fa fa-money positive" ng-if="playlist.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="playlist.percent_steem_dollars === 0"></i>{{playlist.root_title}}</h2>
                 </div>
                 <div class="postdetails"><i class="icon ion-android-time"></i>&nbsp;{{playlist.created|timeago}}&nbsp;{{'BY'|translate}}&nbsp;<i class="icon ion-android-person"></i>&nbsp;{{playlist.author}}&nbsp;<div class="reputation">{{playlist.author_reputation|reputation|number:0}}</div></div>
                 </div>
                 <div class="row gray profile">
                   <div class="col"><ion-spinner ng-if="playlist.invoting"></ion-spinner>
                   <i class="fa fa-chevron-circle-up fa-lg" ng-click="upvotePost(playlist)" ng-if="!playlist.upvoted"></i><i class="fa fa-chevron-circle-up fa-lg positive" ng-click="unvotePost(playlist)" ng-if="playlist.upvoted"></i>&nbsp;&nbsp;<span ng-click="$root.openInfo(playlist)">{{playlist.net_votes}}</span>&nbsp;&nbsp;
-                   <i class="fa fa-chevron-circle-down fa-lg" ng-click="downvotePost(playlist)" ng-if="!playlist.downvoted"></i><i class="fa fa-chevron-circle-down fa-lg positive" ng-click="unvotePost(playlist)" ng-if="playlist.downvoted"></i></div>
-                  <div class="col" ng-click="openTooltip($event,playlist)">&nbsp; <i class="ion-social-usd"></i>&nbsp;{{playlist | sumPostTotal | number}}</div>
+                   <!--<i class="fa fa-chevron-circle-down fa-lg" ng-click="downvotePost(playlist)" ng-if="!playlist.downvoted"></i><i class="fa fa-chevron-circle-down fa-lg positive" ng-click="unvotePost(playlist)" ng-if="playlist.downvoted"></i>--></div>
+                  <div class="col" ng-click="openTooltip($event,playlist)">&nbsp; <i class="ion-social-usd"></i><span ng-if="playlist.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{playlist | sumPostTotal | number}}</del></span><span ng-if="playlist.max_accepted_payout.split(' ')[0] !== '0.000'">{{playlist | sumPostTotal | number}}</span></div>
                   <div class="col">&nbsp; <i class="icon ion-chatbubbles"></i>&nbsp;{{playlist.children}}</div>
                   <div class="col" ng-if="playlist.author!==user.username && active!=='recent-replies'">&nbsp; <i class="icon ion-arrow-return-right"></i></div>
                 </div>
             </div>
           </ion-list>
         </div>
-      
+
         <div class="padding" ng-if="active=='transfers'">
           <p class="bold uppercase">
             {{'BALANCES'|translate}}
@@ -100,7 +148,7 @@
               <div ng-if="tr[1].op[0]=='transfer'">{{tr[1].op[1].amount}} | {{tr[1].op[1].memo}}</div>
               <div ng-if="tr[1].op[0]=='transfer_to_vesting'">{{tr[1].op[1].amount}} | {{tr[1].op[1].memo}}</div>
               <div ng-if="tr[1].op[0]=='withdraw_vesting'">{{tr[1].op[1].vesting_shares}} | {{tr[1].op[1].memo}}</div>
-              
+
               <p ng-if="tr[1].op[0]=='comment_reward'">@{{tr[1].op[1].author}}/{{tr[1].op[1].permlink}}</p>
               <p ng-if="tr[1].op[0]=='author_reward'">@{{tr[1].op[1].author}}/{{tr[1].op[1].permlink}}</p>
               <p ng-if="tr[1].op[0]=='curation_reward'">@{{tr[1].op[1].comment_author}}/{{tr[1].op[1].comment_permlink}}</p>
@@ -111,7 +159,7 @@
             </div>
           </div>
         </div>
-      
+
         <div class="box pink" ng-if="active=='permissions'">
           <div class="list card">
             <div class="item">
