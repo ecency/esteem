@@ -16,7 +16,7 @@
 	    </ion-nav-buttons>
 	</ion-nav-bar>
   <ion-content class="has-header" scroll="true" delegate-handle="mainScroll" overflow-scroll="true">
-		<ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
+		<ion-refresher pulling-text="{{'PULL_DOWN_TO_REFRESH'|translate}}" on-refresh="refresh()">
   	</ion-refresher>
   		<div ng-if="$root.$storage.view=='compact' && data.length>0" class="masonry-layout">
 	    	<div ng-repeat="d in data track by $index" class="masonry-layout__panel">
