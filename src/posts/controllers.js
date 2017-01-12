@@ -2597,9 +2597,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         angular.merge($scope.user, dd);
         //console.log(angular.toJson($scope.user));
         //console.log($scope.user.json_metadata.profile.cover_image);
-        if(!$scope.$$phase){
-          $scope.$apply();
-        }
+
         if ($rootScope.$storage.user) {
           $scope.css = ($rootScope.$storage.user.username === $scope.user.username && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : ($rootScope.$storage.user.username !== $scope.user.username && ($scope.user.json_metadata && $scope.user.json_metadata.profile.cover_image)) ? {'background': 'url('+$scope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
         } else {
@@ -2607,8 +2605,14 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         }
 
       });
-
+      window.Api.follow_api().exec("get_follow_count", [$stateParams.username]).then(function(res){
+        //console.log(res);
+        $scope.followdetails = res;
+      });
       $scope.getFollows(null, "d");
+      if(!$scope.$$phase){
+        $scope.$apply();
+      }
     };
 
     $scope.refresh();

@@ -10,9 +10,39 @@
             <span class="item-myavatar" ng-if="!($root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image)"><img src="img/photo.png" ng-click="showProfile()"></span>
             <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.profilePicUrl}}" ng-if="$root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image" ng-click="showProfile()" />
             <div class="footprofileinfo">
-              <h4 class="center"><span class="light">@{{$root.$storage.user.username}}</span>&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation}}</div></h4>
+              <h4 class="center">
+                <span class="light">@{{$root.$storage.user.username}}</span>
+                &nbsp;
+                <div class="reputation">{{$root.$storage.user.reputation|reputation}}
+                </div>
+              </h4>
               <p>{{$root.$storage.user.json_metadata.profile.about}}</p>
-              <div class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}}&nbsp;|&nbsp;<i class="icon ion-ios-people"></i>&nbsp;{{followdetails.follower_count}}&nbsp;|&nbsp;<i class="ion-person-add"></i>&nbsp;{{followdetails.following_count}}</div>
+              <div class="padding">
+                <i class="icon ion-android-list"></i>&nbsp;
+                {{$root.$storage.user.post_count}}&nbsp;
+                |&nbsp;
+                <i class="icon ion-arrow-graph-up-right"></i>&nbsp;
+                {{$root.$storage.user.voting_power/100|number:2}}&nbsp;
+                |&nbsp;<i class="icon ion-ios-people"></i>&nbsp;
+                {{followdetails.follower_count}}&nbsp;
+                |&nbsp;<i class="ion-person-add"></i>&nbsp;
+                {{followdetails.following_count}}
+              </div>
+              <p><span ng-if="$root.$storage.user.json_metadata.profile && $root.$storage.user.json_metadata.profile.location">
+                <i class="icon ion-location"></i>&nbsp;
+                {{$root.$storage.user.json_metadata.profile.location}}
+                &nbsp;
+              </span>&nbsp;
+              <span ng-if="$root.$storage.user.json_metadata.profile && $root.$storage.user.json_metadata.profile.website">
+                <i class="icon ion-link"></i>&nbsp;
+                <a ng-click="window.open('{{$root.$storage.user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</a>
+                &nbsp;
+              </span>
+              <span ng-if="$root.$storage.user.created">
+                <i class="icon ion-calendar"></i>&nbsp;
+                {{$root.$storage.user.created|date}}
+                &nbsp;
+              </span></p>
             </div>
           </div>
           <div class="item-myavatar" ng-if="$root.$storage.user.username !== user.username">
@@ -21,7 +51,25 @@
             <div class="footprofileinfo">
               <h4 class="center"><span class="light">@{{user.username}}</span>&nbsp;<div class="reputation">{{user.reputation|reputation}}</div></h4>
               <p>{{user.json_metadata.profile.about}}</p>
-              <div class="padding"><i class="icon ion-android-list"></i>&nbsp;{{user.post_count}}&nbsp;{{'POSTS'|translate}}&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{user.voting_power/100|number:2}}&nbsp;voting</div>
+              <div class="padding"><i class="icon ion-android-list"></i>&nbsp;{{user.post_count}}&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{user.voting_power/100|number:2}}&nbsp;|&nbsp;<i class="icon ion-ios-people"></i>&nbsp;
+              {{followdetails.follower_count}}&nbsp;
+              |&nbsp;<i class="ion-person-add"></i>&nbsp;
+              {{followdetails.following_count}}</div>
+              <p><span ng-if="user.json_metadata.profile && user.json_metadata.profile.location">
+                <i class="icon ion-location"></i>&nbsp;
+                {{user.json_metadata.profile.location}}
+                &nbsp;
+              </span>&nbsp;
+              <span ng-if="user.json_metadata.profile && user.json_metadata.profile.website">
+                <i class="icon ion-link"></i>&nbsp;
+                <a ng-click="window.open('{{user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</a>
+                &nbsp;
+              </span>
+              <span ng-if="user.created">
+                <i class="icon ion-calendar"></i>&nbsp;
+                {{user.created|date}}
+                &nbsp;
+              </span></p>
             </div>
           </div>
       </div>
