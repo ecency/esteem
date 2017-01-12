@@ -13,7 +13,7 @@
   "ABOUT_2":"is powered by {{platformname}} platform. App is created by",
   "ABOUT_3":"and it is open-source, community driven mobile project. It offers content access for reading, commenting, voting, posting, transfer earnings, etc. features offered by {{platformname}} blockchain and {{sitename}}.",
   "ABOUT_4":"1. App never access or hold onto user funds.",
-  "ABOUT_5":"2. App offer a client-side security model, with private keys hosted locally and never sent to any servers.",
+  "ABOUT_5":"2. App offers a client-side security model, with private keys hosted locally and never sent to any servers.",
   "ABOUT_6":"3. App offers simple, attractive user interfaces and experiences.",
   "ABOUT_7":"4. App never require users to input any personal information.",
   "ABOUT_8":"Vote good-karma as witness",
@@ -219,6 +219,17 @@
   "LANGUAGES_TEXT":"Here you can change language of the app.",
   "LOGIN_TO_X":"This operation requires user to be logged in with main password, active/posting key. Please login and try again.",
   "GALLERY":"Gallery",
+  "TRANSLATIONS":"Translation contributors",
   "SHARE":"Share",
-  "MARKETPLACE":"Market Place"
+  "MARKETPLACE":"Market Place",
+  "EXCHANGE":"Exchange",
+  "DRAFTS":"Drafts",
+  "POST_IS_UNDRAFT":"Post is removed from drafts!",
+  "POST_IS_DRAFT":"Post is added to drafts!",
+  "SWIPE_LEFT":"Swipe left to see options",
+  "MANAGE":"Manage",
+  "IMAGE_REMOVED":"Image is removed",
+  "COPY":"Copy",
+  "NO_IMAGE":"You have not uploaded any image, yet!",
+  "PULL_DOWN_TO_REFRESH":"Pull down to refresh"
 }
