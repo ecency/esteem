@@ -1136,6 +1136,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
     if ($scope.error) {
       //$rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REQUEST_LIMIT_TEXT'));
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+      $rootScope.$broadcast('hide:loading');
     } else {
       $rootScope.log("fetching..."+type+" "+limit+" "+tag);
       if (typeof window.Api.database_api === "function") {
@@ -2587,7 +2589,48 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       return false;
     }
   };
+  $scope.ifExists = function(xx){
+    for (var i = 0; i < $scope.profile.length; i++) {
+      if ($scope.profile[i].permlink === xx){
+        return true;
+      }
+    }
+    return false;
+  }
+  $scope.loadmore = function() {
+    var params = {tag: $stateParams.username, limit: 20, filter_tags: []};
 
+    if ($scope.profile && $scope.profile.length>0) {
+      params.start_author = $scope.profile[$scope.profile.length-1].author;
+      params.start_permlink = $scope.profile[$scope.profile.length-1].permlink;
+    }
+    if ($scope.error) {
+      //$rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REQUEST_LIMIT_TEXT'));
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+      $rootScope.$broadcast('hide:loading');
+    } else {
+      $rootScope.log("fetching profile...blog "+20+" "+$stateParams.username);
+      console.log($scope.profile);
+      if (typeof window.Api.database_api === "function") {
+        window.Api.database_api().exec("get_discussions_by_blog", [params]).then(function(response){
+          console.log(response);
+          angular.forEach(response, function(v,k){
+
+            if (!$scope.ifExists(v.permlink)){
+              $scope.profile.push(v);
+            }
+          });
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+          //console.log($scope.data.length);
+          $scope.$broadcast('scroll.infiniteScrollComplete');
+          $rootScope.$broadcast('hide:loading');
+        });
+        console.log($scope.profile);
+      }
+    }
+  }
   $scope.$on('$ionicView.beforeEnter', function(){
     $scope.user = {username: $stateParams.username};
     $scope.follower = [];
