@@ -723,6 +723,14 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               if (localStorage.error == 1) {
                 $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
               } else {
+								if (tt>0){
+									post.upvoted = true;
+								} else if (tt<0) {
+									post.downvoted = true;
+								} else {
+									post.upvoted = false;
+									post.downvoted = false;
+								}
                 if (afterward === 'fetchContent') {
                   $rootScope.$broadcast(afterward, { any: {author: post.author, permlink: post.permlink} });
                 } else {
@@ -730,6 +738,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 }
               }
               $rootScope.$broadcast('hide:loading');
+
             }, 3000);
           } else {
             $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
