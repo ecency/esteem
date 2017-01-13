@@ -1,4 +1,4 @@
-<ion-view view-title="" hide-nav-bar="true"><!--ng-class="{'mpb':$root.$storage.user.json_metadata.profile.cover_image}"-->
+<ion-view view-title="" hide-nav-bar="true" view-cache="false"><!--ng-class="{'mpb':$root.$storage.user.json_metadata.profile.cover_image}"-->
   <ion-content class="has-footer" overflow-scroll="true">
     <div class="bar bar-subheader mysubheader bar-positive" ng-style="css||mcss">
       <button class="button button-icon button-clear ion-ios-arrow-back profilebtn" ng-click="goBack()"></button>
@@ -82,7 +82,7 @@
             <h3 class="bold">{{playlist.root_title}}</h3>
             <span ng-bind-html="playlist.body.substring(0,100)|parseUrl"></span>
             </div>-->
-            <div class="item" ng-repeat="playlist in profile | orderBy:'-created' | limitTo:25 track by $index" ng-class="{'item-thumbnail-left': playlist.json_metadata.image}">
+            <div class="item" ng-repeat="playlist in data.profile | orderBy:'-created' | limitTo:25 track by $index" ng-class="{'item-thumbnail-left': playlist.json_metadata.image}">
               <img ng-src="{{playlist.json_metadata.image[0]}}" ng-click="open(playlist)" ng-if="playlist.json_metadata.image" onerror="this.src='img/noimage.png'"/>
                 <div ng-click="open(playlist)">
                 <div class="wrap">
@@ -100,7 +100,7 @@
                 </div>
             </div>
           </ion-list>
-          <ion-infinite-scroll on-infinite="loadmore()" distance="15%"></ion-infinite-scroll>
+          <ion-infinite-scroll on-infinite="loadmore()" ng-if="moreDataCanBeLoaded()" distance="15%"></ion-infinite-scroll>
         </div>
 
         <div class="padding" ng-if="active=='transfers'">
