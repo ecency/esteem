@@ -233,5 +233,9 @@
 	"IMAGE_REMOVED": "Image is removed",
 	"COPY": "Copy",
 	"NO_IMAGE": "You have not uploaded any image, yet!",
-	"PULL_DOWN_TO_REFRESH": "Pull down to refresh"
+	"PULL_DOWN_TO_REFRESH": "Pull down to refresh",
+	"EXTERNAL_APPS": "External Apps",
+	"PLUGINS": "Plugins",
+	"SUGGEST": "Suggest",
+	"COMING_SOON": "Coming soon"
 }
