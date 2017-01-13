@@ -58,7 +58,7 @@
   "PROFILE_2":"{{platformpower}}, influence tokens that earn more power for holding long term and voting on posts. The more one holds the more one can influence other’s rewards and earn rewards for accurate voting.",
   "PROFILE_3":"Tokens worth about {{platformsunit}} of {{platformname}}.",
   "ESTIMATED_VALUE":"Estimated Value",
-  "PROFILE_4":"The estimated value is based on a 3.5 day average value of {{platformname}}.",
+  "PROFILE_4":"The estimated value is based on a 7 day average value of {{platformname}}.",
   "TRANSACTION_HISTORY":"Transaction History",
   "POSTING":"Posting",
   "PROFILE_5":"The posting key is used for posting and voting. It should be different from the active and owner keys.",
@@ -219,7 +219,6 @@
   "LANGUAGES_TEXT":"Here you can change language of the app.",
   "LOGIN_TO_X":"This operation requires user to be logged in with main password, active/posting key. Please login and try again.",
   "GALLERY":"Gallery",
-  "TRANSLATIONS":"Translation contributors",
   "SHARE":"Share",
   "MARKETPLACE":"Market Place"
 }
