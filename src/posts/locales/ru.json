@@ -221,5 +221,19 @@
     "PAYOUT_CYCLE": "Период выплат",
     "TRANSLATIONS": "Авторы перевода",
     "SHARE": "Поделиться",
-    "MARKETPLACE": "Market Place"
+    "MARKETPLACE": "Рынок",
+    "EXCHANGE": "Биржа",
+    "DRAFTS": "Черновики",
+    "POST_IS_UNDRAFT": "Пост удален из черновиков!",
+    "POST_IS_DRAFT": "Пост добавлен в черновики!",
+    "SWIPE_LEFT": "Проведите пальцем влево чтобы увидеть варианты",
+    "MANAGE": "Управление",
+    "IMAGE_REMOVED": "Изображение удалено",
+    "COPY": "Копировать",
+    "NO_IMAGE": "Вы еще не загрузили ни одного изображения!",
+    "PULL_DOWN_TO_REFRESH": "Потяните вниз, чтобы обновить",
+    "EXTERNAL_APPS": "Внешние приложения",
+    "PLUGINS": "Плагины",
+    "SUGGEST": "Предложить",
+    "COMING_SOON": "Скоро"
 }
