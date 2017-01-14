@@ -2590,46 +2590,131 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     }
   };
   $scope.ifExists = function(xx){
-    for (var i = 0; i < $scope.profile.length; i++) {
-      if ($scope.profile[i].permlink === xx){
+    for (var i = 0; i < $scope.data.profile.length; i++) {
+      if ($scope.data.profile[i].permlink === xx){
         return true;
       }
     }
     return false;
   }
+  $scope.end = false;
+  $scope.clen = 20;
+  $scope.moreDataCanBeLoaded = function(){
+    return ($scope.data.profile && $scope.data.profile.length>0) && !$scope.end;
+  }
+
   $scope.loadmore = function() {
-    var params = {tag: $stateParams.username, limit: 20, filter_tags: []};
+    //console.log('loadmore');
+    var params = {tag: $stateParams.username, limit: 20};
+    var len = $scope.data.profile?$scope.data.profile.length:0;
 
-    if ($scope.profile && $scope.profile.length>0) {
-      params.start_author = $scope.profile[$scope.profile.length-1].author;
-      params.start_permlink = $scope.profile[$scope.profile.length-1].permlink;
-    }
-    if ($scope.error) {
-      //$rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REQUEST_LIMIT_TEXT'));
-      $scope.$broadcast('scroll.infiniteScrollComplete');
-      $rootScope.$broadcast('hide:loading');
-    } else {
-      $rootScope.log("fetching profile...blog "+20+" "+$stateParams.username);
-      console.log($scope.profile);
-      if (typeof window.Api.database_api === "function") {
-        window.Api.database_api().exec("get_discussions_by_blog", [params]).then(function(response){
-          console.log(response);
-          angular.forEach(response, function(v,k){
+    //console.log($scope.data.profile);
 
-            if (!$scope.ifExists(v.permlink)){
-              $scope.profile.push(v);
-            }
-          });
-          if (!$scope.$$phase) {
-            $scope.$apply();
+    if (len>0) {
+      params.start_author = $scope.data.profile[len-1].author;
+      params.start_permlink = $scope.data.profile[len-1].permlink;
+
+      if ($scope.end) {
+        //$rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REQUEST_LIMIT_TEXT'));
+        $scope.$broadcast('scroll.infiniteScrollComplete');
+        $rootScope.$broadcast('hide:loading');
+      } else {
+        //console.log(params);
+        //$rootScope.log("fetching profile...blog 20 ");
+        if (typeof window.Api.database_api === "function") {
+          if ($scope.active == 'blog') {
+            window.Api.database_api().exec("get_discussions_by_blog", [params]).then(function(response){
+
+              if (response) {
+                for (var j = 0; j < response.length; j++) {
+                  var v = response[j];
+                  v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
+                  !$scope.$$phase?$scope.$apply():console.log('phased');
+                  var found = false;
+                  for (var i = $scope.data.profile.length-1; i >= 0; i--) {
+                    if ($scope.data.profile[i].id === v.id){
+                      found = true;
+                      //console.log($scope.data.profile[i].id, v.id);
+                    }
+                  }
+                  if (!found){
+                    //console.log(v.id);
+                    $scope.data.profile.push(v);
+                  }
+                  if (response.length <= 1) {
+                    $scope.end = true;
+                  } else {
+                    $scope.end = false;
+                  }
+                }
+              }
+            });
+            $scope.$broadcast('scroll.infiniteScrollComplete');
           }
-          //console.log($scope.data.length);
-          $scope.$broadcast('scroll.infiniteScrollComplete');
-          $rootScope.$broadcast('hide:loading');
-        });
-        console.log($scope.profile);
+          if ($scope.active == 'posts') {
+            window.Api.database_api().exec("get_discussions_by_comments", [params]).then(function(response){
+
+              if (response) {
+                for (var j = 0; j < response.length; j++) {
+                  var v = response[j];
+                  v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
+                  !$scope.$$phase?$scope.$apply():console.log('phased');
+                  var found = false;
+                  for (var i = $scope.data.profile.length-1; i >= 0; i--) {
+                    if ($scope.data.profile[i].id === v.id){
+                      found = true;
+                      //console.log($scope.data.profile[i].id, v.id);
+                    }
+                  }
+                  if (!found){
+                    //console.log(v.id);
+                    $scope.data.profile.push(v);
+                  }
+                  if (response.length <= 1) {
+                    $scope.end = true;
+                  } else {
+                    $scope.end = false;
+                  }
+                }
+              }
+            });
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+          }
+          if ($scope.active == 'recent-replies') {
+            var pp = [$scope.data.profile[$scope.data.profile.length-1].author, $scope.data.profile[$scope.data.profile.length-1].permlink, 20];
+            window.Api.database_api().exec("get_replies_by_last_update", [pp]).then(function(response){
+              //console.log(response);
+              if (response) {
+                for (var j = 0; j < response.length; j++) {
+                  var v = response[j];
+                  v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
+                  !$scope.$$phase?$scope.$apply():console.log('phased');
+                  var found = false;
+                  for (var i = $scope.data.profile.length-1; i >= 0; i--) {
+                    if ($scope.data.profile[i].id === v.id){
+                      found = true;
+                      //console.log($scope.data.profile[i].id, v.id);
+                    }
+                  }
+                  if (!found){
+                    //console.log(v.id);
+                    $scope.data.profile.push(v);
+                  }
+                  if (response.length <= 1) {
+                    $scope.end = true;
+                  } else {
+                    $scope.end = false;
+                  }
+                }
+              }
+            });
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+          }
+          //console.log($scope.profile);
+        }
       }
     }
+
   }
   $scope.$on('$ionicView.beforeEnter', function(){
     $scope.user = {username: $stateParams.username};
@@ -2651,7 +2736,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       $scope.nonexist = false;
 
       window.Api.database_api().exec("get_state", ["/@"+$stateParams.username+$scope.rest]).then(function(res){
-        $scope.profile = [];
+        $scope.data = {profile: []};
         //console.log(res);
         if (Object.keys(res.content).length>0) {
           angular.forEach(res.content, function(v,k){
@@ -2674,35 +2759,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 }
               }
             }
-            $scope.profile.push(v);
+            $scope.data.profile.push(v);
           });
-          /*for (var property in res.content) {
-            if (res.content.hasOwnProperty(property)) {
-              // do stuff
-              var ins = res.content[property];
-              //ins.json_metadata = angular.fromJson(ins.json_metadata);
-              if ($rootScope.$storage.user){
-                if ($rootScope.$storage.user.username !== ins.author) {
-                  ins.reblogged = true;
-                }
-                var len = ins.active_votes.length;
-                for (var j = len - 1; j >= 0; j--) {
-                  if (ins.active_votes[j].voter === $rootScope.$storage.user.username) {
-                    if (ins.active_votes[j].percent > 0) {
-                      ins.upvoted = true;
-                    } else if (ins.active_votes[j].percent < 0) {
-                      ins.downvoted = true;
-                    } else {
-                      ins.upvoted = false;
-                      ins.downvoted = false;
-                    }
-                  }
-                }
-              }
-              $scope.profile.push(ins);
-            }
-          }*/
-          //console.log($scope.profile);
           $scope.nonexist = false;
           if(!$scope.$$phase){
             $scope.$apply();
@@ -2816,9 +2874,11 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     $ionicSideMenuDelegate.toggleLeft();
   }
   $scope.change = function(type){
-    $scope.profile = [];
+    $scope.data = undefined;
+    $scope.data = {profile: []};
     $scope.accounts = [];
     $scope.active = type;
+    $scope.end = false;
     if (type != "blog") {
       $scope.rest = "/"+type;
     } else {
@@ -2848,35 +2908,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 }
               }
             }
-            $scope.profile.push(v);
+            $scope.data.profile.push(v);
           });
-          /*for (var property in res.content) {
-            if (res.content.hasOwnProperty(property)) {
-              var ins = res.content[property];
-              //ins.json_metadata = ins.json_metadata?angular.fromJson(ins.json_metadata):null;
-              if ($rootScope.$storage.user){
-                if (type==="blog") {
-                  if ($rootScope.$storage.user.username !== ins.author) {
-                    ins.reblogged = true;
-                  }
-                }
-                var len = ins.active_votes.length;
-                for (var j = len - 1; j >= 0; j--) {
-                  if (ins.active_votes[j].voter === $rootScope.$storage.user.username) {
-                    if (ins.active_votes[j].percent > 0) {
-                      ins.upvoted = true;
-                    } else if (ins.active_votes[j].percent < 0) {
-                      ins.downvoted = true;
-                    } else {
-                      ins.upvoted = false;
-                      ins.downvoted = false;
-                    }
-                  }
-                }
-              }
-              $scope.profile.push(ins);
-            }
-          }*/
           $scope.nonexist = false;
         } else {
           $scope.nonexist = true;
