@@ -237,5 +237,7 @@
 	"EXTERNAL_APPS": "External Apps",
 	"PLUGINS": "Plugins",
 	"SUGGEST": "Suggest",
-	"COMING_SOON": "Coming soon"
+	"COMING_SOON": "Coming soon",
+	"CHAIN": "Chain",
+	"CHAIN_TEXT": "Here you can change blockchain or default platform."
 }

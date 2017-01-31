@@ -177,7 +177,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
           if (!$scope.$$phase) {
             $scope.$apply();
           }
-          $scope.mcss = ($rootScope.$storage.user.json_metadata && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
+          $scope.mcss = ($rootScope.$storage.user.json_metadata && $rootScope.$storage.user.json_metadata.profile && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
         });
       }
     }
@@ -1941,7 +1941,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $scope.post = result;
         //$ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
       setTimeout(function() {
-        $rootScope.$broadcast('update:content');
+        //$rootScope.$broadcast('update:content');
       }, 10);
       $rootScope.$broadcast('hide:loading');
       //console.log($scope.post);
@@ -1951,6 +1951,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     });
     //$rootScope.$broadcast('hide:loading');
   };
+  $scope.fetchComments = function(){
+    $rootScope.$broadcast('update:content');
+  }
   $scope.$on('$ionicView.beforeEnter', function(){
     $rootScope.log('beforeEnter postctrl');
     $rootScope.$broadcast('show:loading');
@@ -2185,6 +2188,9 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
 })
 
 app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicActionSheet, $cordovaCamera, ImageUploadService, $ionicPopup, $ionicSideMenuDelegate, $ionicHistory, $state, APIs, $ionicPopover, $filter) {
+
+
+  $scope.translationData = { platformname: $rootScope.$storage.platformname, platformpower: $rootScope.$storage.platformpower, platformsunit:"$1.00" };
 
   $scope.goBack = function() {
     var viewHistory = $ionicHistory.viewHistory();
@@ -2865,7 +2871,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     }
 
     //setTimeout(function() {
-      $scope.css = ($rootScope.$storage.user.username === $scope.user.username && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : ($rootScope.$storage.user.username !== $scope.user.username && ($scope.user.json_metadata && $scope.user.json_metadata.profile.cover_image)) ? {'background': 'url('+$scope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
+      $scope.css = ($rootScope.$storage.user.username === $scope.user.username && $rootScope.$storage.user.json_metadata && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : ($rootScope.$storage.user.username !== $scope.user.username && ($scope.user.json_metadata && $scope.user.json_metadata.profile.cover_image)) ? {'background': 'url('+$scope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
       //console.log($scope.css);
     //}, 1);
 
@@ -3015,7 +3021,28 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       $scope.tooltipText = texth;
       $scope.tooltip.show($event);
    };
+   $scope.changeChain = function() {
+    if ($rootScope.$storage.chain == 'steem'){
+      $rootScope.$storage.platformname = "Steem";
+      $rootScope.$storage.platformpower = "Steem Power";
+      $rootScope.$storage.platformsunit = "Steem";
+      $rootScope.$storage.platformdollar = "Steem Dollar";
+      $rootScope.$storage.platformdunit = "SBD";
+      $rootScope.$storage.platformpunit = "SP";
+      $rootScope.$storage.platformlunit = "STEEM";
+      $rootScope.$storage.socket = "wss://node.steem.ws";
+    } else {
+      $rootScope.$storage.platformname = "ГОЛОС";
+      $rootScope.$storage.platformpower = "СИЛА ГОЛОСА";
+      $rootScope.$storage.platformsunit = "Голос";
+      $rootScope.$storage.platformdollar = "ЗОЛОТОЙ";
+      $rootScope.$storage.platformdunit = "GBG";
+      $rootScope.$storage.platformpunit = "СИЛА ГОЛОСА";
+      $rootScope.$storage.platformlunit = "ГОЛОС";
+      $rootScope.$storage.socket = "wss://node.golos.ws";
+    }
 
+   }
    $scope.closeTooltip = function() {
       $scope.tooltip.hide();
    };
@@ -3041,6 +3068,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       if (!$scope.$$phase) {
         $scope.$apply();
       }
+      //$window.location.reload(true);
     }, 1);
   }
 
@@ -3170,8 +3198,8 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     $ionicHistory.nextViewOptions({
       disableBack: true
     });
-    $state.go('app.posts', {}, {reload: true});
-    //$window.location.reload(true);
+    //$state.go('app.posts', {}, {reload: true});
+    $window.location.reload(true);
   };
 
 });

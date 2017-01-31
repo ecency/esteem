@@ -16,40 +16,40 @@ module.exports = function (app) {
         return window.Api.follow_api().exec("get_following", [user, follower, what, limit]);
       },
       saveSubscription: function(deviceid, username, subscription) {
-        return $http.post(API_END_POINT+"/api/devices", {deviceid: deviceid, username: username, subscription: subscription});
+        return $http.post(API_END_POINT+"/api/devices", {deviceid: deviceid, username: username, subscription: subscription, chain: $rootScope.$storage.chain});
       },
       updateSubscription: function(deviceid, username, subscription) {
-        return $http.put(API_END_POINT+"/api/devices", {deviceid: deviceid, username: username, subscription: subscription});
+        return $http.put(API_END_POINT+"/api/devices", {deviceid: deviceid, username: username, subscription: subscription, chain: $rootScope.$storage.chain});
       },
       deleteSubscription: function(deviceid) {
-        return $http.delete(API_END_POINT+"/api/devices/"+deviceid);
+        return $http.delete(API_END_POINT+"/api/devices/"+deviceid+"/"+$rootScope.$storage.chain);
       },
       getSubscriptions: function(deviceid) {
-        return $http.get(API_END_POINT+"/api/devices/"+deviceid);
+        return $http.get(API_END_POINT+"/api/devices/"+deviceid+"/"+$rootScope.$storage.chain);
       },
 			addBookmark: function(user, bookmark) {
-        return $http.post(API_END_POINT+"/api/bookmark", {username: user, author: bookmark.author, permlink: bookmark.permlink});
+        return $http.post(API_END_POINT+"/api/bookmark", {username: user, author: bookmark.author, permlink: bookmark.permlink, chain: $rootScope.$storage.chain});
       },
 			getBookmarks: function(user) {
-        return $http.get(API_END_POINT+"/api/bookmarks/"+user);
+        return $http.get(API_END_POINT+"/api/bookmarks/"+user+"/"+$rootScope.$storage.chain);
       },
 			removeBookmark: function(id, user) {
-        return $http.delete(API_END_POINT+"/api/bookmarks/"+user+"/"+id);
+        return $http.delete(API_END_POINT+"/api/bookmarks/"+user+"/"+id+"/"+$rootScope.$storage.chain);
       },
 			addDraft: function(user, draft) {
-        return $http.post(API_END_POINT+"/api/draft", {username: user, title: draft.title, body: draft.body, tags: draft.tags, post_type: draft.post_type});
+        return $http.post(API_END_POINT+"/api/draft", {username: user, title: draft.title, body: draft.body, tags: draft.tags, post_type: draft.post_type, chain: $rootScope.$storage.chain});
       },
 			getDrafts: function(user) {
-        return $http.get(API_END_POINT+"/api/drafts/"+user);
+        return $http.get(API_END_POINT+"/api/drafts/"+user+"/"+$rootScope.$storage.chain);
       },
 			removeDraft: function(id, user) {
-        return $http.delete(API_END_POINT+"/api/drafts/"+user+"/"+id);
+        return $http.delete(API_END_POINT+"/api/drafts/"+user+"/"+id+"/"+$rootScope.$storage.chain);
       },
 			removeImage: function(id, user) {
-        return $http.delete(API_END_POINT+"/api/images/"+user+"/"+id);
+        return $http.delete(API_END_POINT+"/api/images/"+user+"/"+id+"/"+$rootScope.$storage.chain);
       },
 			fetchImages: function(user) {
-        return $http.get(API_END_POINT+"/api/images/"+user);
+        return $http.get(API_END_POINT+"/api/images/"+user+"/"+$rootScope.$storage.chain);
       }
 		};
 	}])
