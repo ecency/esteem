@@ -249,8 +249,21 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     } else {
       $translate.use($rootScope.$storage.language);
     }
+    if (!$rootScope.$storage.chain){
+      $rootScope.$storage.platformname = "Steem";
+      $rootScope.$storage.platformpower = "Steem Power";
+      $rootScope.$storage.platformsunit = "Steem";
+      $rootScope.$storage.platformdollar = "Steem Dollar";
+      $rootScope.$storage.platformdunit = "SBD";
+      $rootScope.$storage.platformpunit = "SP";
+      $rootScope.$storage.platformlunit = "STEEM";
+      $rootScope.$storage.chain = "steem";
+    }
 
     $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'es', name: 'Español'}, {id:'gr', name: 'Ελληνικά'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'ru', name: 'Русский'}, {id:'bg', name: 'Български'}, {id:'nl', name: 'Nederlands'}, {id:'hu', name: 'Magyar'}, {id:'cs', name: 'Čeština'}, {id:'iw', name: 'עברית‎'}, {id:'pl', name: 'Polski‎'}, {id:'pt', name: 'Português'}, {id:'id', name:'Bahasa Indonesia'}, {id:'zh', name:'繁體中文'}];
+
+    $rootScope.$storage.chains = [{id:'steem', name: 'Steem'}, {id:'golos', name: 'Golos'}];
+
 
     if (window.cordova) {
       if (ionic.Platform.isIPad() || ionic.Platform.isIOS()) {

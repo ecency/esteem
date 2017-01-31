@@ -94,7 +94,7 @@
                   <div class="col"><ion-spinner ng-if="playlist.invoting"></ion-spinner>
                   <i class="fa fa-chevron-circle-up fa-lg" ng-click="upvotePost(playlist)" ng-if="!playlist.upvoted"></i><i class="fa fa-chevron-circle-up fa-lg positive" ng-click="unvotePost(playlist)" ng-if="playlist.upvoted"></i>&nbsp;&nbsp;<span ng-click="$root.openInfo(playlist)">{{playlist.net_votes}}</span>&nbsp;&nbsp;
                    <!--<i class="fa fa-chevron-circle-down fa-lg" ng-click="downvotePost(playlist)" ng-if="!playlist.downvoted"></i><i class="fa fa-chevron-circle-down fa-lg positive" ng-click="unvotePost(playlist)" ng-if="playlist.downvoted"></i>--></div>
-                  <div class="col" ng-click="openTooltip($event,playlist)">&nbsp; <i class="ion-social-usd"></i><span ng-if="playlist.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{playlist | sumPostTotal | number}}</del></span><span ng-if="playlist.max_accepted_payout.split(' ')[0] !== '0.000'">{{playlist | sumPostTotal | number}}</span></div>
+                  <div class="col" ng-click="openTooltip($event,playlist)">&nbsp; <i ng-class="{'ion-social-usd':$root.$storage.chain=='steem','fa fa-rub':$root.$storage.chain='golos'}"></i><span ng-if="playlist.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{playlist | sumPostTotal | number}}</del></span><span ng-if="playlist.max_accepted_payout.split(' ')[0] !== '0.000'">{{playlist | sumPostTotal | number}}</span></div>
                   <div class="col">&nbsp; <i class="icon ion-chatbubbles"></i>&nbsp;{{playlist.children}}</div>
                   <div class="col" ng-if="playlist.author!==user.username && active!=='recent-replies'">&nbsp; <i class="icon ion-arrow-return-right"></i></div>
                 </div>
@@ -109,31 +109,31 @@
           </p>
           <div class="row">
             <div class="col col-67">
-            STEEM <br><span class="gray wrap">{{'PROFILE_1'|translate:'{ platformname: "Steem", platformpower:"Steem Power" }' }}</span>
+            {{$root.$storage.platformname}} <br><span class="gray wrap">{{'PROFILE_1'|translate:translationData }}</span>
             </div>
             <div class="col col-33">
-            {{accounts.balance | st | number}} STEEM
+            {{accounts.balance | st | number}} {{$root.$storage.platformlunit}}
             </div>
           </div>
           <div class="row">
             <div class="col col-67">
-            STEEM POWER <br><span class="gray wrap">{{'PROFILE_2'|translate:'{ platformpower: "Steem Power" }'}}</span>
+            {{$root.$storage.platformpower}} <br><span class="gray wrap">{{'PROFILE_2'|translate:translationData}}</span>
             </div>
             <div class="col col-33">
-            {{accounts.vesting_shares | sp | number}} SP
+            {{accounts.vesting_shares | sp | number}} {{$root.$storage.platformpunit}}
             </div>
           </div>
           <div class="row">
             <div class="col col-67">
-            STEEM DOLLARS <br><span class="gray wrap">{{'PROFILE_3'|translate:'{ platformname: "Steem", platformsunit:"$1.00" }'}}</span>
+            {{$root.$storage.platformdollar}} <br><span class="gray wrap">{{'PROFILE_3'|translate:translationData}}</span>
             </div>
             <div class="col col-33">
-            {{accounts.sbd_balance | sbd | number}} SBD
+            {{accounts.sbd_balance | sbd | number}} {{$root.$storage.platformdunit}}
             </div>
           </div>
           <div class="row">
             <div class="col col-67">
-            {{'ESTIMATED_VALUE'|translate}} <br><span class="gray wrap">{{'PROFILE_4'|translate:'{ platformname: "Steem" }'}}</span>
+            {{'ESTIMATED_VALUE'|translate}} <br><span class="gray wrap">{{'PROFILE_4'|translate:translationData}}</span>
             </div>
             <div class="col col-33">
             ${{accounts.vesting_shares | sd:accounts.balance:accounts.sbd_balance | number}}
@@ -149,12 +149,11 @@
               <div ng-if="tr[1].op[0]=='transfer'">{{tr[1].op[1].amount}} | {{tr[1].op[1].memo}}</div>
               <div ng-if="tr[1].op[0]=='transfer_to_vesting'">{{tr[1].op[1].amount}} | {{tr[1].op[1].memo}}</div>
               <div ng-if="tr[1].op[0]=='withdraw_vesting'">{{tr[1].op[1].vesting_shares}} | {{tr[1].op[1].memo}}</div>
-
               <p ng-if="tr[1].op[0]=='comment_reward'">@{{tr[1].op[1].author}}/{{tr[1].op[1].permlink}}</p>
               <p ng-if="tr[1].op[0]=='author_reward'">@{{tr[1].op[1].author}}/{{tr[1].op[1].permlink}}</p>
               <p ng-if="tr[1].op[0]=='curation_reward'">@{{tr[1].op[1].comment_author}}/{{tr[1].op[1].comment_permlink}}</p>
-              <p ng-if="tr[1].op[0]=='transfer'">from {{tr[1].op[1].from}} to {{tr[1].op[1].to}}</p>
-              <p ng-if="tr[1].op[0]=='transfer_to_vesting'">from {{tr[1].op[1].from}} to {{tr[1].op[1].to}}</p>
+              <p ng-if="tr[1].op[0]=='transfer'">{{'FROM'|translate}} {{tr[1].op[1].from}} {{'TO'|translate}}  {{tr[1].op[1].to}}</p>
+              <p ng-if="tr[1].op[0]=='transfer_to_vesting'">{{'FROM'|translate}}  {{tr[1].op[1].from}} {{'TO'|translate}}  {{tr[1].op[1].to}}</p>
               <p ng-if="tr[1].op[0]=='withdraw_vesting'">{{tr[1].op[1].account}}</p>
 
             </div>

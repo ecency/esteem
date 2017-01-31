@@ -44,12 +44,13 @@
 
         <div class="col col-33" ng-if="$root.voiceOver"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
         <i class="icon ion-android-arrow-dropup-circle" ng-click="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted">{{'UPVOTE'|translate}}</i><i class="icon ion-android-arrow-dropup-circle positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted">{{'UNVOTE_UPVOTED'|translate}}</i>&nbsp;&nbsp;&nbsp;<span ng-click="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
-        <div class="col col-33" ng-click="openTooltip($event,$root.$storage.sitem)"><i class="ion-social-usd"></i>{{$root.$storage.sitem | sumPostTotal | number}}</div>
+        <div class="col col-33" ng-click="openTooltip($event,$root.$storage.sitem)"><i ng-class="{'ion-social-usd':$root.$storage.chain=='steem','fa fa-rub':$root.$storage.chain='golos'}"></i>{{$root.$storage.sitem | sumPostTotal | number}}</div>
         <div class="col"><i class="icon ion-chatbubbles"></i>{{$root.$storage.sitem.children}}</div>
         <div class="col" ng-click="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username"><i class="fa fa-reply"></i></div>
         <div class="col" ng-click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode=='first_payout' && $root.$storage.sitem.author==$root.$storage.user.username"><i class="fa  fa-pencil-square-o"></i></div>
         <div class="col" ng-click="deletePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.net_votes==0 && $root.$storage.sitem.author==$root.$storage.user.username"><i class="fa fa-trash-o"></i></div>
       </div>
+      <p class="tcenter"><button class="button button-positive" ng-if="!comments" ng-click="fetchComments()">{{'COMMENTS'|translate}}</button></p>
       <p ng-if="comments.length>0" class="italic tcenter gray">{{'POST_1'|translate}}</p>
       <p ng-if="comments.length>0" class="italic tcenter gray">{{'POST_2'|translate}}</p>
       <ion-thread comments="comments"></ion-thread>
