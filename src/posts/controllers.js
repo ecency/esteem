@@ -46,23 +46,11 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $rootScope.$storage.sitem = item;
     //console.log(item);
 
-    /*window.Api.database_api().exec("get_state", ['/'+item.category+'/@'+item.author+'/'+item.permlink]).then(function(dd){
-
-      //console.log(dd);
-      var state = dd.current_route.split('@')[1];
-      angular.forEach(dd.content, function(v,k){
-        angular.forEach(v.replies, function(vv,kk){
-          var t = dd.content[vv];
-          v.replies[kk] = t;
-        });
-      });
-
-      var content = dd.content[state];
-      console.log(content);
-      $rootScope.$storage.sitem = content;
+    window.Api.database_api().exec("get_state", [item.url]).then(function(dd){
+      console.log(dd);
     });
 
-    $state.go('app.single');*/
+    //$state.go('app.single');*/
     $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});
   };
   $scope.advancedChange = function() {
@@ -1884,7 +1872,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           }
         });*/
         $scope.comments = result;
-        //console.log(result);
+        console.log(result);
       }
 
       $rootScope.$broadcast('hide:loading');

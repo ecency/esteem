@@ -845,9 +845,9 @@ module.exports = function (app) {
             },
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
                         <div class="ion-comment--author"><b>{{comment.author}}</b>&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
-                        <div class="ion-comment--score"><i ng-class="{\'ion-social-usd\':$root.$storage.chain==\'steem\',\'fa fa-rub\':$root.$storage.chain=\'golos\'}"></i> {{comment.total_pending_payout_value.split(" ")[0]|number}}</div>\
+                        <div class="ion-comment--score"><i ng-class="{\'ion-social-usd\':$root.$storage.chain==\'steem\',\'fa fa-rub\':$root.$storage.chain==\'golos\'}"></i> {{comment.total_pending_payout_value.split(" ")[0]|number}}</div>\
                         <div class="ion-comment--text bodytext selectable" ng-bind-html="comment.body | parseUrl "></div>\
-                        <div class="ion-comment--replies">{{comment.net_votes || 0}} votes, {{comment.children || 0}} replies</div>\
+                        <div class="ion-comment--replies" ng-click="toggleComment(comment)">{{comment.net_votes || 0}} votes, {{comment.children || 0}} replies</div>\
                         <ion-option-button ng-click="upvotePost(comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></ion-option-button>\
                         <ion-option-button ng-click="replyToComment(comment)"><span class="fa fa-reply"></ion-option-button>\
                         <ion-option-button ng-click="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></ion-option-button>\
@@ -855,7 +855,7 @@ module.exports = function (app) {
                         <ion-option-button ng-if="comment.author == $root.$storage.user.username" ng-click="deleteComment(comment)"><span class="ion-ios-trash-outline" style="font-size:30px"></ion-option-button>\
                     </ion-item>',
             controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopup, $ionicActionSheet, $cordovaCamera, $filter) {
-                $scope.compateDate = function(comment) {
+                  $scope.compateDate = function(comment) {
                     if (comment.last_payout == "1970-01-01T00:00:00") {
                         return true;
                     } else {
@@ -865,7 +865,27 @@ module.exports = function (app) {
                         return false;
                       }
                     }
-                }
+                  };
+                  $scope.toggleComment = function(comment) {
+                      $rootScope.log('toggleComment');
+
+                      if (comment.children > 0){
+                        window.Api.database_api().exec("get_content_replies", [comment.author, comment.permlink]).then(function(res1){
+                          //todo fix active_votes
+                          comment.replies = res1;
+                          //$rootScope.log('result',res1);
+                          if (comment.showChildren) {
+                              comment.showChildren = false;
+                          } else {
+                              comment.showChildren = true;
+                          }
+                          if (!$scope.$$phase) {
+                            $scope.$apply();
+                          }
+                        });
+                        //$rootScope.$broadcast('hide:loading');
+                      }
+                  };
                   $scope.upvotePost = function(post) {
                     $rootScope.votePost(post, 'upvote', 'update:content');
                   };
@@ -1203,7 +1223,7 @@ module.exports = function (app) {
             //Replace ng-if="!comment.showChildren" with ng-if="comment.showChildren" to hide all child comments by default
             //Replace comment.data.replies.data.children according to the API you are using | orderBy:\'-net_votes\'
             template: '<script type="text/ng-template" id="node.html">\
-                            <ion-comment ng-click="toggleComment(comment)" comment="comment">\
+                            <ion-comment comment="comment">\
                             </ion-comment>\
                             <div class="reddit-post--comment--container">\
                                  <ul ng-if="comment.showChildren" class="animate-if ion-comment--children">\

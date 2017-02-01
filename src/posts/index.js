@@ -208,6 +208,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('pt', require('./locales/pt')); //Portuguese
   $translateProvider.translations('id', require('./locales/id')); //Indonesian
   $translateProvider.translations('zh', require('./locales/zh')); //Chinese traditional
+  $translateProvider.translations('dolan', require('./locales/dolan')); //Chinese traditional
 
   $translateProvider.useSanitizeValueStrategy(null);
 
@@ -259,8 +260,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$storage.platformlunit = "STEEM";
       $rootScope.$storage.chain = "steem";
     }
-
-    $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'es', name: 'Español'}, {id:'gr', name: 'Ελληνικά'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'ru', name: 'Русский'}, {id:'bg', name: 'Български'}, {id:'nl', name: 'Nederlands'}, {id:'hu', name: 'Magyar'}, {id:'cs', name: 'Čeština'}, {id:'iw', name: 'עברית‎'}, {id:'pl', name: 'Polski‎'}, {id:'pt', name: 'Português'}, {id:'id', name:'Bahasa Indonesia'}, {id:'zh', name:'繁體中文'}];
+    $rootScope.$storage.chain = "steem";
+    $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'es', name: 'Español'}, {id:'gr', name: 'Ελληνικά'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'ru', name: 'Русский'}, {id:'bg', name: 'Български'}, {id:'nl', name: 'Nederlands'}, {id:'hu', name: 'Magyar'}, {id:'cs', name: 'Čeština'}, {id:'iw', name: 'עברית‎'}, {id:'pl', name: 'Polski‎'}, {id:'pt', name: 'Português'}, {id:'id', name:'Bahasa Indonesia'}, {id:'zh', name:'繁體中文'}, , {id:'dolan', name:'Dolan'}];
 
     $rootScope.$storage.chains = [{id:'steem', name: 'Steem'}, {id:'golos', name: 'Golos'}];
 
