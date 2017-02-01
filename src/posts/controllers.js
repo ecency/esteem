@@ -1938,11 +1938,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         }
         result.json_metadata = angular.fromJson(result.json_metadata);
         $rootScope.$storage.sitem = result;
+        console.log(result);
         $scope.post = result;
         //$ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
-      setTimeout(function() {
-        //$rootScope.$broadcast('update:content');
-      }, 10);
       $rootScope.$broadcast('hide:loading');
       //console.log($scope.post);
       if (!$scope.$$phase) {

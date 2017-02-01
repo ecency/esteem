@@ -889,10 +889,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     setTimeout(function() {
       window.Api.initPromise.then(function(response) {
         window.Api.database_api().exec("get_feed_history", []).then(function(r){
-        //$rootScope.log(r);
+        $rootScope.log(r);
           $rootScope.$storage.base = r.current_median_history.base.split(" ")[0];
           window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(r){
-            //$rootScope.log(r);
+            $rootScope.log(r);
             $rootScope.$storage.steem_per_mvests = (Number(r.total_vesting_fund_steem.substring(0, r.total_vesting_fund_steem.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;
           });
         });
