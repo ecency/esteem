@@ -49,8 +49,8 @@
         <div class="row header">
           <div class="col">{{'DATE' | translate}}</div>
           <div class="col">{{'PRICE' | translate}}</div>
-          <div class="col">Steem</div>
-          <div class="col">SD ($)</div>
+          <div class="col">{{$root.$storage.platformsunit}}</div>
+          <div class="col">{{$root.$storage.platformdollar}}</div>
         </div>
         <div class="row" ng-repeat="(key, f) in recent_trades">
           <div class="col">{{f.date|timeago}}</div>

@@ -9,6 +9,10 @@ module.exports = function (app) {
 			getconfig: function() {
 				return $http.get('');
 			},
+      getCurrencyRate: function(code_from, code_to){
+        console.log(code_from,code_to);
+        return $http.get("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.xchange%20where%20pair%20in%20(%22"+code_from+code_to+"%22)&format=json&diagnostics=false&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
+      },
       getFollowers: function(user, follower, what, limit) {
         return window.Api.follow_api().exec("get_followers", [user, follower, what, limit]);
       },
@@ -659,7 +663,7 @@ module.exports = function (app) {
         };
     });
 
-     app.filter('metadataUsers', function($sce) {
+    app.filter('metadataUsers', function($sce) {
         var users = /(^|\s)(@[a-z][-\.a-z\d]+[a-z\d])/gim;
         return function(textu) {
           if (textu) {
@@ -669,6 +673,18 @@ module.exports = function (app) {
             $rootScope.log(angular.toJson(musers));
 
             return textu;
+          }
+        };
+    });
+
+     app.filter('getCurrencySymbol', function($filter) {
+        return function(text) {
+          if (text) {
+            //console.log(text.split('-')[1]);
+            //var x = text.split('-')[1];
+            //var tt = $filter('uppercase')(x);
+            var textu = window.getSymbol(text);
+            return textu=="?"?text:textu;
           }
         };
     });
@@ -779,10 +795,10 @@ module.exports = function (app) {
 		}
 	})
 
-  app.filter("sumPostTotal", function(){
+  app.filter("sumPostTotal", function($rootScope){
     return function(value) {
       if (value && value.total_payout_value) {
-        return (parseFloat(value.total_payout_value.split(" ")[0])+parseFloat(value.total_pending_payout_value.split(" ")[0]));
+        return ((parseFloat(value.total_payout_value.split(" ")[0])+parseFloat(value.total_pending_payout_value.split(" ")[0]))*$rootScope.$storage.currencyRate);
       }
     }
   });
@@ -845,7 +861,7 @@ module.exports = function (app) {
             },
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
                         <div class="ion-comment--author"><b>{{comment.author}}</b>&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
-                        <div class="ion-comment--score"><i ng-class="{\'ion-social-usd\':$root.$storage.chain==\'steem\',\'fa fa-rub\':$root.$storage.chain==\'golos\'}"></i> {{comment.total_pending_payout_value.split(" ")[0]|number}}</div>\
+                        <div class="ion-comment--score"><i class="fa" ng-class="$root.$storage.currency"></i> {{comment.total_pending_payout_value.split(" ")[0]|number}}</div>\
                         <div class="ion-comment--text bodytext selectable" ng-bind-html="comment.body | parseUrl "></div>\
                         <div class="ion-comment--replies" ng-click="toggleComment(comment)">{{comment.net_votes || 0}} votes, {{comment.children || 0}} replies</div>\
                         <ion-option-button ng-click="upvotePost(comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></ion-option-button>\

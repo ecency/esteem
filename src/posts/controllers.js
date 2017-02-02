@@ -3007,7 +3007,69 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       $scope.tooltipText = texth;
       $scope.tooltip.show($event);
    };
-   $scope.changeChain = function() {
+
+  function getDate(xx) {
+    angular.forEach($rootScope.$storage.currencies, function(v,k){
+      if (v.id == xx) {
+        return true;
+      }
+    });
+  }
+
+  function searchObj(nameKey, myArray) {
+    for (var i=0; i < myArray.length; i++) {
+        if (myArray[i].id === nameKey) {
+            return myArray[i];
+        }
+    }
+  }
+
+  function checkDate(date) {
+    var eold = 86400000; //1 * 24 * 60 * 60 * 1000; //1 day old
+    var now = new Date().getTime();
+    var old = new Date(date).getTime();
+    return now-old>=eold;
+  }
+
+  $scope.changeCurrency = function(xx) {
+    setTimeout(function() {
+      console.log(xx);
+      var resultObject = $rootScope.$storage.currencies.filter(function ( obj ) {
+          return obj.id === xx;
+      })[0];
+      //searchObj(xx, $rootScope.$storage.currencies);
+      if (checkDate(resultObject.date)) {
+        if ($rootScope.$storage.chain == 'steem'){
+          APIs.getCurrencyRate("USD", xx ).then(function(res){
+            $rootScope.$storage.currencyRate = Number(res.data.query.results.rate.Rate);
+            $rootScope.$storage.currencies.filter(function(obj){
+              if (obj.id == xx) {
+                obj.rate = $rootScope.$storage.currencyRate;
+                obj.date = res.data.query.results.rate.Date;
+              }
+            });
+          });
+        } else {
+          APIs.getCurrencyRate("XAU", xx ).then(function(res){
+            //XAU - 31.1034768g
+            //GBG rate in mg. so exchangeRate/31103.4768
+            $rootScope.$storage.currencyRate = Number(res.data.query.results.rate.Rate)/31103.4768;
+            $rootScope.$storage.currencies.filter(function(obj){
+              if (obj.id == xx) {
+                obj.rate = $rootScope.$storage.currencyRate;
+                obj.date = res.data.query.results.rate.Date;
+              }
+            });
+            //console.log($rootScope.$storage.currencyRate);
+          });
+        }
+        if (!$scope.$$phase) {
+          $scope.$apply();
+        }  
+      }
+    }, 1);
+  }
+  $scope.changeChain = function() {
     if ($rootScope.$storage.chain == 'steem'){
       $rootScope.$storage.platformname = "Steem";
       $rootScope.$storage.platformpower = "Steem Power";
@@ -3026,27 +3088,20 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       $rootScope.$storage.platformpunit = "СИЛА ГОЛОСА";
       $rootScope.$storage.platformlunit = "ГОЛОС";
       $rootScope.$storage.socket = "wss://node.golos.ws";
+
     }
+    
+    $scope.changeCurrency($rootScope.$storage.currency);
 
-   }
-   $scope.closeTooltip = function() {
-      $scope.tooltip.hide();
-   };
+  }
+  $scope.closeTooltip = function() {
+    $scope.tooltip.hide();
+  };
 
-   //Cleanup the popover when we're done with it!
-   $scope.$on('$destroy', function() {
-      $scope.tooltip.remove();
-   });
-
-   // Execute action on hide popover
-   $scope.$on('popover.hidden', function() {
-      // Execute action
-   });
-
-   // Execute action on remove popover
-   $scope.$on('popover.removed', function() {
-      // Execute action
-   });
+  //Cleanup the popover when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.tooltip.remove();
+  });
 
   $scope.changeLanguage = function(locale){
     setTimeout(function() {

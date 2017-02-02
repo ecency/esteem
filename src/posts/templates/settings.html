@@ -102,6 +102,29 @@
 
     <div class="row">
       <div class="col col-33">
+        <span class="slabel" ng-click='openTooltip($event,"{{"LANGUAGES_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i> {{'LANGUAGES'|translate}}</span>
+      </div>
+      <div class="col">
+        <select ng-model="$root.$storage.language" ng-change='changeLanguage($root.$storage.language)'>
+          <option ng-repeat="option in $root.$storage.languages" value="{{option.id}}">{{option.name}}</option>
+        </select>
+        <!--<div class="capital">{{$root.$storage.language}} <div class="pull-right"><i class="icon ion-chevron-right"></i></div></div>-->
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col col-33">
+        <span class="slabel" ng-click='openTooltip($event,"{{"CURRENCY_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i> {{'CURRENCY'|translate}}</span>
+      </div>
+      <div class="col">
+        <select ng-model="$root.$storage.currency" ng-change='changeCurrency($root.$storage.currency)'>
+          <option ng-repeat="option in $root.$storage.currencies" value="{{option.id}}">{{option.name}}</option>
+        </select>
+        <!--<div class="capital">{{$root.$storage.language}} <div class="pull-right"><i class="icon ion-chevron-right"></i></div></div>-->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-33">
         <span class="slabel" ng-click='openTooltip($event,"{{"CHAIN_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i> {{'CHAIN'|translate}}</span>
       </div>
       <div class="col">
@@ -122,19 +145,6 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col col-33">
-        <span class="slabel" ng-click='openTooltip($event,"{{"LANGUAGES_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i> {{'LANGUAGES'|translate}}</span>
-      </div>
-      <div class="col">
-        <select ng-model="$root.$storage.language" ng-change='changeLanguage($root.$storage.language)'>
-          <option ng-repeat="option in $root.$storage.languages" value="{{option.id}}">{{option.name}}</option>
-        </select>
-        <!--<div class="capital">{{$root.$storage.language}} <div class="pull-right"><i class="icon ion-chevron-right"></i></div></div>-->
-      </div>
-    </div>
-
-    
     <!--<div class="row">
       <div class="col">
       </div>

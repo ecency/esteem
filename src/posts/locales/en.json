@@ -239,5 +239,7 @@
 	"SUGGEST": "Suggest",
 	"COMING_SOON": "Coming soon",
 	"CHAIN": "Chain",
-	"CHAIN_TEXT": "Here you can change blockchain or default platform."
+	"CHAIN_TEXT": "Here you can change blockchain or default platform.",
+	"CURRENCY": "Currency",
+	"CURRENCY_TEXT": "Here you can change your default currency. You will see post/comment reward value in this currency."
 }

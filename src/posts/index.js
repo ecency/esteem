@@ -18,6 +18,7 @@ var steemRPC = require("steem-rpc");
 window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
 window.steemJS = require("steemjs-lib");
 window.diff_match_patch = require('diff-match-patch');
+window.getSymbol = require('currency-symbol-map');
 
 require('./config')(app);
 require('./services')(app);
@@ -222,7 +223,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
   $rootScope.log = function(message) {
     $log.info(message);
   };
-
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -259,11 +259,15 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$storage.platformpunit = "SP";
       $rootScope.$storage.platformlunit = "STEEM";
       $rootScope.$storage.chain = "steem";
+      $rootScope.$storage.currency = "usd";
     }
-    $rootScope.$storage.chain = "steem";
+
     $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'es', name: 'Español'}, {id:'gr', name: 'Ελληνικά'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'ru', name: 'Русский'}, {id:'bg', name: 'Български'}, {id:'nl', name: 'Nederlands'}, {id:'hu', name: 'Magyar'}, {id:'cs', name: 'Čeština'}, {id:'iw', name: 'עברית‎'}, {id:'pl', name: 'Polski‎'}, {id:'pt', name: 'Português'}, {id:'id', name:'Bahasa Indonesia'}, {id:'zh', name:'繁體中文'}, , {id:'dolan', name:'Dolan'}];
 
     $rootScope.$storage.chains = [{id:'steem', name: 'Steem'}, {id:'golos', name: 'Golos'}];
+
+    $rootScope.$storage.currencies = [{id:'btc', name: 'BTC', rate: 0, date: "1/1/2016"}, {id:'usd', name: 'USD', rate: 0, date: "1/1/2016"}, {id:'eur', name: 'EUR', rate: 0, date: "1/1/2016"}, {id:'rub', name: 'RUB', rate: 0, date: "1/1/2016"}, {id:'gbp', name: 'GBP', rate: 0, date: "1/1/2016"}, {id:'jpy', name: 'JPY', rate: 0, date: "1/1/2016"}, {id:'krw', name: 'KRW', rate: 0, date: "1/1/2016"}, {id:'inr', name: 'INR', rate: 0, date: "1/1/2016"}, {id:'try', name: 'TRY', rate: 0, date: "1/1/2016"}];
+
 
 
     if (window.cordova) {
@@ -890,10 +894,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     setTimeout(function() {
       window.Api.initPromise.then(function(response) {
         window.Api.database_api().exec("get_feed_history", []).then(function(r){
-        $rootScope.log(r);
+        //$rootScope.log(r);
           $rootScope.$storage.base = r.current_median_history.base.split(" ")[0];
           window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(r){
-            $rootScope.log(r);
+            //$rootScope.log(r);
             $rootScope.$storage.steem_per_mvests = (Number(r.total_vesting_fund_steem.substring(0, r.total_vesting_fund_steem.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;
           });
         });
