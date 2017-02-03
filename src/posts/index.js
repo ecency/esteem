@@ -262,13 +262,43 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$storage.currency = "usd";
     }
 
-    $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'es', name: 'Español'}, {id:'gr', name: 'Ελληνικά'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'ru', name: 'Русский'}, {id:'bg', name: 'Български'}, {id:'nl', name: 'Nederlands'}, {id:'hu', name: 'Magyar'}, {id:'cs', name: 'Čeština'}, {id:'iw', name: 'עברית‎'}, {id:'pl', name: 'Polski‎'}, {id:'pt', name: 'Português'}, {id:'id', name:'Bahasa Indonesia'}, {id:'zh', name:'繁體中文'}, , {id:'dolan', name:'Dolan'}];
+    $rootScope.$storage.languages = [
+      {id:'en', name: 'English'}, 
+      {id:'es', name: 'Español'}, 
+      {id:'gr', name: 'Ελληνικά'}, 
+      {id:'fr', name: 'Français'}, 
+      {id:'de', name: 'Deutsch'}, 
+      {id:'ru', name: 'Русский'}, 
+      {id:'bg', name: 'Български'}, 
+      {id:'nl', name: 'Nederlands'}, 
+      {id:'hu', name: 'Magyar'}, 
+      {id:'cs', name: 'Čeština'}, 
+      {id:'iw', name: 'עברית‎'}, 
+      {id:'pl', name: 'Polski‎'}, 
+      {id:'pt', name: 'Português'}, 
+      {id:'id', name: 'Bahasa Indonesia'}, 
+      {id:'zh', name: '繁體中文'}, 
+      {id:'dolan', name: 'Dolan'}
+    ];
 
     $rootScope.$storage.chains = [{id:'steem', name: 'Steem'}, {id:'golos', name: 'Golos'}];
 
-    $rootScope.$storage.currencies = [{id:'btc', name: 'BTC', rate: 0, date: "1/1/2016"}, {id:'usd', name: 'USD', rate: 0, date: "1/1/2016"}, {id:'eur', name: 'EUR', rate: 0, date: "1/1/2016"}, {id:'rub', name: 'RUB', rate: 0, date: "1/1/2016"}, {id:'gbp', name: 'GBP', rate: 0, date: "1/1/2016"}, {id:'jpy', name: 'JPY', rate: 0, date: "1/1/2016"}, {id:'krw', name: 'KRW', rate: 0, date: "1/1/2016"}, {id:'inr', name: 'INR', rate: 0, date: "1/1/2016"}, {id:'try', name: 'TRY', rate: 0, date: "1/1/2016"}];
-
-
+    if (!$rootScope.$storage.currencies) {
+      $rootScope.$storage.currencies = [
+        {id:'btc', name: 'BTC', rate: 0, date: "1/1/2016"}, 
+        {id:'usd', name: 'USD', rate: 0, date: "1/1/2016"}, 
+        {id:'eur', name: 'EUR', rate: 0, date: "1/1/2016"}, 
+        {id:'rub', name: 'RUB', rate: 0, date: "1/1/2016"}, 
+        {id:'gbp', name: 'GBP', rate: 0, date: "1/1/2016"}, 
+        {id:'jpy', name: 'JPY', rate: 0, date: "1/1/2016"}, 
+        {id:'krw', name: 'KRW', rate: 0, date: "1/1/2016"}, 
+        {id:'inr', name: 'INR', rate: 0, date: "1/1/2016"}, 
+        {id:'cny', name: 'CNY', rate: 0, date: "1/1/2016"}, 
+        {id:'uah', name: 'UAH', rate: 0, date: "1/1/2016"}, 
+        {id:'sek', name: 'SEK', rate: 0, date: "1/1/2016"}, 
+        {id:'try', name: 'TRY', rate: 0, date: "1/1/2016"}
+      ];
+    }
 
     if (window.cordova) {
       if (ionic.Platform.isIPad() || ionic.Platform.isIOS()) {

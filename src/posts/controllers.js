@@ -10,6 +10,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $scope.loginModal = modal;
   });
 
+
   $ionicPopover.fromTemplateUrl('templates/popover.html', {
     scope: $scope,
   }).then(function(popover) {
@@ -45,10 +46,6 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     item.json_metadata = angular.fromJson(item.json_metadata);
     $rootScope.$storage.sitem = item;
     //console.log(item);
-
-    window.Api.database_api().exec("get_state", [item.url]).then(function(dd){
-      console.log(dd);
-    });
 
     //$state.go('app.single');*/
     $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});
@@ -584,17 +581,22 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
    });
 
   $scope.openTooltip = function($event, d) {
-      var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CYCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PROMOTED')+"</b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('AUTHOR_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('CURATION_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
-      $scope.tooltipText = texth;
-      if (!$scope.$$phase) {
-        $scope.$apply();
-      }
-      $scope.tooltip.show($event);
-   };
+    var tppv = Number(d.total_pending_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
+    var p = Number(d.promoted.split(' ')[0])*$rootScope.$storage.currencyRate;
+    var tpv = Number(d.total_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
+    var ar = Number(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
+    var crp = Number(d.curator_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
+    var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CYCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(tppv, 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PROMOTED')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(p,3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(tpv,3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('AUTHOR_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(ar,3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('CURATION_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(crp,3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
+    $scope.tooltipText = texth;
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
+    $scope.tooltip.show($event);
+  };
 
-   $scope.closeTooltip = function() {
+  $scope.closeTooltip = function() {
       $scope.tooltip.hide();
-   };
+  };
 
    //Cleanup the popover when we're done with it!
    $scope.$on('$destroy', function() {
@@ -1367,9 +1369,14 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
    });
 
    $scope.openTooltip = function($event, d) {
-    var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CYCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PROMOTED')+"</b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('AUTHOR_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('CURATION_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
-      $scope.tooltipText = texth;
-      $scope.tooltip.show($event);
+    var tppv = Number(d.total_pending_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
+    var p = Number(d.promoted.split(' ')[0])*$rootScope.$storage.currencyRate;
+    var tpv = Number(d.total_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
+    var ar = Number(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
+    var crp = Number(d.curator_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
+    var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CYCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(tppv, 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PROMOTED')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(p,3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(tpv,3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('AUTHOR_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(ar,3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('CURATION_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(crp,3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
+    $scope.tooltipText = texth;
+    $scope.tooltip.show($event);
    };
 
    $scope.closeTooltip = function() {
@@ -1905,8 +1912,63 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       $scope.closeModal();
     }
   };
+  $scope.accounts = {};
   $scope.getContent = function(author, permlink) {
-    window.Api.database_api().exec("get_content", [author, permlink]).then(function(result){
+    var url = "/"+$stateParams.category+"/@"+author+"/"+permlink;
+    window.Api.database_api().exec("get_state", [url]).then(function(dd){
+      console.log(dd);
+      var con = dd.content;
+      var acon = dd.accounts;
+
+      angular.forEach(con, function(v,k){
+        v.comments = [];
+      });
+      //setTimeout(function() {
+        angular.forEach(con, function(v,k){
+          var vparent = v.parent_author==""?v.author:v.parent_author;
+          var vperm = v.parent_author==""?v.permlink:v.parent_permlink;
+          var keyy = vparent+"/"+vperm;
+          if (v.parent_permlink!==v.category) {
+            con[keyy].comments.push(v);  
+          }
+        });
+        console.log(con);  
+      //}, 1);
+      angular.forEach(acon, function(v,k){
+        v.json_metadata = angular.fromJson(v.json_metadata);
+      });
+      var result = con[author+"/"+permlink];
+
+      var len = result.active_votes.length;
+      var user = $rootScope.$storage.user;
+      if (user) {
+        for (var j = len - 1; j >= 0; j--) {
+          if (result.active_votes[j].voter === user.username) {
+            if (result.active_votes[j].percent > 0) {
+              result.upvoted = true;
+            } else if (result.active_votes[j].percent < 0) {
+              result.downvoted = true;
+            } else {
+              result.downvoted = false;
+              result.upvoted = false;
+            }
+          }
+        }
+      }
+
+      result.json_metadata = angular.fromJson(result.json_metadata);
+      //$rootScope.$storage.sitem = result;
+      //console.log(result);
+      $rootScope.$broadcast('hide:loading');
+      $scope.post = result;
+      $rootScope.$storage.paccounts = acon;
+
+      if (!$scope.$$phase) {
+        $scope.$apply();
+      }
+
+    });
+    /*window.Api.database_api().exec("get_content", [author, permlink]).then(function(result){
       //console.log(result);
         var len = result.active_votes.length;
         var user = $rootScope.$storage.user;
@@ -1936,6 +1998,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       }
     });
     //$rootScope.$broadcast('hide:loading');
+    */
   };
   $scope.fetchComments = function(){
     $rootScope.$broadcast('update:content');
@@ -2205,9 +2268,14 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
    });
 
    $scope.openTooltip = function($event, d) {
-    var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CYCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_pending_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PROMOTED')+"</b></div><div class='col'>$"+$filter('number')(d.promoted.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('AUTHOR_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0] , 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('CURATION_PAYOUT')+"</b></div><div class='col'>$"+$filter('number')(d.curator_payout_value.split(' ')[0], 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
-      $scope.tooltipText = texth;
-      $scope.tooltip.show($event);
+    var tppv = Number(d.total_pending_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
+    var p = Number(d.promoted.split(' ')[0])*$rootScope.$storage.currencyRate;
+    var tpv = Number(d.total_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
+    var ar = Number(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
+    var crp = Number(d.curator_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
+    var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CYCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(tppv, 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PROMOTED')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(p,3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(tpv,3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('AUTHOR_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(ar,3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('CURATION_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(crp,3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
+    $scope.tooltipText = texth;
+    $scope.tooltip.show($event);
    };
 
    $scope.closeTooltip = function() {
@@ -3045,7 +3113,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
             $rootScope.$storage.currencies.filter(function(obj){
               if (obj.id == xx) {
                 obj.rate = $rootScope.$storage.currencyRate;
-                obj.date = res.data.query.results.rate.Date;
+                obj.date = res.data.query.results.rate.Date==="N/A"?new Date() : res.data.query.results.rate.Date;
               }
             });
           });
@@ -3057,7 +3125,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
             $rootScope.$storage.currencies.filter(function(obj){
               if (obj.id == xx) {
                 obj.rate = $rootScope.$storage.currencyRate;
-                obj.date = res.data.query.results.rate.Date;
+                obj.date = res.data.query.results.rate.Date==="N/A"?new Date() : res.data.query.results.rate.Date;
               }
             });
             //console.log($rootScope.$storage.currencyRate);
@@ -3070,6 +3138,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     }, 1);
   }
   $scope.changeChain = function() {
+
     if ($rootScope.$storage.chain == 'steem'){
       $rootScope.$storage.platformname = "Steem";
       $rootScope.$storage.platformpower = "Steem Power";
@@ -3229,7 +3298,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
           localStorage.socketUrl = $rootScope.$storage.socket;
           setTimeout(function() {
             ionic.Platform.exitApp(); // stops the app
-          }, 10);
+          }, 1);
         } else {
           $rootScope.log('You are not sure');
         }

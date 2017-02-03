@@ -50,10 +50,10 @@
         <div class="col" ng-click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode=='first_payout' && $root.$storage.sitem.author==$root.$storage.user.username"><i class="fa  fa-pencil-square-o"></i></div>
         <div class="col" ng-click="deletePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.net_votes==0 && $root.$storage.sitem.author==$root.$storage.user.username"><i class="fa fa-trash-o"></i></div>
       </div>
-      <p class="tcenter"><button class="button button-positive" ng-if="!comments" ng-click="fetchComments()">{{'COMMENTS'|translate}}</button></p>
+      <p class="tcenter"><button class="button button-positive" ng-if="!post.comments" ng-click="fetchComments()">{{'COMMENTS'|translate}}</button></p>
       <p ng-if="comments.length>0" class="italic tcenter gray">{{'POST_1'|translate}}</p>
       <p ng-if="comments.length>0" class="italic tcenter gray">{{'POST_2'|translate}}</p>
-      <ion-thread comments="comments"></ion-thread>
+      <ion-thread comments="post.comments"></ion-thread>
     </div>
     <script id = "popoverTr.html" type="text/ng-template">
       <ion-popover-view class="detailedPost">

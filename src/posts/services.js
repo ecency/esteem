@@ -26,34 +26,34 @@ module.exports = function (app) {
         return $http.put(API_END_POINT+"/api/devices", {deviceid: deviceid, username: username, subscription: subscription, chain: $rootScope.$storage.chain});
       },
       deleteSubscription: function(deviceid) {
-        return $http.delete(API_END_POINT+"/api/devices/"+deviceid+"/"+$rootScope.$storage.chain);
+        return $http.delete(API_END_POINT+"/api/devices/"+deviceid);
       },
       getSubscriptions: function(deviceid) {
-        return $http.get(API_END_POINT+"/api/devices/"+deviceid+"/"+$rootScope.$storage.chain);
+        return $http.get(API_END_POINT+"/api/devices/"+deviceid);
       },
 			addBookmark: function(user, bookmark) {
         return $http.post(API_END_POINT+"/api/bookmark", {username: user, author: bookmark.author, permlink: bookmark.permlink, chain: $rootScope.$storage.chain});
       },
 			getBookmarks: function(user) {
-        return $http.get(API_END_POINT+"/api/bookmarks/"+user+"/"+$rootScope.$storage.chain);
+        return $http.get(API_END_POINT+"/api/bookmarks/"+user);
       },
 			removeBookmark: function(id, user) {
-        return $http.delete(API_END_POINT+"/api/bookmarks/"+user+"/"+id+"/"+$rootScope.$storage.chain);
+        return $http.delete(API_END_POINT+"/api/bookmarks/"+user+"/"+id);
       },
 			addDraft: function(user, draft) {
         return $http.post(API_END_POINT+"/api/draft", {username: user, title: draft.title, body: draft.body, tags: draft.tags, post_type: draft.post_type, chain: $rootScope.$storage.chain});
       },
 			getDrafts: function(user) {
-        return $http.get(API_END_POINT+"/api/drafts/"+user+"/"+$rootScope.$storage.chain);
+        return $http.get(API_END_POINT+"/api/drafts/"+user);
       },
 			removeDraft: function(id, user) {
-        return $http.delete(API_END_POINT+"/api/drafts/"+user+"/"+id+"/"+$rootScope.$storage.chain);
+        return $http.delete(API_END_POINT+"/api/drafts/"+user+"/"+id);
       },
 			removeImage: function(id, user) {
-        return $http.delete(API_END_POINT+"/api/images/"+user+"/"+id+"/"+$rootScope.$storage.chain);
+        return $http.delete(API_END_POINT+"/api/images/"+user+"/"+id);
       },
 			fetchImages: function(user) {
-        return $http.get(API_END_POINT+"/api/images/"+user+"/"+$rootScope.$storage.chain);
+        return $http.get(API_END_POINT+"/api/images/"+user);
       }
 		};
 	}])
@@ -803,13 +803,21 @@ module.exports = function (app) {
     }
   });
 
-    app.filter('hrefToJS', function ($sce, $sanitize) {
-        return function (text) {
-            var regex = /href="([\S]+)"/g;
-            var newString = $sanitize(text).replace(regex, "href onClick=\"window.open('$1', '_blank', 'location=yes');return false;\"");
-            return $sce.trustAsHtml(newString);
-        }
-    });
+  app.filter("rate", function($rootScope){
+    return function(value) {
+      if (value) {
+        return (parseFloat(value)*$rootScope.$storage.currencyRate);
+      }
+    }
+  });  
+
+  app.filter('hrefToJS', function ($sce, $sanitize) {
+      return function (text) {
+          var regex = /href="([\S]+)"/g;
+          var newString = $sanitize(text).replace(regex, "href onClick=\"window.open('$1', '_blank', 'location=yes');return false;\"");
+          return $sce.trustAsHtml(newString);
+      }
+  });
 
   app.directive('autofocus', ['$timeout',
     function ($timeout) {
@@ -860,8 +868,8 @@ module.exports = function (app) {
                 comment: '='
             },
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
-                        <div class="ion-comment--author"><b>{{comment.author}}</b>&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
-                        <div class="ion-comment--score"><i class="fa" ng-class="$root.$storage.currency"></i> {{comment.total_pending_payout_value.split(" ")[0]|number}}</div>\
+                        <div class="ion-comment--author"><img class="round-avatar" ng-src="{{$root.$storage.paccounts[comment.author].json_metadata.user_image}}"/><b>{{comment.author}}</b>&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
+                        <div class="ion-comment--score"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> {{comment.total_pending_payout_value.split(" ")[0]|rate|number}}</div>\
                         <div class="ion-comment--text bodytext selectable" ng-bind-html="comment.body | parseUrl "></div>\
                         <div class="ion-comment--replies" ng-click="toggleComment(comment)">{{comment.net_votes || 0}} votes, {{comment.children || 0}} replies</div>\
                         <ion-option-button ng-click="upvotePost(comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></ion-option-button>\
@@ -885,22 +893,12 @@ module.exports = function (app) {
                   $scope.toggleComment = function(comment) {
                       $rootScope.log('toggleComment');
 
-                      if (comment.children > 0){
-                        window.Api.database_api().exec("get_content_replies", [comment.author, comment.permlink]).then(function(res1){
-                          //todo fix active_votes
-                          comment.replies = res1;
-                          //$rootScope.log('result',res1);
-                          if (comment.showChildren) {
-                              comment.showChildren = false;
-                          } else {
-                              comment.showChildren = true;
-                          }
-                          if (!$scope.$$phase) {
-                            $scope.$apply();
-                          }
-                        });
-                        //$rootScope.$broadcast('hide:loading');
+                      if (comment.showChildren) {
+                          comment.showChildren = false;
+                      } else {
+                          comment.showChildren = true;
                       }
+                    //$rootScope.$broadcast('hide:loading');
                   };
                   $scope.upvotePost = function(post) {
                     $rootScope.votePost(post, 'upvote', 'update:content');
@@ -1035,9 +1033,6 @@ module.exports = function (app) {
                       });
                     }
                   };
-
-
-
 
                   var dmp = new window.diff_match_patch();
                   function createPatch(text1, text2) {
@@ -1242,8 +1237,8 @@ module.exports = function (app) {
                             <ion-comment comment="comment">\
                             </ion-comment>\
                             <div class="reddit-post--comment--container">\
-                                 <ul ng-if="comment.showChildren" class="animate-if ion-comment--children">\
-                                    <li ng-repeat="comment in comment.replies | orderBy:\'-net_votes\' track by $index ">\
+                                 <ul ng-if="!comment.showChildren" class="animate-if ion-comment--children">\
+                                    <li ng-repeat="comment in comment.comments | orderBy:\'-net_votes\' track by $index ">\
                                         <ng-include src="\'node.html\'"/>\
                                     </li>\
                                 </ul>\
@@ -1257,27 +1252,13 @@ module.exports = function (app) {
                           </ul>\
                         </ion-list>',
             controller: function($scope, $rootScope) {
-
                 $scope.toggleComment = function(comment) {
-
-                    $rootScope.log('toggleComment');
-
-                    if (comment.children > 0){
-                      window.Api.database_api().exec("get_content_replies", [comment.author, comment.permlink]).then(function(res1){
-                        //todo fix active_votes
-                        comment.replies = res1;
-                        //$rootScope.log('result',res1);
-                        if (comment.showChildren) {
-                            comment.showChildren = false;
-                        } else {
-                            comment.showChildren = true;
-                        }
-                        if (!$scope.$$phase) {
-                          $scope.$apply();
-                        }
-                      });
-                      //$rootScope.$broadcast('hide:loading');
-                    }
+                  $rootScope.log('toggleComment');
+                  if (comment.showChildren) {
+                      comment.showChildren = false;
+                  } else {
+                      comment.showChildren = true;
+                  }
                 };
             }
         }
