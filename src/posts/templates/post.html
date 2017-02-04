@@ -27,7 +27,8 @@
   <ion-content class="padding has-header" delegate-handle="mainScroll" overflow-scroll="true"><!---->
     <div ng-if='$root.$storage.sitem'>
     	<p class="title h3">{{$root.$storage.sitem.title}}</p>
-    	<div class="stitle row gray"><div class="col"><i class="icon ion-android-time"></i> {{$root.$storage.sitem.created|timeago}} {{'BY'|translate}} <i class="icon ion-android-person"></i>&nbsp;<b><a href="#/app/profile/{{$root.$storage.sitem.author}}">{{$root.$storage.sitem.author}}</a></b>&nbsp;<div class="reputation">{{$root.$storage.sitem.author_reputation|reputation|number:0}}</div> {{'IN'|translate}}&nbsp;{{$root.$storage.sitem.category}}</div><div class="pull-right"><span ng-if="$root.voiceOver"><i class="fa fa-flag" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted">{{'DOWNVOTE'|translate}}</i><i class="fa fa-flag positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted">{{'UNVOTE_DOWNVOTED'|translate}}</i></span><span ng-if="!$root.voiceOver"><i class="fa fa-flag" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted"></i><i class="fa fa-flag positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted"></i></span></div></div>
+    	<div class="stitle row gray"><div class="col">
+        <img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.$storage.paccounts[$root.$storage.sitem.author].json_metadata.user_image||$root.$storage.paccounts[$root.$storage.sitem.author].json_metadata.profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /> <b><a href="#/app/profile/{{$root.$storage.sitem.author}}">{{$root.$storage.sitem.author}}</a></b>&nbsp;<div class="reputation">{{$root.$storage.sitem.author_reputation|reputation|number:0}}</div>&middot;{{$root.$storage.sitem.created|timeago}} {{'IN'|translate}}&nbsp;{{$root.$storage.sitem.category}}</div><div class="pull-right"><span ng-if="$root.voiceOver"><i class="fa fa-flag" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted">{{'DOWNVOTE'|translate}}</i><i class="fa fa-flag positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted">{{'UNVOTE_DOWNVOTED'|translate}}</i></span><span ng-if="!$root.voiceOver"><i class="fa fa-flag" ng-click="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted"></i><i class="fa fa-flag positive" ng-click="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted"></i></span></div></div>
     	<br><!---->
       <div class="bodytext selectable" ng-bind-html="$root.$storage.sitem.body | parseUrl ">
       </div>
@@ -50,9 +51,6 @@
         <div class="col" ng-click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode=='first_payout' && $root.$storage.sitem.author==$root.$storage.user.username"><i class="fa  fa-pencil-square-o"></i></div>
         <div class="col" ng-click="deletePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.net_votes==0 && $root.$storage.sitem.author==$root.$storage.user.username"><i class="fa fa-trash-o"></i></div>
       </div>
-      <p class="tcenter"><button class="button button-positive" ng-if="!post.comments" ng-click="fetchComments()">{{'COMMENTS'|translate}}</button></p>
-      <p ng-if="comments.length>0" class="italic tcenter gray">{{'POST_1'|translate}}</p>
-      <p ng-if="comments.length>0" class="italic tcenter gray">{{'POST_2'|translate}}</p>
       <ion-thread comments="post.comments"></ion-thread>
     </div>
     <script id = "popoverTr.html" type="text/ng-template">

@@ -868,17 +868,44 @@ module.exports = function (app) {
                 comment: '='
             },
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
-                        <div class="ion-comment--author"><img class="round-avatar" ng-src="{{$root.$storage.paccounts[comment.author].json_metadata.user_image}}"/><b>{{comment.author}}</b>&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
-                        <div class="ion-comment--score"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> {{comment.total_pending_payout_value.split(" ")[0]|rate|number}}</div>\
+                        <div class="ion-comment--author"><img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.$storage.paccounts[comment.author].json_metadata.user_image||$root.$storage.paccounts[comment.author].json_metadata.profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b>{{comment.author}}</b>&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
+                        <div class="ion-comment--score"><span ng-click="openTooltip($event,comment)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> {{comment.total_pending_payout_value.split(" ")[0]|rate|number}} </span> | <span ng-click="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
                         <div class="ion-comment--text bodytext selectable" ng-bind-html="comment.body | parseUrl "></div>\
-                        <div class="ion-comment--replies" ng-click="toggleComment(comment)">{{comment.net_votes || 0}} votes, {{comment.children || 0}} replies</div>\
+                        <div class="ion-comment--replies"><span ng-click="upvotePost(comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UPVOTE"|translate}}</span> | <span ng-click="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span ng-click="toggleComment(comment)">{{comment.children || 0}} {{"REPLIES"|translate}}</span> |  <span ng-click="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span></div>\
                         <ion-option-button ng-click="upvotePost(comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></ion-option-button>\
                         <ion-option-button ng-click="replyToComment(comment)"><span class="fa fa-reply"></ion-option-button>\
                         <ion-option-button ng-click="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></ion-option-button>\
                         <ion-option-button ng-if="comment.author == $root.$storage.user.username && compateDate(comment)" ng-click="editComment(comment)"><span class="ion-ios-compose-outline" style="font-size:30px"></ion-option-button>\
                         <ion-option-button ng-if="comment.author == $root.$storage.user.username" ng-click="deleteComment(comment)"><span class="ion-ios-trash-outline" style="font-size:30px"></ion-option-button>\
                     </ion-item>',
-            controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopup, $ionicActionSheet, $cordovaCamera, $filter) {
+            controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopover, $ionicPopup, $ionicActionSheet, $cordovaCamera, $filter) {
+                  $ionicPopover.fromTemplateUrl('popoverTr.html', {
+                      scope: $scope
+                   }).then(function(popover) {
+                      $scope.tooltip = popover;
+                   });
+
+                   $scope.openTooltip = function($event, d) {
+                    var tppv = Number(d.total_pending_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
+                    var p = Number(d.promoted.split(' ')[0])*$rootScope.$storage.currencyRate;
+                    var tpv = Number(d.total_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
+                    var ar = Number(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
+                    var crp = Number(d.curator_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
+                    var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CYCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(tppv, 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(tpv,3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
+                    $scope.tooltipText = texth;
+                    $scope.tooltip.show($event);
+                   };
+
+                   $scope.closeTooltip = function() {
+                      $scope.tooltip.hide();
+                   };
+
+                   //Cleanup the popover when we're done with it!
+                   $scope.$on('$destroy', function() {
+                      $scope.tooltip.remove();
+                   });
+
+
                   $scope.compateDate = function(comment) {
                     if (comment.last_payout == "1970-01-01T00:00:00") {
                         return true;

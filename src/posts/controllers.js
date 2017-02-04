@@ -202,25 +202,16 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       APIs.deleteSubscription($rootScope.$storage.deviceid).then(function(res){
         $ionicSideMenuDelegate.toggleLeft();
         $window.location.reload(true);
-
-        //$rootScope.$broadcast("user:logout");
-        //$state.go('app.posts');
-        //$state.go($state.current, {}, {reload: true});
       });
     } else {
       $ionicSideMenuDelegate.toggleLeft();
       $window.location.reload(true);
-
-      //$rootScope.$broadcast("user:logout");
-      //$state.go('app.posts');
-      //$state.go($state.current, {}, {reload: true});
     }
     $rootScope.$storage.filter = undefined;
     $rootScope.$storage.tag = undefined;
 
     $ionicHistory.clearCache();
     $ionicHistory.clearHistory();
-    //$rootScope.$broadcast('ngRepeatFinished');
   };
   $scope.data = {};
   $ionicModal.fromTemplateUrl('templates/search.html', {
@@ -1916,7 +1907,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.getContent = function(author, permlink) {
     var url = "/"+$stateParams.category+"/@"+author+"/"+permlink;
     window.Api.database_api().exec("get_state", [url]).then(function(dd){
-      console.log(dd);
+      //console.log(dd);
       var con = dd.content;
       var acon = dd.accounts;
 
@@ -1924,15 +1915,15 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         v.comments = [];
       });
       //setTimeout(function() {
-        angular.forEach(con, function(v,k){
-          var vparent = v.parent_author==""?v.author:v.parent_author;
-          var vperm = v.parent_author==""?v.permlink:v.parent_permlink;
-          var keyy = vparent+"/"+vperm;
-          if (v.parent_permlink!==v.category) {
-            con[keyy].comments.push(v);  
-          }
-        });
-        console.log(con);  
+      angular.forEach(con, function(v,k){
+        var vparent = v.parent_author==""?v.author:v.parent_author;
+        var vperm = v.parent_author==""?v.permlink:v.parent_permlink;
+        var keyy = vparent+"/"+vperm;
+        if (v.parent_permlink!==v.category) {
+          con[keyy].comments.push(v);  
+        }
+      });
+      console.log(con);  
       //}, 1);
       angular.forEach(acon, function(v,k){
         v.json_metadata = angular.fromJson(v.json_metadata);
@@ -3062,7 +3053,7 @@ app.controller('MarketCtrl', function($scope, $rootScope, $state, $ionicPopover,
 
 });
 
-app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionicHistory, $state, $ionicPopover, $ionicPopup, APIs, $filter, $translate, $window) {
+app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionicHistory, $state, $ionicPopover, $ionicPopup, APIs, $filter, $translate, $window, $ionicSideMenuDelegate) {
 
    $ionicPopover.fromTemplateUrl('popover.html', {
       scope: $scope
@@ -3232,7 +3223,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       resteem: $scope.data.resteem,
       device: ionic.Platform.platform(),
       timestamp: $filter('date')(new Date(), 'medium'),
-      appversion: '1.3.3'
+      appversion: '1.3.8'
     }
     APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, $rootScope.$storage.subscription).then(function(res){
       console.log(angular.toJson(res));
@@ -3285,7 +3276,27 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     }, 10);
 
   });
+  $scope.logouts = function() {
+    $rootScope.$storage.user = undefined;
+    $rootScope.$storage.user = null;
+    $rootScope.$storage.mylogin = undefined;
+    $rootScope.$storage.mylogin = null;
+    //make sure user credentials cleared.
+    if ($rootScope.$storage.deviceid) {
+      APIs.deleteSubscription($rootScope.$storage.deviceid).then(function(res){
+        $ionicSideMenuDelegate.toggleLeft();
+        $window.location.reload(true);
+      });
+    } else {
+      $ionicSideMenuDelegate.toggleLeft();
+      $window.location.reload(true);
+    }
+    $rootScope.$storage.filter = undefined;
+    $rootScope.$storage.tag = undefined;
 
+    $ionicHistory.clearCache();
+    $ionicHistory.clearHistory();
+  };
   $scope.save = function(){
     if (localStorage.socketUrl !== $rootScope.$storage.socket) {
       var confirmPopup = $ionicPopup.confirm({
@@ -3296,9 +3307,10 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
         if(res) {
           $rootScope.log('You are sure');
           localStorage.socketUrl = $rootScope.$storage.socket;
+          $scope.logouts();
           setTimeout(function() {
             ionic.Platform.exitApp(); // stops the app
-          }, 1);
+          }, 10);
         } else {
           $rootScope.log('You are not sure');
         }

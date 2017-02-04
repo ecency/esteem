@@ -260,8 +260,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$storage.platformlunit = "STEEM";
       $rootScope.$storage.chain = "steem";
       $rootScope.$storage.currency = "usd";
+      $rootScope.$storage.currencyRate = 1;
     }
-
     $rootScope.$storage.languages = [
       {id:'en', name: 'English'}, 
       {id:'es', name: 'Español'}, 

@@ -28,7 +28,7 @@
       <br>
         <center>
           <a menu-close href="#/app/profile/{{$root.$storage.user.username}}" class="item-myavatar" ng-if="$root.$storage.user">
-            <span class="item-myavatar" ng-if="!$root.$storage.user.json_metadata.profilePicUrl && !$root.$storage.user.json_metadata.profile.profile_image"><img src="img/photo.png"></span>
+            <span class="item-myavatar" ng-if="!$root.$storage.user.json_metadata.profilePicUrl && !$root.$storage.user.json_metadata.profile.profile_image"><img src="img/user_profile.png"></span>
             <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.profilePicUrl}}" ng-if="$root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image" />
           </a>
           <div ng-class="{'footprofileinfomenu':$root.$storage.user.json_metadata.profile.cover_image}">
