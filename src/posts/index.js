@@ -17,6 +17,7 @@ if (localStorage.getItem("socketUrl") === null) {
 var steemRPC = require("steem-rpc");
 window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
 window.steemJS = require("steemjs-lib");
+window.golosJS = require("golosjs-lib");
 window.diff_match_patch = require('diff-match-patch');
 window.getSymbol = require('currency-symbol-map');
 

@@ -60,7 +60,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $scope.loginModal.hide();
   };
 
-  $scope.login = function() {
+  $scope.openLogin = function() {
     setTimeout(function() {
       $scope.loginModal.show();
     }, 1);
@@ -90,7 +90,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       $rootScope.$broadcast('show:loading');
       $scope.loginData.username = $scope.loginData.username.trim();
       if (!$rootScope.$storage.user) {
-        console.log('doLogin'+$scope.loginData.username+$rootScope.$storage.password);
+        console.log('doLogin'+$scope.loginData.username+$scope.loginData.password);
         window.Api.database_api().exec("get_accounts", [[$scope.loginData.username]]).then(function(dd){
           dd = dd[0];
           $scope.loginData.id = dd.id;
@@ -102,8 +102,11 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
           $scope.loginData.post_count = dd.post_count;
           $scope.loginData.voting_power = dd.voting_power;
           $scope.loginData.witness_votes = dd.witness_votes;
-
-          $scope.login = new window.steemJS.Login();
+          if ($rootScope.$storage.chain == 'golos') {
+            $scope.login = new window.golosJS.Login();
+          } else {
+            $scope.login = new window.steemJS.Login();
+          }
           $scope.login.setRoles(["posting"]);
           var loginSuccess = $scope.login.checkKeys({
               accountName: $scope.loginData.username,
