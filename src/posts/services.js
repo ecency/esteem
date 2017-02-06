@@ -25,6 +25,9 @@ module.exports = function (app) {
       updateSubscription: function(deviceid, username, subscription) {
         return $http.put(API_END_POINT+"/api/devices", {deviceid: deviceid, username: username, subscription: subscription, chain: $rootScope.$storage.chain});
       },
+      updateToken: function(deviceid, newdev) {
+        return $http.put(API_END_POINT+"/api/device/"+deviceid, {newdev: newdev, chain: $rootScope.$storage.chain});
+      },
       deleteSubscription: function(deviceid) {
         return $http.delete(API_END_POINT+"/api/devices/"+deviceid);
       },
@@ -751,7 +754,7 @@ module.exports = function (app) {
 	app.filter('sd', function($sce, $rootScope) {
 	    return function(text, balance, sbd) {
 	    	if (text) {
-	    		return (Number(text.split(" ")[0])/1e6*$rootScope.$storage.steem_per_mvests*$rootScope.$storage.base + Number(balance.split(" ")[0])*$rootScope.$storage.base + Number(sbd.split(" ")[0])).toFixed(3);
+	    		return ((Number(text.split(" ")[0])/1e6*$rootScope.$storage.steem_per_mvests*$rootScope.$storage.base + Number(balance.split(" ")[0])*$rootScope.$storage.base + Number(sbd.split(" ")[0])).toFixed(3))*$rootScope.$storage.currencyRate;
 	    	}
 	    };
 	})
@@ -796,11 +799,14 @@ module.exports = function (app) {
 	})
 
   app.filter("sumPostTotal", function($rootScope){
-    return function(value) {
+    function SumPostTotal(value, rate) {
       if (value && value.total_payout_value) {
-        return ((parseFloat(value.total_payout_value.split(" ")[0])+parseFloat(value.total_pending_payout_value.split(" ")[0]))*$rootScope.$storage.currencyRate);
+        return ((parseFloat(value.total_payout_value.split(" ")[0])+parseFloat(value.total_pending_payout_value.split(" ")[0]))*rate);
       }
     }
+    //SumPostTotal.$stateful = true;
+
+    return SumPostTotal;
   });
 
   app.filter("rate", function($rootScope){

@@ -3104,21 +3104,21 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     }
   }
 
-  function checkDate(date) {
+  function checkDate(date, ignore) {
     var eold = 86400000; //1 * 24 * 60 * 60 * 1000; //1 day old
     var now = new Date().getTime();
     var old = new Date(date).getTime();
-    return now-old>=eold;
+    return ignore||now-old>=eold;
   }
 
-  $scope.changeCurrency = function(xx) {
+  $scope.changeCurrency = function(xx, ignore) {
     setTimeout(function() {
       console.log(xx);
       var resultObject = $rootScope.$storage.currencies.filter(function ( obj ) {
           return obj.id === xx;
       })[0];
       //searchObj(xx, $rootScope.$storage.currencies);
-      if (checkDate(resultObject.date)) {
+      if (checkDate(resultObject.date, ignore)) {
         if ($rootScope.$storage.chain == 'steem'){
           APIs.getCurrencyRate("USD", xx ).then(function(res){
             $rootScope.$storage.currencyRate = Number(res.data.query.results.rate.Rate);
@@ -3146,11 +3146,17 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
         if (!$scope.$$phase) {
           $scope.$apply();
         }  
+      } else {
+
+        $rootScope.$storage.currencyRate = resultObject.rate;
+        
+        if (!$scope.$$phase) {
+          $scope.$apply();
+        }
       }
     }, 1);
   }
   $scope.changeChain = function() {
-
     if ($rootScope.$storage.chain == 'steem'){
       $rootScope.$storage.platformname = "Steem";
       $rootScope.$storage.platformpower = "Steem Power";
@@ -3160,6 +3166,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       $rootScope.$storage.platformpunit = "SP";
       $rootScope.$storage.platformlunit = "STEEM";
       $rootScope.$storage.socket = "wss://node.steem.ws";
+      $scope.socket = "wss://node.steem.ws";
     } else {
       $rootScope.$storage.platformname = "ГОЛОС";
       $rootScope.$storage.platformpower = "СИЛА ГОЛОСА";
@@ -3169,12 +3176,12 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       $rootScope.$storage.platformpunit = "СИЛА ГОЛОСА";
       $rootScope.$storage.platformlunit = "ГОЛОС";
       $rootScope.$storage.socket = "wss://node.golos.ws";
-
+      $scope.socket = "wss://node.golos.ws";
     }
-    
-    $scope.changeCurrency($rootScope.$storage.currency);
-
+    $scope.restart = true;
+    $scope.changeCurrency($rootScope.$storage.currency, true);
   }
+  $scope.restart = false;
   $scope.closeTooltip = function() {
     $scope.tooltip.hide();
   };
@@ -3317,9 +3324,13 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
 
     $ionicHistory.clearCache();
     $ionicHistory.clearHistory();
+    setTimeout(function() {
+      ionic.Platform.exitApp(); // stops the app
+    }, 100);
   };
+  $scope.socket = $rootScope.$storage.socket;
   $scope.save = function(){
-    if (localStorage.socketUrl !== $rootScope.$storage.socket) {
+    if ($scope.restart) {
       var confirmPopup = $ionicPopup.confirm({
         title: $filter('translate')('ARE_YOU_SURE'),
         template: $filter('translate')('UPDATE_REQUIRES_RESTART')
@@ -3327,22 +3338,21 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       confirmPopup.then(function(res) {
         if(res) {
           $rootScope.log('You are sure');
-          localStorage.socketUrl = $rootScope.$storage.socket;
+          $rootScope.$storage.socket = $scope.socket;
+          localStorage.socketUrl = $scope.socket;
           $scope.logouts();
-          setTimeout(function() {
-            ionic.Platform.exitApp(); // stops the app
-          }, 10);
         } else {
           $rootScope.log('You are not sure');
         }
       });
-    };
-    $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('SETTINGS_UPDATED'));
-    $ionicHistory.nextViewOptions({
-      disableBack: true
-    });
-    //$state.go('app.posts', {}, {reload: true});
-    $window.location.reload(true);
+    } else {
+      $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('SETTINGS_UPDATED'));
+      $ionicHistory.nextViewOptions({
+        disableBack: true
+      });
+      //$state.go('app.posts', {}, {reload: true});
+      $window.location.reload(true);  
+    }
   };
 
 });

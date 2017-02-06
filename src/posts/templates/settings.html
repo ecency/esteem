@@ -73,7 +73,7 @@
         </label>
       </div>
     </div>
-    <div class="row">
+    <div class="row" ng-if="$root.$storage.chain=='steem'">
       <div class="col col-33">
       <span class="slabel" ng-click='openTooltip($event,"{{"RESTEEM_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i> {{'RESTEEM'|translate}}</span>
       </div>
@@ -141,7 +141,7 @@
         ")'><i class="icon ion-ios-information-outline gray"></i> {{'SERVER'|translate}}</span>
       </div>
       <div class="col">
-        <input type="text" placeholder="Server" ng-model="$root.$storage.socket" style="width:100%;">
+        <input type="text" placeholder="Server" ng-model="socket" style="width:100%;">
       </div>
     </div>
 

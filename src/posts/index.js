@@ -929,7 +929,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         //$rootScope.log(r);
           $rootScope.$storage.base = r.current_median_history.base.split(" ")[0];
           window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(r){
-            //$rootScope.log(r);
+            $rootScope.log(r);
             $rootScope.$storage.steem_per_mvests = (Number(r.total_vesting_fund_steem.substring(0, r.total_vesting_fund_steem.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;
           });
         });
@@ -963,19 +963,15 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         });
 
         window.FirebasePlugin.onTokenRefresh(function(token) {
-          var subs = {};
-          APIs.getSubscriptions($rootScope.$storage.deviceid).then(function(res){
-            $rootScope.log(angular.toJson(res.data));
-            angular.merge(subs, {vote: res.data[0].subscription.vote||false, follow: res.data[0].subscription.follow||false, comment: res.data[0].subscription.comment||false, mention: res.data[0].subscription.mention||false, resteem: res.data[0].subscription.resteem||false, token: token});
-            APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username||undefined, subs).then(function(res){
-              console.log(angular.toJson(res));
-            });
-            if (!$rootScope.$$phase){
-              $rootScope.$apply();
+          APIs.updateToken($rootScope.$storage.deviceid, token).then(function(res){
+            console.log(angular.toJson(res));
+            if (res.status) {
+              $rootScope.$storage.deviceid = token  
             }
           });
-
-          //console.log(token);
+          if (!$rootScope.$$phase){
+            $rootScope.$apply();
+          }
         }, function(error) {
           console.error(error);
         });
