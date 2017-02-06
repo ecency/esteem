@@ -102,11 +102,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
           $scope.loginData.post_count = dd.post_count;
           $scope.loginData.voting_power = dd.voting_power;
           $scope.loginData.witness_votes = dd.witness_votes;
-          if ($rootScope.$storage.chain == 'golos') {
-            $scope.login = new window.golosJS.Login();
-          } else {
-            $scope.login = new window.steemJS.Login();
-          }
+          $scope.login = new window[$rootScope.$storage.chain+"JS"].Login();
           $scope.login.setRoles(["posting"]);
           var loginSuccess = $scope.login.checkKeys({
               accountName: $scope.loginData.username,
@@ -331,7 +327,12 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 })
 
 app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $filter, $q, $timeout, $cordovaBarcodeScanner, $ionicPlatform) {
-  $scope.data = {type: "steem", amount: 0.001};
+
+  if ($rootScope.$storage.chain == "steem") {
+    $scope.data = {types: [{type: "steem", name:"Steem", id:1},{type: "sbd", name:"Steem Dollar", id:2}, {type: "sp", name:"Steem Power", id:3}], type: "steem", amount: 0.001};
+  } else {
+    $scope.data = {types: [{type: "golos", name: "ГОЛОС", id:1},{type: "gbg", name:"ЗОЛОТОЙ", id:2}, {type: "golosp", name:"СИЛА ГОЛОСА", id:3}], type: "golos", amount: 0.001};
+  }
   $scope.changeUsername = function(typed) {
     $rootScope.log('searching');
     $scope.data.username = angular.lowercase($scope.data.username);
@@ -381,14 +382,14 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
       if (!$rootScope.$storage.user.password && !$rootScope.$storage.user.privateActiveKey) {
         $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('ACTIVE_KEY_REQUIRED_TEXT'));
       } else {
-        if ($scope.data.type === 'sbd') {
+        if ($scope.data.type === 'sbd' || $scope.data.type === 'gbg') {
           if ($scope.data.amount > Number($scope.balance.sbd_balance.split(" ")[0])) {
             $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('BALANCE_TEXT'));
           } else {
             $scope.okbalance = true;
           }
         }
-        if ($scope.data.type === 'sp' || $scope.data.type === 'steem') {
+        if ($scope.data.type === 'sp' || $scope.data.type === 'steem' || $scope.data.type === 'golos' || $scope.data.type === 'golosp') {
           if ($scope.data.amount > Number($scope.balance.balance.split(" ")[0])) {
             $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('BALANCE_TEXT'));
           } else {
@@ -410,7 +411,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
             if(res) {
               $rootScope.log('You are sure');
               $rootScope.$broadcast('show:loading');
-              $scope.mylogin = new window.steemJS.Login();
+              $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
               $scope.mylogin.setRoles(["active"]);
               var loginSuccess = $scope.mylogin.checkKeys({
                   accountName: $rootScope.$storage.user.username,
@@ -422,8 +423,8 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
                 }
               );
               if (loginSuccess) {
-                var tr = new window.steemJS.TransactionBuilder();
-                if ($scope.data.type !== 'sp') {
+                var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+                if ($scope.data.type !== 'sp' && $scope.data.type !== 'golosp') {
 
                   var tt = $filter('number')($scope.data.amount) +" "+angular.uppercase($scope.data.type);
                   tr.add_type_operation("transfer", {
@@ -439,12 +440,13 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
                       $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
                     } else {
                       $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
-                        $scope.data = {type: "steem", amount: 0.001};
+                        $scope.data.type=$rootScope.$storage.chain;
+                        $scope.data.amount= 0.001;
                       });
                     }
                   }, 3000);
                 } else {
-                  var tt = $filter('number')($scope.data.amount) +" STEEM";
+                  var tt = $filter('number')($scope.data.amount) + " "+$filter('uppercase')($rootScope.$storage.chain);
                   tr.add_type_operation("transfer_to_vesting", {
                     from: $rootScope.$storage.user.username,
                     to: $scope.data.username,
@@ -457,7 +459,8 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
                       $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
                     } else {
                       $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
-                        $scope.data = {type: "steem", amount: 0.001};
+                        $scope.data.type=$rootScope.$storage.chain;
+                        $scope.data.amount= 0.001;
                       });
                     }
                   }, 3000);
@@ -482,6 +485,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
     $rootScope.$broadcast('show:loading');
     window.Api.database_api().exec("get_accounts", [ [ $rootScope.$storage.user.username ] ]).then(function(dd){
       $scope.balance = dd[0];
+      console.log($scope.balance);
       $rootScope.$broadcast('hide:loading');
       if (!$scope.$$phase){
         $scope.$apply();
@@ -619,17 +623,19 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
     $scope.spost = $rootScope.$storage.spost || $scope.spost;
 
-    if (!$scope.spost.operation_type) {
-      $scope.spost.operation_type = 'default';
-    }
+    
 
     $timeout(function(){
+      if (!$scope.spost.operation_type) {
+        $scope.spost.operation_type = 'default';
+      }
+      $scope.tagsChange();
+
       $scope.modalp.show();
       /*angular.element("textarea").focus(function() {
         $scope.lastFocused = document.activeElement;
         //console.log(document);
       });*/
-
     }, 10);
     //$scope.modalp.show();
   });
@@ -811,7 +817,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.tagsChange = function() {
     $rootScope.log("tagsChange");
     $scope.spost.tags = $filter('lowercase')($scope.spost.tags);
-    $scope.spost.category = $scope.spost.tags.split(" ");
+    $scope.spost.category = $scope.spost.tags?$scope.spost.tags.split(" "):[];
     if ($scope.spost.category.length > 5) {
       $scope.disableBtn = true;
     } else {
@@ -828,7 +834,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user) {
-      $scope.mylogin = new window.steemJS.Login();
+      $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
       $scope.mylogin.setRoles(["posting"]);
       var loginSuccess = $scope.mylogin.checkKeys({
           accountName: $rootScope.$storage.user.username,
@@ -840,7 +846,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         }
       );
       if (loginSuccess) {
-        var tr = new window.steemJS.TransactionBuilder();
+        var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
         var permlink = createPermlink($scope.spost.title);
         var json = $filter("metadata")($scope.spost.body);
         angular.merge(json, {tags: $scope.spost.category, app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' });
@@ -1190,7 +1196,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
               $rootScope.log("get_dynamic_global_properties "+ response.head_block_number);
               if ($rootScope.$storage.user) {
-                $scope.mylogin = new window.steemJS.Login();
+                $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
                 $scope.mylogin.setRoles(["posting"]);
                 var loginSuccess = $scope.mylogin.checkKeys({
                     accountName: $rootScope.$storage.user.username,
@@ -1654,7 +1660,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             $rootScope.log('You are sure');
             $rootScope.$broadcast('show:loading');
             if ($rootScope.$storage.user) {
-              $scope.mylogin = new window.steemJS.Login();
+              $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
               $scope.mylogin.setRoles(["posting"]);
               var loginSuccess = $scope.mylogin.checkKeys({
                   accountName: $rootScope.$storage.user.username,
@@ -1666,7 +1672,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
                 }
               );
               if (loginSuccess) {
-                var tr = new window.steemJS.TransactionBuilder();
+                var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
 
                 tr.add_type_operation("delete_comment", {
                   author: xx.author,
@@ -1728,7 +1734,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     }
 
     if ($rootScope.$storage.user) {
-      $scope.mylogin = new window.steemJS.Login();
+      $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
       $scope.mylogin.setRoles(["posting"]);
       var loginSuccess = $scope.mylogin.checkKeys({
           accountName: $rootScope.$storage.user.username,
@@ -1740,7 +1746,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         }
       );
       if (loginSuccess) {
-        var tr = new window.steemJS.TransactionBuilder();
+        var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
         var permlink = $scope.spost.permlink;
         var jjson = $filter("metadata")($scope.spost.body);
         //console.log(jjson);
@@ -1793,7 +1799,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     //$rootScope.log(xx);
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user) {
-      $scope.mylogin = new window.steemJS.Login();
+      $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
       $scope.mylogin.setRoles(["posting"]);
       var loginSuccess = $scope.mylogin.checkKeys({
           accountName: $rootScope.$storage.user.username,
@@ -1805,7 +1811,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         }
       );
       if (loginSuccess) {
-        var tr = new window.steemJS.TransactionBuilder();
+        var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
         var t = new Date();
         var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
         var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "" , app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
@@ -1926,10 +1932,13 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           con[keyy].comments.push(v);  
         }
       });
-      console.log(con);  
+      console.log(acon);  
       //}, 1);
       angular.forEach(acon, function(v,k){
-        v.json_metadata = angular.fromJson(v.json_metadata);
+        //console.log(v.json_metadata);
+        if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
+          v.json_metadata = angular.fromJson(v.json_metadata);
+        }
       });
       var result = con[author+"/"+permlink];
 
@@ -2330,7 +2339,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
 
             $rootScope.log('You are sure');
             if ($rootScope.$storage.user) {
-              $scope.mylogin = new window.steemJS.Login();
+              $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
               $scope.mylogin.setRoles(["active"]);
               var loginSuccess = $scope.mylogin.checkKeys({
                   accountName: $rootScope.$storage.user.username,
@@ -2343,7 +2352,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               );
               //todo: if json_metadata already exist make sure to keep it.
               if (loginSuccess) {
-                var tr = new window.steemJS.TransactionBuilder();
+                var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
                 tr.add_type_operation("account_update", {
                   account: $rootScope.$storage.user.username,
                   memo_key: $rootScope.$storage.user.memo_key,
@@ -2412,7 +2421,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             setTimeout(function() {
               $rootScope.$broadcast('show:loading');
               if ($rootScope.$storage.user) {
-                $scope.mylogin = new window.steemJS.Login();
+                $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
                 $scope.mylogin.setRoles(["active"]);
                 var loginSuccess = $scope.mylogin.checkKeys({
                     accountName: $rootScope.$storage.user.username,
@@ -2424,7 +2433,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   }
                 );
                 if (loginSuccess) {
-                  var tr = new window.steemJS.TransactionBuilder();
+                  var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
                   tr.add_type_operation("account_update", {
                     account: $rootScope.$storage.user.username,
                     memo_key: $rootScope.$storage.user.memo_key,
@@ -2485,7 +2494,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
 
             setTimeout(function() {
               if ($rootScope.$storage.user) {
-                $scope.mylogin = new window.steemJS.Login();
+                $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
                 $scope.mylogin.setRoles(["active"]);
                 var loginSuccess = $scope.mylogin.checkKeys({
                     accountName: $rootScope.$storage.user.username,
@@ -2497,7 +2506,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   }
                 );
                 if (loginSuccess) {
-                  var tr = new window.steemJS.TransactionBuilder();
+                  var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
                   tr.add_type_operation("account_update", {
                     account: $rootScope.$storage.user.username,
                     memo_key: $rootScope.$storage.user.memo_key,
@@ -2565,7 +2574,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
 
             $rootScope.log('You are sure');
             if ($rootScope.$storage.user) {
-              $scope.mylogin = new window.steemJS.Login();
+              $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
               $scope.mylogin.setRoles(["active"]);
               var loginSuccess = $scope.mylogin.checkKeys({
                   accountName: $rootScope.$storage.user.username,
@@ -2578,7 +2587,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               );
               //todo: if json_metadata already exist make sure to keep it.
               if (loginSuccess) {
-                var tr = new window.steemJS.TransactionBuilder();
+                var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
                 tr.add_type_operation("account_update", {
                   account: $rootScope.$storage.user.username,
                   memo_key: $rootScope.$storage.user.memo_key,
@@ -2906,11 +2915,20 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         $scope.getOtherUsersData();
       } else {
           $rootScope.log("get follows counts");
-          window.Api.follow_api().exec("get_follow_count", [$stateParams.username]).then(function(res){
-            //console.log(res);
-            $scope.followdetails = res;
-          });
-          //$scope.getFollows("r","d");
+          if ($rootScope.$storage.chain == "steem") {
+            window.Api.follow_api().exec("get_follow_count", [$stateParams.username]).then(function(res){
+              //console.log(res);
+              $scope.followdetails = res;
+            });
+          } else {
+            $scope.getFollows("r","d");
+            setTimeout(function() {
+              $scope.followdetails = {follower_count: $scope.follower.length, following_count: $scope.following.length}; 
+              if (!$scope.$$phase) {
+                $scope.$apply();
+              } 
+            }, 2000);            
+          }
       }
     } else {
       if ($stateParams.username) {
@@ -2919,7 +2937,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     }
 
     //setTimeout(function() {
-      $scope.css = ($rootScope.$storage.user.username === $scope.user.username && $rootScope.$storage.user.json_metadata && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : ($rootScope.$storage.user.username !== $scope.user.username && ($scope.user.json_metadata && $scope.user.json_metadata.profile.cover_image)) ? {'background': 'url('+$scope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
+      $scope.css = ($rootScope.$storage.user.username === $scope.user.username && $rootScope.$storage.user.json_metadata && $rootScope.$storage.user.json_metadata.profile && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : ($rootScope.$storage.user.username !== $scope.user.username && ($scope.user.json_metadata && $scope.user.json_metadata.profile && $scope.user.json_metadata.profile.cover_image)) ? {'background': 'url('+$scope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
       //console.log($scope.css);
     //}, 1);
 

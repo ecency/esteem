@@ -7,8 +7,8 @@
       <button class="button button-outline button-light profilebtn_follow" ng-click="unfollowUser(user.username)" ng-if="$root.$storage.user && $root.$storage.user.username != user.username && isFollowing(user.username)"><!--button-icon button-clear<i class="fa fa-user-times fa-lg"></i>-->{{'UNFOLLOW'|translate}}</button>&nbsp;
       <div class="center">
           <div class="item-myavatar" ng-if="$root.$storage.user && $root.$storage.user.username == user.username">
-            <span class="item-myavatar" ng-if="!($root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image)"><img src="img/user_profile.png" ng-click="showProfile()"></span>
-            <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.profilePicUrl}}" ng-if="$root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image" ng-click="showProfile()" />
+            <span class="item-myavatar" ng-if="!($root.$storage.user.json_metadata.profile.profile_image||$root.$storage.user.json_metadata.user_image)"><img src="img/user_profile.png" ng-click="showProfile()"></span>
+            <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.user_image}}" ng-if="$root.$storage.user.json_metadata.user_image || $root.$storage.user.json_metadata.profile.profile_image" ng-click="showProfile()" />
             <div class="footprofileinfo">
               <h4 class="center">
                 <span class="light">@{{$root.$storage.user.username}}</span>
@@ -46,8 +46,8 @@
             </div>
           </div>
           <div class="item-myavatar" ng-if="$root.$storage.user.username !== user.username">
-            <span class="item-myavatar" ng-if="!(user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image)"><img src="img/user_profile.png" /></span>
-            <img ng-src="{{user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image}}" ng-if="user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image" />
+            <span class="item-myavatar" ng-if="!(user.json_metadata.profile.profile_image||user.json_metadata.user_image)"><img src="img/user_profile.png" /></span>
+            <img ng-src="{{user.json_metadata.profile.profile_image || user.json_metadata.user_image}}" ng-if="user.json_metadata.profile.profile_image || user.json_metadata.user_image" />
             <div class="footprofileinfo">
               <h4 class="center"><span class="light">@{{user.username}}</span>&nbsp;<div class="reputation">{{user.reputation|reputation}}</div></h4>
               <p>{{user.json_metadata.profile.about}}</p>

@@ -395,6 +395,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       }
       window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
       window.steemJS = require("steemjs-lib");
+      window.golosJS = require("golosjs-lib");
 
       if (!angular.isDefined($rootScope.timeint)) {
         window.Api.initPromise.then(function(response) {
@@ -681,7 +682,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           $rootScope.log('You are sure');
           $rootScope.$broadcast('show:loading');
           if ($rootScope.$storage.user) {
-              $rootScope.mylogin = new window.steemJS.Login();
+              $rootScope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
               $rootScope.mylogin.setRoles(["posting"]);
               var loginSuccess = $rootScope.mylogin.checkKeys({
                   accountName: $rootScope.$storage.user.username,
@@ -693,7 +694,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 }
               );
               if (loginSuccess) {
-                var tr = new window.steemJS.TransactionBuilder();
+                var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
                 var json;
 
                 json = ["reblog",{account:$rootScope.$storage.user.username, author:author, permlink:permlink}];
@@ -746,7 +747,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       if ($rootScope.$storage.user) {
         window.Api.initPromise.then(function(response) {
           $rootScope.log("Api ready:" + angular.toJson(response));
-          $rootScope.mylogin = new window.steemJS.Login();
+          $rootScope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
           $rootScope.mylogin.setRoles(["posting"]);
           var loginSuccess = $rootScope.mylogin.checkKeys({
               accountName: $rootScope.$storage.user.username,
@@ -758,7 +759,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
           );
           if (loginSuccess) {
-            var tr = new window.steemJS.TransactionBuilder();
+            var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
             tr.add_type_operation("vote", {
                 voter: $rootScope.$storage.user.username,
                 author: post.author,
@@ -824,7 +825,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             $rootScope.$broadcast('show:loading');
             if ($rootScope.$storage.user) {
               if ($rootScope.$storage.user.password || $rootScope.$storage.user.privateActiveKey) {
-                $rootScope.mylogin = new window.steemJS.Login();
+                $rootScope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
                 $rootScope.mylogin.setRoles(["active"]);
                 var loginSuccess = $rootScope.mylogin.checkKeys({
                     accountName: $rootScope.$storage.user.username,
@@ -836,7 +837,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                   }
                 );
                 if (loginSuccess) {
-                  var tr = new window.steemJS.TransactionBuilder();
+                  var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
                   tr.add_type_operation("account_witness_vote", {
                       account: $rootScope.$storage.user.username,
                       approve: true,
@@ -876,7 +877,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$broadcast('show:loading');
       $rootScope.log(xx);
       if ($rootScope.$storage.user) {
-          $rootScope.mylogin = new window.steemJS.Login();
+          $rootScope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
           $rootScope.mylogin.setRoles(["posting"]);
           var loginSuccess = $rootScope.mylogin.checkKeys({
               accountName: $rootScope.$storage.user.username,
@@ -888,7 +889,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
           );
           if (loginSuccess) {
-            var tr = new window.steemJS.TransactionBuilder();
+            var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
             var json;
             if (mtype === "follow") {
               json = ['follow',{follower:$rootScope.$storage.user.username, following:xx, what: ["blog"]}];

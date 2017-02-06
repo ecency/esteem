@@ -871,12 +871,7 @@ module.exports = function (app) {
                         <div class="ion-comment--author"><img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.$storage.paccounts[comment.author].json_metadata.user_image||$root.$storage.paccounts[comment.author].json_metadata.profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b>{{comment.author}}</b>&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
                         <div class="ion-comment--score"><span ng-click="openTooltip($event,comment)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> {{comment.total_pending_payout_value.split(" ")[0]|rate|number}} </span> | <span ng-click="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
                         <div class="ion-comment--text bodytext selectable" ng-bind-html="comment.body | parseUrl "></div>\
-                        <div class="ion-comment--replies"><span ng-click="upvotePost(comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UPVOTE"|translate}}</span> | <span ng-click="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span ng-click="toggleComment(comment)">{{comment.children || 0}} {{"REPLIES"|translate}}</span> |  <span ng-click="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span></div>\
-                        <ion-option-button ng-click="upvotePost(comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></ion-option-button>\
-                        <ion-option-button ng-click="replyToComment(comment)"><span class="fa fa-reply"></ion-option-button>\
-                        <ion-option-button ng-click="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></ion-option-button>\
-                        <ion-option-button ng-if="comment.author == $root.$storage.user.username && compateDate(comment)" ng-click="editComment(comment)"><span class="ion-ios-compose-outline" style="font-size:30px"></ion-option-button>\
-                        <ion-option-button ng-if="comment.author == $root.$storage.user.username" ng-click="deleteComment(comment)"><span class="ion-ios-trash-outline" style="font-size:30px"></ion-option-button>\
+                        <div class="ion-comment--replies"><span ng-click="upvotePost(comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UPVOTE"|translate}}</span> | <span ng-click="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span ng-click="toggleComment(comment)">{{comment.children || 0}} {{"REPLIES"|translate}}</span> | <span ng-click="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.$storage.user.username && compateDate(comment)" ng-click="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.$storage.user.username" ng-click="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{\'REMOVE\'|translate}}</span></div>\
                     </ion-item>',
             controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopover, $ionicPopup, $ionicActionSheet, $cordovaCamera, $filter) {
                   $ionicPopover.fromTemplateUrl('popoverTr.html', {
@@ -1072,7 +1067,7 @@ module.exports = function (app) {
                     if (!$scope.editc) {
                         $rootScope.$broadcast('show:loading');
                         if ($rootScope.$storage.user) {
-                          $scope.mylogin = new window.steemJS.Login();
+                          $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
                           $scope.mylogin.setRoles(["posting"]);
                           var loginSuccess = $scope.mylogin.checkKeys({
                               accountName: $rootScope.$storage.user.username,
@@ -1084,7 +1079,7 @@ module.exports = function (app) {
                             }
                           );
                           if (loginSuccess) {
-                            var tr = new window.steemJS.TransactionBuilder();
+                            var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
                             var t = new Date();
                             var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
 
@@ -1133,7 +1128,7 @@ module.exports = function (app) {
 
                         $rootScope.$broadcast('show:loading');
                         if ($rootScope.$storage.user) {
-                          $scope.mylogin = new window.steemJS.Login();
+                          $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
                           $scope.mylogin.setRoles(["posting"]);
                           var loginSuccess = $scope.mylogin.checkKeys({
                               accountName: $rootScope.$storage.user.username,
@@ -1145,7 +1140,7 @@ module.exports = function (app) {
                             }
                           );
                           if (loginSuccess) {
-                            var tr = new window.steemJS.TransactionBuilder();
+                            var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
 
                             var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
                             tr.add_type_operation("comment", {
@@ -1205,7 +1200,7 @@ module.exports = function (app) {
                             $rootScope.log('You are sure');
                             $rootScope.$broadcast('show:loading');
                             if ($rootScope.$storage.user) {
-                              $scope.mylogin = new window.steemJS.Login();
+                              $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
                               $scope.mylogin.setRoles(["posting"]);
                               var loginSuccess = $scope.mylogin.checkKeys({
                                   accountName: $rootScope.$storage.user.username,
@@ -1217,7 +1212,7 @@ module.exports = function (app) {
                                 }
                               );
                               if (loginSuccess) {
-                                var tr = new window.steemJS.TransactionBuilder();
+                                var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
 
                                 tr.add_type_operation("delete_comment", {
                                   author: comment.author,
