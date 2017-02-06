@@ -28,8 +28,8 @@
       <br>
         <center>
           <a menu-close href="#/app/profile/{{$root.$storage.user.username}}" class="item-myavatar" ng-if="$root.$storage.user">
-            <span class="item-myavatar" ng-if="!$root.$storage.user.json_metadata.profilePicUrl && !$root.$storage.user.json_metadata.profile.profile_image"><img src="img/photo.png"></span>
-            <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.profilePicUrl}}" ng-if="$root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image" />
+            <span class="item-myavatar" ng-if="!$root.$storage.user.json_metadata.user_image && !$root.$storage.user.json_metadata.profile.profile_image"><img src="img/user_profile.png"></span>
+            <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.user_image}}" ng-if="$root.$storage.user.json_metadata.user_image || $root.$storage.user.json_metadata.profile.profile_image" />
           </a>
           <div ng-class="{'footprofileinfomenu':$root.$storage.user.json_metadata.profile.cover_image}">
             <div class="h4">@{{$root.$storage.user.username}}&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation:true|number:1}}</div></div>
@@ -54,7 +54,7 @@
         </ion-list>
       </div>
       <ion-list>
-        <ion-item menu-close ng-click="login()" class="item-icon-left" ng-if="!$root.$storage.user">
+        <ion-item menu-close ng-click="openLogin()" class="item-icon-left" ng-if="!$root.$storage.user">
           <i class="icon ion-log-in"></i>
           {{'LOGIN'|translate}}
         </ion-item>

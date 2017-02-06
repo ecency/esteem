@@ -7,8 +7,8 @@
       <button class="button button-outline button-light profilebtn_follow" ng-click="unfollowUser(user.username)" ng-if="$root.$storage.user && $root.$storage.user.username != user.username && isFollowing(user.username)"><!--button-icon button-clear<i class="fa fa-user-times fa-lg"></i>-->{{'UNFOLLOW'|translate}}</button>&nbsp;
       <div class="center">
           <div class="item-myavatar" ng-if="$root.$storage.user && $root.$storage.user.username == user.username">
-            <span class="item-myavatar" ng-if="!($root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image)"><img src="img/photo.png" ng-click="showProfile()"></span>
-            <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.profilePicUrl}}" ng-if="$root.$storage.user.json_metadata.profilePicUrl || $root.$storage.user.json_metadata.profile.profile_image" ng-click="showProfile()" />
+            <span class="item-myavatar" ng-if="!($root.$storage.user.json_metadata.profile.profile_image||$root.$storage.user.json_metadata.user_image)"><img src="img/user_profile.png" ng-click="showProfile()"></span>
+            <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.user_image}}" ng-if="$root.$storage.user.json_metadata.user_image || $root.$storage.user.json_metadata.profile.profile_image" ng-click="showProfile()" />
             <div class="footprofileinfo">
               <h4 class="center">
                 <span class="light">@{{$root.$storage.user.username}}</span>
@@ -46,8 +46,8 @@
             </div>
           </div>
           <div class="item-myavatar" ng-if="$root.$storage.user.username !== user.username">
-            <span class="item-myavatar" ng-if="!(user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image)"><img src="img/photo.png" /></span>
-            <img ng-src="{{user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image}}" ng-if="user.json_metadata.profilePicUrl || user.json_metadata.profile.profile_image" />
+            <span class="item-myavatar" ng-if="!(user.json_metadata.profile.profile_image||user.json_metadata.user_image)"><img src="img/user_profile.png" /></span>
+            <img ng-src="{{user.json_metadata.profile.profile_image || user.json_metadata.user_image}}" ng-if="user.json_metadata.profile.profile_image || user.json_metadata.user_image" />
             <div class="footprofileinfo">
               <h4 class="center"><span class="light">@{{user.username}}</span>&nbsp;<div class="reputation">{{user.reputation|reputation}}</div></h4>
               <p>{{user.json_metadata.profile.about}}</p>
@@ -94,7 +94,7 @@
                   <div class="col"><ion-spinner ng-if="playlist.invoting"></ion-spinner>
                   <i class="fa fa-chevron-circle-up fa-lg" ng-click="upvotePost(playlist)" ng-if="!playlist.upvoted"></i><i class="fa fa-chevron-circle-up fa-lg positive" ng-click="unvotePost(playlist)" ng-if="playlist.upvoted"></i>&nbsp;&nbsp;<span ng-click="$root.openInfo(playlist)">{{playlist.net_votes}}</span>&nbsp;&nbsp;
                    <!--<i class="fa fa-chevron-circle-down fa-lg" ng-click="downvotePost(playlist)" ng-if="!playlist.downvoted"></i><i class="fa fa-chevron-circle-down fa-lg positive" ng-click="unvotePost(playlist)" ng-if="playlist.downvoted"></i>--></div>
-                  <div class="col" ng-click="openTooltip($event,playlist)">&nbsp; <i ng-class="{'ion-social-usd':$root.$storage.chain=='steem','fa fa-rub':$root.$storage.chain='golos'}"></i><span ng-if="playlist.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{playlist | sumPostTotal | number}}</del></span><span ng-if="playlist.max_accepted_payout.split(' ')[0] !== '0.000'">{{playlist | sumPostTotal | number}}</span></div>
+                  <div class="col" ng-click="openTooltip($event,playlist)">&nbsp; <b>{{$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="playlist.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{playlist | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="playlist.max_accepted_payout.split(' ')[0] !== '0.000'">{{playlist | sumPostTotal:$root.$storage.currencyRate | number}}</span></div>
                   <div class="col">&nbsp; <i class="icon ion-chatbubbles"></i>&nbsp;{{playlist.children}}</div>
                   <div class="col" ng-if="playlist.author!==user.username && active!=='recent-replies'">&nbsp; <i class="icon ion-arrow-return-right"></i></div>
                 </div>
@@ -136,7 +136,7 @@
             {{'ESTIMATED_VALUE'|translate}} <br><span class="gray wrap">{{'PROFILE_4'|translate:translationData}}</span>
             </div>
             <div class="col col-33">
-            ${{accounts.vesting_shares | sd:accounts.balance:accounts.sbd_balance | number}}
+            {{$root.$storage.currency|getCurrencySymbol}} {{accounts.vesting_shares | sd:accounts.balance:accounts.sbd_balance | number}}
             </div>
           </div>
           <p class="bold">{{'TRANSACTION_HISTORY'|translate}}</p>

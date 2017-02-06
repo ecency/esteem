@@ -17,7 +17,9 @@ if (localStorage.getItem("socketUrl") === null) {
 var steemRPC = require("steem-rpc");
 window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
 window.steemJS = require("steemjs-lib");
+window.golosJS = require("golosjs-lib");
 window.diff_match_patch = require('diff-match-patch');
+window.getSymbol = require('currency-symbol-map');
 
 require('./config')(app);
 require('./services')(app);
@@ -208,6 +210,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('pt', require('./locales/pt')); //Portuguese
   $translateProvider.translations('id', require('./locales/id')); //Indonesian
   $translateProvider.translations('zh', require('./locales/zh')); //Chinese traditional
+  $translateProvider.translations('dolan', require('./locales/dolan')); //Chinese traditional
 
   $translateProvider.useSanitizeValueStrategy(null);
 
@@ -221,7 +224,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
   $rootScope.log = function(message) {
     $log.info(message);
   };
-
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -258,12 +260,46 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$storage.platformpunit = "SP";
       $rootScope.$storage.platformlunit = "STEEM";
       $rootScope.$storage.chain = "steem";
+      $rootScope.$storage.currency = "usd";
+      $rootScope.$storage.currencyRate = 1;
     }
-
-    $rootScope.$storage.languages = [{id:'en', name: 'English'}, {id:'es', name: 'Español'}, {id:'gr', name: 'Ελληνικά'}, {id:'fr', name: 'Français'}, {id:'de', name: 'Deutsch'}, {id:'ru', name: 'Русский'}, {id:'bg', name: 'Български'}, {id:'nl', name: 'Nederlands'}, {id:'hu', name: 'Magyar'}, {id:'cs', name: 'Čeština'}, {id:'iw', name: 'עברית‎'}, {id:'pl', name: 'Polski‎'}, {id:'pt', name: 'Português'}, {id:'id', name:'Bahasa Indonesia'}, {id:'zh', name:'繁體中文'}];
+    $rootScope.$storage.languages = [
+      {id:'en', name: 'English'}, 
+      {id:'es', name: 'Español'}, 
+      {id:'gr', name: 'Ελληνικά'}, 
+      {id:'fr', name: 'Français'}, 
+      {id:'de', name: 'Deutsch'}, 
+      {id:'ru', name: 'Русский'}, 
+      {id:'bg', name: 'Български'}, 
+      {id:'nl', name: 'Nederlands'}, 
+      {id:'hu', name: 'Magyar'}, 
+      {id:'cs', name: 'Čeština'}, 
+      {id:'iw', name: 'עברית‎'}, 
+      {id:'pl', name: 'Polski‎'}, 
+      {id:'pt', name: 'Português'}, 
+      {id:'id', name: 'Bahasa Indonesia'}, 
+      {id:'zh', name: '繁體中文'}, 
+      {id:'dolan', name: 'Dolan'}
+    ];
 
     $rootScope.$storage.chains = [{id:'steem', name: 'Steem'}, {id:'golos', name: 'Golos'}];
 
+    if (!$rootScope.$storage.currencies) {
+      $rootScope.$storage.currencies = [
+        {id:'btc', name: 'BTC', rate: 0, date: "1/1/2016"}, 
+        {id:'usd', name: 'USD', rate: 0, date: "1/1/2016"}, 
+        {id:'eur', name: 'EUR', rate: 0, date: "1/1/2016"}, 
+        {id:'rub', name: 'RUB', rate: 0, date: "1/1/2016"}, 
+        {id:'gbp', name: 'GBP', rate: 0, date: "1/1/2016"}, 
+        {id:'jpy', name: 'JPY', rate: 0, date: "1/1/2016"}, 
+        {id:'krw', name: 'KRW', rate: 0, date: "1/1/2016"}, 
+        {id:'inr', name: 'INR', rate: 0, date: "1/1/2016"}, 
+        {id:'cny', name: 'CNY', rate: 0, date: "1/1/2016"}, 
+        {id:'uah', name: 'UAH', rate: 0, date: "1/1/2016"}, 
+        {id:'sek', name: 'SEK', rate: 0, date: "1/1/2016"}, 
+        {id:'try', name: 'TRY', rate: 0, date: "1/1/2016"}
+      ];
+    }
 
     if (window.cordova) {
       if (ionic.Platform.isIPad() || ionic.Platform.isIOS()) {
@@ -359,6 +395,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       }
       window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
       window.steemJS = require("steemjs-lib");
+      window.golosJS = require("golosjs-lib");
 
       if (!angular.isDefined($rootScope.timeint)) {
         window.Api.initPromise.then(function(response) {
@@ -645,7 +682,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           $rootScope.log('You are sure');
           $rootScope.$broadcast('show:loading');
           if ($rootScope.$storage.user) {
-              $rootScope.mylogin = new window.steemJS.Login();
+              $rootScope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
               $rootScope.mylogin.setRoles(["posting"]);
               var loginSuccess = $rootScope.mylogin.checkKeys({
                   accountName: $rootScope.$storage.user.username,
@@ -657,7 +694,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 }
               );
               if (loginSuccess) {
-                var tr = new window.steemJS.TransactionBuilder();
+                var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
                 var json;
 
                 json = ["reblog",{account:$rootScope.$storage.user.username, author:author, permlink:permlink}];
@@ -710,7 +747,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       if ($rootScope.$storage.user) {
         window.Api.initPromise.then(function(response) {
           $rootScope.log("Api ready:" + angular.toJson(response));
-          $rootScope.mylogin = new window.steemJS.Login();
+          $rootScope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
           $rootScope.mylogin.setRoles(["posting"]);
           var loginSuccess = $rootScope.mylogin.checkKeys({
               accountName: $rootScope.$storage.user.username,
@@ -722,7 +759,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
           );
           if (loginSuccess) {
-            var tr = new window.steemJS.TransactionBuilder();
+            var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
             tr.add_type_operation("vote", {
                 voter: $rootScope.$storage.user.username,
                 author: post.author,
@@ -788,7 +825,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             $rootScope.$broadcast('show:loading');
             if ($rootScope.$storage.user) {
               if ($rootScope.$storage.user.password || $rootScope.$storage.user.privateActiveKey) {
-                $rootScope.mylogin = new window.steemJS.Login();
+                $rootScope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
                 $rootScope.mylogin.setRoles(["active"]);
                 var loginSuccess = $rootScope.mylogin.checkKeys({
                     accountName: $rootScope.$storage.user.username,
@@ -800,7 +837,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                   }
                 );
                 if (loginSuccess) {
-                  var tr = new window.steemJS.TransactionBuilder();
+                  var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
                   tr.add_type_operation("account_witness_vote", {
                       account: $rootScope.$storage.user.username,
                       approve: true,
@@ -840,7 +877,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$broadcast('show:loading');
       $rootScope.log(xx);
       if ($rootScope.$storage.user) {
-          $rootScope.mylogin = new window.steemJS.Login();
+          $rootScope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
           $rootScope.mylogin.setRoles(["posting"]);
           var loginSuccess = $rootScope.mylogin.checkKeys({
               accountName: $rootScope.$storage.user.username,
@@ -852,7 +889,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
           );
           if (loginSuccess) {
-            var tr = new window.steemJS.TransactionBuilder();
+            var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
             var json;
             if (mtype === "follow") {
               json = ['follow',{follower:$rootScope.$storage.user.username, following:xx, what: ["blog"]}];
@@ -892,7 +929,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         //$rootScope.log(r);
           $rootScope.$storage.base = r.current_median_history.base.split(" ")[0];
           window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(r){
-            //$rootScope.log(r);
+            $rootScope.log(r);
             $rootScope.$storage.steem_per_mvests = (Number(r.total_vesting_fund_steem.substring(0, r.total_vesting_fund_steem.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;
           });
         });
@@ -926,19 +963,15 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         });
 
         window.FirebasePlugin.onTokenRefresh(function(token) {
-          var subs = {};
-          APIs.getSubscriptions($rootScope.$storage.deviceid).then(function(res){
-            $rootScope.log(angular.toJson(res.data));
-            angular.merge(subs, {vote: res.data[0].subscription.vote||false, follow: res.data[0].subscription.follow||false, comment: res.data[0].subscription.comment||false, mention: res.data[0].subscription.mention||false, resteem: res.data[0].subscription.resteem||false, token: token});
-            APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username||undefined, subs).then(function(res){
-              console.log(angular.toJson(res));
-            });
-            if (!$rootScope.$$phase){
-              $rootScope.$apply();
+          APIs.updateToken($rootScope.$storage.deviceid, token).then(function(res){
+            console.log(angular.toJson(res));
+            if (res.status) {
+              $rootScope.$storage.deviceid = token  
             }
           });
-
-          //console.log(token);
+          if (!$rootScope.$$phase){
+            $rootScope.$apply();
+          }
         }, function(error) {
           console.error(error);
         });

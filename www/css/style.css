@@ -215,7 +215,7 @@ textarea.markdown-input {
 
 .ion-comment {
   font-size: 12px;
-  padding: 4px 15px;
+  padding: 4px 0px;
   overflow: visible;
   white-space: normal;
   border: none;
@@ -237,14 +237,54 @@ textarea.markdown-input {
 }
 .ion-comment--author {
   color: #111;
-  margin-bottom: 6px;
 }
+.ion-comment--author img {
+  float: left;
+  overflow: hidden;
+}
+img.round-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 0px 10px 0px 0px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+  -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+}
+
+.col img {
+  float: left;
+}
+
+/*
+div img.round-avatar{
+    height:40;
+    width:40px;
+    position:relative;
+    border-radius:100%;
+    overflow:hidden;
+}
+img.round-avatar{
+  position:absolute;
+  left:-50%; right:-50%; top:0;
+  margin:auto;
+  height:100%; width:auto;
+}*/
+
 .ion-comment--op {
   color: #8899a6;
 }
 .ion-comment--replies {
   color: #8899a6;
+  padding: 10px 0px;
+}
+.ion-comment--replies .tb {
   text-align: right;
+}
+.ion-comment--replies .ti {
+  text-align: left;
 }
 .ion-comment--score {
   text-align: right;
@@ -252,8 +292,6 @@ textarea.markdown-input {
   top: 0;
   right: 0;
   color: #8899a6;
-  -webkit-transition: color 0.1s;
-  transition: color 0.1s;
 }
 .positives {
 	background-color: #387ef5;
@@ -287,7 +325,7 @@ textarea.markdown-input {
   background-color: #f8f8f8;
 }
 .ion-comment--children {
-  margin-left: 10px;
+  margin-left: 35px;
 }
 .ion-android-arrow-dropup-circle {
 	font-size: 20px;

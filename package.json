@@ -5,9 +5,11 @@
   "dependencies": {
     "acorn": "^3.3.0",
     "brfs": "^1.4.2",
+    "currency-symbol-map": "^3.1.0",
     "diff-match-patch": "^1.0.0",
     "elementtree": "^0.1.6",
     "fs": "0.0.2",
+    "golosjs-lib": "^0.3.7-1",
     "gulp": "^3.5.6",
     "gulp-browserify": "^0.5.1",
     "gulp-concat": "^2.2.0",

@@ -8,17 +8,18 @@
       </div>
       <label class="item item-input item-select">
         <span class="input-label">{{'ASSET'|translate}}</span>
-        <select ng-model="data.type" ng-change="typechange()">
+        <!--<select ng-model="data.type" ng-change="typechange()">
             <option value="steem">STEEM</option>
             <option value="sbd">SBD</option>
             <option value="sp">SP</option>
-        </select>
+        </select>-->
+        <select ng-model="data.type" ng-options="item.type as item.name for item in data.types track by item.id"></select>
       </label>
       <label class="item item-input">
         <span class="input-label">{{'AMOUNT'|translate}}</span>
         <input type="number" placeholder="{{'AMOUNT'|translate}}" step="0.001" ng-model="data.amount">
       </label>
-      <label class="item item-input" ng-if="data.type != 'sp'">
+      <label class="item item-input" ng-if="data.type != 'sp'&&data.type != 'golosp'">
         <span class="input-label">{{'MEMO'|translate}}</span>
         <textarea ng-model="data.memo" rows="3" placeholder="{{'PUBLIC_MEMO'|translate}}"></textarea>
       </label>

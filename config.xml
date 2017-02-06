@@ -95,7 +95,6 @@
     <plugin name="phonegap-plugin-mobile-accessibility" spec="https://github.com/phonegap/phonegap-mobile-accessibility.git" />
     <plugin name="ionic-plugin-keyboard" spec="~2.2.1" />
     <plugin name="cordova-plugin-globalization" spec="~1.0.4" />
-    <plugin name="cordova-plugin-firebase" spec="https://github.com/arnesson/cordova-plugin-firebase" />
     <plugin name="cordova-plugin-crosswalk-webview" spec="~2.2.0">
         <variable name="XWALK_VERSION" value="22+" />
         <variable name="XWALK_LITEVERSION" value="xwalk_core_library_canary:17+" />
@@ -104,4 +103,5 @@
         <variable name="XWALK_MULTIPLEAPK" value="true" />
     </plugin>
     <plugin name="com.verso.cordova.clipboard" spec="https://github.com/VersoSolutions/CordovaClipboard" />
+    <plugin name="cordova-plugin-firebase" spec="https://github.com/arnesson/cordova-plugin-firebase" />
 </widget>

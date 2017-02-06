@@ -8,7 +8,7 @@
     <center><img ng-src="img/logo.png" width="100" /></center>
     <center><h1>{{'WELCOME_BACK'|translate}}</h1></center>
     <center><p class="gray fsmaller padding">{{'LOGIN_1'|translate}}</p></center>
-    <br/>
+    <center><div class="fsmaller">{{'CHAIN'|translate}} {{$root.$storage.chain|uppercase}}</div></center>
     <form ng-submit="doLogin()" name="login" novalidate>
       <div class="list list-inset">
         <label class="item item-input">
@@ -36,7 +36,7 @@
         <button class="button button-block button-light" ng-click="closeLogin()">{{'CANCEL'|translate}}</button>
         </div><div class="col"><button class="button button-block button-positive" ng-click="doLogin()" ng-disabled="login.$invalid">{{'LOGIN'|translate}}</button></div>
         </div>
-        <p class="tcenter">{{'DONT_HAVE'|translate}} <a href onClick="window.open('https://steemit.com/create_account', '_blank', 'location=yes');return false;">{{'SIGN_UP_NOW'|translate}}</a></p>
+        <p class="tcenter">{{'DONT_HAVE'|translate}} <a href ng-click="openSignUP()">{{'SIGN_UP_NOW'|translate}}</a></p>
         <br/>
   </ion-content>
 </ion-modal-view>
