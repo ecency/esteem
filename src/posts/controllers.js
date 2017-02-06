@@ -59,7 +59,12 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.closeLogin = function() {
     $scope.loginModal.hide();
   };
-
+  
+  $scope.openSignUP = function() {
+    $scope.chainurl = $rootScope.$storage.chain=='steem'?'https://steemit.com/create_account':'https://golos.io/create_account';
+    window.open($scope.chainurl, '_blank', 'location=yes');
+    return false;  
+  }
   $scope.openLogin = function() {
     setTimeout(function() {
       $scope.loginModal.show();
@@ -70,7 +75,13 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     //$ionicSideMenuDelegate.toggleLeft();
   }
   $scope.share = function() {
-    var link = "http://steemit.com/"+$rootScope.$storage.sitem.category+"/@"+$rootScope.$storage.sitem.author+"/"+$rootScope.$storage.sitem.permlink;
+    var host = "";
+    if ($rootScope.$storage.chain == 'steem') {
+      host = "https://steemit.com/";
+    } else {
+      host = "https://golos.io/";
+    }
+    var link = host+$rootScope.$storage.sitem.category+"/@"+$rootScope.$storage.sitem.author+"/"+$rootScope.$storage.sitem.permlink;
     var message = "Hey! Checkout blog post on Steem "+link;
     var subject = "Via eSteem Mobile";
     var file = null;
