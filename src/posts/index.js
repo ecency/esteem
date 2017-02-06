@@ -279,7 +279,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       {id:'pt', name: 'Português'}, 
       {id:'id', name: 'Bahasa Indonesia'}, 
       {id:'zh', name: '繁體中文'}, 
-      {id:'dolan', name: 'Dolan'}
+      {id:'dolan', name: 'Dolan'},
+      {id:'pt-br', name: 'Português BR'},
+      {id:'tw', name: '简体中文'}
     ];
 
     $rootScope.$storage.chains = [{id:'steem', name: 'Steem'}, {id:'golos', name: 'Golos'}];
