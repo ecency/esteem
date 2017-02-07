@@ -514,10 +514,9 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   });
 
 });
-app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService, $filter, $ionicHistory, $timeout, APIs) {
+app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService, $filter, $ionicHistory, $timeout, APIs, $translate) {
 
-  $scope.activeMenu = $rootScope.$storage.filter || "trending";
-  $scope.mymenu = $rootScope.$storage.user ? [{text: $filter('translate')('FEED'), custom:'feed'}, {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}] : [ {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}];
+  
 
   $scope.options = {
     loop: false,
@@ -1239,6 +1238,24 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     if ($stateParams.tags) {
       $rootScope.$storage.tag = $stateParams.tags;
     }
+    if (!angular.isDefined($rootScope.$storage.language)) {
+      if(typeof navigator.globalization !== "undefined") {
+          navigator.globalization.getPreferredLanguage(function(language) {
+              $translate.use((language.value).split("-")[0]).then(function(data) {
+                  console.log("SUCCESS -> " + data);
+                  $rootScope.$storage.language = language.value.split('-')[0];
+              }, function(error) {
+                  console.log("ERROR -> " + error);
+              });
+          }, null);
+      } else {
+        $rootScope.$storage.language = 'en';
+      }
+    } else {
+      $translate.use($rootScope.$storage.language);
+    }
+
+    $scope.activeMenu = $rootScope.$storage.filter || "trending";
     $scope.mymenu = $rootScope.$storage.user ? [{text: $filter('translate')('FEED'), custom:'feed'}, {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}] : [ {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}];
 
     angular.forEach($scope.mymenu, function(v,k){
@@ -1948,7 +1965,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       angular.forEach(acon, function(v,k){
         //console.log(v.json_metadata);
         if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
-          v.json_metadata = angular.fromJson(v.json_metadata);
+          console.log(v.json_metadata);
+          if (v.json_metadata)
+            v.json_metadata = angular.fromJson(v.json_metadata);
         }
       });
       var result = con[author+"/"+permlink];
@@ -2847,7 +2866,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     $scope.getFollows = function(r,d) {
 
       $scope.dfetching = function(){
-        APIs.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
+        APIs.getFollowing($stateParams.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
           if (res && res.length===$scope.limit) {
             $scope.tt.duser = res[res.length-1].following;
           }
@@ -2865,7 +2884,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         });
       };
       $scope.rfetching = function(){
-        APIs.getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit).then(function(res){
+        APIs.getFollowers($stateParams.username, $scope.tt.ruser, "blog", $scope.limit).then(function(res){
           if (res && res.length===$scope.limit) {
             $scope.tt.ruser = res[res.length-1].follower;
           }
@@ -2948,7 +2967,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     }
 
     //setTimeout(function() {
-      $scope.css = ($rootScope.$storage.user.username === $scope.user.username && $rootScope.$storage.user.json_metadata && $rootScope.$storage.user.json_metadata.profile && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : ($rootScope.$storage.user.username !== $scope.user.username && ($scope.user.json_metadata && $scope.user.json_metadata.profile && $scope.user.json_metadata.profile.cover_image)) ? {'background': 'url('+$scope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
+      $scope.css = ($rootScope.$storage.user&& $rootScope.$storage.user.username === $scope.user.username && $rootScope.$storage.user.json_metadata && $rootScope.$storage.user.json_metadata.profile && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : ($rootScope.$storage.user && $rootScope.$storage.user.username !== $scope.user.username && ($scope.user.json_metadata && $scope.user.json_metadata.profile && $scope.user.json_metadata.profile.cover_image)) ? {'background': 'url('+$scope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
       //console.log($scope.css);
     //}, 1);
 
