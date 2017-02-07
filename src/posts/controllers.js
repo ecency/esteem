@@ -3195,8 +3195,8 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       $rootScope.$storage.platformdunit = "SBD";
       $rootScope.$storage.platformpunit = "SP";
       $rootScope.$storage.platformlunit = "STEEM";
-      $rootScope.$storage.socket = "wss://node.steem.ws";
-      $scope.socket = "wss://node.steem.ws";
+      $rootScope.$storage.socket = "wss://steemit.com/wspa";
+      $scope.socket = "wss://steemit.com/wspa";
     } else {
       $rootScope.$storage.platformname = "ГОЛОС";
       $rootScope.$storage.platformpower = "СИЛА ГОЛОСА";
@@ -3205,8 +3205,8 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       $rootScope.$storage.platformdunit = "GBG";
       $rootScope.$storage.platformpunit = "СИЛА ГОЛОСА";
       $rootScope.$storage.platformlunit = "ГОЛОС";
-      $rootScope.$storage.socket = "wss://node.golos.ws";
-      $scope.socket = "wss://node.golos.ws";
+      $rootScope.$storage.socket = "wss://ws.golos.io/";
+      $scope.socket = "wss://ws.golos.io/";
     }
     $scope.restart = true;
     $scope.changeCurrency($rootScope.$storage.currency, true);
