@@ -2004,7 +2004,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     window.Api.initPromise.then(function(response) {
       window.Api.database_api().exec("get_content_replies", [$scope.post.author, $scope.post.permlink]).then(function(result){
         //todo fix active_votes
-        //console.log(result);
+        console.log(result);
         if (result) {
           /*angular.forEach(result, function(v,k){
             var len = v.active_votes.length;
@@ -2080,12 +2080,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             con[keyy].comments.push(v);  
           }
         });
-        console.log(acon);  
+        //console.log(acon);  
         //}, 1);
         angular.forEach(acon, function(v,k){
           //console.log(v.json_metadata);
           if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
-            console.log(v.json_metadata);
+            //console.log(v.json_metadata);
             if (v.json_metadata)
               v.json_metadata = angular.fromJson(v.json_metadata);
           }
@@ -2159,7 +2159,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
   $scope.$on('$ionicView.beforeEnter', function(){
     $rootScope.log('beforeEnter postctrl');
-    $rootScope.$broadcast('show:loading');
+    //$rootScope.$broadcast('show:loading');
     if ($stateParams.category === '111') {
       var ttemp = $rootScope.$storage.sitem;
       $scope.post = ttemp;
@@ -2279,47 +2279,49 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
     $scope.tt = {ruser:"", duser:""};
 
     $scope.rfetching = function(){
-      APIs.getFollowers($rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit).then(function(res){
-        if (res && res.length===$scope.limit) {
-          $scope.tt.ruser = res[res.length-1].follower;
-        }
-        //console.log(res);
-        var ll = res.length;
-        for (var i = 0; i < ll; i++) {
-          res[i].id += 1;
-          $scope.followers.push(res[i]);
-        }
-        if (res.length < $scope.limit) {
-          if (!$scope.$$phase){
-            $scope.$apply();
+      window.Api.initPromise.then(function(response) {
+        window.Api.follow_api().exec("get_followers", [$rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit]).then(function(res){
+          if (res && res.length===$scope.limit) {
+            $scope.tt.ruser = res[res.length-1].follower;
           }
-        } else {
-          setTimeout($scope.rfetching, 5);
-        }
-        //console.log($scope.followers);
+          //console.log(res);
+          var ll = res.length;
+          for (var i = 0; i < ll; i++) {
+            res[i].id += 1;
+            $scope.followers.push(res[i]);
+          }
+          if (res.length < $scope.limit) {
+            if (!$scope.$$phase){
+              $scope.$apply();
+            }
+          } else {
+            setTimeout($scope.rfetching, 5);
+          }
+        });
       });
     };
 
     $scope.dfetching = function(){
-      APIs.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
-        if (res && res.length===$scope.limit) {
-          $scope.tt.duser = res[res.length-1].following;
-        }
-        var ll = res.length;
-
-        //console.log(res);
-        for (var i = 0; i < ll; i++) {
-          res[i].id += 1;
-          $scope.following.push(res[i]);
-        }
-        if (res.length<$scope.limit) {
-          if (!$scope.$$phase){
-            $scope.$apply();
+      window.Api.initPromise.then(function(response) {
+        window.Api.follow_api().exec("get_following", [$rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit]).then(function(res){
+          if (res && res.length===$scope.limit) {
+            $scope.tt.duser = res[res.length-1].following;
           }
-        } else {
-          setTimeout($scope.dfetching, 5);
-        }
-        //console.log($scope.following);
+          var ll = res.length;
+
+          //console.log(res);
+          for (var i = 0; i < ll; i++) {
+            res[i].id += 1;
+            $scope.following.push(res[i]);
+          }
+          if (res.length<$scope.limit) {
+            if (!$scope.$$phase){
+              $scope.$apply();
+            }
+          } else {
+            setTimeout($scope.dfetching, 5);
+          }
+        });
       });
     };
 
@@ -3036,39 +3038,43 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     $scope.getFollows = function(r,d) {
 
       $scope.dfetching = function(){
-        APIs.getFollowing($stateParams.username, $scope.tt.duser, "blog", $scope.limit).then(function(res){
-          if (res && res.length===$scope.limit) {
-            $scope.tt.duser = res[res.length-1].following;
-          }
-          var len = res.length;
-          for (var i = 0; i < len; i++) {
-            $scope.following.push(res[i].following);
-          }
-          if (res.length<$scope.limit) {
-            if (!$scope.$$phase) {
-              $scope.$apply();
+        window.Api.initPromise.then(function(response) {
+          window.Api.follow_api().exec("get_following", [$stateParams.username, $scope.tt.duser, "blog", $scope.limit]).then(function(res){
+            if (res && res.length===$scope.limit) {
+              $scope.tt.duser = res[res.length-1].following;
             }
-          } else {
-            setTimeout($scope.dfetching, 5);
-          }
+            var len = res.length;
+            for (var i = 0; i < len; i++) {
+              $scope.following.push(res[i].following);
+            }
+            if (res.length<$scope.limit) {
+              if (!$scope.$$phase) {
+                $scope.$apply();
+              }
+            } else {
+              setTimeout($scope.dfetching, 5);
+            }
+          });
         });
       };
       $scope.rfetching = function(){
-        APIs.getFollowers($stateParams.username, $scope.tt.ruser, "blog", $scope.limit).then(function(res){
-          if (res && res.length===$scope.limit) {
-            $scope.tt.ruser = res[res.length-1].follower;
-          }
-          var len = res.length;
-          for (var i = 0; i < len; i++) {
-            $scope.follower.push(res[i].follower);
-          }
-          if (res.length<$scope.limit) {
-            if (!$scope.$$phase) {
-              $scope.$apply();
+        window.Api.initPromise.then(function(response) {
+          window.Api.follow_api().exec("get_followers", [$stateParams.username, $scope.tt.ruser, "blog", $scope.limit]).then(function(res){
+            if (res && res.length===$scope.limit) {
+              $scope.tt.ruser = res[res.length-1].follower;
             }
-          } else {
-            setTimeout($scope.rfetching, 10);
-          }
+            var len = res.length;
+            for (var i = 0; i < len; i++) {
+              $scope.follower.push(res[i].follower);
+            }
+            if (res.length<$scope.limit) {
+              if (!$scope.$$phase) {
+                $scope.$apply();
+              }
+            } else {
+              setTimeout($scope.rfetching, 10);
+            }
+          });
         });
       };
       if (r) {
