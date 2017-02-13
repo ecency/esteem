@@ -399,16 +399,16 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       window.steemJS = require("steemjs-lib");
       window.golosJS = require("golosjs-lib");
 
-      if (!angular.isDefined($rootScope.timeint)) {
-        window.Api.initPromise.then(function(response) {
-          $rootScope.log("Api ready state change: "+angular.toJson(response));
-          $rootScope.timeint = $interval(function(){
-            window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
-              $rootScope.log("get_dynamic_global_properties " + response.head_block_number);
-            });
-          }, 15000);
-        });
-      }
+      //if (!angular.isDefined($rootScope.timeint)) {
+      window.Api.initPromise.then(function(response) {
+        $rootScope.log("Api ready state change: "+angular.toJson(response));
+        $rootScope.timeint = $interval(function(){
+          window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
+            $rootScope.log("get_dynamic_global_properties " + response.head_block_number);
+          });
+        }, 15000);
+      });
+      //}
       window.FirebasePlugin.onNotificationOpen(function(data) {
         $rootScope.log(angular.toJson(data));
         if(data.tap){

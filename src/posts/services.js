@@ -14,10 +14,14 @@ module.exports = function (app) {
         return $http.get("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.xchange%20where%20pair%20in%20(%22"+code_from+code_to+"%22)&format=json&diagnostics=false&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
       },
       getFollowers: function(user, follower, what, limit) {
-        return window.Api.follow_api().exec("get_followers", [user, follower, what, limit]);
+        window.Api.initPromise.then(function(response) {
+          return window.Api.follow_api().exec("get_followers", [user, follower, what, limit]);
+        });
       },
       getFollowing: function(user, follower, what, limit) {
-        return window.Api.follow_api().exec("get_following", [user, follower, what, limit]);
+        window.Api.initPromise.then(function(response) {
+          return window.Api.follow_api().exec("get_following", [user, follower, what, limit]);
+        });
       },
       saveSubscription: function(deviceid, username, subscription) {
         return $http.post(API_END_POINT+"/api/devices", {deviceid: deviceid, username: username, subscription: subscription, chain: $rootScope.$storage.chain});
@@ -800,8 +804,10 @@ module.exports = function (app) {
 
   app.filter("sumPostTotal", function($rootScope){
     function SumPostTotal(value, rate) {
-      if (value && value.total_payout_value) {
-        return ((parseFloat(value.total_payout_value.split(" ")[0])+parseFloat(value.total_pending_payout_value.split(" ")[0]))*rate);
+      console.log(value, rate);
+      if (value && value.pending_payout_value) {
+        //value.total_payout_value.split(" ")[0])+parseFloat(value.total_pending_payout_value.split(" ")[0])
+        return (parseFloat(value.pending_payout_value.split(" ")[0])*rate);
       }
     }
     //SumPostTotal.$stateful = true;

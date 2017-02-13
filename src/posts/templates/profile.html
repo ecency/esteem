@@ -1,14 +1,14 @@
 <ion-view view-title="" hide-nav-bar="true" view-cache="false"><!--ng-class="{'mpb':$root.$storage.user.json_metadata.profile.cover_image}"-->
   <ion-content class="has-footer" overflow-scroll="true">
     <div class="bar bar-subheader mysubheader bar-positive" ng-style="css||mcss">
-      <button class="button button-icon button-clear ion-ios-arrow-back profilebtn" ng-click="goBack()"></button>
-      <button class="button button-outline button-light profilebtn_follow" ng-click="followUser(user.username)" ng-if="$root.$storage.user && $root.$storage.user.username != user.username && !isFollowing(user.username)"><!--<i class="fa fa-user-plus fa-lg"></i>-->{{'FOLLOW'|translate}}</button>
-      <button class="button button-clear profilebtn_follow button-icon ion-camera" ng-click="showCover()" ng-if="$root.$storage.user && $root.$storage.user.username === user.username"></button>
-      <button class="button button-outline button-light profilebtn_follow" ng-click="unfollowUser(user.username)" ng-if="$root.$storage.user && $root.$storage.user.username != user.username && isFollowing(user.username)"><!--button-icon button-clear<i class="fa fa-user-times fa-lg"></i>-->{{'UNFOLLOW'|translate}}</button>&nbsp;
+      <button class="button button-icon button-clear ion-ios-arrow-back profilebtn" on-tap="goBack()"></button>
+      <button class="button button-outline button-light profilebtn_follow" on-tap="followUser(user.username)" ng-if="$root.$storage.user && $root.$storage.user.username != user.username && !isFollowing(user.username)"><!--<i class="fa fa-user-plus fa-lg"></i>-->{{'FOLLOW'|translate}}</button>
+      <button class="button button-clear profilebtn_follow button-icon ion-camera" on-tap="showCover()" ng-if="$root.$storage.user && $root.$storage.user.username === user.username"></button>
+      <button class="button button-outline button-light profilebtn_follow" on-tap="unfollowUser(user.username)" ng-if="$root.$storage.user && $root.$storage.user.username != user.username && isFollowing(user.username)"><!--button-icon button-clear<i class="fa fa-user-times fa-lg"></i>-->{{'UNFOLLOW'|translate}}</button>&nbsp;
       <div class="center">
           <div class="item-myavatar" ng-if="$root.$storage.user && $root.$storage.user.username == user.username">
-            <span class="item-myavatar" ng-if="!($root.$storage.user.json_metadata.profile.profile_image||$root.$storage.user.json_metadata.user_image)"><img src="img/user_profile.png" ng-click="showProfile()"></span>
-            <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.user_image}}" ng-if="$root.$storage.user.json_metadata.user_image || $root.$storage.user.json_metadata.profile.profile_image" ng-click="showProfile()" />
+            <span class="item-myavatar" ng-if="!($root.$storage.user.json_metadata.profile.profile_image||$root.$storage.user.json_metadata.user_image)"><img src="img/user_profile.png" on-tap="showProfile()"></span>
+            <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.user_image}}" ng-if="$root.$storage.user.json_metadata.user_image || $root.$storage.user.json_metadata.profile.profile_image" on-tap="showProfile()" />
             <div class="footprofileinfo">
               <h4 class="center">
                 <span class="light">@{{$root.$storage.user.username}}</span>
@@ -35,7 +35,7 @@
               </span>&nbsp;
               <span ng-if="$root.$storage.user.json_metadata.profile && $root.$storage.user.json_metadata.profile.website">
                 <i class="icon ion-link"></i>&nbsp;
-                <a ng-click="window.open('{{$root.$storage.user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</a>
+                <a on-tap="window.open('{{$root.$storage.user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</a>
                 &nbsp;
               </span>
               <span ng-if="$root.$storage.user.created">
@@ -62,7 +62,7 @@
               </span>&nbsp;
               <span ng-if="user.json_metadata.profile && user.json_metadata.profile.website">
                 <i class="icon ion-link"></i>&nbsp;
-                <a ng-click="window.open('{{user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</a>
+                <a on-tap="window.open('{{user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</a>
                 &nbsp;
               </span>
               <span ng-if="user.created">
@@ -78,13 +78,13 @@
         <div class="box blue" ng-if="active!='wallet'||active!='permissions'">
           <p class="padding" ng-if="nonexist">{{'NOTHING_HERE'|translate}}</p>
           <ion-list>
-            <!--<div ng-repeat="(key, playlist) in profile" class="item wrap" ng-click="open(playlist)">
+            <!--<div ng-repeat="(key, playlist) in profile" class="item wrap" on-tap="open(playlist)">
             <h3 class="bold">{{playlist.root_title}}</h3>
             <span ng-bind-html="playlist.body.substring(0,100)|parseUrl"></span>
             </div>-->
             <div class="item" ng-repeat="playlist in data.profile | orderBy:'-created' | limitTo:25 track by $index" ng-class="{'item-thumbnail-left': playlist.json_metadata.image}">
-              <img ng-src="{{playlist.json_metadata.image[0]}}" ng-click="open(playlist)" ng-if="playlist.json_metadata.image" onerror="this.src='img/noimage.png'"/>
-                <div ng-click="open(playlist)">
+              <img ng-src="{{playlist.json_metadata.image[0]}}" on-tap="open(playlist)" ng-if="playlist.json_metadata.image" onerror="this.src='img/noimage.png'"/>
+                <div on-tap="open(playlist)">
                 <div class="wrap">
                   <h2><i class="fa fa-money positive" ng-if="playlist.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="playlist.percent_steem_dollars === 0"></i>{{playlist.root_title}}</h2>
                 </div>
@@ -92,9 +92,9 @@
                 </div>
                 <div class="row gray profile">
                   <div class="col"><ion-spinner ng-if="playlist.invoting"></ion-spinner>
-                  <i class="fa fa-chevron-circle-up fa-lg" ng-click="upvotePost(playlist)" ng-if="!playlist.upvoted"></i><i class="fa fa-chevron-circle-up fa-lg positive" ng-click="unvotePost(playlist)" ng-if="playlist.upvoted"></i>&nbsp;&nbsp;<span ng-click="$root.openInfo(playlist)">{{playlist.net_votes}}</span>&nbsp;&nbsp;
-                   <!--<i class="fa fa-chevron-circle-down fa-lg" ng-click="downvotePost(playlist)" ng-if="!playlist.downvoted"></i><i class="fa fa-chevron-circle-down fa-lg positive" ng-click="unvotePost(playlist)" ng-if="playlist.downvoted"></i>--></div>
-                  <div class="col" ng-click="openTooltip($event,playlist)">&nbsp; <b>{{$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="playlist.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{playlist | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="playlist.max_accepted_payout.split(' ')[0] !== '0.000'">{{playlist | sumPostTotal:$root.$storage.currencyRate | number}}</span></div>
+                  <i class="fa fa-chevron-circle-up fa-lg" on-tap="upvotePost(playlist)" ng-if="!playlist.upvoted" on-hold="openSlider($event)"></i><i class="fa fa-chevron-circle-up fa-lg positive" on-tap="unvotePost(playlist)" ng-if="playlist.upvoted"></i>&nbsp;&nbsp;<span on-tap="$root.openInfo(playlist)">{{playlist.net_votes}}</span>&nbsp;&nbsp;
+                   <!--<i class="fa fa-chevron-circle-down fa-lg" on-tap="downvotePost(playlist)" ng-if="!playlist.downvoted"></i><i class="fa fa-chevron-circle-down fa-lg positive" on-tap="unvotePost(playlist)" ng-if="playlist.downvoted"></i>--></div>
+                  <div class="col" on-tap="openTooltip($event,playlist)">&nbsp; <b>{{$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="playlist.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{playlist | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="playlist.max_accepted_payout.split(' ')[0] !== '0.000'">{{playlist | sumPostTotal:$root.$storage.currencyRate | number}}</span></div>
                   <div class="col">&nbsp; <i class="icon ion-chatbubbles"></i>&nbsp;{{playlist.children}}</div>
                   <div class="col" ng-if="playlist.author!==user.username && active!=='recent-replies'">&nbsp; <i class="icon ion-arrow-return-right"></i></div>
                 </div>
@@ -212,16 +212,22 @@
         </ion-content>
       </ion-popover-view>
     </script>
-
+    <script id = "popoverSliderrp.html" type="text/ng-template">
+      <ion-popover-view class="detailedSlide">
+        <ion-content>
+          <rzslider rz-slider-model="pslider.value" rz-slider-options="pslider.options"></rzslider>
+        </ion-content>
+      </ion-popover-view>
+    </script>
   </ion-content>
   <div class="profile bar bar-footer">
     <div class="button-bar">
-      <!--<a class="button button-large button-positive icon ion-ios-heart" ng-class="{'active':active=='feed'}" ng-click="change('feed')">&nbsp;Feeds</a>-->
-      <a class="button button-large button-positive icon ion-compose" ng-class="{'active':active=='blog'}" ng-click="change('blog')">&nbsp;{{'BLOG'|translate}}</a>
-      <a class="button button-positive icon ion-document-text" ng-class="{'active':active=='posts'}" ng-click="change('posts')">&nbsp;{{'POSTS'|translate}}</a>
-      <a class="button button-positive icon ion-chatbubbles" ng-class="{'active':active=='recent-replies'}" ng-click="change('recent-replies')">&nbsp;{{'REPLIES'|translate}}</a>
-      <a class="button button-positive icon ion-card" ng-class="{'active':active=='transfers'}"  ng-click="change('transfers')">&nbsp;{{'WALLET'|translate}}</a>
-      <!--<a class="button button-royal icon ion-lock-combination" ng-class="{'active':active=='permissions'}" ng-click="change('permissions')">Keys</a>-->
+      <!--<a class="button button-large button-positive icon ion-ios-heart" ng-class="{'active':active=='feed'}" on-tap="change('feed')">&nbsp;Feeds</a>-->
+      <a class="button button-large button-positive icon ion-compose" ng-class="{'active':active=='blog'}" on-tap="change('blog')">&nbsp;{{'BLOG'|translate}}</a>
+      <a class="button button-positive icon ion-document-text" ng-class="{'active':active=='posts'}" on-tap="change('posts')">&nbsp;{{'POSTS'|translate}}</a>
+      <a class="button button-positive icon ion-chatbubbles" ng-class="{'active':active=='recent-replies'}" on-tap="change('recent-replies')">&nbsp;{{'REPLIES'|translate}}</a>
+      <a class="button button-positive icon ion-card" ng-class="{'active':active=='transfers'}"  on-tap="change('transfers')">&nbsp;{{'WALLET'|translate}}</a>
+      <!--<a class="button button-royal icon ion-lock-combination" ng-class="{'active':active=='permissions'}" on-tap="change('permissions')">Keys</a>-->
     </div>
   </div>
 </ion-view>

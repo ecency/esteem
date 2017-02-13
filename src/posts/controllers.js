@@ -102,55 +102,57 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       $scope.loginData.username = $scope.loginData.username.trim();
       if (!$rootScope.$storage.user) {
         console.log('doLogin'+$scope.loginData.username+$scope.loginData.password);
-        window.Api.database_api().exec("get_accounts", [[$scope.loginData.username]]).then(function(dd){
-          dd = dd[0];
-          $scope.loginData.id = dd.id;
-          $scope.loginData.owner = dd.owner;
-          $scope.loginData.active = dd.active;
-          $scope.loginData.reputation = dd.reputation;
-          $scope.loginData.posting = dd.posting;
-          $scope.loginData.memo_key = dd.memo_key;
-          $scope.loginData.post_count = dd.post_count;
-          $scope.loginData.voting_power = dd.voting_power;
-          $scope.loginData.witness_votes = dd.witness_votes;
-          $scope.login = new window[$rootScope.$storage.chain+"JS"].Login();
-          $scope.login.setRoles(["posting"]);
-          var loginSuccess = $scope.login.checkKeys({
-              accountName: $scope.loginData.username,
-              password: $scope.loginData.password || null,
-              auths: {
-                  posting: dd.posting.key_auths
-              },
-              privateKey: $scope.loginData.privatePostingKey || null
+        window.Api.initPromise.then(function(response) {
+          window.Api.database_api().exec("get_accounts", [[$scope.loginData.username]]).then(function(dd){
+            dd = dd[0];
+            $scope.loginData.id = dd.id;
+            $scope.loginData.owner = dd.owner;
+            $scope.loginData.active = dd.active;
+            $scope.loginData.reputation = dd.reputation;
+            $scope.loginData.posting = dd.posting;
+            $scope.loginData.memo_key = dd.memo_key;
+            $scope.loginData.post_count = dd.post_count;
+            $scope.loginData.voting_power = dd.voting_power;
+            $scope.loginData.witness_votes = dd.witness_votes;
+            $scope.login = new window[$rootScope.$storage.chain+"JS"].Login();
+            $scope.login.setRoles(["posting"]);
+            var loginSuccess = $scope.login.checkKeys({
+                accountName: $scope.loginData.username,
+                password: $scope.loginData.password || null,
+                auths: {
+                    posting: dd.posting.key_auths
+                },
+                privateKey: $scope.loginData.privatePostingKey || null
+              }
+            );
+
+            if (!loginSuccess) {
+                $rootScope.$broadcast('hide:loading');
+                $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('PASSWORD_INCORRECT'));
+            } else {
+              $rootScope.$storage.user = $scope.loginData;
+              $rootScope.$broadcast('fetchPosts');
+              $rootScope.$storage.mylogin = $scope.login;
+              APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date(), 'medium'), appversion: $rootScope.$storage.appversion}).then(function(res){
+                $rootScope.$broadcast('hide:loading');
+                //$state.go($state.current, {}, {reload: true});
+                //$state.go('app.posts', {}, { reload: true });
+                //$scope.closeLogin();
+                $scope.loginModal.hide();
+                //$ionicHistory.clearCache();
+                //$ionicHistory.clearHistory();
+                $rootScope.$broadcast('refreshLocalUserData');
+
+                setTimeout(function() {
+                  $window.location.reload(true);
+                }, 10);
+
+              });
             }
-          );
-
-          if (!loginSuccess) {
-              $rootScope.$broadcast('hide:loading');
-              $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('PASSWORD_INCORRECT'));
-          } else {
-            $rootScope.$storage.user = $scope.loginData;
-            $rootScope.$broadcast('fetchPosts');
-            $rootScope.$storage.mylogin = $scope.login;
-            APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date(), 'medium'), appversion: $rootScope.$storage.appversion}).then(function(res){
-              $rootScope.$broadcast('hide:loading');
-              //$state.go($state.current, {}, {reload: true});
-              //$state.go('app.posts', {}, { reload: true });
-              //$scope.closeLogin();
-              $scope.loginModal.hide();
-              //$ionicHistory.clearCache();
-              //$ionicHistory.clearHistory();
-              $rootScope.$broadcast('refreshLocalUserData');
-
-              setTimeout(function() {
-                $window.location.reload(true);
-              }, 10);
-
-            });
-          }
-          /*if(!$scope.$$phase) {
-            $scope.$apply();
-          }*/
+            /*if(!$scope.$$phase) {
+              $scope.$apply();
+            }*/
+          });
         });
       }
     } else {
@@ -162,19 +164,21 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $rootScope.$on('refreshLocalUserData', function() {
     $rootScope.log('refreshLocalUserData');
     if ($rootScope.$storage.user && $rootScope.$storage.user.username) {
-      if (typeof window.Api.database_api === "function") {
-        window.Api.database_api().exec("get_accounts", [ [ $rootScope.$storage.user.username ] ]).then(function(dd){
-          dd = dd[0];
-          if (dd && dd.json_metadata) {
-            dd.json_metadata = angular.fromJson(dd.json_metadata);
-          }
-          angular.merge($rootScope.$storage.user, dd);
-          if (!$scope.$$phase) {
-            $scope.$apply();
-          }
-          $scope.mcss = ($rootScope.$storage.user.json_metadata && $rootScope.$storage.user.json_metadata.profile && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
-        });
-      }
+      window.Api.initPromise.then(function(response) {
+        if (typeof window.Api.database_api === "function") {
+          window.Api.database_api().exec("get_accounts", [ [ $rootScope.$storage.user.username ] ]).then(function(dd){
+            dd = dd[0];
+            if (dd && dd.json_metadata) {
+              dd.json_metadata = angular.fromJson(dd.json_metadata);
+            }
+            angular.merge($rootScope.$storage.user, dd);
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }
+            $scope.mcss = ($rootScope.$storage.user.json_metadata && $rootScope.$storage.user.json_metadata.profile && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
+          });
+        }
+      });
     }
   })
 
@@ -270,35 +274,39 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     setTimeout(function() {
       if ($scope.data.search.length > 1) {
         if ($scope.data.type == "tag"){
-          window.Api.database_api().exec("get_trending_tags", [$scope.data.search, 15]).then(function(result){
-            var ee = [];
-            //console.log(result);
-            /*if (result){
-              var ll = result.length;
-              for (var i = ll - 1; i >= 0; i--) {
-                if (result[i].name.indexOf($scope.data.search) > -1){
-                  ee.push(result[i]);
+          window.Api.initPromise.then(function(response) {
+            window.Api.database_api().exec("get_trending_tags", [$scope.data.search, 15]).then(function(result){
+              var ee = [];
+              //console.log(result);
+              /*if (result){
+                var ll = result.length;
+                for (var i = ll - 1; i >= 0; i--) {
+                  if (result[i].name.indexOf($scope.data.search) > -1){
+                    ee.push(result[i]);
+                  }
                 }
-              }
-              $scope.data.searchResult = ee;
-            }*/
-            $scope.data.searchResult = result;
-
-            if (!$scope.$$phase) {
-              $scope.$apply();
-            }
-          });
-        }
-        if ($scope.data.type == "user"){
-          var ee = [];
-          window.Api.database_api().exec("lookup_accounts", [$scope.data.search, 15]).then(function(result){
-            if (result){
+                $scope.data.searchResult = ee;
+              }*/
               $scope.data.searchResult = result;
-            }
 
               if (!$scope.$$phase) {
                 $scope.$apply();
               }
+            });
+          });
+        }
+        if ($scope.data.type == "user"){
+          var ee = [];
+          window.Api.initPromise.then(function(response) {
+            window.Api.database_api().exec("lookup_accounts", [$scope.data.search, 15]).then(function(result){
+              if (result){
+                $scope.data.searchResult = result;
+              }
+
+                if (!$scope.$$phase) {
+                  $scope.$apply();
+                }
+            });
           });
         }
 
@@ -330,8 +338,10 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $state.go("app.profile", {username: xy});
   };
   $scope.testfunction = function() {
-    window.Api.database_api().exec("get_account_history", [$rootScope.$storage.user.username, -1, 25]).then(function(response){
-      $rootScope.log(angular.toJson(response));
+    window.Api.initPromise.then(function(response) {
+      window.Api.database_api().exec("get_account_history", [$rootScope.$storage.user.username, -1, 25]).then(function(response){
+        $rootScope.log(angular.toJson(response));
+      });
     });
   }
 
@@ -347,11 +357,13 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   $scope.changeUsername = function(typed) {
     $rootScope.log('searching');
     $scope.data.username = angular.lowercase($scope.data.username);
-    window.Api.database_api().exec("lookup_account_names", [[$scope.data.username]]).then(function(response){
-      $scope.users = response[0];
-      if (!$scope.$$phase) {
-        $scope.$apply();
-      }
+    window.Api.initPromise.then(function(response) {
+      window.Api.database_api().exec("lookup_account_names", [[$scope.data.username]]).then(function(response){
+        $scope.users = response[0];
+        if (!$scope.$$phase) {
+          $scope.$apply();
+        }
+      });
     });
   }
   $scope.qrScan = function() {
@@ -494,29 +506,79 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   };
   $scope.refresh = function() {
     $rootScope.$broadcast('show:loading');
-    window.Api.database_api().exec("get_accounts", [ [ $rootScope.$storage.user.username ] ]).then(function(dd){
-      $scope.balance = dd[0];
-      console.log($scope.balance);
-      $rootScope.$broadcast('hide:loading');
-      if (!$scope.$$phase){
-        $scope.$apply();
-      }
+    window.Api.initPromise.then(function(response) {
+      window.Api.database_api().exec("get_accounts", [ [ $rootScope.$storage.user.username ] ]).then(function(dd){
+        $scope.balance = dd[0];
+        console.log($scope.balance);
+        $rootScope.$broadcast('hide:loading');
+        if (!$scope.$$phase){
+          $scope.$apply();
+        }
+      });
     });
     $rootScope.$broadcast('hide:loading');
   }
   $scope.$on('$ionicView.beforeEnter', function(){
-    window.Api.database_api().exec("get_accounts", [ [ $rootScope.$storage.user.username ] ]).then(function(dd){
-      $scope.balance = dd[0];
-      if (!$scope.$$phase){
-        $scope.$apply();
-      }
+    window.Api.initPromise.then(function(response) {
+      window.Api.database_api().exec("get_accounts", [ [ $rootScope.$storage.user.username ] ]).then(function(dd){
+        $scope.balance = dd[0];
+        if (!$scope.$$phase){
+          $scope.$apply();
+        }
+      });
     });
   });
 
 });
 app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService, $filter, $ionicHistory, $timeout, APIs, $translate) {
 
+  var formatToPercentage = function (value) {
+    return value + '%';
+  };
+
+  $scope.pslider = {
+    value: $rootScope.$storage.voteWeight/100,
+    options: {
+      floor: 1,
+      ceil: 100,
+      translate: formatToPercentage,
+      showSelectionBar: true
+    }
+  };
   
+  $ionicPopover.fromTemplateUrl('popoverSlider.html', {
+      scope: $scope
+  }).then(function(popover) {
+      $scope.tooltipSlider = popover;
+  });
+  
+  $scope.openSlider = function($event) {
+    $scope.pslider = {
+      value: $rootScope.$storage.voteWeight/100,
+      options: {
+        floor: 1,
+        ceil: 100,
+        translate: formatToPercentage,
+        showSelectionBar: true
+      }
+    };
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
+    $scope.tooltipSlider.show($event);
+  };
+
+  $scope.closeSlider = function() {
+    $scope.tooltipSlider.hide();
+  };
+
+  $scope.$watch('pslider', function(newValue, oldValue){
+    //console.log(newValue.value);
+    if (newValue.value) {
+      $rootScope.$storage.voteWeight = newValue.value*100;
+    }
+  }, true);
+
 
   $scope.options = {
     loop: false,
@@ -584,9 +646,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
   $ionicPopover.fromTemplateUrl('popoverT.html', {
       scope: $scope
-   }).then(function(popover) {
-      $scope.tooltip = popover;
-   });
+  }).then(function(popover) {
+    $scope.tooltip = popover;
+  });
 
   $scope.openTooltip = function($event, d) {
     var tppv = Number(d.total_pending_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
@@ -1077,33 +1139,35 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   }
 
   $scope.fetchContent = function(author, permlink) {
-    window.Api.database_api().exec("get_content", [author, permlink]).then(function(result){
-      var len = result.active_votes.length;
-      var user = $rootScope.$storage.user;
-      if (user) {
-        for (var j = len - 1; j >= 0; j--) {
-          if (result.active_votes[j].voter === user.username) {
-            if (result.active_votes[j].percent > 0) {
-              result.upvoted = true;
-            } else if (result.active_votes[j].percent < 0) {
-              result.downvoted = true;
-            } else {
-              result.downvoted = false;
-              result.upvoted = false;
+    window.Api.initPromise.then(function(response) {
+      window.Api.database_api().exec("get_content", [author, permlink]).then(function(result){
+        var len = result.active_votes.length;
+        var user = $rootScope.$storage.user;
+        if (user) {
+          for (var j = len - 1; j >= 0; j--) {
+            if (result.active_votes[j].voter === user.username) {
+              if (result.active_votes[j].percent > 0) {
+                result.upvoted = true;
+              } else if (result.active_votes[j].percent < 0) {
+                result.downvoted = true;
+              } else {
+                result.downvoted = false;
+                result.upvoted = false;
+              }
             }
           }
         }
-      }
-      result.json_metadata = angular.fromJson(result.json_metadata);
-      angular.forEach($scope.data, function(value, key) {
-        if (value.permlink === result.permlink) {
-          $scope.data[key] = result;
+        result.json_metadata = angular.fromJson(result.json_metadata);
+        angular.forEach($scope.data, function(value, key) {
+          if (value.permlink === result.permlink) {
+            $scope.data[key] = result;
+          }
+        });
+        $rootScope.$broadcast('hide:loading');
+        if (!$scope.$$phase) {
+          $scope.$apply();
         }
       });
-      $rootScope.$broadcast('hide:loading');
-      if (!$scope.$$phase) {
-        $scope.$apply();
-      }
     });
   }
   $scope.ifExists = function(xx){
@@ -1139,50 +1203,55 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $scope.$broadcast('scroll.infiniteScrollComplete');
       $rootScope.$broadcast('hide:loading');
     } else {
-      $rootScope.log("fetching..."+type+" "+limit+" "+tag);
-      if (typeof window.Api.database_api === "function") {
-        window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
-          //console.log(response.length);
-          if (response.length <= 1) {
-            $scope.error = true;
-          }
-          if (response) {
-            for (var i = 0; i < response.length; i++) {
-              response[i].json_metadata = response[i].json_metadata?angular.fromJson(response[i].json_metadata):response[i].json_metadata;
-              var permlink = response[i].permlink;
-              if (!$scope.ifExists(permlink)) {
-                var user = $rootScope.$storage.user || undefined;
-                if (user) {
-                  //console.log('exist');
-                  if (response[i] && response[i].active_votes) {
-                    var len = response[i].active_votes.length-1;
-                    for (var j = 0; j < len; j++) {
-                      if (response[i].active_votes[j].voter === user.username) {
-                        if (response[i].active_votes[j].percent > 0) {
-                          response[i].upvoted = true;
-                        } else if (response[i].active_votes[j].percent < 0) {
-                          response[i].downvoted = true;
-                        } else {
-                          response[i].downvoted = false;
-                          response[i].upvoted = false;
+      window.Api.initPromise.then(function(response) {
+        $rootScope.log("fetching..."+type+" "+limit+" "+tag);
+        if (typeof window.Api.database_api === "function") {
+          /*window.Api.database_api().exec("get_state", ["/"+type]).then(function(response){
+            console.log(response);
+          });*/
+          window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
+            console.log(response);
+            if (response.length <= 1) {
+              $scope.error = true;
+            }
+            if (response) {
+              for (var i = 0; i < response.length; i++) {
+                response[i].json_metadata = response[i].json_metadata?angular.fromJson(response[i].json_metadata):response[i].json_metadata;
+                var permlink = response[i].permlink;
+                if (!$scope.ifExists(permlink)) {
+                  var user = $rootScope.$storage.user || undefined;
+                  if (user) {
+                    //console.log('exist');
+                    if (response[i] && response[i].active_votes) {
+                      var len = response[i].active_votes.length-1;
+                      for (var j = 0; j < len; j++) {
+                        if (response[i].active_votes[j].voter === user.username) {
+                          if (response[i].active_votes[j].percent > 0) {
+                            response[i].upvoted = true;
+                          } else if (response[i].active_votes[j].percent < 0) {
+                            response[i].downvoted = true;
+                          } else {
+                            response[i].downvoted = false;
+                            response[i].upvoted = false;
+                          }
                         }
                       }
                     }
                   }
+                  $scope.data.push(response[i]);
                 }
-                $scope.data.push(response[i]);
               }
             }
-          }
 
-          if (!$scope.$$phase) {
-            $scope.$apply();
-          }
-          //console.log($scope.data.length);
-          $scope.$broadcast('scroll.infiniteScrollComplete');
-          $rootScope.$broadcast('hide:loading');
-        });
-      }
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }
+            //console.log($scope.data.length);
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+            $rootScope.$broadcast('hide:loading');
+          });
+        }
+      });
     }
   };
 
@@ -1199,7 +1268,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $rootScope.$storage.filter = "trending";
     }
     if (window.Api) {
-      if (!angular.isDefined($rootScope.timeint)) {
+      /*if (!angular.isDefined($rootScope.timeint)) {
         window.Api.initPromise.then(function(response) {
           $rootScope.log("Api ready:" + angular.toJson(response));
           $rootScope.timeint = $interval(function(){
@@ -1222,11 +1291,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             });
           }, 15000);
           $rootScope.$broadcast('fetchPosts');
-          /*setTimeout(function() {
-            $scope.fetchPosts(null, $scope.limit, null);
-          }, 10);*/
         });
-      }
+      }*/
     }
 
     setTimeout(function() {
@@ -1273,6 +1339,55 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.data = {};
   $scope.spost = {};
   $scope.replying = false;
+
+  var formatToPercentage = function (value) {
+    return value + '%';
+  };
+
+  $scope.pslider = {
+    value: $rootScope.$storage.voteWeight/100,
+    options: {
+      floor: 1,
+      ceil: 100,
+      translate: formatToPercentage,
+      showSelectionBar: true
+    }
+  };
+
+  $ionicPopover.fromTemplateUrl('popoverSliderr.html', {
+      scope: $scope
+  }).then(function(popover) {
+      $scope.tooltipSlider = popover;
+  });
+  
+  $scope.openSlider = function($event) {
+    $scope.pslider = {
+      value: $rootScope.$storage.voteWeight/100,
+      options: {
+        floor: 1,
+        ceil: 100,
+        translate: formatToPercentage,
+        showSelectionBar: true
+      }
+    };
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
+    $scope.tooltipSlider.show($event);
+  };
+
+  $scope.closeSlider = function() {
+    $scope.tooltipSlider.hide();
+  };
+
+  $scope.$watch('pslider', function(newValue, oldValue){
+    //console.log(newValue.value);
+    if (newValue.value) {
+      $rootScope.$storage.voteWeight = newValue.value*100;
+    }
+  }, true);
+
+
   $scope.isBookmarked = function() {
     var bookm = $rootScope.$storage.bookmark || undefined;
     if (bookm) {
@@ -1863,12 +1978,14 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             $scope.data.comment = "";
 
             $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
-            window.Api.database_api().exec("get_content_replies", [$rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink]).then(function(result){
-              if (result)
-                $scope.comments = result;
-              if (!$scope.$$phase) {
-                $scope.$apply();
-              }
+            window.Api.initPromise.then(function(response) {
+              window.Api.database_api().exec("get_content_replies", [$rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink]).then(function(result){
+                if (result)
+                  $scope.comments = result;
+                if (!$scope.$$phase) {
+                  $scope.$apply();
+                }
+              });
             });
           }
           $rootScope.$broadcast('hide:loading');
@@ -1884,33 +2001,35 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
   $rootScope.$on("update:content", function(){
     $rootScope.log("update:content");
-    window.Api.database_api().exec("get_content_replies", [$scope.post.author, $scope.post.permlink]).then(function(result){
-      //todo fix active_votes
-      //console.log(result);
-      if (result) {
-        /*angular.forEach(result, function(v,k){
-          var len = v.active_votes.length;
-          var user = $rootScope.$storage.user;
-          if (user) {
-            for (var j = len - 1; j >= 0; j--) {
-              if (v.active_votes[j].voter === user.username) {
-                if (v.active_votes[j].percent > 0) {
-                  v.upvoted = true;
-                } else if (v.active_votes[j].percent < 0) {
-                  v.downvoted = true;
-                } else {
-                  v.downvoted = false;
-                  v.upvoted = false;
+    window.Api.initPromise.then(function(response) {
+      window.Api.database_api().exec("get_content_replies", [$scope.post.author, $scope.post.permlink]).then(function(result){
+        //todo fix active_votes
+        //console.log(result);
+        if (result) {
+          /*angular.forEach(result, function(v,k){
+            var len = v.active_votes.length;
+            var user = $rootScope.$storage.user;
+            if (user) {
+              for (var j = len - 1; j >= 0; j--) {
+                if (v.active_votes[j].voter === user.username) {
+                  if (v.active_votes[j].percent > 0) {
+                    v.upvoted = true;
+                  } else if (v.active_votes[j].percent < 0) {
+                    v.downvoted = true;
+                  } else {
+                    v.downvoted = false;
+                    v.upvoted = false;
+                  }
                 }
               }
             }
-          }
-        });*/
-        $scope.comments = result;
-        console.log(result);
-      }
+          });*/
+          $scope.comments = result;
+          console.log(result);
+        }
 
-      $rootScope.$broadcast('hide:loading');
+        $rootScope.$broadcast('hide:loading');
+      });
     });
     $rootScope.$broadcast('hide:loading');
   });
@@ -1943,63 +2062,65 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.accounts = {};
   $scope.getContent = function(author, permlink) {
     var url = "/"+$stateParams.category+"/@"+author+"/"+permlink;
-    window.Api.database_api().exec("get_state", [url]).then(function(dd){
-      //console.log(dd);
-      var con = dd.content;
-      var acon = dd.accounts;
+    window.Api.initPromise.then(function(response) {
+      window.Api.database_api().exec("get_state", [url]).then(function(dd){
+        //console.log(dd);
+        var con = dd.content;
+        var acon = dd.accounts;
 
-      angular.forEach(con, function(v,k){
-        v.comments = [];
-      });
-      //setTimeout(function() {
-      angular.forEach(con, function(v,k){
-        var vparent = v.parent_author==""?v.author:v.parent_author;
-        var vperm = v.parent_author==""?v.permlink:v.parent_permlink;
-        var keyy = vparent+"/"+vperm;
-        if (v.parent_permlink!==v.category) {
-          con[keyy].comments.push(v);  
-        }
-      });
-      console.log(acon);  
-      //}, 1);
-      angular.forEach(acon, function(v,k){
-        //console.log(v.json_metadata);
-        if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
-          console.log(v.json_metadata);
-          if (v.json_metadata)
-            v.json_metadata = angular.fromJson(v.json_metadata);
-        }
-      });
-      var result = con[author+"/"+permlink];
+        angular.forEach(con, function(v,k){
+          v.comments = [];
+        });
+        //setTimeout(function() {
+        angular.forEach(con, function(v,k){
+          var vparent = v.parent_author==""?v.author:v.parent_author;
+          var vperm = v.parent_author==""?v.permlink:v.parent_permlink;
+          var keyy = vparent+"/"+vperm;
+          if (v.parent_permlink!==v.category) {
+            con[keyy].comments.push(v);  
+          }
+        });
+        console.log(acon);  
+        //}, 1);
+        angular.forEach(acon, function(v,k){
+          //console.log(v.json_metadata);
+          if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
+            console.log(v.json_metadata);
+            if (v.json_metadata)
+              v.json_metadata = angular.fromJson(v.json_metadata);
+          }
+        });
+        var result = con[author+"/"+permlink];
 
-      var len = result.active_votes.length;
-      var user = $rootScope.$storage.user;
-      if (user) {
-        for (var j = len - 1; j >= 0; j--) {
-          if (result.active_votes[j].voter === user.username) {
-            if (result.active_votes[j].percent > 0) {
-              result.upvoted = true;
-            } else if (result.active_votes[j].percent < 0) {
-              result.downvoted = true;
-            } else {
-              result.downvoted = false;
-              result.upvoted = false;
+        var len = result.active_votes.length;
+        var user = $rootScope.$storage.user;
+        if (user) {
+          for (var j = len - 1; j >= 0; j--) {
+            if (result.active_votes[j].voter === user.username) {
+              if (result.active_votes[j].percent > 0) {
+                result.upvoted = true;
+              } else if (result.active_votes[j].percent < 0) {
+                result.downvoted = true;
+              } else {
+                result.downvoted = false;
+                result.upvoted = false;
+              }
             }
           }
         }
-      }
 
-      result.json_metadata = angular.fromJson(result.json_metadata);
-      //$rootScope.$storage.sitem = result;
-      //console.log(result);
-      $rootScope.$broadcast('hide:loading');
-      $scope.post = result;
-      $rootScope.$storage.paccounts = acon;
+        result.json_metadata = angular.fromJson(result.json_metadata);
+        //$rootScope.$storage.sitem = result;
+        //console.log(result);
+        $rootScope.$broadcast('hide:loading');
+        $scope.post = result;
+        $rootScope.$storage.paccounts = acon;
 
-      if (!$scope.$$phase) {
-        $scope.$apply();
-      }
+        if (!$scope.$$phase) {
+          $scope.$apply();
+        }
 
+      });
     });
     /*window.Api.database_api().exec("get_content", [author, permlink]).then(function(result){
       //console.log(result);
@@ -2271,6 +2392,52 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
 
 app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicActionSheet, $cordovaCamera, ImageUploadService, $ionicPopup, $ionicSideMenuDelegate, $ionicHistory, $state, APIs, $ionicPopover, $filter) {
 
+  var formatToPercentage = function (value) {
+    return value + '%';
+  };
+
+  $scope.pslider = {
+    value: $rootScope.$storage.voteWeight/100,
+    options: {
+      floor: 1,
+      ceil: 100,
+      translate: formatToPercentage,
+      showSelectionBar: true
+    }
+  };
+
+  $ionicPopover.fromTemplateUrl('popoverSliderr.html', {
+      scope: $scope
+  }).then(function(popover) {
+      $scope.tooltipSlider = popover;
+  });
+  
+  $scope.openSlider = function($event) {
+    $scope.pslider = {
+      value: $rootScope.$storage.voteWeight/100,
+      options: {
+        floor: 1,
+        ceil: 100,
+        translate: formatToPercentage,
+        showSelectionBar: true
+      }
+    };
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
+    $scope.tooltipSlider.show($event);
+  };
+
+  $scope.closeSlider = function() {
+    $scope.tooltipSlider.hide();
+  };
+
+  $scope.$watch('pslider', function(newValue, oldValue){
+    //console.log(newValue.value);
+    if (newValue.value) {
+      $rootScope.$storage.voteWeight = newValue.value*100;
+    }
+  }, true);
 
   $scope.translationData = { platformname: $rootScope.$storage.platformname, platformpower: $rootScope.$storage.platformpower, platformsunit:"$1.00" };
 
@@ -2714,97 +2881,99 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       } else {
         //console.log(params);
         //$rootScope.log("fetching profile...blog 20 ");
-        if (typeof window.Api.database_api === "function") {
-          if ($scope.active == 'blog') {
-            window.Api.database_api().exec("get_discussions_by_blog", [params]).then(function(response){
+        window.Api.initPromise.then(function(response) {
+          if (typeof window.Api.database_api === "function") {
+            if ($scope.active == 'blog') {
+              window.Api.database_api().exec("get_discussions_by_blog", [params]).then(function(response){
 
-              if (response) {
-                for (var j = 0; j < response.length; j++) {
-                  var v = response[j];
-                  v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
-                  !$scope.$$phase?$scope.$apply():console.log('phased');
-                  var found = false;
-                  for (var i = $scope.data.profile.length-1; i >= 0; i--) {
-                    if ($scope.data.profile[i].id === v.id){
-                      found = true;
-                      //console.log($scope.data.profile[i].id, v.id);
+                if (response) {
+                  for (var j = 0; j < response.length; j++) {
+                    var v = response[j];
+                    v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
+                    !$scope.$$phase?$scope.$apply():console.log('phased');
+                    var found = false;
+                    for (var i = $scope.data.profile.length-1; i >= 0; i--) {
+                      if ($scope.data.profile[i].id === v.id){
+                        found = true;
+                        //console.log($scope.data.profile[i].id, v.id);
+                      }
+                    }
+                    if (!found){
+                      //console.log(v.id);
+                      $scope.data.profile.push(v);
+                    }
+                    if (response.length <= 1) {
+                      $scope.end = true;
+                    } else {
+                      $scope.end = false;
                     }
                   }
-                  if (!found){
-                    //console.log(v.id);
-                    $scope.data.profile.push(v);
-                  }
-                  if (response.length <= 1) {
-                    $scope.end = true;
-                  } else {
-                    $scope.end = false;
-                  }
                 }
-              }
-            });
-            $scope.$broadcast('scroll.infiniteScrollComplete');
-          }
-          if ($scope.active == 'posts') {
-            window.Api.database_api().exec("get_discussions_by_comments", [params]).then(function(response){
+              });
+              $scope.$broadcast('scroll.infiniteScrollComplete');
+            }
+            if ($scope.active == 'posts') {
+              window.Api.database_api().exec("get_discussions_by_comments", [params]).then(function(response){
 
-              if (response) {
-                for (var j = 0; j < response.length; j++) {
-                  var v = response[j];
-                  v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
-                  !$scope.$$phase?$scope.$apply():console.log('phased');
-                  var found = false;
-                  for (var i = $scope.data.profile.length-1; i >= 0; i--) {
-                    if ($scope.data.profile[i].id === v.id){
-                      found = true;
-                      //console.log($scope.data.profile[i].id, v.id);
+                if (response) {
+                  for (var j = 0; j < response.length; j++) {
+                    var v = response[j];
+                    v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
+                    !$scope.$$phase?$scope.$apply():console.log('phased');
+                    var found = false;
+                    for (var i = $scope.data.profile.length-1; i >= 0; i--) {
+                      if ($scope.data.profile[i].id === v.id){
+                        found = true;
+                        //console.log($scope.data.profile[i].id, v.id);
+                      }
+                    }
+                    if (!found){
+                      //console.log(v.id);
+                      $scope.data.profile.push(v);
+                    }
+                    if (response.length <= 1) {
+                      $scope.end = true;
+                    } else {
+                      $scope.end = false;
                     }
                   }
-                  if (!found){
-                    //console.log(v.id);
-                    $scope.data.profile.push(v);
-                  }
-                  if (response.length <= 1) {
-                    $scope.end = true;
-                  } else {
-                    $scope.end = false;
-                  }
                 }
-              }
-            });
-            $scope.$broadcast('scroll.infiniteScrollComplete');
-          }
-          if ($scope.active == 'recent-replies') {
-            var pp = [$scope.data.profile[$scope.data.profile.length-1].author, $scope.data.profile[$scope.data.profile.length-1].permlink, 20];
-            window.Api.database_api().exec("get_replies_by_last_update", [pp]).then(function(response){
-              //console.log(response);
-              if (response) {
-                for (var j = 0; j < response.length; j++) {
-                  var v = response[j];
-                  v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
-                  !$scope.$$phase?$scope.$apply():console.log('phased');
-                  var found = false;
-                  for (var i = $scope.data.profile.length-1; i >= 0; i--) {
-                    if ($scope.data.profile[i].id === v.id){
-                      found = true;
-                      //console.log($scope.data.profile[i].id, v.id);
+              });
+              $scope.$broadcast('scroll.infiniteScrollComplete');
+            }
+            if ($scope.active == 'recent-replies') {
+              var pp = [$scope.data.profile[$scope.data.profile.length-1].author, $scope.data.profile[$scope.data.profile.length-1].permlink, 20];
+              window.Api.database_api().exec("get_replies_by_last_update", [pp]).then(function(response){
+                //console.log(response);
+                if (response) {
+                  for (var j = 0; j < response.length; j++) {
+                    var v = response[j];
+                    v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
+                    !$scope.$$phase?$scope.$apply():console.log('phased');
+                    var found = false;
+                    for (var i = $scope.data.profile.length-1; i >= 0; i--) {
+                      if ($scope.data.profile[i].id === v.id){
+                        found = true;
+                        //console.log($scope.data.profile[i].id, v.id);
+                      }
+                    }
+                    if (!found){
+                      //console.log(v.id);
+                      $scope.data.profile.push(v);
+                    }
+                    if (response.length <= 1) {
+                      $scope.end = true;
+                    } else {
+                      $scope.end = false;
                     }
                   }
-                  if (!found){
-                    //console.log(v.id);
-                    $scope.data.profile.push(v);
-                  }
-                  if (response.length <= 1) {
-                    $scope.end = true;
-                  } else {
-                    $scope.end = false;
-                  }
                 }
-              }
-            });
-            $scope.$broadcast('scroll.infiniteScrollComplete');
+              });
+              $scope.$broadcast('scroll.infiniteScrollComplete');
+            }
+            //console.log($scope.profile);
           }
-          //console.log($scope.profile);
-        }
+        });
       }
     }
 
@@ -2827,40 +2996,41 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       }
 
       $scope.nonexist = false;
-
-      window.Api.database_api().exec("get_state", ["/@"+$stateParams.username+$scope.rest]).then(function(res){
-        $scope.data = {profile: []};
-        //console.log(res);
-        if (Object.keys(res.content).length>0) {
-          angular.forEach(res.content, function(v,k){
-            v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
-            if ($rootScope.$storage.user){
-              if ($rootScope.$storage.user.username !== v.author) {
-                v.reblogged = true;
-              }
-              var len = v.active_votes.length;
-              for (var j = len - 1; j >= 0; j--) {
-                if (v.active_votes[j].voter === $rootScope.$storage.user.username) {
-                  if (v.active_votes[j].percent > 0) {
-                    v.upvoted = true;
-                  } else if (v.active_votes[j].percent < 0) {
-                    v.downvoted = true;
-                  } else {
-                    v.upvoted = false;
-                    v.downvoted = false;
+      window.Api.initPromise.then(function(response) {
+        window.Api.database_api().exec("get_state", ["/@"+$stateParams.username+$scope.rest]).then(function(res){
+          $scope.data = {profile: []};
+          //console.log(res);
+          if (Object.keys(res.content).length>0) {
+            angular.forEach(res.content, function(v,k){
+              v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
+              if ($rootScope.$storage.user){
+                if ($rootScope.$storage.user.username !== v.author) {
+                  v.reblogged = true;
+                }
+                var len = v.active_votes.length;
+                for (var j = len - 1; j >= 0; j--) {
+                  if (v.active_votes[j].voter === $rootScope.$storage.user.username) {
+                    if (v.active_votes[j].percent > 0) {
+                      v.upvoted = true;
+                    } else if (v.active_votes[j].percent < 0) {
+                      v.downvoted = true;
+                    } else {
+                      v.upvoted = false;
+                      v.downvoted = false;
+                    }
                   }
                 }
               }
+              $scope.data.profile.push(v);
+            });
+            $scope.nonexist = false;
+            if(!$scope.$$phase){
+              $scope.$apply();
             }
-            $scope.data.profile.push(v);
-          });
-          $scope.nonexist = false;
-          if(!$scope.$$phase){
-            $scope.$apply();
+          } else {
+            $scope.nonexist = true;
           }
-        } else {
-          $scope.nonexist = true;
-        }
+        });
       });
     };
     $scope.getFollows = function(r,d) {
@@ -2913,25 +3083,27 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     };
     $scope.getOtherUsersData = function() {
       //console.log("getOtherUsersData");
-      window.Api.database_api().exec("get_accounts", [[$stateParams.username]]).then(function(dd){
-        dd = dd[0];
-        if (dd && dd.json_metadata) {
-          dd.json_metadata = angular.fromJson(dd.json_metadata);
-        }
-        angular.merge($scope.user, dd);
-        //console.log(angular.toJson($scope.user));
-        //console.log($scope.user.json_metadata.profile.cover_image);
+      window.Api.initPromise.then(function(response) {
+        window.Api.database_api().exec("get_accounts", [[$stateParams.username]]).then(function(dd){
+          dd = dd[0];
+          if (dd && dd.json_metadata) {
+            dd.json_metadata = angular.fromJson(dd.json_metadata);
+          }
+          angular.merge($scope.user, dd);
+          //console.log(angular.toJson($scope.user));
+          //console.log($scope.user.json_metadata.profile.cover_image);
 
-        if ($rootScope.$storage.user) {
-          $scope.css = ($rootScope.$storage.user.username === $scope.user.username && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : ($rootScope.$storage.user.username !== $scope.user.username && ($scope.user.json_metadata && $scope.user.json_metadata.profile.cover_image)) ? {'background': 'url('+$scope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
-        } else {
-          $scope.css = null;
-        }
+          if ($rootScope.$storage.user) {
+            $scope.css = ($rootScope.$storage.user.username === $scope.user.username && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : ($rootScope.$storage.user.username !== $scope.user.username && ($scope.user.json_metadata && $scope.user.json_metadata.profile.cover_image)) ? {'background': 'url('+$scope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
+          } else {
+            $scope.css = null;
+          }
 
-      });
-      window.Api.follow_api().exec("get_follow_count", [$stateParams.username]).then(function(res){
-        //console.log(res);
-        $scope.followdetails = res;
+        });
+        window.Api.follow_api().exec("get_follow_count", [$stateParams.username]).then(function(res){
+          //console.log(res);
+          $scope.followdetails = res;
+        });
       });
       $scope.getFollows(null, "d");
       if(!$scope.$$phase){
@@ -2946,9 +3118,11 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       } else {
           $rootScope.log("get follows counts");
           if ($rootScope.$storage.chain == "steem") {
-            window.Api.follow_api().exec("get_follow_count", [$stateParams.username]).then(function(res){
-              //console.log(res);
-              $scope.followdetails = res;
+            window.Api.initPromise.then(function(response) {
+              window.Api.follow_api().exec("get_follow_count", [$stateParams.username]).then(function(res){
+                //console.log(res);
+                $scope.followdetails = res;
+              });
             });
           } else {
             $scope.getFollows("r","d");
@@ -2986,53 +3160,55 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     } else {
       $scope.rest = "";
     }
-    window.Api.database_api().exec("get_state", ["/@"+$stateParams.username+$scope.rest]).then(function(res){
-      //console.log(res);
-      if (res.content) {
-        if (Object.keys(res.content).length>0) {
-          angular.forEach(res.content, function(v,k){
-            v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
-            if ($rootScope.$storage.user){
-              if ($rootScope.$storage.user.username !== v.author) {
-                v.reblogged = true;
-              }
-              var len = v.active_votes.length;
-              for (var j = len - 1; j >= 0; j--) {
-                if (v.active_votes[j].voter === $rootScope.$storage.user.username) {
-                  if (v.active_votes[j].percent > 0) {
-                    v.upvoted = true;
-                  } else if (v.active_votes[j].percent < 0) {
-                    v.downvoted = true;
-                  } else {
-                    v.upvoted = false;
-                    v.downvoted = false;
+    window.Api.initPromise.then(function(response) {
+      window.Api.database_api().exec("get_state", ["/@"+$stateParams.username+$scope.rest]).then(function(res){
+        //console.log(res);
+        if (res.content) {
+          if (Object.keys(res.content).length>0) {
+            angular.forEach(res.content, function(v,k){
+              v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
+              if ($rootScope.$storage.user){
+                if ($rootScope.$storage.user.username !== v.author) {
+                  v.reblogged = true;
+                }
+                var len = v.active_votes.length;
+                for (var j = len - 1; j >= 0; j--) {
+                  if (v.active_votes[j].voter === $rootScope.$storage.user.username) {
+                    if (v.active_votes[j].percent > 0) {
+                      v.upvoted = true;
+                    } else if (v.active_votes[j].percent < 0) {
+                      v.downvoted = true;
+                    } else {
+                      v.upvoted = false;
+                      v.downvoted = false;
+                    }
                   }
                 }
               }
-            }
-            $scope.data.profile.push(v);
-          });
-          $scope.nonexist = false;
-        } else {
-          $scope.nonexist = true;
-        }
-        if(!$scope.$$phase){
-          $scope.$apply();
-        }
-      }
-      if (type==="transfers" || type==="permissions") {
-        for (var property in res.accounts) {
-          if (res.accounts.hasOwnProperty(property)) {
-            $scope.accounts = res.accounts[property];
-            //$rootScope.log(angular.toJson(res.accounts[property].transfer_history));
-            $scope.transfers = res.accounts[property].transfer_history;
+              $scope.data.profile.push(v);
+            });
             $scope.nonexist = false;
+          } else {
+            $scope.nonexist = true;
+          }
+          if(!$scope.$$phase){
+            $scope.$apply();
           }
         }
-        if(!$scope.$$phase){
-          $scope.$apply();
+        if (type==="transfers" || type==="permissions") {
+          for (var property in res.accounts) {
+            if (res.accounts.hasOwnProperty(property)) {
+              $scope.accounts = res.accounts[property];
+              //$rootScope.log(angular.toJson(res.accounts[property].transfer_history));
+              $scope.transfers = res.accounts[property].transfer_history;
+              $scope.nonexist = false;
+            }
+          }
+          if(!$scope.$$phase){
+            $scope.$apply();
+          }
         }
-      }
+      });
     });
   }
 
@@ -3044,29 +3220,35 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope) {
   $scope.$on('$ionicView.beforeEnter', function(){
     $scope.active = 'buy';
     $scope.orders = [];
-    window.Api.database_api().exec("get_order_book", [15]).then(function(res){
-      $scope.orders = res;
-      if (!$scope.$$phase) {
-        $scope.$apply();
-      }
+    window.Api.initPromise.then(function(response) {
+      window.Api.database_api().exec("get_order_book", [15]).then(function(res){
+        $scope.orders = res;
+        if (!$scope.$$phase) {
+          $scope.$apply();
+        }
+      });
     });
     $scope.change = function(type){
       $scope.active = type;
       if (type == "open"){
-        window.Api.database_api().exec("get_open_orders", [$stateParams.username]).then(function(res){
-          $scope.openorders = res;
-          if (!$scope.$$phase) {
-            $scope.$apply();
-          }
+        window.Api.initPromise.then(function(response) {
+          window.Api.database_api().exec("get_open_orders", [$stateParams.username]).then(function(res){
+            $scope.openorders = res;
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }
+          });
         });
       }
       if (type == "history"){
         $scope.history = [];
-        window.Api.market_history_api().exec("get_recent_trades", [15]).then(function(r){
-          $scope.recent_trades = r;
-          if (!$scope.$$phase) {
-            $scope.$apply();
-          }
+        window.Api.initPromise.then(function(response) {
+          window.Api.market_history_api().exec("get_recent_trades", [15]).then(function(r){
+            $scope.recent_trades = r;
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }
+          });
         });
       }
     };
