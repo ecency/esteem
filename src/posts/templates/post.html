@@ -41,10 +41,10 @@
 
       <div class="row gray">
         <div class="col col-33" ng-if="!$root.voiceOver"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
-        <i class="fa fa-chevron-circle-up fa-lg" on-tap="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted && !$root.$storage.sitem.invoting"></i><i class="fa fa-chevron-circle-up fa-lg positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted && !$root.$storage.sitem.invoting"></i>&nbsp;&nbsp;&nbsp;<span on-tap="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
+        <i class="fa fa-chevron-circle-up fa-lg" on-tap="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted && !$root.$storage.sitem.invoting" on-hold="openSliderr($event)"></i><i class="fa fa-chevron-circle-up fa-lg positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted && !$root.$storage.sitem.invoting"></i>&nbsp;&nbsp;&nbsp;<span on-tap="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
 
         <div class="col col-33" ng-if="$root.voiceOver"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
-        <i class="icon ion-android-arrow-dropup-circle" on-tap="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted" on-hold="openSlider($event)">{{'UPVOTE'|translate}}</i><i class="icon ion-android-arrow-dropup-circle positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted">{{'UNVOTE_UPVOTED'|translate}}</i>&nbsp;&nbsp;&nbsp;<span on-tap="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
+        <i class="icon ion-android-arrow-dropup-circle" on-tap="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted" on-hold="openSliderr($event)">{{'UPVOTE'|translate}}</i><i class="icon ion-android-arrow-dropup-circle positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted">{{'UNVOTE_UPVOTED'|translate}}</i>&nbsp;&nbsp;&nbsp;<span on-tap="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
         <div class="col col-33" on-tap="openTooltip($event,$root.$storage.sitem)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> {{$root.$storage.sitem | sumPostTotal:$root.$storage.currencyRate | number}}</div>
         <div class="col"><i class="icon ion-chatbubbles"></i>{{$root.$storage.sitem.children}}</div>
         <div class="col" on-tap="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username"><i class="fa fa-reply"></i></div>
@@ -63,7 +63,7 @@
     </script>
     <script id = "popoverSliderr.html" type="text/ng-template">
       <ion-popover-view class="detailedSlide">
-        <ion-content>
+        <ion-content class="padding">
           <rzslider rz-slider-model="pslider.value" rz-slider-options="pslider.options"></rzslider>
         </ion-content>
       </ion-popover-view>

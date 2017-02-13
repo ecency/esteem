@@ -1357,10 +1357,10 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $ionicPopover.fromTemplateUrl('popoverSliderr.html', {
       scope: $scope
   }).then(function(popover) {
-      $scope.tooltipSlider = popover;
+      $scope.tooltipSliderr = popover;
   });
   
-  $scope.openSlider = function($event) {
+  $scope.openSliderr = function($event) {
     $scope.pslider = {
       value: $rootScope.$storage.voteWeight/100,
       options: {
@@ -1373,11 +1373,11 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     if (!$scope.$$phase) {
       $scope.$apply();
     }
-    $scope.tooltipSlider.show($event);
+    $scope.tooltipSliderr.show($event);
   };
 
-  $scope.closeSlider = function() {
-    $scope.tooltipSlider.hide();
+  $scope.closeSliderr = function() {
+    $scope.tooltipSliderr.hide();
   };
 
   $scope.$watch('pslider', function(newValue, oldValue){
@@ -2406,7 +2406,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     }
   };
 
-  $ionicPopover.fromTemplateUrl('popoverSliderr.html', {
+  $ionicPopover.fromTemplateUrl('popoverSliderrp.html', {
       scope: $scope
   }).then(function(popover) {
       $scope.tooltipSlider = popover;
