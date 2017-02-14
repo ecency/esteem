@@ -183,6 +183,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   })
 
   $scope.openPostModal = function() {
+    $state.go('app.posts');
     $rootScope.$broadcast('openPostModal');
   }
 

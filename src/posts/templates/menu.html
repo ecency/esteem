@@ -39,6 +39,10 @@
       </div>
       <div ng-if="showExtra">
         <ion-list>
+          <ion-item menu-close ng-click="openPostModal()" class="item-icon-left" ng-if="$root.$storage.user">
+            <i class="icon ion-android-create"></i>
+            {{'SUBMIT_A_STORY'|translate}}
+          </ion-item>
           <ion-item menu-close href="#/app/profile/{{$root.$storage.user.username}}" class="item-icon-left" ng-if="$root.$storage.user">
             <i class="icon ion-person"></i>
             {{'PROFILE'|translate}}
