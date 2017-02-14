@@ -1,15 +1,15 @@
 <ion-view view-cache="false" view-title="{{'ABOUT' | translate}} - v{{$root.$storage.appversion}}">
   <ion-content class="padding">
     <center><img src="img/about.png"></center>
-    <p><b>eSteem</b> - {{'ABOUT_1'|translate}}</p>
-    <p><b>eSteem</b> {{'ABOUT_2'|translate:'{ platformname: "Steem" }' }} <span ng-if="$root.$storage.user"><a href="#app/profile/good-karma">good-karma</a></span><span ng-if="!$root.$storage.user">good-karma</span> {{'ABOUT_3'|translate:'{ platformname: "Steem", sitename: "Steemit" }' }}
-    <br>
-    {{'ABOUT_4'|translate}}<br>
-    {{'ABOUT_5'|translate}}<br>
-    {{'ABOUT_6'|translate}}<br>
-    {{'ABOUT_7'|translate}}
+    <p><b>eSteem</b> {{'ABOUT_2'|translate}} <div ng-bind-html="'ABOUT_11'|translate"></div>
     </p>
+    <p ng-if="$root.$storage.user">{{"FOUNDER"|translate}} <a href="#app/profile/good-karma">good-karma</a></p>
     <div class="tcenter" ng-if="$root.$storage.user"><span ng-if="!$root.isWitnessVoted()"><button class="button button-positive" ng-click="$root.voteWitness()">{{'ABOUT_8'|translate}}</button></span></div>
+    <p>
+    <b><u>{{'ABOUT_9'|translate}}</u></b>
+    <br><a href="mailto:info@esteem.ws?Subject=Feedback">info@esteem.ws</a>
+    <br><a href="http://esteem.ws">http://esteem.ws</a>
+    </p>
     <p>
         <b><u>{{'TRANSLATIONS'|translate}}</u></b><br>
         Русский - <a href="#app/profile/testz">testz</a>, <a href="#app/profile/on0tole">on0tole</a><br>
@@ -34,16 +34,9 @@
         -->
     </p>
     <p>
-    <b><u>{{'ABOUT_9'|translate}}</u></b>
-    <br><a href="mailto:info@esteem.ws?Subject=Feedback">info@esteem.ws</a>
-    </p>
-    <p>
     <b><u>{{'ABOUT_10'|translate}}</u></b>
-    <br><a href="http://esteem.ws">http://esteem.ws</a>
     <br><a href="https://steem.io">https://steem.io</a>
     <br><a href="https://golos.io">https://golos.io</a>
     </p>
-    
-    
   </ion-content>
 </ion-view>
