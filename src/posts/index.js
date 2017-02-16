@@ -768,6 +768,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 permlink: post.permlink,
                 weight: $rootScope.$storage.voteWeight*tt || 10000*tt
             });
+            console.log(tr);
             localStorage.error = 0;
             tr.process_transaction($rootScope.mylogin, null, true);
             setTimeout(function() {
