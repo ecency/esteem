@@ -195,27 +195,30 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
       $compileProvider.debugInfoEnabled(false);
   }
 
-  $translateProvider.translations('en', require('./locales/en')); //English
-  $translateProvider.translations('ru', require('./locales/ru')); //Russian
-  $translateProvider.translations('de', require('./locales/de')); //German
-  $translateProvider.translations('fr', require('./locales/fr')); //French
-  $translateProvider.translations('es', require('./locales/es')); //Spanish
-  $translateProvider.translations('gr', require('./locales/gr')); //Greek
-  $translateProvider.translations('bg', require('./locales/bg')); //Bulgarian
-  $translateProvider.translations('nl', require('./locales/nl')); //Dutch
-  $translateProvider.translations('hu', require('./locales/hu')); //Hungarian
-  $translateProvider.translations('cs', require('./locales/cs')); //Czech
-  $translateProvider.translations('iw', require('./locales/iw')); //Hebrew
-  $translateProvider.translations('pl', require('./locales/pl')); //Polish
-  $translateProvider.translations('pt', require('./locales/pt')); //Portuguese
-  $translateProvider.translations('id', require('./locales/id')); //Indonesian
-  $translateProvider.translations('zh', require('./locales/zh')); //Chinese traditional
-  $translateProvider.translations('dolan', require('./locales/dolan')); //Chinese traditional
+  $translateProvider.translations('en-US', require('./locales/en')); //English
+  $translateProvider.translations('ru-RU', require('./locales/ru-RU')); //Russian
+  $translateProvider.translations('de-DE', require('./locales/de-DE')); //German
+  $translateProvider.translations('fr-FR', require('./locales/fr-FR')); //French
+  $translateProvider.translations('es-ES', require('./locales/es-ES')); //Spanish
+  $translateProvider.translations('el-GR', require('./locales/el-GR')); //Greek
+  $translateProvider.translations('bg-BG', require('./locales/bg-BG')); //Bulgarian
+  $translateProvider.translations('nl-NL', require('./locales/nl-NL')); //Dutch
+  $translateProvider.translations('hu-HU', require('./locales/hu-HU')); //Hungarian
+  $translateProvider.translations('cs-CZ', require('./locales/cs-CZ')); //Czech
+  $translateProvider.translations('he-IL', require('./locales/he-IL')); //Hebrew
+  $translateProvider.translations('pl-PL', require('./locales/pl-PL')); //Polish
+  $translateProvider.translations('pt-PT', require('./locales/pt-PT')); //Portuguese
+  $translateProvider.translations('pt-BR', require('./locales/pt-BR')); //Portuguese Brazil
+  $translateProvider.translations('id-ID', require('./locales/id-ID')); //Indonesian
+  $translateProvider.translations('zh-TW', require('./locales/zh-TW')); //Chinese traditional
+  $translateProvider.translations('zh-CN', require('./locales/zh-CN')); //Chinese simplified
+  $translateProvider.translations('dolan', require('./locales/dolan')); //Dolan
+  $translateProvider.translations('sv-SE', require('./locales/sv-SE')); //Chinese simplified
 
   $translateProvider.useSanitizeValueStrategy(null);
 
-  $translateProvider.preferredLanguage('en');
-  $translateProvider.fallbackLanguage('en');
+  $translateProvider.preferredLanguage('en-US');
+  $translateProvider.fallbackLanguage('en-US');
 
 });
 
@@ -238,9 +241,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     if (!angular.isDefined($rootScope.$storage.language)) {
       if(typeof navigator.globalization !== "undefined") {
           navigator.globalization.getPreferredLanguage(function(language) {
-              $translate.use((language.value).split("-")[0]).then(function(data) {
+              $translate.use(language.value).then(function(data) {
                   console.log("SUCCESS -> " + data);
-                  $rootScope.$storage.language = language.value.split('-')[0];
+                  $rootScope.$storage.language = language.value;
               }, function(error) {
                   console.log("ERROR -> " + error);
               });
@@ -265,23 +268,24 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     }
     $rootScope.$storage.languages = [
       {id:'en', name: 'English'}, 
-      {id:'es', name: 'Español'}, 
-      {id:'gr', name: 'Ελληνικά'}, 
-      {id:'fr', name: 'Français'}, 
-      {id:'de', name: 'Deutsch'}, 
-      {id:'ru', name: 'Русский'}, 
-      {id:'bg', name: 'Български'}, 
-      {id:'nl', name: 'Nederlands'}, 
-      {id:'hu', name: 'Magyar'}, 
-      {id:'cs', name: 'Čeština'}, 
-      {id:'iw', name: 'עברית‎'}, 
-      {id:'pl', name: 'Polski‎'}, 
-      {id:'pt', name: 'Português'}, 
-      {id:'id', name: 'Bahasa Indonesia'}, 
-      {id:'zh', name: '繁體中文'}, 
-      {id:'dolan', name: 'Dolan'},
-      {id:'pt-br', name: 'Português BR'},
-      {id:'tw', name: '简体中文'}
+      {id:'es-ES', name: 'Español'}, 
+      {id:'el-GR', name: 'Ελληνικά'}, 
+      {id:'fr-FR', name: 'Français'}, 
+      {id:'de-DE', name: 'Deutsch'}, 
+      {id:'ru-RU', name: 'Русский'}, 
+      {id:'bg-BG', name: 'Български'}, 
+      {id:'nl-NL', name: 'Nederlands'}, 
+      {id:'hu-HU', name: 'Magyar'}, 
+      {id:'cs-CZ', name: 'Čeština'}, 
+      {id:'he-IL', name: 'עברית‎'}, 
+      {id:'pl-PL', name: 'Polski‎'}, 
+      {id:'pt-PT', name: 'Português'}, 
+      {id:'pt-BR', name: 'Português BR'},
+      {id:'sv-SE', name: 'Svensk'},
+      {id:'id-ID', name: 'Bahasa Indonesia'}, 
+      {id:'zh-CN', name: '繁體中文'}, 
+      {id:'zh-TW', name: '简体中文'},
+      {id:'dolan', name: 'Dolan'}
     ];
 
     $rootScope.$storage.chains = [{id:'steem', name: 'Steem'}, {id:'golos', name: 'Golos'}];
