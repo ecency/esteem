@@ -129,6 +129,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     console.log(x);
     $scope.loginData.chain = x;
   }
+  console.log(window.steemRPC.Client);
   $scope.doLogin = function() {
     $rootScope.log('Doing login');
     if ($scope.loginData.password || $scope.loginData.privatePostingKey) {
@@ -136,67 +137,71 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       $scope.loginData.username = $scope.loginData.username.trim();
       console.log('doLogin'+$scope.loginData.username+$scope.loginData.password);
       window.Api.close();
+      window.steemRPC.Client.close();
       var socketUrl = $rootScope.$storage["socket"+$scope.loginData.chain];
       console.log(socketUrl);
       window.Api = window.steemRPC.Client.get({url:socketUrl}, true);
-      window.Api.initPromise.then(function(response) {
-        window.Api.database_api().exec("get_accounts", [[$scope.loginData.username]]).then(function(dd){
-          dd = dd[0];
-          console.log(dd);
-          $scope.loginData.id = dd.id;
-          $scope.loginData.owner = dd.owner;
-          $scope.loginData.active = dd.active;
-          $scope.loginData.reputation = dd.reputation;
-          $scope.loginData.posting = dd.posting;
-          $scope.loginData.memo_key = dd.memo_key;
-          $scope.loginData.post_count = dd.post_count;
-          $scope.loginData.voting_power = dd.voting_power;
-          $scope.loginData.witness_votes = dd.witness_votes;
-          $scope.login = new window[$scope.loginData.chain+"JS"].Login();
-          $scope.login.setRoles(["posting"]);
-          var loginSuccess = $scope.login.checkKeys({
-              accountName: $scope.loginData.username,
-              password: $scope.loginData.password || null,
-              auths: {
-                  posting: dd.posting.key_auths
-              },
-              privateKey: $scope.loginData.privatePostingKey || null
+      setTimeout(function() {
+        window.Api.initPromise.then(function(response) {
+          window.Api.database_api().exec("get_accounts", [[$scope.loginData.username]]).then(function(dd){
+            dd = dd[0];
+            console.log(dd);
+            $scope.loginData.id = dd.id;
+            $scope.loginData.owner = dd.owner;
+            $scope.loginData.active = dd.active;
+            $scope.loginData.reputation = dd.reputation;
+            $scope.loginData.posting = dd.posting;
+            $scope.loginData.memo_key = dd.memo_key;
+            $scope.loginData.post_count = dd.post_count;
+            $scope.loginData.voting_power = dd.voting_power;
+            $scope.loginData.witness_votes = dd.witness_votes;
+            $scope.login = new window[$scope.loginData.chain+"JS"].Login();
+            $scope.login.setRoles(["posting"]);
+            var loginSuccess = $scope.login.checkKeys({
+                accountName: $scope.loginData.username,
+                password: $scope.loginData.password || null,
+                auths: {
+                    posting: dd.posting.key_auths
+                },
+                privateKey: $scope.loginData.privatePostingKey || null
+              }
+            );
+
+            if (!loginSuccess) {
+                $rootScope.$broadcast('hide:loading');
+                $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('PASSWORD_INCORRECT'));
+            } else {
+              $rootScope.$storage.user = $scope.loginData;
+              $rootScope.$storage.users.push($rootScope.$storage.user);
+              $rootScope.$storage.mylogin = $scope.login;
+              APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date(), 'medium'), appversion: $rootScope.$storage.appversion}).then(function(res){
+                $rootScope.$broadcast('hide:loading');
+                //$state.go($state.current, {}, {reload: true});
+                //$state.go('app.posts', {}, { reload: true });
+                //$scope.closeLogin();
+                $scope.loginModal.hide();
+                //$ionicHistory.clearCache();
+                //$ionicHistory.clearHistory();
+                $rootScope.$broadcast('refreshLocalUserData');
+                  
+                window.Api.close();
+                var steemRPC = require("steem-rpc");
+                window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
+
+                setTimeout(function() {
+                  $window.location.reload(true);
+                  $rootScope.$broadcast('fetchPosts');
+                }, 2000);
+
+              });
             }
-          );
-
-          if (!loginSuccess) {
-              $rootScope.$broadcast('hide:loading');
-              $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('PASSWORD_INCORRECT'));
-          } else {
-            $rootScope.$storage.user = $scope.loginData;
-            $rootScope.$storage.users.push($rootScope.$storage.user);
-            $rootScope.$broadcast('fetchPosts');
-            $rootScope.$storage.mylogin = $scope.login;
-            APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date(), 'medium'), appversion: $rootScope.$storage.appversion}).then(function(res){
-              $rootScope.$broadcast('hide:loading');
-              //$state.go($state.current, {}, {reload: true});
-              //$state.go('app.posts', {}, { reload: true });
-              //$scope.closeLogin();
-              $scope.loginModal.hide();
-              //$ionicHistory.clearCache();
-              //$ionicHistory.clearHistory();
-              $rootScope.$broadcast('refreshLocalUserData');
-              
-              window.Api.close();
-              var steemRPC = require("steem-rpc");
-              window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
-
-              setTimeout(function() {
-                $window.location.reload(true);
-              }, 10);
-
-            });
-          }
-          /*if(!$scope.$$phase) {
-            $scope.$apply();
-          }*/
+            /*if(!$scope.$$phase) {
+              $scope.$apply();
+            }*/
+          });
         });
-      });
+      }, 10);
+      
     } else {
       $scope.loginModal.hide();
       $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_FAIL'));
