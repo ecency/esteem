@@ -39,10 +39,10 @@
       </div>
       <div ng-if="showExtra">
         <ion-list>
-          <ion-item menu-close class="item-icon-left" ng-if="$root.$storage.users" ng-repeat="user in $root.$storage.users" ng-click="selectAccount(user)">
-            <i class="icon ion-person"></i>
+          <ion-item menu-close class="item-icon-left" ng-if="$root.$storage.users" ng-repeat="user in $root.$storage.users" ng-click="selectAccount(user)" ng-class="{'active': (user.username==$root.$storage.user.username&&user.chain==$root.$storage.user.chain) }">
+            <img class="icon logos" ng-src="{{'img/'+user.chain+'_icon.png'}}" />
             {{user.username}}
-            <span class="badge badge-assertive">{{user.chain}}</span>
+            <!--<span class="badge badge-assertive">{{user.chain}}</span>-->
           </ion-item>
           <ion-item menu-close ng-click="openLogin()" class="item-icon-left" ng-if="$root.$storage.user">
             <i class="icon ion-plus-round"></i>

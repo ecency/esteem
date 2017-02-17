@@ -955,6 +955,76 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     if (!angular.isDefined($rootScope.$storage.notifications)) {
       $rootScope.$storage.notifications = [];
     }
+    $rootScope.$on('changedChain', function(){
+      console.log('changeCHain');
+      if ($rootScope.$storage.chain == 'steem'){
+        $rootScope.$storage.platformname = "Steem";
+        $rootScope.$storage.platformpower = "Steem Power";
+        $rootScope.$storage.platformsunit = "Steem";
+        $rootScope.$storage.platformdollar = "Steem Dollar";
+        $rootScope.$storage.platformdunit = "SBD";
+        $rootScope.$storage.platformpunit = "SP";
+        $rootScope.$storage.platformlunit = "STEEM";
+        $rootScope.$storage.socketsteem = "wss://steemd.steemit.com";
+      } else {
+        $rootScope.$storage.platformname = "ГОЛОС";
+        $rootScope.$storage.platformpower = "СИЛА ГОЛОСА";
+        $rootScope.$storage.platformsunit = "Голос";
+        $rootScope.$storage.platformdollar = "ЗОЛОТОЙ";
+        $rootScope.$storage.platformdunit = "GBG";
+        $rootScope.$storage.platformpunit = "СИЛА ГОЛОСА";
+        $rootScope.$storage.platformlunit = "ГОЛОС";
+        $rootScope.$storage.socketgolos = "wss://ws.golos.io/";
+        //$scope.socket = "wss://golos.steem.ws";
+      }
+      localStorage.socketUrl = $rootScope.$storage["socket"+$rootScope.$storage.chain];
+    });
+    function checkDate(date, ignore) {
+      var eold = 86400000; //1 * 24 * 60 * 60 * 1000; //1 day old
+      var now = new Date().getTime();
+      var old = new Date(date).getTime();
+      return ignore||now-old>=eold;
+    }
+    $rootScope.$on('changedCurrency', function(event, args){
+      var xx = args.currency;
+      var ignore = args.enforce;
+
+      setTimeout(function() {
+        console.log(xx);
+        var resultObject = $rootScope.$storage.currencies.filter(function ( obj ) {
+            return obj.id === xx;
+        })[0];
+        //searchObj(xx, $rootScope.$storage.currencies);
+        if (checkDate(resultObject.date, ignore)) {
+          if ($rootScope.$storage.chain == 'steem'){
+            APIs.getCurrencyRate("USD", xx ).then(function(res){
+              $rootScope.$storage.currencyRate = Number(res.data.query.results.rate.Rate);
+              $rootScope.$storage.currencies.filter(function(obj){
+                if (obj.id == xx) {
+                  obj.rate = $rootScope.$storage.currencyRate;
+                  obj.date = res.data.query.results.rate.Date==="N/A"?new Date() : res.data.query.results.rate.Date;
+                }
+              });
+            });
+          } else {
+            APIs.getCurrencyRate("XAU", xx ).then(function(res){
+              //XAU - 31.1034768g
+              //GBG rate in mg. so exchangeRate/31103.4768
+              $rootScope.$storage.currencyRate = Number(res.data.query.results.rate.Rate)/31103.4768;
+              $rootScope.$storage.currencies.filter(function(obj){
+                if (obj.id == xx) {
+                  obj.rate = $rootScope.$storage.currencyRate;
+                  obj.date = res.data.query.results.rate.Date==="N/A"?new Date() : res.data.query.results.rate.Date;
+                }
+              });
+              //console.log($rootScope.$storage.currencyRate);
+            });
+          }
+        } else {
+          $rootScope.$storage.currencyRate = resultObject.rate;
+        }
+      }, 1);
+    });
 
     if (window.cordova) {
       if (!ionic.Platform.isWindowsPhone()) {

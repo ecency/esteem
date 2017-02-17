@@ -1440,6 +1440,8 @@ em {
 	width: auto;
 	max-width: 100%;*/
 }
-.category {
-  
+.icon.logos {
+  margin: 15px 0px 0px 5px;
+  max-width: 20px;
+  max-height: 20px;
 }

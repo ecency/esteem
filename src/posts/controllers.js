@@ -99,37 +99,15 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       $rootScope.log("not shared");
     });
   }
-  $rootScope.$on('changedChain', function(){
-    console.log('changeCHain');
-    if ($rootScope.$storage.chain == 'steem'){
-      $rootScope.$storage.platformname = "Steem";
-      $rootScope.$storage.platformpower = "Steem Power";
-      $rootScope.$storage.platformsunit = "Steem";
-      $rootScope.$storage.platformdollar = "Steem Dollar";
-      $rootScope.$storage.platformdunit = "SBD";
-      $rootScope.$storage.platformpunit = "SP";
-      $rootScope.$storage.platformlunit = "STEEM";
-      $rootScope.$storage.socketsteem = "wss://steemd.steemit.com";
-      $scope.socket = "wss://steemd.steemit.com";
-    } else {
-      $rootScope.$storage.platformname = "ГОЛОС";
-      $rootScope.$storage.platformpower = "СИЛА ГОЛОСА";
-      $rootScope.$storage.platformsunit = "Голос";
-      $rootScope.$storage.platformdollar = "ЗОЛОТОЙ";
-      $rootScope.$storage.platformdunit = "GBG";
-      $rootScope.$storage.platformpunit = "СИЛА ГОЛОСА";
-      $rootScope.$storage.platformlunit = "ГОЛОС";
-      $rootScope.$storage.socketgolos = "wss://ws.golos.io/";
-      //$scope.socket = "wss://golos.steem.ws";
-      $scope.socket = "wss://ws.golos.io/";
-    }
-  });
+
 
   $scope.loginChain = function(x){
     console.log(x);
     $scope.loginData.chain = x;
   }
   console.log(window.steemRPC.Client);
+  console.log(window.Api);
+
   $scope.doLogin = function() {
     $rootScope.log('Doing login');
     if ($scope.loginData.password || $scope.loginData.privatePostingKey) {
@@ -137,9 +115,12 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       $scope.loginData.username = $scope.loginData.username.trim();
       console.log('doLogin'+$scope.loginData.username+$scope.loginData.password);
       window.Api.close();
+      window.Api = null;
       window.steemRPC.Client.close();
+      
       var socketUrl = $rootScope.$storage["socket"+$scope.loginData.chain];
       console.log(socketUrl);
+
       window.Api = window.steemRPC.Client.get({url:socketUrl}, true);
       setTimeout(function() {
         window.Api.initPromise.then(function(response) {
@@ -157,6 +138,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
             $scope.loginData.witness_votes = dd.witness_votes;
             $scope.login = new window[$scope.loginData.chain+"JS"].Login();
             $scope.login.setRoles(["posting"]);
+            
             var loginSuccess = $scope.login.checkKeys({
                 accountName: $scope.loginData.username,
                 password: $scope.loginData.password || null,
@@ -184,9 +166,15 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                 //$ionicHistory.clearHistory();
                 $rootScope.$broadcast('refreshLocalUserData');
                   
-                window.Api.close();
-                var steemRPC = require("steem-rpc");
-                window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
+                //window.Api.close();
+                //var steemRPC = require("steem-rpc");
+                //window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
+
+                //window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
+                $rootScope.$storage.chain = $scope.loginData.chain;
+
+                $rootScope.$broadcast('changedChain');
+                $rootScope.$broadcast('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
 
                 setTimeout(function() {
                   $window.location.reload(true);
@@ -200,7 +188,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
             }*/
           });
         });
-      }, 10);
+      }, 1000);
       
     } else {
       $scope.loginModal.hide();
@@ -210,12 +198,22 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
   $scope.selectAccount = function(user) {
     $rootScope.$storage.user = user;
+    $rootScope.$storage.chain = user.chain;
+
+    $rootScope.$broadcast('changedChain');
+
+    $rootScope.$broadcast('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
+    
     $rootScope.$broadcast('refreshLocalUserData');
+    
+    setTimeout(function() {
+      $window.location.reload(true);
+    }, 2000);
   }
 
   $rootScope.$on('refreshLocalUserData', function() {
     $rootScope.log('refreshLocalUserData');
-    if ($rootScope.$storage.user && $rootScope.$storage.user.username) {
+    if ($rootScope.$storage.user && $rootScope.$storage.user.username && $rootScope.$storage.user.chain == $rootScope.$storage.chain) {
       window.Api.initPromise.then(function(response) {
         if (typeof window.Api.database_api === "function") {
           window.Api.database_api().exec("get_accounts", [ [ $rootScope.$storage.user.username ] ]).then(function(dd){
@@ -1272,7 +1270,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             console.log(response);
           });*/
           window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
-            console.log(response);
+            //console.log(response);
             if (response.length <= 1) {
               $scope.error = true;
             }
@@ -3384,61 +3382,33 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     }
   }
 
-  function checkDate(date, ignore) {
-    var eold = 86400000; //1 * 24 * 60 * 60 * 1000; //1 day old
-    var now = new Date().getTime();
-    var old = new Date(date).getTime();
-    return ignore||now-old>=eold;
-  }
-
   $scope.changeCurrency = function(xx, ignore) {
-    setTimeout(function() {
-      console.log(xx);
-      var resultObject = $rootScope.$storage.currencies.filter(function ( obj ) {
-          return obj.id === xx;
-      })[0];
-      //searchObj(xx, $rootScope.$storage.currencies);
-      if (checkDate(resultObject.date, ignore)) {
-        if ($rootScope.$storage.chain == 'steem'){
-          APIs.getCurrencyRate("USD", xx ).then(function(res){
-            $rootScope.$storage.currencyRate = Number(res.data.query.results.rate.Rate);
-            $rootScope.$storage.currencies.filter(function(obj){
-              if (obj.id == xx) {
-                obj.rate = $rootScope.$storage.currencyRate;
-                obj.date = res.data.query.results.rate.Date==="N/A"?new Date() : res.data.query.results.rate.Date;
-              }
-            });
-          });
-        } else {
-          APIs.getCurrencyRate("XAU", xx ).then(function(res){
-            //XAU - 31.1034768g
-            //GBG rate in mg. so exchangeRate/31103.4768
-            $rootScope.$storage.currencyRate = Number(res.data.query.results.rate.Rate)/31103.4768;
-            $rootScope.$storage.currencies.filter(function(obj){
-              if (obj.id == xx) {
-                obj.rate = $rootScope.$storage.currencyRate;
-                obj.date = res.data.query.results.rate.Date==="N/A"?new Date() : res.data.query.results.rate.Date;
-              }
-            });
-            //console.log($rootScope.$storage.currencyRate);
-          });
-        }
-        if (!$scope.$$phase) {
-          $scope.$apply();
-        }  
-      } else {
-
-        $rootScope.$storage.currencyRate = resultObject.rate;
-        
-        if (!$scope.$$phase) {
-          $scope.$apply();
-        }
-      }
-    }, 1);
+    $rootScope.$broadcast('changedCurrency', {currency: xx, enforce: ignore});
   }
   $scope.changeChain = function() {
-    $rootScope.$broadcast('changedChain');
     $scope.restart = true;
+    if ($rootScope.$storage.chain == 'steem'){
+      $rootScope.$storage.platformname = "Steem";
+      $rootScope.$storage.platformpower = "Steem Power";
+      $rootScope.$storage.platformsunit = "Steem";
+      $rootScope.$storage.platformdollar = "Steem Dollar";
+      $rootScope.$storage.platformdunit = "SBD";
+      $rootScope.$storage.platformpunit = "SP";
+      $rootScope.$storage.platformlunit = "STEEM";
+      $rootScope.$storage.socketsteem = "wss://steemd.steemit.com";
+      $scope.socket = "wss://steemd.steemit.com";
+    } else {
+      $rootScope.$storage.platformname = "ГОЛОС";
+      $rootScope.$storage.platformpower = "СИЛА ГОЛОСА";
+      $rootScope.$storage.platformsunit = "Голос";
+      $rootScope.$storage.platformdollar = "ЗОЛОТОЙ";
+      $rootScope.$storage.platformdunit = "GBG";
+      $rootScope.$storage.platformpunit = "СИЛА ГОЛОСА";
+      $rootScope.$storage.platformlunit = "ГОЛОС";
+      $rootScope.$storage.socketgolos = "wss://ws.golos.io/";
+      //$scope.socket = "wss://golos.steem.ws";
+      $scope.socket = "wss://ws.golos.io/";
+    }
     $scope.changeCurrency($rootScope.$storage.currency, true);
   }
   $scope.restart = false;
@@ -3601,7 +3571,9 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
           $rootScope.$storage["socket"+$rootScope.$storage.chain] = $scope.socket;
           localStorage.socketUrl = $scope.socket;
           //$scope.logouts();
-          $window.location.reload(true);  
+          setTimeout(function() {
+            $window.location.reload(true);  
+          }, 1000);
         } else {
           $rootScope.log('You are not sure');
         }
