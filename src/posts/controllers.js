@@ -3559,6 +3559,12 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     }, 100);
   };
   $scope.socket = $rootScope.$storage["socket"+$rootScope.$storage.chain];
+  $scope.socketChange = function(xx){
+    console.log(xx);
+    $rootScope.$storage["socket"+$rootScope.$storage.chain] = xx;
+    localStorage.socketUrl = xx;
+    $scope.restart = true;
+  }
   $scope.save = function(){
     if ($scope.restart) {
       var confirmPopup = $ionicPopup.confirm({
@@ -3568,12 +3574,8 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       confirmPopup.then(function(res) {
         if(res) {
           $rootScope.log('You are sure');
-          $rootScope.$storage["socket"+$rootScope.$storage.chain] = $scope.socket;
-          localStorage.socketUrl = $scope.socket;
           //$scope.logouts();
-          setTimeout(function() {
-            $window.location.reload(true);  
-          }, 1000);
+          $window.location.reload(true);  
         } else {
           $rootScope.log('You are not sure');
         }
