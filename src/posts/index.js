@@ -14,8 +14,8 @@ if (localStorage.getItem("socketUrl") === null) {
   localStorage.setItem("socketUrl", "wss://steemit.com/wspa");
 }
 
-var steemRPC = require("steem-rpc");
-window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
+window.steemRPC = require("steem-rpc");
+window.Api = window.steemRPC.Client.get({url:localStorage.socketUrl}, true);
 window.steemJS = require("steemjs-lib");
 window.golosJS = require("golosjs-lib");
 window.diff_match_patch = require('diff-match-patch');
@@ -212,7 +212,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('id-ID', require('./locales/id-ID')); //Indonesian
   $translateProvider.translations('zh-TW', require('./locales/zh-TW')); //Chinese traditional
   $translateProvider.translations('zh-CN', require('./locales/zh-CN')); //Chinese simplified
-  $translateProvider.translations('dolan', require('./locales/dolan')); //Dolan
+  $translateProvider.translations('dolan', require('./locales/dol')); //Dolan
   $translateProvider.translations('sv-SE', require('./locales/sv-SE')); //Chinese simplified
 
   $translateProvider.useSanitizeValueStrategy(null);
@@ -238,6 +238,16 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+    if (!$rootScope.$storage.users) {
+      $rootScope.$storage.users = [];
+    }
+    
+    if (!$rootScope.$storage.socketgolos)
+      $rootScope.$storage.socketgolos = "wss://ws.golos.io/";
+    if (!$rootScope.$storage.socketsteem)
+      $rootScope.$storage.socketsteem = "wss://steemd.steemit.com";
+
+
     if (!angular.isDefined($rootScope.$storage.language)) {
       if(typeof navigator.globalization !== "undefined") {
           navigator.globalization.getPreferredLanguage(function(language) {
@@ -949,10 +959,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     if (window.cordova) {
       if (!ionic.Platform.isWindowsPhone()) {
         if (ionic.Platform.isIOS() || ionic.Platform.isIPad()) {
-          window.FirebasePlugin.grantPermission();
+          //window.FirebasePlugin.grantPermission();
         }
 
-        window.FirebasePlugin.getToken(function(token) {
+        /*window.FirebasePlugin.getToken(function(token) {
             // save this server-side and use it to push notifications to this device
             $rootScope.log("device "+token);
             $rootScope.$storage.deviceid = token;
@@ -967,9 +977,24 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
         }, function(error) {
             console.error(error);
+        });*/
+
+        FCMPlugin.getToken(function(token){
+          // save this server-side and use it to push notifications to this device
+          $rootScope.log("device "+token);
+          $rootScope.$storage.deviceid = token;
+          if ($rootScope.$storage.user) {
+            APIs.saveSubscription(token, $rootScope.$storage.user.username, { device: ionic.Platform.platform() }).then(function(res){
+              $rootScope.log(angular.toJson(res));
+            });
+          } else {
+            APIs.saveSubscription(token, "", { device: ionic.Platform.platform() }).then(function(res){
+              $rootScope.log(angular.toJson(res));
+            });
+          }
         });
 
-        window.FirebasePlugin.onTokenRefresh(function(token) {
+        /*window.FirebasePlugin.onTokenRefresh(function(token) {
           APIs.updateToken($rootScope.$storage.deviceid, token).then(function(res){
             console.log(angular.toJson(res));
             if (res.status) {
@@ -981,9 +1006,20 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           }
         }, function(error) {
           console.error(error);
+        });*/
+        FCMPlugin.onTokenRefresh(function(token){
+          APIs.updateToken($rootScope.$storage.deviceid, token).then(function(res){
+            console.log(angular.toJson(res));
+            if (res.status) {
+              $rootScope.$storage.deviceid = token  
+            }
+          });
+          if (!$rootScope.$$phase){
+            $rootScope.$apply();
+          }
         });
 
-        window.FirebasePlugin.onNotificationOpen(function(data) {
+        /*window.FirebasePlugin.onNotificationOpen(function(data) {
             $rootScope.log(angular.toJson(data));
 
             //console.log(angular.toJson(data));
@@ -1027,6 +1063,53 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
         }, function(error) {
             console.error(error);
+        });
+        */
+
+        //FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
+        //Here you define your application behaviour based on the notification data.
+        FCMPlugin.onNotification(function(data){
+          $rootScope.log(angular.toJson(data));
+
+            //console.log(angular.toJson(data));
+
+            //$rootScope.$storage.notifications.push({title:data.title, message: data.body, author: data.author, permlink: data.permlink, created: new Date()});
+
+            if(data.wasTapped){
+              //Notification was received on device tray and tapped by the user.
+              if (data.author && data.permlink) {
+                if (!$rootScope.$storage.pincode) {
+
+                  var alertPopup = $ionicPopup.confirm({
+                    title: data.title,
+                    template: data.body + $filter('translate')('OPENING_POST')
+                  });
+
+                  alertPopup.then(function(res) {
+                    $rootScope.log('Thank you for seeing alert from tray');
+                    if (res) {
+                      setTimeout(function() {
+                        $rootScope.getContentAndOpen({author:data.author, permlink:data.permlink});
+                      }, 10);
+                    } else {
+                      $rootScope.log("not sure to open alert");
+                    }
+                  });
+
+                } else {
+                  $rootScope.$storage.notifData = {title:data.title, body: data.body, author: data.author, permlink: data.permlink};
+                  $rootScope.pinenabled = true;
+                }
+              }
+            } else{
+              //Notification was received in foreground. Maybe the user needs to be notified.
+              //alert( JSON.stringify(data) );
+              if (data.author && data.permlink) {
+                $rootScope.showMessage(data.title, data.body+" "+data.permlink);
+              } else {
+                $rootScope.showMessage(data.title, data.body);
+              }
+            }
         });
       }
 

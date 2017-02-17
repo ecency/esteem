@@ -39,6 +39,15 @@
       </div>
       <div ng-if="showExtra">
         <ion-list>
+          <ion-item menu-close class="item-icon-left" ng-if="$root.$storage.users" ng-repeat="user in $root.$storage.users" ng-click="selectAccount(user)">
+            <i class="icon ion-person"></i>
+            {{user.username}}
+            <span class="badge badge-assertive">{{user.chain}}</span>
+          </ion-item>
+          <ion-item menu-close ng-click="openLogin()" class="item-icon-left" ng-if="$root.$storage.user">
+            <i class="icon ion-plus-round"></i>
+            {{'ADD_ACCOUNT'|translate}}
+          </ion-item>
           <ion-item menu-close ng-click="openPostModal()" class="item-icon-left" ng-if="$root.$storage.user">
             <i class="icon ion-android-create"></i>
             {{'SUBMIT_A_STORY'|translate}}

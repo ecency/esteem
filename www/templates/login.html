@@ -8,7 +8,11 @@
     <center><img ng-src="img/logo.png" width="100" /></center>
     <center><h1>{{'WELCOME_BACK'|translate}}</h1></center>
     <center><p class="gray fsmaller padding">{{'LOGIN_1'|translate}}</p></center>
-    <center><div class="fsmaller">{{'CHAIN'|translate}} {{$root.$storage.chain|uppercase}}</div></center>
+    <center>
+      <select ng-model="loginData.chain" ng-change="loginChain(loginData.chain)">
+        <option ng-repeat="option in $root.$storage.chains" value="{{option.id}}">{{option.name}}</option>
+      </select>
+    </center>
     <form ng-submit="doLogin()" name="login" novalidate>
       <div class="list list-inset">
         <label class="item item-input">
