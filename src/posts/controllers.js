@@ -105,9 +105,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     console.log(x);
     $scope.loginData.chain = x;
   }
-  console.log(window.steemRPC.Client);
-  console.log(window.Api);
-
+  
   $scope.doLogin = function() {
     $rootScope.log('Doing login');
     if ($scope.loginData.password || $scope.loginData.privatePostingKey) {
@@ -154,6 +152,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                 $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('PASSWORD_INCORRECT'));
             } else {
               $rootScope.$storage.user = $scope.loginData;
+
               $rootScope.$storage.users.push($rootScope.$storage.user);
               $rootScope.$storage.mylogin = $scope.login;
               APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date(), 'medium'), appversion: $rootScope.$storage.appversion}).then(function(res){
@@ -963,7 +962,10 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
   $scope.submitStory = function() {
     //console.log($scope.spost.body);
-
+    $scope.tagsChange();
+    if (!$scope.$$phase){
+      $scope.$apply();
+    }
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user) {
       $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
@@ -1022,6 +1024,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         tr.process_transaction($scope.mylogin, null, true);
         $scope.replying = false;
         setTimeout(function() {
+          $rootScope.$broadcast('hide:loading');
           if (localStorage.error == 1) {
             $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
           } else {
@@ -1035,7 +1038,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             //$scope.closeMenuPopover();
             $state.go("app.profile", {username: $rootScope.$storage.user.username});
           }
-          $rootScope.$broadcast('hide:loading');
         }, 3000);
       } else {
         $rootScope.$broadcast('hide:loading');
@@ -1270,7 +1272,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             console.log(response);
           });*/
           window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
-            //console.log(response);
+            console.log(response);
             if (response.length <= 1) {
               $scope.error = true;
             }
@@ -1924,6 +1926,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
 
   $scope.submitStory = function() {
+    if (!$scope.$$phase){
+      $scope.$apply();
+    }
     $rootScope.$broadcast('show:loading');
     if ($scope.edit) {
       var patch = createPatch($scope.patchbody, $scope.spost.body)
@@ -1970,6 +1975,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         tr.process_transaction($scope.mylogin, null, true);
         $scope.replying = false;
         setTimeout(function() {
+          $rootScope.$broadcast('hide:loading');
           if (localStorage.error == 1) {
             $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
           } else {
@@ -1984,7 +1990,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               $state.go("app.profile", {username: $rootScope.$storage.user.username});
             }, 1);
           }
-          $rootScope.$broadcast('hide:loading');
         }, 3000);
       } else {
         $rootScope.$broadcast('hide:loading');
@@ -2000,6 +2005,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
   $scope.reply = function (xx) {
     //$rootScope.log(xx);
+    if (!$scope.$$phase){
+      $scope.$apply();
+    }
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user) {
       $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
@@ -2017,7 +2025,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
         var t = new Date();
         var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
-        var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "" , app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
+        var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ["esteem"] , app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
         tr.add_type_operation("comment", {
           parent_author: $scope.post.author,
           parent_permlink: $scope.post.permlink,
@@ -2031,6 +2039,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         tr.process_transaction($scope.mylogin, null, true);
         $scope.replying = false;
         setTimeout(function() {
+          $rootScope.$broadcast('hide:loading');
           if (localStorage.error == 1) {
             $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
           } else {
@@ -2048,7 +2057,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               });
             });
           }
-          $rootScope.$broadcast('hide:loading');
         }, 3000);
       } else {
         $rootScope.$broadcast('hide:loading');
@@ -2112,7 +2120,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
   $scope.isreplying = function(cho, xx) {
     $scope.replying = xx;
-    $scope.post = cho;
+    angular.merge($scope.post, cho);
     if (xx) {
       $scope.openModal();
     } else {

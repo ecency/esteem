@@ -5,7 +5,7 @@
     <button class="button button-positive button-primary" ng-click="reply()">{{'POST'|translate}}</button>
   </ion-header-bar>
   <ion-content class="padding posting" overflow-scroll="false">
-    <div ng-if="post.body" class="padding bodytext selectable" ng-bind-html="post.body | parseUrl"></div>
+    <div ng-if="post.body&&post.parent_author!=''" class="padding bodytext selectable" ng-bind-html="post.body | parseUrl"></div>
     <textarea autofocus ng-model='data.comment' rows="10" placeholder="{{'COMMENT_CONTENT'|translate}}" class="width100" ng-focus='cfocus()'></textarea>
       <p ng-if="data.comment">{{'PREVIEW'|translate}}</p>
       <div ng-if="data.comment" class="padding bodytext" ng-bind-html="data.comment | parseUrl "></div>

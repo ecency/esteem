@@ -23,7 +23,7 @@
 	    	   <div class="list masonry-layout__panel-content">
 		    	<div class="item">
 				    <div on-tap="open(d)">
-				    <span ng-if="d.reblogged_by"><i class="icon ion-arrow-return-right"></i> {{'RESTEEMED_BY'|translate}} {{d.reblogged_by}}</span>
+				    <span ng-if="d.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{'RESTEEMED_BY'|translate}} {{d.reblogged_by}}</span>
 				    <p><h2><i class="fa fa-money positive" ng-if="d.promoted.split(' ')[0] !== '0.000'"></i>
 							<i class="fa fa-fire positive" ng-if="d.percent_steem_dollars === 0"></i> {{d.title}}</h2></p>
 				    <div class="row postdetails wrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;{{'BY'|translate}}&nbsp;<b>{{d.author}}</b>&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div> {{'IN'|translate}} {{d.category}} &middot; {{d.body|readingtime}} {{'MIN_READ'|translate}}</div></div>
