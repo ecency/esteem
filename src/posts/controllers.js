@@ -221,10 +221,10 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
               dd.json_metadata = angular.fromJson(dd.json_metadata);
             }
             angular.merge($rootScope.$storage.user, dd);
+            $scope.mcss = ($rootScope.$storage.user.json_metadata && $rootScope.$storage.user.json_metadata.profile && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
             if (!$scope.$$phase) {
               $scope.$apply();
             }
-            $scope.mcss = ($rootScope.$storage.user.json_metadata && $rootScope.$storage.user.json_metadata.profile && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
           });
         }
       });
@@ -3172,7 +3172,9 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           } else {
             $scope.css = null;
           }
-
+          if (!$scope.$$phase){
+            $scope.$apply();
+          }
         });
         window.Api.follow_api().exec("get_follow_count", [$stateParams.username]).then(function(res){
           //console.log(res);
@@ -3274,7 +3276,9 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             if (res.accounts.hasOwnProperty(property)) {
               $scope.accounts = res.accounts[property];
               //$rootScope.log(angular.toJson(res.accounts[property].transfer_history));
+
               $scope.transfers = res.accounts[property].transfer_history;
+              //console.log($scope.transfers);
               $scope.nonexist = false;
             }
           }

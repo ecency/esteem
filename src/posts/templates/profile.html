@@ -1,6 +1,6 @@
 <ion-view view-title="" hide-nav-bar="true" view-cache="false"><!--ng-class="{'mpb':$root.$storage.user.json_metadata.profile.cover_image}"-->
   <ion-content class="has-footer" overflow-scroll="true">
-    <div class="bar bar-subheader mysubheader bar-positive" ng-style="css||mcss">
+    <div class="bar bar-subheader mysubheader bar-positive" ng-style="$root.$storage.user.username != user.username?css:mcss">
       <button class="button button-icon button-clear ion-ios-arrow-back profilebtn" on-tap="goBack()"></button>
       <button class="button button-outline button-light profilebtn_follow" on-tap="followUser(user.username)" ng-if="$root.$storage.user && $root.$storage.user.username != user.username && !isFollowing(user.username)"><!--<i class="fa fa-user-plus fa-lg"></i>-->{{'FOLLOW'|translate}}</button>
       <button class="button button-clear profilebtn_follow button-icon ion-camera" on-tap="showCover()" ng-if="$root.$storage.user && $root.$storage.user.username === user.username"></button>
@@ -16,7 +16,7 @@
                 <div class="reputation">{{$root.$storage.user.reputation|reputation}}
                 </div>
               </h4>
-              <p>{{$root.$storage.user.json_metadata.profile.about}}</p>
+              <div class="about">{{$root.$storage.user.json_metadata.profile.about}}</div>
               <div class="padding">
                 <i class="icon ion-android-list"></i>&nbsp;
                 {{$root.$storage.user.post_count}}&nbsp;
@@ -144,16 +144,17 @@
             <div class="item" ng-repeat="tr in transfers | orderBy:'-[0]' | limitTo:15 track by $index">
               <span>{{tr[1].timestamp | timeago}} - {{tr[1].op[0]}}</span>
               <div ng-if="tr[1].op[0]=='comment_reward'">{{tr[1].op[1].sbd_payout}} | {{tr[1].op[1].vesting_payout}}</div>
-              <div ng-if="tr[1].op[0]=='author_reward'">{{tr[1].op[1].sbd_payout}} | {{tr[1].op[1].steem_payout}} | {{tr[1].op[1].vesting_payout}}</div>
+              <div ng-if="tr[1].op[0]=='author_reward'" class="wrap">{{tr[1].op[1].sbd_payout}} | {{tr[1].op[1].steem_payout}} | {{tr[1].op[1].vesting_payout}}</div>
               <div ng-if="tr[1].op[0]=='curation_reward'">{{tr[1].op[1].reward}} | {{tr[1].op[1].vesting_payout}}</div>
               <div ng-if="tr[1].op[0]=='transfer'">{{tr[1].op[1].amount}} | {{tr[1].op[1].memo}}</div>
+              <div ng-if="tr[1].op[0]=='interest'">{{tr[1].op[1].interest}}</div>
               <div ng-if="tr[1].op[0]=='transfer_to_vesting'">{{tr[1].op[1].amount}} | {{tr[1].op[1].memo}}</div>
               <div ng-if="tr[1].op[0]=='withdraw_vesting'">{{tr[1].op[1].vesting_shares}} | {{tr[1].op[1].memo}}</div>
               <p ng-if="tr[1].op[0]=='comment_reward'">@{{tr[1].op[1].author}}/{{tr[1].op[1].permlink}}</p>
-              <p ng-if="tr[1].op[0]=='author_reward'">@{{tr[1].op[1].author}}/{{tr[1].op[1].permlink}}</p>
-              <p ng-if="tr[1].op[0]=='curation_reward'">@{{tr[1].op[1].comment_author}}/{{tr[1].op[1].comment_permlink}}</p>
-              <p ng-if="tr[1].op[0]=='transfer'">{{'FROM'|translate}} {{tr[1].op[1].from}} {{'TO'|translate}}  {{tr[1].op[1].to}}</p>
-              <p ng-if="tr[1].op[0]=='transfer_to_vesting'">{{'FROM'|translate}}  {{tr[1].op[1].from}} {{'TO'|translate}}  {{tr[1].op[1].to}}</p>
+              <p ng-if="tr[1].op[0]=='author_reward'" class="wrap">@{{tr[1].op[1].author}}/{{tr[1].op[1].permlink}}</p>
+              <p ng-if="tr[1].op[0]=='curation_reward'" class="wrap">@{{tr[1].op[1].comment_author}}/{{tr[1].op[1].comment_permlink}}</p>
+              <p ng-if="tr[1].op[0]=='transfer'">{{tr[1].op[1].from}} {{'TO'|translate}}  {{tr[1].op[1].to}}</p>
+              <p ng-if="tr[1].op[0]=='transfer_to_vesting'"> {{tr[1].op[1].from}} {{'TO'|translate}}  {{tr[1].op[1].to}}</p>
               <p ng-if="tr[1].op[0]=='withdraw_vesting'">{{tr[1].op[1].account}}</p>
 
             </div>

@@ -417,6 +417,9 @@ img.round-avatar{
   font: 14px Sans-Serif;
   line-height: 8pt;
 }
+.about {
+  line-height: 12pt;
+}
 .action-sheet-group{
   overflow: scroll;
   max-height: 400px;
