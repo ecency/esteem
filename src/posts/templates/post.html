@@ -46,8 +46,7 @@
         <div class="col col-33" ng-if="$root.voiceOver"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
         <i class="icon ion-android-arrow-dropup-circle" on-tap="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted" on-hold="openSliderr($event)">{{'UPVOTE'|translate}}</i><i class="icon ion-android-arrow-dropup-circle positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted">{{'UNVOTE_UPVOTED'|translate}}</i>&nbsp;&nbsp;&nbsp;<span on-tap="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
         <div class="col col-33" on-tap="openTooltip($event,$root.$storage.sitem)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> {{$root.$storage.sitem | sumPostTotal:$root.$storage.currencyRate | number}}</div>
-        <div class="col"><i class="icon ion-chatbubbles"></i>{{$root.$storage.sitem.children}}</div>
-        <div class="col" on-tap="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username"><i class="fa fa-reply"></i></div>
+        <div class="col" on-tap="isreplying($root.$storage.sitem, true)"><i class="fa fa-reply"></i> {{$root.$storage.sitem.children}}</div>
         <div class="col" on-tap="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode=='first_payout' && $root.$storage.sitem.author==$root.$storage.user.username"><i class="fa  fa-pencil-square-o"></i></div>
         <div class="col" on-tap="deletePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.net_votes==0 && $root.$storage.sitem.author==$root.$storage.user.username"><i class="fa fa-trash-o"></i></div>
       </div>

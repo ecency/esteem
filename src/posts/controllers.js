@@ -1272,7 +1272,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             console.log(response);
           });*/
           window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
-            console.log(response);
+            $rootScope.log(response);
             if (response.length <= 1) {
               $scope.error = true;
             }
@@ -3472,7 +3472,13 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     if ($rootScope.$storage.user && $rootScope.$storage.deviceid) {
       APIs.getSubscriptions($rootScope.$storage.deviceid).then(function(res){
         $rootScope.log(angular.toJson(res.data));
-        angular.merge($scope.data, {vote: res.data[0].subscription.vote, follow: res.data[0].subscription.follow, comment: res.data[0].subscription.comment, mention: res.data[0].subscription.mention, resteem: res.data[0].subscription.resteem});
+        var d = res.data;
+        angular.forEach(d, function(v,k){
+          if (v.username == $rootScope.$storage.user.username) {
+            angular.merge($scope.data, {vote: v.subscription.vote, follow: v.subscription.follow, comment: v.subscription.comment, mention: v.subscription.mention, resteem: v.subscription.resteem});    
+          }          
+        })
+        
         if (!$scope.$$phase){
           $scope.$apply();
         }
