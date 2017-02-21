@@ -26,7 +26,7 @@
 				    <span ng-if="d.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{'RESTEEMED_BY'|translate}} {{d.reblogged_by}}</span>
 				    <p><h2><i class="fa fa-money positive" ng-if="d.promoted.split(' ')[0] !== '0.000'"></i>
 							<i class="fa fa-fire positive" ng-if="d.percent_steem_dollars === 0"></i> {{d.title}}</h2></p>
-				    <div class="row postdetails wrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;{{'BY'|translate}}&nbsp;<b>{{d.author}}</b>&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div> {{'IN'|translate}} {{d.category}} &middot; {{d.body|readingtime}} {{'MIN_READ'|translate}}</div></div>
+				    <div class="row postdetails wrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;{{'BY'|translate}}&nbsp;<b>{{d.author}}</b>&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div> {{'IN'|translate}} {{d.category|detransliterate:false}} &middot; {{d.body|readingtime}} {{'MIN_READ'|translate}}</div></div>
 				    </div>
 				    <div class="row">
 				    <div class="col">
@@ -58,7 +58,7 @@
 				<div class="item" on-tap="open(ds)">
 					<span ng-if="ds.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{'RESTEEMED_BY'|translate}} {{ds.reblogged_by}}</span>
 				    <h2><i class="fa fa-money positive" ng-if="ds.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="ds.percent_steem_dollars === 0"></i>{{ds.title}}</h2>
-				    <div class="row postdetails wrap"><div class="col"><i class="icon ion-android-time"></i> {{ds.created|timeago}}&nbsp;{{'BY'|translate}}&nbsp;<b>{{ds.author}}</b>&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div> {{'IN'|translate}} {{ds.category}} &middot; {{ds.body|readingtime}} {{'MIN_READ'|translate}}</div></div>
+				    <div class="row postdetails wrap"><div class="col"><i class="icon ion-android-time"></i> {{ds.created|timeago}}&nbsp;{{'BY'|translate}}&nbsp;<b>{{ds.author}}</b>&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div> {{'IN'|translate}} {{ds.category|detransliterate:false}} &middot; {{ds.body|readingtime}} {{'MIN_READ'|translate}}</div></div>
 				</div>
 				<div class="item-body">
 				    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" on-tap="open(ds)" ng-if="ds.json_metadata.image[0]" onerror="this.src='img/noimage.png'"/>

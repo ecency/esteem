@@ -11,7 +11,9 @@ var app = angular.module('steem', [
 ]);
 
 if (localStorage.getItem("socketUrl") === null) {
-  localStorage.setItem("socketUrl", "wss://steemit.com/wspa");
+  localStorage.setItem("socketUrl", "wss://steemd.steemit.com");
+} else if (localStorage.getItem("socketUrl") == "wss://steemit.com/wspa") {
+  localStorage.socketUrl="wss://steemd.steemit.com";
 }
 
 window.steemRPC = require("steem-rpc");
@@ -407,7 +409,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.log("app resume");
       var steemRPC = require("steem-rpc");
       if (localStorage.getItem("socketUrl") === null) {
-        localStorage.setItem("socketUrl", "wss://steemit.com/wspa");
+        localStorage.setItem("socketUrl", "wss://steemd.steemit.com");
       }
       window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
       window.steemJS = require("steemjs-lib");

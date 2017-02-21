@@ -152,8 +152,18 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                 $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('PASSWORD_INCORRECT'));
             } else {
               $rootScope.$storage.user = $scope.loginData;
-
-              $rootScope.$storage.users.push($rootScope.$storage.user);
+              var found = false;
+              if ($rootScope.$storage.users.length>0){
+                angular.forEach($rootScope.$storage.users, function(v,k){
+                  if (v.username == $rootScope.$storage.user.username && v.chain == $rootScope.$storage.user.chain){
+                    found = true;
+                  }
+                });
+              }
+              if (found) {
+              } else {
+                $rootScope.$storage.users.push($rootScope.$storage.user);  
+              }
               $rootScope.$storage.mylogin = $scope.login;
               APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date(), 'medium'), appversion: $rootScope.$storage.appversion}).then(function(res){
                 $rootScope.$broadcast('hide:loading');
@@ -949,6 +959,15 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $rootScope.log("tagsChange");
     $scope.spost.tags = $filter('lowercase')($scope.spost.tags);
     $scope.spost.category = $scope.spost.tags?$scope.spost.tags.split(" "):[];
+
+    angular.forEach($scope.spost.category, function(v,k){
+      if(/^[а-яё]/.test(v)) {
+        v = 'ru--' + $filter('detransliterate')(v, true);
+        $scope.spost.category[k] = v;
+      }
+    });
+
+    //console.log($scope.spost.category);
     if ($scope.spost.category.length > 5) {
       $scope.disableBtn = true;
     } else {
@@ -3592,6 +3611,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       confirmPopup.then(function(res) {
         if(res) {
           $rootScope.log('You are sure');
+          localStorage.socketUrl = $rootScope.$storage["socket"+$rootScope.$storage.chain];
           //$scope.logouts();
           $window.location.reload(true);  
         } else {
