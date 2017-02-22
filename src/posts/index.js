@@ -983,6 +983,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         //$scope.socket = "wss://golos.steem.ws";
       }
       localStorage.socketUrl = $rootScope.$storage["socket"+$rootScope.$storage.chain];
+      window.Api.close();
+      window.Api = null;
+      window.steemRPC.Client.close();
+      window.Api = window.steemRPC.Client.get({url:localStorage.socketUrl}, true);
+
       if (!$rootScope.$$phase) {
         $rootScope.$apply();
       }
