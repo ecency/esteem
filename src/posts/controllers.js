@@ -10,6 +10,15 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $scope.loginModal = modal;
   });
 
+  //var {key} = require($rootScope.$storage.chain+"js-lib");
+  console.log(window.steemJS);
+  let seed = "THIS IS A TERRIBLE BRAINKEY SEED WORD SEQUENCE";
+  let pkey = window[$rootScope.$storage.chain+"JS"].PrivateKey.fromSeed((window[$rootScope.$storage.chain+"JS"].key).normalize_brainKey(seed) );
+
+  console.log("\nPrivate key:", pkey.toWif());
+  console.log("Public key :", pkey.toPublicKey().toString(), "\n");
+
+  console.log((new window[$rootScope.$storage.chain+"JS"].Login()).generateKeys('mgood',pkey.toWif()));
 
   $ionicPopover.fromTemplateUrl('templates/popover.html', {
     scope: $scope,
@@ -41,6 +50,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
   $scope.changeUsername = function(){
     $scope.loginData.username = angular.lowercase($scope.loginData.username);
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
   }
   $scope.open = function(item) {
     item.json_metadata = angular.fromJson(item.json_metadata);
@@ -217,7 +229,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     
     setTimeout(function() {
       $window.location.reload(true);
-    }, 2000);
+    }, 1000);
   }
 
   $rootScope.$on('refreshLocalUserData', function() {
@@ -231,7 +243,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
               dd.json_metadata = angular.fromJson(dd.json_metadata);
             }
             angular.merge($rootScope.$storage.user, dd);
+
             $scope.mcss = ($rootScope.$storage.user.json_metadata && $rootScope.$storage.user.json_metadata.profile && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
+            
             if (!$scope.$$phase) {
               $scope.$apply();
             }
@@ -3613,7 +3627,9 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
           $rootScope.log('You are sure');
           localStorage.socketUrl = $rootScope.$storage["socket"+$rootScope.$storage.chain];
           //$scope.logouts();
-          $window.location.reload(true);  
+          setTimeout(function() {
+            $window.location.reload(true);
+          }, 500);
         } else {
           $rootScope.log('You are not sure');
         }

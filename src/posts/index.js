@@ -255,6 +255,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           navigator.globalization.getPreferredLanguage(function(language) {
               $translate.use(language.value).then(function(data) {
                   console.log("SUCCESS -> " + data);
+                  if (language.value.indexOf("en") == 0) {
+                    $rootScope.$storage.language = 'en';            
+                  }
                   $rootScope.$storage.language = language.value;
               }, function(error) {
                   console.log("ERROR -> " + error);
@@ -980,6 +983,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         //$scope.socket = "wss://golos.steem.ws";
       }
       localStorage.socketUrl = $rootScope.$storage["socket"+$rootScope.$storage.chain];
+      if (!$rootScope.$$phase) {
+        $rootScope.$apply();
+      }
     });
     function checkDate(date, ignore) {
       var eold = 86400000; //1 * 24 * 60 * 60 * 1000; //1 day old
@@ -990,42 +996,42 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     $rootScope.$on('changedCurrency', function(event, args){
       var xx = args.currency;
       var ignore = args.enforce;
-
-      setTimeout(function() {
-        console.log(xx);
-        var resultObject = $rootScope.$storage.currencies.filter(function ( obj ) {
-            return obj.id === xx;
-        })[0];
-        //searchObj(xx, $rootScope.$storage.currencies);
-        if (checkDate(resultObject.date, ignore)) {
-          if ($rootScope.$storage.chain == 'steem'){
-            APIs.getCurrencyRate("USD", xx ).then(function(res){
-              $rootScope.$storage.currencyRate = Number(res.data.query.results.rate.Rate);
-              $rootScope.$storage.currencies.filter(function(obj){
-                if (obj.id == xx) {
-                  obj.rate = $rootScope.$storage.currencyRate;
-                  obj.date = res.data.query.results.rate.Date==="N/A"?new Date() : res.data.query.results.rate.Date;
-                }
-              });
+      console.log(xx);
+      var resultObject = $rootScope.$storage.currencies.filter(function ( obj ) {
+          return obj.id === xx;
+      })[0];
+      //searchObj(xx, $rootScope.$storage.currencies);
+      if (checkDate(resultObject.date, ignore)) {
+        if ($rootScope.$storage.chain == 'steem'){
+          APIs.getCurrencyRate("USD", xx ).then(function(res){
+            $rootScope.$storage.currencyRate = Number(res.data.query.results.rate.Rate);
+            $rootScope.$storage.currencies.filter(function(obj){
+              if (obj.id == xx) {
+                obj.rate = $rootScope.$storage.currencyRate;
+                obj.date = res.data.query.results.rate.Date==="N/A"?new Date() : res.data.query.results.rate.Date;
+              }
             });
-          } else {
-            APIs.getCurrencyRate("XAU", xx ).then(function(res){
-              //XAU - 31.1034768g
-              //GBG rate in mg. so exchangeRate/31103.4768
-              $rootScope.$storage.currencyRate = Number(res.data.query.results.rate.Rate)/31103.4768;
-              $rootScope.$storage.currencies.filter(function(obj){
-                if (obj.id == xx) {
-                  obj.rate = $rootScope.$storage.currencyRate;
-                  obj.date = res.data.query.results.rate.Date==="N/A"?new Date() : res.data.query.results.rate.Date;
-                }
-              });
-              //console.log($rootScope.$storage.currencyRate);
-            });
-          }
+          });
         } else {
-          $rootScope.$storage.currencyRate = resultObject.rate;
+          APIs.getCurrencyRate("XAU", xx ).then(function(res){
+            //XAU - 31.1034768g
+            //GBG rate in mg. so exchangeRate/31103.4768
+            $rootScope.$storage.currencyRate = Number(res.data.query.results.rate.Rate)/31103.4768;
+            $rootScope.$storage.currencies.filter(function(obj){
+              if (obj.id == xx) {
+                obj.rate = $rootScope.$storage.currencyRate;
+                obj.date = res.data.query.results.rate.Date==="N/A"?new Date() : res.data.query.results.rate.Date;
+              }
+            });
+            //console.log($rootScope.$storage.currencyRate);
+          });
         }
-      }, 1);
+      } else {
+        $rootScope.$storage.currencyRate = resultObject.rate;
+      }
+      if (!$rootScope.$$phase) {
+        $rootScope.$apply();
+      }
     });
 
     if (window.cordova) {
