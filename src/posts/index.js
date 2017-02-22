@@ -117,7 +117,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   })
 
   .state('app.posts', {
-    url: '/posts/:tags',
+    url: '/posts/:tags/:renew',
     views: {
       'menuContent': {
         //templateUrl: 'templates/posts.html',
@@ -183,7 +183,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/posts/');
+  $urlRouterProvider.otherwise('/app/posts//');
   $ionicConfigProvider.navBar.alignTitle('left')
   $ionicConfigProvider.backButton.text('').icon('ion-chevron-left');
   $ionicConfigProvider.views.swipeBackEnabled(false);

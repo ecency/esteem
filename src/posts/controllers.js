@@ -198,9 +198,10 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                 $rootScope.$broadcast('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
 
                 setTimeout(function() {
-                  $window.location.reload(true);
+                  //$window.location.reload(true);
+                  $state.go('app.posts',{renew:true},{reload: true});
                   $rootScope.$broadcast('fetchPosts');
-                }, 2000);
+                }, 1000);
 
               });
             }
@@ -228,7 +229,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $rootScope.$broadcast('refreshLocalUserData');
     
     setTimeout(function() {
-      $window.location.reload(true);
+      //$window.location.reload(true);
+      $state.go('app.posts',{renew:true},{reload: true});
     }, 1000);
   }
 
@@ -298,11 +300,13 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     if ($rootScope.$storage.deviceid) {
       APIs.deleteSubscription($rootScope.$storage.deviceid).then(function(res){
         $ionicSideMenuDelegate.toggleLeft();
-        $window.location.reload(true);
+        //$window.location.reload(true);
+        $state.go('app.posts',{renew:true},{reload: true});
       });
     } else {
       $ionicSideMenuDelegate.toggleLeft();
-      $window.location.reload(true);
+      //$window.location.reload(true);
+      $state.go('app.posts',{renew:true},{reload: true});
     }
     $rootScope.$storage.filter = undefined;
     $rootScope.$storage.tag = undefined;
@@ -1161,6 +1165,11 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   }
 
   $scope.$on('$stateChangeSuccess', function() {
+    console.log('stateChangeSuccess', $stateParams.renew);
+    if ($stateParams.renew) {
+      $scope.data = null;
+      $scope.data = [];
+    }
     $scope.loadMore();
   });
 
@@ -1394,11 +1403,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
     }, 10);
   });
-
+  
   $scope.$on('$ionicView.beforeEnter', function(){
     if ($stateParams.tags) {
       $rootScope.$storage.tag = $stateParams.tags;
     }
+
     if (!angular.isDefined($rootScope.$storage.language)) {
       if(typeof navigator.globalization !== "undefined") {
           navigator.globalization.getPreferredLanguage(function(language) {
@@ -3472,7 +3482,6 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       if (!$scope.$$phase) {
         $scope.$apply();
       }
-      //$window.location.reload(true);
     }, 1);
   }
 
@@ -3594,11 +3603,13 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     if ($rootScope.$storage.deviceid) {
       APIs.deleteSubscription($rootScope.$storage.deviceid).then(function(res){
         $ionicSideMenuDelegate.toggleLeft();
-        $window.location.reload(true);
+        //$window.location.reload(true);
+        $state.go('app.posts',{renew:true},{reload: true});
       });
     } else {
       $ionicSideMenuDelegate.toggleLeft();
-      $window.location.reload(true);
+      //$window.location.reload(true);
+      $state.go('app.posts',{renew:true},{reload: true});
     }
     $rootScope.$storage.filter = undefined;
     $rootScope.$storage.tag = undefined;
@@ -3628,7 +3639,17 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
           localStorage.socketUrl = $rootScope.$storage["socket"+$rootScope.$storage.chain];
           //$scope.logouts();
           setTimeout(function() {
-            $window.location.reload(true);
+            window.Api.close();
+            window.Api = null;
+            window.steemRPC.Client.close();
+            var socketUrl = $rootScope.$storage["socket"+$rootScope.$storage.chain];
+            window.Api = window.steemRPC.Client.get({url:socketUrl}, true);
+
+            window.Api.initPromise.then(function(response) {
+              $state.go('app.posts',{renew:true},{reload: true});
+            });
+
+
           }, 500);
         } else {
           $rootScope.log('You are not sure');
@@ -3639,8 +3660,8 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       $ionicHistory.nextViewOptions({
         disableBack: true
       });
-      //$state.go('app.posts', {}, {reload: true});
-      $window.location.reload(true);  
+      //$window.location.reload(true);  
+      $state.go('app.posts',{renew:true},{reload: true});
     }
   };
 
