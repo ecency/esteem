@@ -1168,7 +1168,7 @@ module.exports = function (app) {
                     if (!$scope.editc) {
                         $rootScope.$broadcast('show:loading');
                         if ($rootScope.$storage.user) {
-                          $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+                          $scope.mylogin = new window.sgJS.Login();
                           $scope.mylogin.setRoles(["posting"]);
                           var loginSuccess = $scope.mylogin.checkKeys({
                               accountName: $rootScope.$storage.user.username,
@@ -1180,7 +1180,7 @@ module.exports = function (app) {
                             }
                           );
                           if (loginSuccess) {
-                            var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+                            var tr = new window.sgJS.TransactionBuilder();
                             var t = new Date();
                             var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
 
@@ -1229,7 +1229,7 @@ module.exports = function (app) {
 
                         $rootScope.$broadcast('show:loading');
                         if ($rootScope.$storage.user) {
-                          $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+                          $scope.mylogin = new window.sgJS.Login();
                           $scope.mylogin.setRoles(["posting"]);
                           var loginSuccess = $scope.mylogin.checkKeys({
                               accountName: $rootScope.$storage.user.username,
@@ -1241,7 +1241,7 @@ module.exports = function (app) {
                             }
                           );
                           if (loginSuccess) {
-                            var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+                            var tr = new window.sgJS.TransactionBuilder();
 
                             var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
                             tr.add_type_operation("comment", {
@@ -1301,7 +1301,7 @@ module.exports = function (app) {
                             $rootScope.log('You are sure');
                             $rootScope.$broadcast('show:loading');
                             if ($rootScope.$storage.user) {
-                              $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+                              $scope.mylogin = new window.sgJS.Login();
                               $scope.mylogin.setRoles(["posting"]);
                               var loginSuccess = $scope.mylogin.checkKeys({
                                   accountName: $rootScope.$storage.user.username,
@@ -1313,7 +1313,7 @@ module.exports = function (app) {
                                 }
                               );
                               if (loginSuccess) {
-                                var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+                                var tr = new window.sgJS.TransactionBuilder();
 
                                 tr.add_type_operation("delete_comment", {
                                   author: comment.author,

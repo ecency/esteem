@@ -16,10 +16,16 @@ if (localStorage.getItem("socketUrl") === null) {
   localStorage.socketUrl="wss://steemd.steemit.com";
 }
 
+localStorage.golosId = "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12";
+localStorage.steemId = "0000000000000000000000000000000000000000000000000000000000000000";
+
 window.steemRPC = require("steem-rpc");
 window.Api = window.steemRPC.Client.get({url:localStorage.socketUrl}, true);
-window.steemJS = require("steemjs-lib");
-window.golosJS = require("golosjs-lib");
+//window.steemJS = require("steemjs-lib");
+
+window.sgJS = require("sgjs-lib");
+
+//window.golosJS = require("golosjs-lib");
 window.diff_match_patch = require('diff-match-patch');
 window.getSymbol = require('currency-symbol-map');
 
@@ -249,6 +255,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     if (!$rootScope.$storage.socketsteem)
       $rootScope.$storage.socketsteem = "wss://steemd.steemit.com";
 
+    window.sgJS.ChainConfig.setChainId(localStorage[$rootScope.$storage.chain+"Id"]);
 
     if (!angular.isDefined($rootScope.$storage.language)) {
       if(typeof navigator.globalization !== "undefined") {
@@ -415,8 +422,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         localStorage.setItem("socketUrl", "wss://steemd.steemit.com");
       }
       window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
-      window.steemJS = require("steemjs-lib");
-      window.golosJS = require("golosjs-lib");
+      //window.steemJS = require("steemjs-lib");
+      //window.golosJS = require("golosjs-lib");
 
       //if (!angular.isDefined($rootScope.timeint)) {
       window.Api.initPromise.then(function(response) {
@@ -703,7 +710,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           $rootScope.log('You are sure');
           $rootScope.$broadcast('show:loading');
           if ($rootScope.$storage.user) {
-              $rootScope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+              $rootScope.mylogin = new window.sgJS.Login();
               $rootScope.mylogin.setRoles(["posting"]);
               var loginSuccess = $rootScope.mylogin.checkKeys({
                   accountName: $rootScope.$storage.user.username,
@@ -715,7 +722,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 }
               );
               if (loginSuccess) {
-                var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+                var tr = new window.sgJS.TransactionBuilder();
                 var json;
 
                 json = ["reblog",{account:$rootScope.$storage.user.username, author:author, permlink:permlink}];
@@ -764,13 +771,16 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         tt = 0;
       }
       $rootScope.log('voting '+tt);
-
+      if (!$rootScope.$$phase) {
+        $rootScope.$apply();
+      }
       if ($rootScope.$storage.user) {
         window.Api.initPromise.then(function(response) {
           $rootScope.log("Api ready:" + angular.toJson(response));
-          $rootScope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
-          $rootScope.mylogin.setRoles(["posting"]);
-          var loginSuccess = $rootScope.mylogin.checkKeys({
+          var mylogin = new window.sgJS.Login();
+          mylogin.setRoles(["posting"]);
+          //console.log($rootScope.$storage.user);
+          var loginSuccess = mylogin.checkKeys({
               accountName: $rootScope.$storage.user.username,
               password: $rootScope.$storage.user.password || null,
               auths: {
@@ -780,16 +790,16 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
           );
           if (loginSuccess) {
-            var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+            var tr = new window.sgJS.TransactionBuilder();
             tr.add_type_operation("vote", {
                 voter: $rootScope.$storage.user.username,
                 author: post.author,
                 permlink: post.permlink,
                 weight: $rootScope.$storage.voteWeight*tt || 10000*tt
             });
-            console.log(tr);
             localStorage.error = 0;
-            tr.process_transaction($rootScope.mylogin, null, true);
+            tr.process_transaction(mylogin, null, true);  
+
             setTimeout(function() {
               post.invoting = false;
               if (localStorage.error == 1) {
@@ -847,7 +857,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             $rootScope.$broadcast('show:loading');
             if ($rootScope.$storage.user) {
               if ($rootScope.$storage.user.password || $rootScope.$storage.user.privateActiveKey) {
-                $rootScope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+                $rootScope.mylogin = new window.sgJS.Login();
                 $rootScope.mylogin.setRoles(["active"]);
                 var loginSuccess = $rootScope.mylogin.checkKeys({
                     accountName: $rootScope.$storage.user.username,
@@ -859,7 +869,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                   }
                 );
                 if (loginSuccess) {
-                  var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+                  var tr = new window.sgJS.TransactionBuilder();
                   tr.add_type_operation("account_witness_vote", {
                       account: $rootScope.$storage.user.username,
                       approve: true,
@@ -899,7 +909,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$broadcast('show:loading');
       $rootScope.log(xx);
       if ($rootScope.$storage.user) {
-          $rootScope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+          $rootScope.mylogin = new window.sgJS.Login();
           $rootScope.mylogin.setRoles(["posting"]);
           var loginSuccess = $rootScope.mylogin.checkKeys({
               accountName: $rootScope.$storage.user.username,
@@ -911,7 +921,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
           );
           if (loginSuccess) {
-            var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+            var tr = new window.sgJS.TransactionBuilder();
             var json;
             if (mtype === "follow") {
               json = ['follow',{follower:$rootScope.$storage.user.username, following:xx, what: ["blog"]}];
@@ -961,7 +971,23 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$storage.notifications = [];
     }
     $rootScope.$on('changedChain', function(){
-      console.log('changeCHain');
+      console.log('chain differs');
+      localStorage.socketUrl = $rootScope.$storage["socket"+$rootScope.$storage.chain];
+      window.sgJS.ChainConfig.setChainId(localStorage[$rootScope.$storage.chain+"Id"]);
+      window.Api.close();
+      window.Api = window.steemRPC.Client.get({url: localStorage.socketUrl}, true);
+      
+      window.Api.initPromise.then(function(response) {  
+        angular.forEach($rootScope.$storage.users, function(v,k){
+          if (v.chain == $rootScope.$storage.chain){
+            $rootScope.$storage.user = v;
+          }
+        });
+        if (!$rootScope.$$phase) {
+          $rootScope.$apply();
+        }
+      });
+    
       if ($rootScope.$storage.chain == 'steem'){
         $rootScope.$storage.platformname = "Steem";
         $rootScope.$storage.platformpower = "Steem Power";
@@ -982,12 +1008,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.$storage.socketgolos = "wss://ws.golos.io/";
         //$scope.socket = "wss://golos.steem.ws";
       }
-      localStorage.socketUrl = $rootScope.$storage["socket"+$rootScope.$storage.chain];
-      window.Api.close();
-      window.Api = null;
-      window.steemRPC.Client.close();
-      window.Api = window.steemRPC.Client.get({url:localStorage.socketUrl}, true);
-
+      
       if (!$rootScope.$$phase) {
         $rootScope.$apply();
       }

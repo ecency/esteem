@@ -13,7 +13,7 @@ var paths = {
   sass: ['./scss/**/*.scss'],
   scripts: ['./src/**/*.js', './src/**/*.html'],
   tr: ['./src/posts/locales/*.json'],
-  browserify: ['./node_modules/steem-rpc/*.js', './node_modules/steemjs-lib/*.js']
+  browserify: ['./node_modules/steem-rpc/*.js', './node_modules/sgjs-lib/*.js']
 };
 
 gulp.task('default', ['sass']);
@@ -68,13 +68,13 @@ gulp.task('clean_translations', function(done) {
 });
 
 gulp.task('browserify', function() {
-  gulp.src('./node_modules/steemjs-lib/dist/index.js')
+  gulp.src('./node_modules/sgjs-lib/dist/index.js')
     .pipe(browserify({
       insertGlobals : true,
       debug : !gulp.env.production,
       transform: ['brfs']
     }))
-    .pipe(rename('steemjs-lib.js'))
+    .pipe(rename('sgjs-lib.js'))
     .pipe(gulp.dest('./'));
 });
 

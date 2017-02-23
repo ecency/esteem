@@ -10,8 +10,11 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $scope.loginModal = modal;
   });
 
+  //window.sgJS.ChainConfig.setChainId("782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12");
+  console.log(window.sgJS);
+
   //var {key} = require($rootScope.$storage.chain+"js-lib");
-  console.log(window.steemJS);
+  /*console.log(window.steemJS);
   let seed = "THIS IS A TERRIBLE BRAINKEY SEED WORD SEQUENCE";
   let pkey = window[$rootScope.$storage.chain+"JS"].PrivateKey.fromSeed((window[$rootScope.$storage.chain+"JS"].key).normalize_brainKey(seed) );
 
@@ -19,7 +22,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   console.log("Public key :", pkey.toPublicKey().toString(), "\n");
 
   console.log((new window[$rootScope.$storage.chain+"JS"].Login()).generateKeys('mgood',pkey.toWif()));
-
+  */
   $ionicPopover.fromTemplateUrl('templates/popover.html', {
     scope: $scope,
   }).then(function(popover) {
@@ -220,16 +223,23 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
   $scope.selectAccount = function(user) {
     $rootScope.$storage.user = user;
-    $rootScope.$storage.chain = user.chain;
-
-    $rootScope.$broadcast('changedChain');
-
-    $rootScope.$broadcast('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
     
-    $rootScope.$broadcast('refreshLocalUserData');
+    if ($rootScope.$storage.chain !== user.chain) {
+      $rootScope.$storage.chain = user.chain;  
+      $rootScope.$broadcast('changedChain');
+    }
+    setTimeout(function() {
+      $rootScope.$broadcast('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
+    
+      $rootScope.$broadcast('refreshLocalUserData');  
+    }, 100);
+    
     
     setTimeout(function() {
       //$window.location.reload(true);
+      if (!$rootScope.$$phase) {
+        $rootScope.$apply();
+      }
       $state.go('app.posts',{renew:true},{reload: true});
     }, 1000);
   }
@@ -250,6 +260,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
             
             if (!$scope.$$phase) {
               $scope.$apply();
+            }
+            if (!$rootScope.$$phase) {
+              $rootScope.$apply();
             }
           });
         }
@@ -521,7 +534,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
             if(res) {
               $rootScope.log('You are sure');
               $rootScope.$broadcast('show:loading');
-              $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+              $scope.mylogin = new window.sgJS.Login();
               $scope.mylogin.setRoles(["active"]);
               var loginSuccess = $scope.mylogin.checkKeys({
                   accountName: $rootScope.$storage.user.username,
@@ -533,7 +546,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
                 }
               );
               if (loginSuccess) {
-                var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+                var tr = new window.sgJS.TransactionBuilder();
                 if ($scope.data.type !== 'sp' && $scope.data.type !== 'golosp') {
 
                   var tt = $filter('number')($scope.data.amount) +" "+angular.uppercase($scope.data.type);
@@ -1005,7 +1018,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user) {
-      $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+      $scope.mylogin = new window.sgJS.Login();
       $scope.mylogin.setRoles(["posting"]);
       var loginSuccess = $scope.mylogin.checkKeys({
           accountName: $rootScope.$storage.user.username,
@@ -1017,7 +1030,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         }
       );
       if (loginSuccess) {
-        var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+        var tr = new window.sgJS.TransactionBuilder();
         var permlink = createPermlink($scope.spost.title);
         var json = $filter("metadata")($scope.spost.body);
         angular.merge(json, {tags: $scope.spost.category, app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' });
@@ -1379,7 +1392,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
               $rootScope.log("get_dynamic_global_properties "+ response.head_block_number);
               if ($rootScope.$storage.user) {
-                $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+                $scope.mylogin = new window.sgJS.Login();
                 $scope.mylogin.setRoles(["posting"]);
                 var loginSuccess = $scope.mylogin.checkKeys({
                     accountName: $rootScope.$storage.user.username,
@@ -1908,7 +1921,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             $rootScope.log('You are sure');
             $rootScope.$broadcast('show:loading');
             if ($rootScope.$storage.user) {
-              $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+              $scope.mylogin = new window.sgJS.Login();
               $scope.mylogin.setRoles(["posting"]);
               var loginSuccess = $scope.mylogin.checkKeys({
                   accountName: $rootScope.$storage.user.username,
@@ -1920,7 +1933,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
                 }
               );
               if (loginSuccess) {
-                var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+                var tr = new window.sgJS.TransactionBuilder();
 
                 tr.add_type_operation("delete_comment", {
                   author: xx.author,
@@ -1985,7 +1998,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     }
 
     if ($rootScope.$storage.user) {
-      $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+      $scope.mylogin = new window.sgJS.Login();
       $scope.mylogin.setRoles(["posting"]);
       var loginSuccess = $scope.mylogin.checkKeys({
           accountName: $rootScope.$storage.user.username,
@@ -1997,7 +2010,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         }
       );
       if (loginSuccess) {
-        var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+        var tr = new window.sgJS.TransactionBuilder();
         var permlink = $scope.spost.permlink;
         var jjson = $filter("metadata")($scope.spost.body);
         //console.log(jjson);
@@ -2053,7 +2066,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     }
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user) {
-      $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+      $scope.mylogin = new window.sgJS.Login();
       $scope.mylogin.setRoles(["posting"]);
       var loginSuccess = $scope.mylogin.checkKeys({
           accountName: $rootScope.$storage.user.username,
@@ -2065,7 +2078,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         }
       );
       if (loginSuccess) {
-        var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+        var tr = new window.sgJS.TransactionBuilder();
         var t = new Date();
         var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
         var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ["esteem"] , app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
@@ -2649,7 +2662,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
 
             $rootScope.log('You are sure');
             if ($rootScope.$storage.user) {
-              $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+              $scope.mylogin = new window.sgJS.Login();
               $scope.mylogin.setRoles(["active"]);
               var loginSuccess = $scope.mylogin.checkKeys({
                   accountName: $rootScope.$storage.user.username,
@@ -2662,7 +2675,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               );
               //todo: if json_metadata already exist make sure to keep it.
               if (loginSuccess) {
-                var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+                var tr = new window.sgJS.TransactionBuilder();
                 tr.add_type_operation("account_update", {
                   account: $rootScope.$storage.user.username,
                   memo_key: $rootScope.$storage.user.memo_key,
@@ -2731,7 +2744,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             setTimeout(function() {
               $rootScope.$broadcast('show:loading');
               if ($rootScope.$storage.user) {
-                $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+                $scope.mylogin = new window.sgJS.Login();
                 $scope.mylogin.setRoles(["active"]);
                 var loginSuccess = $scope.mylogin.checkKeys({
                     accountName: $rootScope.$storage.user.username,
@@ -2743,7 +2756,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   }
                 );
                 if (loginSuccess) {
-                  var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+                  var tr = new window.sgJS.TransactionBuilder();
                   tr.add_type_operation("account_update", {
                     account: $rootScope.$storage.user.username,
                     memo_key: $rootScope.$storage.user.memo_key,
@@ -2804,7 +2817,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
 
             setTimeout(function() {
               if ($rootScope.$storage.user) {
-                $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+                $scope.mylogin = new window.sgJS.Login();
                 $scope.mylogin.setRoles(["active"]);
                 var loginSuccess = $scope.mylogin.checkKeys({
                     accountName: $rootScope.$storage.user.username,
@@ -2816,7 +2829,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   }
                 );
                 if (loginSuccess) {
-                  var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+                  var tr = new window.sgJS.TransactionBuilder();
                   tr.add_type_operation("account_update", {
                     account: $rootScope.$storage.user.username,
                     memo_key: $rootScope.$storage.user.memo_key,
@@ -2884,7 +2897,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
 
             $rootScope.log('You are sure');
             if ($rootScope.$storage.user) {
-              $scope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+              $scope.mylogin = new window.sgJS.Login();
               $scope.mylogin.setRoles(["active"]);
               var loginSuccess = $scope.mylogin.checkKeys({
                   accountName: $rootScope.$storage.user.username,
@@ -2897,7 +2910,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               );
               //todo: if json_metadata already exist make sure to keep it.
               if (loginSuccess) {
-                var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+                var tr = new window.sgJS.TransactionBuilder();
                 tr.add_type_operation("account_update", {
                   account: $rootScope.$storage.user.username,
                   memo_key: $rootScope.$storage.user.memo_key,
@@ -3464,6 +3477,8 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       //$scope.socket = "wss://golos.steem.ws";
       $scope.socket = "wss://ws.golos.io/";
     }
+    window.sgJS.ChainConfig.setChainId(localStorage[$rootScope.$storage.chain+"Id"]);
+
     $scope.changeCurrency($rootScope.$storage.currency, true);
   }
   $scope.restart = false;
@@ -3644,12 +3659,16 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
             window.steemRPC.Client.close();
             var socketUrl = $rootScope.$storage["socket"+$rootScope.$storage.chain];
             window.Api = window.steemRPC.Client.get({url:socketUrl}, true);
-
+            if ($rootScope.$storage.user.chain != $rootScope.$storage.chain) {
+              angular.forEach($rootScope.$storage.users, function(v,k){
+                if (v.chain == $rootScope.$storage.chain){
+                  $rootScope.$storage.user = v;
+                }
+              });
+            }
             window.Api.initPromise.then(function(response) {
               $state.go('app.posts',{renew:true},{reload: true});
             });
-
-
           }, 500);
         } else {
           $rootScope.log('You are not sure');
