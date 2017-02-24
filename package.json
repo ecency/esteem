@@ -9,7 +9,6 @@
     "diff-match-patch": "^1.0.0",
     "elementtree": "^0.1.6",
     "fs": "0.0.2",
-    "golosjs-lib": "^0.3.7-1",
     "gulp": "^3.5.6",
     "gulp-browserify": "^0.5.1",
     "gulp-concat": "^2.2.0",
@@ -21,11 +20,12 @@
     "path": "^0.12.7",
     "plist": "^1.2.0",
     "require-main-filename": "^1.0.1",
-    "steem-rpc": "^0.6.6",
-    "steemjs-lib": "^0.3.7"
+    "sgjs-lib": "^0.4.0",
+    "steem-rpc": "^0.6.6"
   },
   "devDependencies": {
     "bower": "^1.3.3",
+    "gulp-clean-json": "git://github.com/ArturKp/gulp-clean-json.git#master",
     "gulp-sass": "^2.1.1",
     "gulp-util": "^2.2.14",
     "shelljs": "^0.3.0"

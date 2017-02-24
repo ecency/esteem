@@ -11,13 +11,21 @@ var app = angular.module('steem', [
 ]);
 
 if (localStorage.getItem("socketUrl") === null) {
-  localStorage.setItem("socketUrl", "wss://steemit.com/wspa");
+  localStorage.setItem("socketUrl", "wss://steemd.steemit.com");
+} else if (localStorage.getItem("socketUrl") == "wss://steemit.com/wspa") {
+  localStorage.socketUrl="wss://steemd.steemit.com";
 }
 
-var steemRPC = require("steem-rpc");
-window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
-window.steemJS = require("steemjs-lib");
-window.golosJS = require("golosjs-lib");
+localStorage.golosId = "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12";
+localStorage.steemId = "0000000000000000000000000000000000000000000000000000000000000000";
+
+window.steemRPC = require("steem-rpc");
+window.Api = window.steemRPC.Client.get({url:localStorage.socketUrl}, true);
+//window.steemJS = require("steemjs-lib");
+
+window.sgJS = require("sgjs-lib");
+
+//window.golosJS = require("golosjs-lib");
 window.diff_match_patch = require('diff-match-patch');
 window.getSymbol = require('currency-symbol-map');
 
@@ -115,7 +123,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   })
 
   .state('app.posts', {
-    url: '/posts/:tags',
+    url: '/posts/:tags/:renew',
     views: {
       'menuContent': {
         //templateUrl: 'templates/posts.html',
@@ -181,7 +189,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/posts/');
+  $urlRouterProvider.otherwise('/app/posts//');
   $ionicConfigProvider.navBar.alignTitle('left')
   $ionicConfigProvider.backButton.text('').icon('ion-chevron-left');
   $ionicConfigProvider.views.swipeBackEnabled(false);
@@ -195,27 +203,30 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
       $compileProvider.debugInfoEnabled(false);
   }
 
-  $translateProvider.translations('en', require('./locales/en')); //English
-  $translateProvider.translations('ru', require('./locales/ru')); //Russian
-  $translateProvider.translations('de', require('./locales/de')); //German
-  $translateProvider.translations('fr', require('./locales/fr')); //French
-  $translateProvider.translations('es', require('./locales/es')); //Spanish
-  $translateProvider.translations('gr', require('./locales/gr')); //Greek
-  $translateProvider.translations('bg', require('./locales/bg')); //Bulgarian
-  $translateProvider.translations('nl', require('./locales/nl')); //Dutch
-  $translateProvider.translations('hu', require('./locales/hu')); //Hungarian
-  $translateProvider.translations('cs', require('./locales/cs')); //Czech
-  $translateProvider.translations('iw', require('./locales/iw')); //Hebrew
-  $translateProvider.translations('pl', require('./locales/pl')); //Polish
-  $translateProvider.translations('pt', require('./locales/pt')); //Portuguese
-  $translateProvider.translations('id', require('./locales/id')); //Indonesian
-  $translateProvider.translations('zh', require('./locales/zh')); //Chinese traditional
-  $translateProvider.translations('dolan', require('./locales/dolan')); //Chinese traditional
+  $translateProvider.translations('en-US', require('./locales/en')); //English
+  $translateProvider.translations('ru-RU', require('./locales/ru-RU')); //Russian
+  $translateProvider.translations('de-DE', require('./locales/de-DE')); //German
+  $translateProvider.translations('fr-FR', require('./locales/fr-FR')); //French
+  $translateProvider.translations('es-ES', require('./locales/es-ES')); //Spanish
+  $translateProvider.translations('el-GR', require('./locales/el-GR')); //Greek
+  $translateProvider.translations('bg-BG', require('./locales/bg-BG')); //Bulgarian
+  $translateProvider.translations('nl-NL', require('./locales/nl-NL')); //Dutch
+  $translateProvider.translations('hu-HU', require('./locales/hu-HU')); //Hungarian
+  $translateProvider.translations('cs-CZ', require('./locales/cs-CZ')); //Czech
+  $translateProvider.translations('he-IL', require('./locales/he-IL')); //Hebrew
+  $translateProvider.translations('pl-PL', require('./locales/pl-PL')); //Polish
+  $translateProvider.translations('pt-PT', require('./locales/pt-PT')); //Portuguese
+  $translateProvider.translations('pt-BR', require('./locales/pt-BR')); //Portuguese Brazil
+  $translateProvider.translations('id-ID', require('./locales/id-ID')); //Indonesian
+  $translateProvider.translations('zh-TW', require('./locales/zh-TW')); //Chinese traditional
+  $translateProvider.translations('zh-CN', require('./locales/zh-CN')); //Chinese simplified
+  $translateProvider.translations('dolan', require('./locales/dol')); //Dolan
+  $translateProvider.translations('sv-SE', require('./locales/sv-SE')); //Chinese simplified
 
   $translateProvider.useSanitizeValueStrategy(null);
 
-  $translateProvider.preferredLanguage('en');
-  $translateProvider.fallbackLanguage('en');
+  $translateProvider.preferredLanguage('en-US');
+  $translateProvider.fallbackLanguage('en-US');
 
 });
 
@@ -235,12 +246,26 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+    if (!$rootScope.$storage.users) {
+      $rootScope.$storage.users = [];
+    }
+    
+    if (!$rootScope.$storage.socketgolos)
+      $rootScope.$storage.socketgolos = "wss://ws.golos.io/";
+    if (!$rootScope.$storage.socketsteem)
+      $rootScope.$storage.socketsteem = "wss://steemd.steemit.com";
+
+    window.sgJS.ChainConfig.setChainId(localStorage[$rootScope.$storage.chain+"Id"]);
+
     if (!angular.isDefined($rootScope.$storage.language)) {
       if(typeof navigator.globalization !== "undefined") {
           navigator.globalization.getPreferredLanguage(function(language) {
-              $translate.use((language.value).split("-")[0]).then(function(data) {
+              $translate.use(language.value).then(function(data) {
                   console.log("SUCCESS -> " + data);
-                  $rootScope.$storage.language = language.value.split('-')[0];
+                  if (language.value.indexOf("en") == 0) {
+                    $rootScope.$storage.language = 'en';            
+                  }
+                  $rootScope.$storage.language = language.value;
               }, function(error) {
                   console.log("ERROR -> " + error);
               });
@@ -265,23 +290,24 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     }
     $rootScope.$storage.languages = [
       {id:'en', name: 'English'}, 
-      {id:'es', name: 'Español'}, 
-      {id:'gr', name: 'Ελληνικά'}, 
-      {id:'fr', name: 'Français'}, 
-      {id:'de', name: 'Deutsch'}, 
-      {id:'ru', name: 'Русский'}, 
-      {id:'bg', name: 'Български'}, 
-      {id:'nl', name: 'Nederlands'}, 
-      {id:'hu', name: 'Magyar'}, 
-      {id:'cs', name: 'Čeština'}, 
-      {id:'iw', name: 'עברית‎'}, 
-      {id:'pl', name: 'Polski‎'}, 
-      {id:'pt', name: 'Português'}, 
-      {id:'id', name: 'Bahasa Indonesia'}, 
-      {id:'zh', name: '繁體中文'}, 
-      {id:'dolan', name: 'Dolan'},
-      {id:'pt-br', name: 'Português BR'},
-      {id:'tw', name: '简体中文'}
+      {id:'es-ES', name: 'Español'}, 
+      {id:'el-GR', name: 'Ελληνικά'}, 
+      {id:'fr-FR', name: 'Français'}, 
+      {id:'de-DE', name: 'Deutsch'}, 
+      {id:'ru-RU', name: 'Русский'}, 
+      {id:'bg-BG', name: 'Български'}, 
+      {id:'nl-NL', name: 'Nederlands'}, 
+      {id:'hu-HU', name: 'Magyar'}, 
+      {id:'cs-CZ', name: 'Čeština'}, 
+      {id:'he-IL', name: 'עברית‎'}, 
+      {id:'pl-PL', name: 'Polski‎'}, 
+      {id:'pt-PT', name: 'Português'}, 
+      {id:'pt-BR', name: 'Português BR'},
+      {id:'sv-SE', name: 'Svensk'},
+      {id:'id-ID', name: 'Bahasa Indonesia'}, 
+      {id:'zh-CN', name: '繁體中文'}, 
+      {id:'zh-TW', name: '简体中文'},
+      {id:'dolan', name: 'Dolan'}
     ];
 
     $rootScope.$storage.chains = [{id:'steem', name: 'Steem'}, {id:'golos', name: 'Golos'}];
@@ -393,11 +419,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.log("app resume");
       var steemRPC = require("steem-rpc");
       if (localStorage.getItem("socketUrl") === null) {
-        localStorage.setItem("socketUrl", "wss://steemit.com/wspa");
+        localStorage.setItem("socketUrl", "wss://steemd.steemit.com");
       }
       window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
-      window.steemJS = require("steemjs-lib");
-      window.golosJS = require("golosjs-lib");
+      //window.steemJS = require("steemjs-lib");
+      //window.golosJS = require("golosjs-lib");
 
       //if (!angular.isDefined($rootScope.timeint)) {
       window.Api.initPromise.then(function(response) {
@@ -684,7 +710,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           $rootScope.log('You are sure');
           $rootScope.$broadcast('show:loading');
           if ($rootScope.$storage.user) {
-              $rootScope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+              $rootScope.mylogin = new window.sgJS.Login();
               $rootScope.mylogin.setRoles(["posting"]);
               var loginSuccess = $rootScope.mylogin.checkKeys({
                   accountName: $rootScope.$storage.user.username,
@@ -696,7 +722,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 }
               );
               if (loginSuccess) {
-                var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+                var tr = new window.sgJS.TransactionBuilder();
                 var json;
 
                 json = ["reblog",{account:$rootScope.$storage.user.username, author:author, permlink:permlink}];
@@ -745,13 +771,16 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         tt = 0;
       }
       $rootScope.log('voting '+tt);
-
+      if (!$rootScope.$$phase) {
+        $rootScope.$apply();
+      }
       if ($rootScope.$storage.user) {
         window.Api.initPromise.then(function(response) {
           $rootScope.log("Api ready:" + angular.toJson(response));
-          $rootScope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
-          $rootScope.mylogin.setRoles(["posting"]);
-          var loginSuccess = $rootScope.mylogin.checkKeys({
+          var mylogin = new window.sgJS.Login();
+          mylogin.setRoles(["posting"]);
+          //console.log($rootScope.$storage.user);
+          var loginSuccess = mylogin.checkKeys({
               accountName: $rootScope.$storage.user.username,
               password: $rootScope.$storage.user.password || null,
               auths: {
@@ -761,7 +790,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
           );
           if (loginSuccess) {
-            var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+            var tr = new window.sgJS.TransactionBuilder();
             tr.add_type_operation("vote", {
                 voter: $rootScope.$storage.user.username,
                 author: post.author,
@@ -769,7 +798,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 weight: $rootScope.$storage.voteWeight*tt || 10000*tt
             });
             localStorage.error = 0;
-            tr.process_transaction($rootScope.mylogin, null, true);
+            tr.process_transaction(mylogin, null, true);  
+
             setTimeout(function() {
               post.invoting = false;
               if (localStorage.error == 1) {
@@ -827,7 +857,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             $rootScope.$broadcast('show:loading');
             if ($rootScope.$storage.user) {
               if ($rootScope.$storage.user.password || $rootScope.$storage.user.privateActiveKey) {
-                $rootScope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+                $rootScope.mylogin = new window.sgJS.Login();
                 $rootScope.mylogin.setRoles(["active"]);
                 var loginSuccess = $rootScope.mylogin.checkKeys({
                     accountName: $rootScope.$storage.user.username,
@@ -839,7 +869,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                   }
                 );
                 if (loginSuccess) {
-                  var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+                  var tr = new window.sgJS.TransactionBuilder();
                   tr.add_type_operation("account_witness_vote", {
                       account: $rootScope.$storage.user.username,
                       approve: true,
@@ -879,7 +909,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$broadcast('show:loading');
       $rootScope.log(xx);
       if ($rootScope.$storage.user) {
-          $rootScope.mylogin = new window[$rootScope.$storage.chain+"JS"].Login();
+          $rootScope.mylogin = new window.sgJS.Login();
           $rootScope.mylogin.setRoles(["posting"]);
           var loginSuccess = $rootScope.mylogin.checkKeys({
               accountName: $rootScope.$storage.user.username,
@@ -891,7 +921,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
           );
           if (loginSuccess) {
-            var tr = new window[$rootScope.$storage.chain+"JS"].TransactionBuilder();
+            var tr = new window.sgJS.TransactionBuilder();
             var json;
             if (mtype === "follow") {
               json = ['follow',{follower:$rootScope.$storage.user.username, following:xx, what: ["blog"]}];
@@ -940,14 +970,103 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     if (!angular.isDefined($rootScope.$storage.notifications)) {
       $rootScope.$storage.notifications = [];
     }
+    $rootScope.$on('changedChain', function(){
+      console.log('chain differs');
+      localStorage.socketUrl = $rootScope.$storage["socket"+$rootScope.$storage.chain];
+      window.sgJS.ChainConfig.setChainId(localStorage[$rootScope.$storage.chain+"Id"]);
+      window.Api.close();
+      window.Api = window.steemRPC.Client.get({url: localStorage.socketUrl}, true);
+      
+      window.Api.initPromise.then(function(response) {  
+        angular.forEach($rootScope.$storage.users, function(v,k){
+          if (v.chain == $rootScope.$storage.chain){
+            $rootScope.$storage.user = v;
+          }
+        });
+        if (!$rootScope.$$phase) {
+          $rootScope.$apply();
+        }
+      });
+    
+      if ($rootScope.$storage.chain == 'steem'){
+        $rootScope.$storage.platformname = "Steem";
+        $rootScope.$storage.platformpower = "Steem Power";
+        $rootScope.$storage.platformsunit = "Steem";
+        $rootScope.$storage.platformdollar = "Steem Dollar";
+        $rootScope.$storage.platformdunit = "SBD";
+        $rootScope.$storage.platformpunit = "SP";
+        $rootScope.$storage.platformlunit = "STEEM";
+        $rootScope.$storage.socketsteem = "wss://steemd.steemit.com";
+      } else {
+        $rootScope.$storage.platformname = "ГОЛОС";
+        $rootScope.$storage.platformpower = "СИЛА ГОЛОСА";
+        $rootScope.$storage.platformsunit = "Голос";
+        $rootScope.$storage.platformdollar = "ЗОЛОТОЙ";
+        $rootScope.$storage.platformdunit = "GBG";
+        $rootScope.$storage.platformpunit = "СИЛА ГОЛОСА";
+        $rootScope.$storage.platformlunit = "ГОЛОС";
+        $rootScope.$storage.socketgolos = "wss://ws.golos.io/";
+        //$scope.socket = "wss://golos.steem.ws";
+      }
+      
+      if (!$rootScope.$$phase) {
+        $rootScope.$apply();
+      }
+    });
+    function checkDate(date, ignore) {
+      var eold = 86400000; //1 * 24 * 60 * 60 * 1000; //1 day old
+      var now = new Date().getTime();
+      var old = new Date(date).getTime();
+      return ignore||now-old>=eold;
+    }
+    $rootScope.$on('changedCurrency', function(event, args){
+      var xx = args.currency;
+      var ignore = args.enforce;
+      console.log(xx);
+      var resultObject = $rootScope.$storage.currencies.filter(function ( obj ) {
+          return obj.id === xx;
+      })[0];
+      //searchObj(xx, $rootScope.$storage.currencies);
+      if (checkDate(resultObject.date, ignore)) {
+        if ($rootScope.$storage.chain == 'steem'){
+          APIs.getCurrencyRate("USD", xx ).then(function(res){
+            $rootScope.$storage.currencyRate = Number(res.data.query.results.rate.Rate);
+            $rootScope.$storage.currencies.filter(function(obj){
+              if (obj.id == xx) {
+                obj.rate = $rootScope.$storage.currencyRate;
+                obj.date = res.data.query.results.rate.Date==="N/A"?new Date() : res.data.query.results.rate.Date;
+              }
+            });
+          });
+        } else {
+          APIs.getCurrencyRate("XAU", xx ).then(function(res){
+            //XAU - 31.1034768g
+            //GBG rate in mg. so exchangeRate/31103.4768
+            $rootScope.$storage.currencyRate = Number(res.data.query.results.rate.Rate)/31103.4768;
+            $rootScope.$storage.currencies.filter(function(obj){
+              if (obj.id == xx) {
+                obj.rate = $rootScope.$storage.currencyRate;
+                obj.date = res.data.query.results.rate.Date==="N/A"?new Date() : res.data.query.results.rate.Date;
+              }
+            });
+            //console.log($rootScope.$storage.currencyRate);
+          });
+        }
+      } else {
+        $rootScope.$storage.currencyRate = resultObject.rate;
+      }
+      if (!$rootScope.$$phase) {
+        $rootScope.$apply();
+      }
+    });
 
     if (window.cordova) {
       if (!ionic.Platform.isWindowsPhone()) {
         if (ionic.Platform.isIOS() || ionic.Platform.isIPad()) {
-          window.FirebasePlugin.grantPermission();
+          //window.FirebasePlugin.grantPermission();
         }
 
-        window.FirebasePlugin.getToken(function(token) {
+        /*window.FirebasePlugin.getToken(function(token) {
             // save this server-side and use it to push notifications to this device
             $rootScope.log("device "+token);
             $rootScope.$storage.deviceid = token;
@@ -962,9 +1081,24 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
         }, function(error) {
             console.error(error);
+        });*/
+
+        FCMPlugin.getToken(function(token){
+          // save this server-side and use it to push notifications to this device
+          $rootScope.log("device "+token);
+          $rootScope.$storage.deviceid = token;
+          if ($rootScope.$storage.user) {
+            APIs.saveSubscription(token, $rootScope.$storage.user.username, { device: ionic.Platform.platform() }).then(function(res){
+              $rootScope.log(angular.toJson(res));
+            });
+          } else {
+            APIs.saveSubscription(token, "", { device: ionic.Platform.platform() }).then(function(res){
+              $rootScope.log(angular.toJson(res));
+            });
+          }
         });
 
-        window.FirebasePlugin.onTokenRefresh(function(token) {
+        /*window.FirebasePlugin.onTokenRefresh(function(token) {
           APIs.updateToken($rootScope.$storage.deviceid, token).then(function(res){
             console.log(angular.toJson(res));
             if (res.status) {
@@ -976,9 +1110,20 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           }
         }, function(error) {
           console.error(error);
+        });*/
+        FCMPlugin.onTokenRefresh(function(token){
+          APIs.updateToken($rootScope.$storage.deviceid, token).then(function(res){
+            console.log(angular.toJson(res));
+            if (res.status) {
+              $rootScope.$storage.deviceid = token  
+            }
+          });
+          if (!$rootScope.$$phase){
+            $rootScope.$apply();
+          }
         });
 
-        window.FirebasePlugin.onNotificationOpen(function(data) {
+        /*window.FirebasePlugin.onNotificationOpen(function(data) {
             $rootScope.log(angular.toJson(data));
 
             //console.log(angular.toJson(data));
@@ -1022,6 +1167,53 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
         }, function(error) {
             console.error(error);
+        });
+        */
+
+        //FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
+        //Here you define your application behaviour based on the notification data.
+        FCMPlugin.onNotification(function(data){
+          $rootScope.log(angular.toJson(data));
+
+            //console.log(angular.toJson(data));
+
+            //$rootScope.$storage.notifications.push({title:data.title, message: data.body, author: data.author, permlink: data.permlink, created: new Date()});
+
+            if(data.wasTapped){
+              //Notification was received on device tray and tapped by the user.
+              if (data.author && data.permlink) {
+                if (!$rootScope.$storage.pincode) {
+
+                  var alertPopup = $ionicPopup.confirm({
+                    title: data.title,
+                    template: data.body + $filter('translate')('OPENING_POST')
+                  });
+
+                  alertPopup.then(function(res) {
+                    $rootScope.log('Thank you for seeing alert from tray');
+                    if (res) {
+                      setTimeout(function() {
+                        $rootScope.getContentAndOpen({author:data.author, permlink:data.permlink});
+                      }, 10);
+                    } else {
+                      $rootScope.log("not sure to open alert");
+                    }
+                  });
+
+                } else {
+                  $rootScope.$storage.notifData = {title:data.title, body: data.body, author: data.author, permlink: data.permlink};
+                  $rootScope.pinenabled = true;
+                }
+              }
+            } else{
+              //Notification was received in foreground. Maybe the user needs to be notified.
+              //alert( JSON.stringify(data) );
+              if (data.author && data.permlink) {
+                $rootScope.showMessage(data.title, data.body+" "+data.permlink);
+              } else {
+                $rootScope.showMessage(data.title, data.body);
+              }
+            }
         });
       }
 

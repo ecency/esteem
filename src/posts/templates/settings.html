@@ -73,7 +73,7 @@
         </label>
       </div>
     </div>
-    <div class="row" ng-if="$root.$storage.chain=='steem'">
+    <div class="row">
       <div class="col col-33">
       <span class="slabel" ng-click='openTooltip($event,"{{"RESTEEM_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i> {{'RESTEEM'|translate}}</span>
       </div>
@@ -137,11 +137,11 @@
 
     <div class="row">
       <div class="col col-33">
-        <span class="slabel" ng-click='openTooltip($event,"<span class=\"bold\">{{"SERVER_TEXT"|translate}}:</span><br><span class=\"wrap\">[steemit] wss://steemit.com/wspa</span><br/><br/><span class=\"wrap\">[steem.ws] wss://node.steem.ws</span><br/><br/><span class=\"wrap\">[piston] wss://this.piston.rocks</span><br/><br/><span class=\"wrap\">[golos] wss://ws.golos.io</span><br/><br/><span class=\"wrap\">[golos.ws] wss://node.golos.ws</span>
+        <span class="slabel" ng-click='openTooltip($event,"<span class=\"bold\">{{"SERVER_TEXT"|translate}}:</span><br><span class=\"wrap\">[steemit] wss://steemd.steemit.com</span><br/><br/><span class=\"wrap\">[steem.ws] wss://node.steem.ws</span><br/><br/><span class=\"wrap\">[piston] wss://this.piston.rocks</span><br/><br/><span class=\"wrap\">[golos] wss://ws.golos.io</span><br/><br/><span class=\"wrap\">[golos.ws] wss://node.golos.ws</span>
         ")'><i class="icon ion-ios-information-outline gray"></i> {{'SERVER'|translate}}</span>
       </div>
       <div class="col">
-        <input type="text" placeholder="Server" ng-model="socket" style="width:100%;">
+        <input type="text" placeholder="Server" ng-model="socket" style="width:100%;" ng-change="socketChange(socket)">
       </div>
     </div>
 

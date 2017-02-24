@@ -28,14 +28,14 @@
     <div ng-if='$root.$storage.sitem'>
     	<p class="title h3">{{$root.$storage.sitem.title}}</p>
     	<div class="stitle row gray"><div class="col">
-        <img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.$storage.paccounts[$root.$storage.sitem.author].json_metadata.user_image||$root.$storage.paccounts[$root.$storage.sitem.author].json_metadata.profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /> <b><a href="#/app/profile/{{$root.$storage.sitem.author}}">{{$root.$storage.sitem.author}}</a></b>&nbsp;<div class="reputation">{{$root.$storage.sitem.author_reputation|reputation|number:0}}</div>&middot;{{$root.$storage.sitem.created|timeago}} {{'IN'|translate}}&nbsp;{{$root.$storage.sitem.category}}</div><div class="pull-right"><span ng-if="$root.voiceOver"><i class="fa fa-flag" on-tap="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted">{{'DOWNVOTE'|translate}}</i><i class="fa fa-flag positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted">{{'UNVOTE_DOWNVOTED'|translate}}</i></span><span ng-if="!$root.voiceOver"><i class="fa fa-flag" on-tap="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted"></i><i class="fa fa-flag positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted"></i></span></div></div>
+        <img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.$storage.paccounts[$root.$storage.sitem.author].json_metadata.user_image||$root.$storage.paccounts[$root.$storage.sitem.author].json_metadata.profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /> <b><a href="#/app/profile/{{$root.$storage.sitem.author}}">{{$root.$storage.sitem.author}}</a></b>&nbsp;<div class="reputation">{{$root.$storage.sitem.author_reputation|reputation|number:0}}</div>&middot;{{$root.$storage.sitem.created|timeago}} {{'IN'|translate}}&nbsp;{{$root.$storage.sitem.category|detransliterate:false}}</div><div class="pull-right"><span ng-if="$root.voiceOver"><i class="fa fa-flag" on-tap="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted">{{'DOWNVOTE'|translate}}</i><i class="fa fa-flag positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted">{{'UNVOTE_DOWNVOTED'|translate}}</i></span><span ng-if="!$root.voiceOver"><i class="fa fa-flag" on-tap="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted"></i><i class="fa fa-flag positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted"></i></span></div></div>
     	<br><!---->
       <div class="bodytext selectable" ng-bind-html="$root.$storage.sitem.body | parseUrl ">
       </div>
 
       <div ng-if='$root.$storage.sitem.json_metadata.tags' class="tags">
         <div ng-repeat='tag in $root.$storage.sitem.json_metadata.tags'>
-          <span><div class="tag" on-tap="openTag(tag, 5)">{{tag}}</div></li>
+          <span><div class="tag" on-tap="openTag(tag, 5)">{{tag|detransliterate:false}}</div></li>
         </div>
       </div>
 
@@ -46,8 +46,7 @@
         <div class="col col-33" ng-if="$root.voiceOver"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
         <i class="icon ion-android-arrow-dropup-circle" on-tap="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted" on-hold="openSliderr($event)">{{'UPVOTE'|translate}}</i><i class="icon ion-android-arrow-dropup-circle positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted">{{'UNVOTE_UPVOTED'|translate}}</i>&nbsp;&nbsp;&nbsp;<span on-tap="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
         <div class="col col-33" on-tap="openTooltip($event,$root.$storage.sitem)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> {{$root.$storage.sitem | sumPostTotal:$root.$storage.currencyRate | number}}</div>
-        <div class="col"><i class="icon ion-chatbubbles"></i>{{$root.$storage.sitem.children}}</div>
-        <div class="col" on-tap="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username"><i class="fa fa-reply"></i></div>
+        <div class="col" on-tap="isreplying($root.$storage.sitem, true)"><i class="fa fa-reply"></i> {{$root.$storage.sitem.children}}</div>
         <div class="col" on-tap="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode=='first_payout' && $root.$storage.sitem.author==$root.$storage.user.username"><i class="fa  fa-pencil-square-o"></i></div>
         <div class="col" on-tap="deletePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.net_votes==0 && $root.$storage.sitem.author==$root.$storage.user.username"><i class="fa fa-trash-o"></i></div>
       </div>

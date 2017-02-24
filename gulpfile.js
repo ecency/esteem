@@ -7,11 +7,13 @@ var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
 var browserify = require('gulp-browserify');
+var clean_json = require("gulp-clean-json");
 
 var paths = {
   sass: ['./scss/**/*.scss'],
   scripts: ['./src/**/*.js', './src/**/*.html'],
-  browserify: ['./node_modules/steem-rpc/*.js', './node_modules/steemjs-lib/*.js']
+  tr: ['./src/posts/locales/*.json'],
+  browserify: ['./node_modules/steem-rpc/*.js', './node_modules/sgjs-lib/*.js']
 };
 
 gulp.task('default', ['sass']);
@@ -59,19 +61,26 @@ gulp.task('scripts', function() {
   .pipe(gulp.dest('./www/js'));
 });
 
+gulp.task('clean_translations', function(done) {
+  gulp.src("./src/posts/locales/*.json")
+    .pipe(clean_json())
+    .pipe(gulp.dest("./src/posts/locales/"));
+});
+
 gulp.task('browserify', function() {
-  gulp.src('./node_modules/steemjs-lib/dist/index.js')
+  gulp.src('./node_modules/sgjs-lib/dist/index.js')
     .pipe(browserify({
       insertGlobals : true,
       debug : !gulp.env.production,
       transform: ['brfs']
     }))
-    .pipe(rename('steemjs-lib.js'))
+    .pipe(rename('sgjs-lib.js'))
     .pipe(gulp.dest('./'));
 });
 
 gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
+  gulp.watch(paths.tr, ['clean_translations']);
   gulp.watch(paths.scripts, ['scripts']);
 });
 

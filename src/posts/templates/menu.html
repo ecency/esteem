@@ -31,7 +31,7 @@
             <span class="item-myavatar" ng-if="!$root.$storage.user.json_metadata.user_image && !$root.$storage.user.json_metadata.profile.profile_image"><img src="img/user_profile.png"></span>
             <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.user_image}}" ng-if="$root.$storage.user.json_metadata.user_image || $root.$storage.user.json_metadata.profile.profile_image" />
           </a>
-          <div ng-class="{'footprofileinfomenu':$root.$storage.user.json_metadata.profile.cover_image}">
+          <div>
             <div class="h4">@{{$root.$storage.user.username}}&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation:true|number:1}}</div></div>
             <div ng-click="showMeExtra()" class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}} <i class="icon pull-right" ng-class="{'ion-arrow-down-b':!showExtra, 'ion-arrow-up-b':showExtra}"></i></div>
           </div>
@@ -39,6 +39,15 @@
       </div>
       <div ng-if="showExtra">
         <ion-list>
+          <ion-item menu-close class="item-icon-left" ng-if="$root.$storage.users" ng-repeat="user in $root.$storage.users" ng-click="selectAccount(user)" ng-class="{'active': (user.username==$root.$storage.user.username&&user.chain==$root.$storage.user.chain) }">
+            <img class="icon logos" ng-src="{{'img/'+user.chain+'_icon.png'}}" />
+            {{user.username}}
+            <!--<span class="badge badge-assertive">{{user.chain}}</span>-->
+          </ion-item>
+          <ion-item menu-close ng-click="openLogin()" class="item-icon-left" ng-if="$root.$storage.user">
+            <i class="icon ion-plus-round"></i>
+            {{'ADD_ACCOUNT'|translate}}
+          </ion-item>
           <ion-item menu-close ng-click="openPostModal()" class="item-icon-left" ng-if="$root.$storage.user">
             <i class="icon ion-android-create"></i>
             {{'SUBMIT_A_STORY'|translate}}
