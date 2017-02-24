@@ -1,7 +1,33 @@
 ## eSteem (Android and iOS)
 
-eSteem mobile application offers functionality targeted to mobile device users, powered by Steem blockchain.
+eSteem is social application where you get paid for blogging, commenting and curating.
 
+eSteem features 
+
+- Access unique articles in any subject you are interested reading.
+- Engage with authors by commenting, discussing topics.
+- Voting for posts to reward author as well as earn curation reward.
+- Publish your articles, blog posts and host them for free and earn rewards by engaging and gain followers.
+- Write articles on go, save multiple drafts of the post for later publication.
+- Bookmark favorite articles to read later.
+- Exchange or cash out your earnings.
+- Send your funds to any authors or users, friends, followers, etc.
+- Follow interesting authors, bloggers.
+- Search your followers and authors you are following.
+- Get notifications to stay in touch with your followers and discussions you are involved in.
+- Search for interesting tags/categories of articles, authors.
+- Personalize your profile.
+- Many more features to come.
+
+
+Security
+
+1. App never access or hold onto user funds.
+2. App offer a client-side security model, with private keys hosted locally and never sent to any servers, you are responsible to backing up your passwords.
+3. App offers simple, attractive user interfaces and experiences
+4. App offers extra layer of security with pin-code
+
+eSteem supports Steem and Golos platforms.
 
 
 ## Development
