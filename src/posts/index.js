@@ -23,7 +23,7 @@ window.steemRPC = require("steem-rpc");
 window.Api = window.steemRPC.Client.get({url:localStorage.socketUrl}, true);
 //window.steemJS = require("steemjs-lib");
 
-window.sgJS = require("sgjs-lib");
+window.ejs = require("esteem-lib");
 
 //window.golosJS = require("golosjs-lib");
 window.diff_match_patch = require('diff-match-patch');
@@ -203,25 +203,25 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
       $compileProvider.debugInfoEnabled(false);
   }
 
-  $translateProvider.translations('en-US', require('./locales/en')); //English
-  $translateProvider.translations('ru-RU', require('./locales/ru-RU')); //Russian
-  $translateProvider.translations('de-DE', require('./locales/de-DE')); //German
-  $translateProvider.translations('fr-FR', require('./locales/fr-FR')); //French
-  $translateProvider.translations('es-ES', require('./locales/es-ES')); //Spanish
-  $translateProvider.translations('el-GR', require('./locales/el-GR')); //Greek
-  $translateProvider.translations('bg-BG', require('./locales/bg-BG')); //Bulgarian
-  $translateProvider.translations('nl-NL', require('./locales/nl-NL')); //Dutch
-  $translateProvider.translations('hu-HU', require('./locales/hu-HU')); //Hungarian
-  $translateProvider.translations('cs-CZ', require('./locales/cs-CZ')); //Czech
-  $translateProvider.translations('he-IL', require('./locales/he-IL')); //Hebrew
-  $translateProvider.translations('pl-PL', require('./locales/pl-PL')); //Polish
-  $translateProvider.translations('pt-PT', require('./locales/pt-PT')); //Portuguese
-  $translateProvider.translations('pt-BR', require('./locales/pt-BR')); //Portuguese Brazil
-  $translateProvider.translations('id-ID', require('./locales/id-ID')); //Indonesian
-  $translateProvider.translations('zh-TW', require('./locales/zh-TW')); //Chinese traditional
-  $translateProvider.translations('zh-CN', require('./locales/zh-CN')); //Chinese simplified
-  $translateProvider.translations('dolan', require('./locales/dol')); //Dolan
-  $translateProvider.translations('sv-SE', require('./locales/sv-SE')); //Chinese simplified
+  $translateProvider.translations('en-US', require('./locales/ready/en')); //English
+  $translateProvider.translations('ru-RU', require('./locales/ready/ru-RU')); //Russian
+  $translateProvider.translations('de-DE', require('./locales/ready/de-DE')); //German
+  $translateProvider.translations('fr-FR', require('./locales/ready/fr-FR')); //French
+  $translateProvider.translations('es-ES', require('./locales/ready/es-ES')); //Spanish
+  $translateProvider.translations('el-GR', require('./locales/ready/el-GR')); //Greek
+  $translateProvider.translations('bg-BG', require('./locales/ready/bg-BG')); //Bulgarian
+  $translateProvider.translations('nl-NL', require('./locales/ready/nl-NL')); //Dutch
+  $translateProvider.translations('hu-HU', require('./locales/ready/hu-HU')); //Hungarian
+  $translateProvider.translations('cs-CZ', require('./locales/ready/cs-CZ')); //Czech
+  $translateProvider.translations('he-IL', require('./locales/ready/he-IL')); //Hebrew
+  $translateProvider.translations('pl-PL', require('./locales/ready/pl-PL')); //Polish
+  $translateProvider.translations('pt-PT', require('./locales/ready/pt-PT')); //Portuguese
+  $translateProvider.translations('pt-BR', require('./locales/ready/pt-BR')); //Portuguese Brazil
+  $translateProvider.translations('id-ID', require('./locales/ready/id-ID')); //Indonesian
+  $translateProvider.translations('zh-TW', require('./locales/ready/zh-TW')); //Chinese traditional
+  $translateProvider.translations('zh-CN', require('./locales/ready/zh-CN')); //Chinese simplified
+  $translateProvider.translations('dolan', require('./locales/ready/dol')); //Dolan
+  $translateProvider.translations('sv-SE', require('./locales/ready/sv-SE')); //Chinese simplified
 
   $translateProvider.useSanitizeValueStrategy(null);
 
@@ -255,7 +255,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     if (!$rootScope.$storage.socketsteem)
       $rootScope.$storage.socketsteem = "wss://steemd.steemit.com";
 
-    window.sgJS.ChainConfig.setChainId(localStorage[$rootScope.$storage.chain+"Id"]);
+    window.ejs.ChainConfig.setChainId(localStorage[$rootScope.$storage.chain+"Id"]);
 
     if (!angular.isDefined($rootScope.$storage.language)) {
       if(typeof navigator.globalization !== "undefined") {
@@ -710,7 +710,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           $rootScope.log('You are sure');
           $rootScope.$broadcast('show:loading');
           if ($rootScope.$storage.user) {
-              $rootScope.mylogin = new window.sgJS.Login();
+              $rootScope.mylogin = new window.ejs.Login();
               $rootScope.mylogin.setRoles(["posting"]);
               var loginSuccess = $rootScope.mylogin.checkKeys({
                   accountName: $rootScope.$storage.user.username,
@@ -722,7 +722,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 }
               );
               if (loginSuccess) {
-                var tr = new window.sgJS.TransactionBuilder();
+                var tr = new window.ejs.TransactionBuilder();
                 var json;
 
                 json = ["reblog",{account:$rootScope.$storage.user.username, author:author, permlink:permlink}];
@@ -777,7 +777,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       if ($rootScope.$storage.user) {
         window.Api.initPromise.then(function(response) {
           $rootScope.log("Api ready:" + angular.toJson(response));
-          var mylogin = new window.sgJS.Login();
+          var mylogin = new window.ejs.Login();
           mylogin.setRoles(["posting"]);
           //console.log($rootScope.$storage.user);
           var loginSuccess = mylogin.checkKeys({
@@ -790,7 +790,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
           );
           if (loginSuccess) {
-            var tr = new window.sgJS.TransactionBuilder();
+            var tr = new window.ejs.TransactionBuilder();
             tr.add_type_operation("vote", {
                 voter: $rootScope.$storage.user.username,
                 author: post.author,
@@ -857,7 +857,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             $rootScope.$broadcast('show:loading');
             if ($rootScope.$storage.user) {
               if ($rootScope.$storage.user.password || $rootScope.$storage.user.privateActiveKey) {
-                $rootScope.mylogin = new window.sgJS.Login();
+                $rootScope.mylogin = new window.ejs.Login();
                 $rootScope.mylogin.setRoles(["active"]);
                 var loginSuccess = $rootScope.mylogin.checkKeys({
                     accountName: $rootScope.$storage.user.username,
@@ -869,7 +869,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                   }
                 );
                 if (loginSuccess) {
-                  var tr = new window.sgJS.TransactionBuilder();
+                  var tr = new window.ejs.TransactionBuilder();
                   tr.add_type_operation("account_witness_vote", {
                       account: $rootScope.$storage.user.username,
                       approve: true,
@@ -909,7 +909,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$broadcast('show:loading');
       $rootScope.log(xx);
       if ($rootScope.$storage.user) {
-          $rootScope.mylogin = new window.sgJS.Login();
+          $rootScope.mylogin = new window.ejs.Login();
           $rootScope.mylogin.setRoles(["posting"]);
           var loginSuccess = $rootScope.mylogin.checkKeys({
               accountName: $rootScope.$storage.user.username,
@@ -921,7 +921,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             }
           );
           if (loginSuccess) {
-            var tr = new window.sgJS.TransactionBuilder();
+            var tr = new window.ejs.TransactionBuilder();
             var json;
             if (mtype === "follow") {
               json = ['follow',{follower:$rootScope.$storage.user.username, following:xx, what: ["blog"]}];
@@ -973,7 +973,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     $rootScope.$on('changedChain', function(){
       console.log('chain differs');
       localStorage.socketUrl = $rootScope.$storage["socket"+$rootScope.$storage.chain];
-      window.sgJS.ChainConfig.setChainId(localStorage[$rootScope.$storage.chain+"Id"]);
+      window.ejs.ChainConfig.setChainId(localStorage[$rootScope.$storage.chain+"Id"]);
       window.Api.close();
       window.Api = window.steemRPC.Client.get({url: localStorage.socketUrl}, true);
       

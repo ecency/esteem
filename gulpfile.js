@@ -13,7 +13,7 @@ var paths = {
   sass: ['./scss/**/*.scss'],
   scripts: ['./src/**/*.js', './src/**/*.html'],
   tr: ['./src/posts/locales/*.json'],
-  browserify: ['./node_modules/steem-rpc/*.js', './node_modules/sgjs-lib/*.js']
+  browserify: ['./node_modules/steem-rpc/*.js', './node_modules/esteem-lib/*.js']
 };
 
 gulp.task('default', ['sass']);
@@ -64,17 +64,17 @@ gulp.task('scripts', function() {
 gulp.task('clean_translations', function(done) {
   gulp.src("./src/posts/locales/*.json")
     .pipe(clean_json())
-    .pipe(gulp.dest("./src/posts/locales/"));
+    .pipe(gulp.dest("./src/posts/locales/ready/"));
 });
 
 gulp.task('browserify', function() {
-  gulp.src('./node_modules/sgjs-lib/dist/index.js')
+  gulp.src('./node_modules/esteem-lib/dist/index.js')
     .pipe(browserify({
       insertGlobals : true,
       debug : !gulp.env.production,
       transform: ['brfs']
     }))
-    .pipe(rename('sgjs-lib.js'))
+    .pipe(rename('esteem-lib.js'))
     .pipe(gulp.dest('./'));
 });
 
