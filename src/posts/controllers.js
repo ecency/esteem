@@ -641,8 +641,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     options: {
       floor: 1,
       ceil: 100,
-      translate: formatToPercentage,
-      showSelectionBar: true
+      hideLimitLabels: true
+      //translate: formatToPercentage,
+      //showSelectionBar: true,
     }
   };
   
@@ -652,14 +653,18 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $scope.tooltipSlider = popover;
   });
   
-  $scope.openSlider = function($event) {
+  $scope.openSlider = function($event, d) {
+    $scope.votingPost = d;
     $scope.pslider = {
       value: $rootScope.$storage.voteWeight/100,
       options: {
-        floor: 1,
+        floor: 0,
         ceil: 100,
+        hideLimitLabels: true,
+        showTicksValues: 25,
         translate: formatToPercentage,
-        showSelectionBar: true
+        //showSelectionBar: true,
+        //ticksArray: [1, 10, 25, 50, 100]
       }
     };
     if (!$scope.$$phase) {
@@ -667,7 +672,10 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
     $scope.tooltipSlider.show($event);
   };
-
+  $scope.votePostS = function() {
+    $scope.tooltipSlider.hide();
+    $scope.votePost($scope.votingPost);
+  }
   $scope.closeSlider = function() {
     $scope.tooltipSlider.hide();
   };
