@@ -243,10 +243,10 @@
   "ABOUT_11":"<br><b>Daftar fitur</b> <br>-akses unik artikel dalam subjek Anda tertarik membaca. <br> -Terlibat dengan penulis dengan komentar, membahas topik. <br>-Voting untuk posting ke penulis hadiah serta mendapatkan pahala pengkurasian. <br>-Publish artikel, posting blog dan host mereka secara gratis dan mendapatkan imbalan dengan melibatkan dan mendapatkan pengikut. <br>-Menulis artikel tentang pergi, menyimpan draf beberapa posting untuk kemudian publikasi. <br>-Bookmark favorit artikel untuk dibaca nanti. <br>-Exchange atau uang tunai penghasilan Anda. <br>-Mengirim dana kepada penulis atau pengguna, temanmu, pengikutmu, dll <br>-ikuti menarik penulis, blogger. <br> -Cari pengikutnya dan penulis Anda mengikuti Anda. <br>-Get pemberitahuan untuk tetap berhubungan dengan pengikut Anda dan diskusi Anda yang terlibat in. <br>-pencarian untuk menarik tags/Kategori artikel, penulis. <br> -Mempersonalisasikan profil Anda. <br>-Banyak lebih banyak fitur untuk datang. <br><br><b>Keamanan</b> <br>1. App tidak pernah mengakses atau memegang pengguna dana. <br>2. app menawarkan model keamanan sisi klien dengan private key host secara lokal dan tidak pernah dikirimkan ke server apapun, Anda bertanggung jawab untuk membuat cadangan password Anda. <br>3. app menawarkan antarmuka pengguna yang sederhana, menarik dan pengalaman <br>4. App menawarkan lapisan tambahan keamanan dengan kode pin <br><br>harga mendukung platform Steem dan Golos. <br>",
   "FOUNDER":"Pendiri dan pengembang",
   "ADD_ACCOUNT":"Tambah akun",
-  "PLATFORM":"",
-  "ESCROW_AGENT":"",
-  "RATIFICATION_DEADLINE":"",
-  "ESCROW_EXPIRATION":"",
-  "ESCROW_FEE":"",
-  "ESCROW_TERMS":""
+  "PLATFORM":"Platform",
+  "ESCROW_AGENT":"Agen escrow",
+  "RATIFICATION_DEADLINE":"Ratifikasi tenggat waktu",
+  "ESCROW_EXPIRATION":"Escrow kadaluarsa",
+  "ESCROW_FEE":"Escrow biaya",
+  "ESCROW_TERMS":"Escrow persyaratan"
 }
