@@ -137,7 +137,7 @@
   "SET_PIN":"पिन सेट करें",
   "ENTER_PIN":"पिन डालें",
   "ARE_YOU_SURE":"क्या आपको यकीन है?",
-  "REBLOG_TEXT":"",
+  "REBLOG_TEXT":"\nरीस्टिम (Reblog) अपरिवर्तनीय है, क्या आप जारी रखना चाहते हैं?",
   "BROADCAST_ERROR":"\nप्रसारण त्रुटि, फिर से कोशिश करें!",
   "SUCCESS":"सफलता",
   "REBLOGGED_POST":"",
