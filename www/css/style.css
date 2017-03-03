@@ -1130,7 +1130,16 @@ img.round-avatar{
 }
 .detailedSlide {
   width: 100%!important;
-  height: 70px;
+  height: 60px;
+  vertical-align: middle;
+}
+.detailedSlide .row {
+  margin: 0px;
+  padding: 0px;
+}
+.detailedSlide .row .col {
+  margin: 0px 5px;
+  padding: 0px;
 }
 .text-class {
   background-color: #000!important;
@@ -1447,4 +1456,7 @@ em {
   margin: 15px 0px 0px 5px;
   max-width: 20px;
   max-height: 20px;
+}
+.col .fa-lg {
+  font-size: 1.7em;
 }
