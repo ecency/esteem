@@ -244,9 +244,9 @@
   "FOUNDER":"موسس و برنامه نویس ارشد",
   "ADD_ACCOUNT":"افزودن حساب کاربری",
   "PLATFORM":"پلتفرم",
-  "ESCROW_AGENT":"",
-  "RATIFICATION_DEADLINE":"",
-  "ESCROW_EXPIRATION":"",
-  "ESCROW_FEE":"",
-  "ESCROW_TERMS":""
+  "ESCROW_AGENT":"مامور وکالت داده شده",
+  "RATIFICATION_DEADLINE":"مهلت تصویب",
+  "ESCROW_EXPIRATION":"پایان زمان وکالت",
+  "ESCROW_FEE":"هزینه وکالت",
+  "ESCROW_TERMS":"شرایط وکالت"
 }
