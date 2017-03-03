@@ -243,5 +243,10 @@
   "ABOUT_11":"",
   "FOUNDER":"",
   "ADD_ACCOUNT":"",
-  "PLATFORM":""
+  "PLATFORM":"",
+  "ESCROW_AGENT":"",
+  "RATIFICATION_DEADLINE":"",
+  "ESCROW_EXPIRATION":"",
+  "ESCROW_FEE":"",
+  "ESCROW_TERMS":""
 }

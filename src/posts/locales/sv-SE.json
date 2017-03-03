@@ -243,5 +243,10 @@
   "ABOUT_11":"<br><b>Lista över funktioner</b><br>- Tillgång till artiklar i ämnen som intresserar dig.<br>- Interagera med skribenter genom att kommentera, diskutera ämnen.<br>- Rösta på inlägg för at belöna skribenter och tjäna kureringsbelöningar.<br>- Publicera dina artiklar, blogginlägg och gör dem tillgänliga för andra helt gratis, samt tjäna belöningar genom att engagera och få följare.<br>- Skriv artiklar på stående fåt, spara flera utkast av dina inlägg för senare publicering.<br>- Bokmärk favortinlägg för att läsa senare.<br>- Handla med eller ta ut dina belöningar.<br>- Gör transaktioner till valfri användare, vän, följare, etc.<br>- Följ intressanta skribenter, bloggare.<br>- Sök bland dina följare och skribenter du följer.<br>- Få meddelande så att du kan hålla kontakten med dina följare och ha koll på de diskussioner du deltar i.<br>- Sök efter intressanta ämnen/artikelkategorier, skribenter.<br>- Gör din profil mer personlig.<br>- Många fler funktioner på väg<br><br><b>Säkerhet</b><br>1. Appen har får aldrig tillgång till eller kontroll över dina pengar.<br>2. Appens säkerhetsmodell är klientcentrerad, med privata nycklar sparade lokalt och aldrig skickade till några andra servrar, du är själv ansvarig för att säkerhetskopiera dina lösenord.<br>3. Appen erbjuder ett enkelt, attraktivt användargränssnitt och användarupplevelse.<br>4. Appen erbjuder extra säkerhet med pin-kod<br><br>eSteem stödjer Steem- och Golos- plattformarna.<br>",
   "FOUNDER":"Grundare och Lead Developer",
   "ADD_ACCOUNT":"Lägg till konto",
-  "PLATFORM":"Plattform"
+  "PLATFORM":"Plattform",
+  "ESCROW_AGENT":"",
+  "RATIFICATION_DEADLINE":"",
+  "ESCROW_EXPIRATION":"",
+  "ESCROW_FEE":"",
+  "ESCROW_TERMS":""
 }
