@@ -137,7 +137,7 @@
   "SET_PIN":"Configure PIN",
   "ENTER_PIN":"Entrar com Pin",
   "ARE_YOU_SURE":"Tem a certeza?",
-  "REBLOG_TEXT":"",
+  "REBLOG_TEXT":"Republicar é irreversível, quer mesmo continuar?",
   "BROADCAST_ERROR":"Erro de difusão, tente novamente!",
   "SUCCESS":"Sucesso",
   "REBLOGGED_POST":"Publicação republicada",

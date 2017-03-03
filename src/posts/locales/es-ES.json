@@ -93,7 +93,7 @@
   "MENTIONS":"Menciones",
   "MENTIONS_TEXT":"Recibirás una notificación cuando alguien te mencione en su publicación/comentario!",
   "RESTEEM":"",
-  "RESTEEM_TEXT":"",
+  "RESTEEM_TEXT":"Recibirás una notificación cuando alguien haga reblog a tu publicación!",
   "CONFIGURATIONS":"Configuraciones",
   "VOTING":"Voto",
   "VOTING_TEXT":"El peso o porcentaje del voto afecta al poder de votación en la app, de tal manera que puedes regular tu recompensa de votación. <br/><br/><b>Nota:</b> Esto cambiará también el peso/porcentaje del voto a la hora de hacer un voto negativo",

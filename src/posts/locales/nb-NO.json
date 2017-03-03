@@ -137,7 +137,7 @@
   "SET_PIN":"SET_PIN",
   "ENTER_PIN":"ENTER_PIN",
   "ARE_YOU_SURE":"ER DU SIKKER",
-  "REBLOG_TEXT":"",
+  "REBLOG_TEXT":"Reblog is irreversible, do you want to continue?",
   "BROADCAST_ERROR":"BROADCAST_ERROR",
   "SUCCESS":"SUKSESS",
   "REBLOGGED_POST":"REBLOGGED_POST",
