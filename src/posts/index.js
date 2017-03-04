@@ -224,7 +224,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('sv-SE', require('./locales/ready/sv-SE')); //Chinese simplified
   $translateProvider.translations('uk-UA', require('./locales/ready/uk-UA')); //Ukrainian
   $translateProvider.translations('ms-MY', require('./locales/ready/ms-MY')); //Malay
-
+  $translateProvider.translations('hr-HR', require('./locales/ready/hr-HR')); //Croatian
 
   $translateProvider.useSanitizeValueStrategy(null);
 
@@ -310,7 +310,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       {id:'id-ID', name: 'Bahasa Indonesia'}, 
       {id:'zh-CN', name: '繁體中文'}, 
       {id:'zh-TW', name: '简体中文'},
-      {id:'dolan', name: 'Dolan'}
+      {id:'dolan', name: 'Dolan'},
+      {id:'uk-UA', name: 'Українська'},
+      {id:'ms-MY', name: 'Bahasa Melayu'}
+      //{id:'hr-HR', name: 'Hrvatski'}
     ];
 
     $rootScope.$storage.chains = [{id:'steem', name: 'Steem'}, {id:'golos', name: 'Golos'}];

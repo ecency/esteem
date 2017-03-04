@@ -11,8 +11,8 @@ var clean_json = require("gulp-clean-json");
 
 var paths = {
   sass: ['./scss/**/*.scss'],
-  scripts: ['./src/**/*.js', './src/**/*.html'],
   tr: ['./src/posts/locales/*.json'],
+  scripts: ['./src/**/*.js', './src/**/*.html'],
   browserify: ['./node_modules/steem-rpc/*.js', './node_modules/esteem-lib/*.js']
 };
 
