@@ -137,7 +137,7 @@
   "SET_PIN":"SET_PIN",
   "ENTER_PIN":"ENTER_PIN",
   "ARE_YOU_SURE":"OLETKO VARMA",
-  "REBLOG_TEXT":"Reblog is irreversible, do you want to continue?",
+  "REBLOG_TEXT":"Steemiin jakaminen on peruuttamatonta, haluatko jatkaa?",
   "BROADCAST_ERROR":"BROADCAST_ERROR",
   "SUCCESS":"MENESTYS",
   "REBLOGGED_POST":"REBLOGGED_POST",
