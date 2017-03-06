@@ -2111,7 +2111,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
   $rootScope.$on("update:content", function(){
     $rootScope.log("update:content");
-    $scope.getContent($scope.post.author, $scope.post.permlink);
+    setTimeout(function() {
+      $scope.getContent($scope.post.author, $scope.post.permlink);  
+    }, 100);
     $rootScope.$broadcast('hide:loading');
   });
   $ionicModal.fromTemplateUrl('templates/reply.html', {
@@ -2252,13 +2254,13 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     }
   });
 
-
-
   $scope.upvotePost = function(post) {
     $rootScope.votePost(post, 'upvote', 'getContent');
   };
   $rootScope.$on('getContent', function() {
-    $scope.getContent($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink);
+    setTimeout(function() {
+      $scope.getContent($rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink);  
+    }, 100);
   });
   $scope.downvotePost = function(post) {
     var confirmPopup = $ionicPopup.confirm({
