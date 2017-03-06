@@ -24,7 +24,7 @@
     <ion-floating-item icon="ion-image" click="showImages(0)" ng-if="isImages()" button-color="#387ef5" icon-color="#fff" text="{{'GALLERY'|translate}}" text-class="text-class"></ion-floating-item>
     <ion-floating-item icon="ion-arrow-return-right" ng-if="$root.$storage.user.username !== $root.$storage.sitem.author" click="$root.reBlog($root.$storage.sitem.author, $root.$storage.sitem.permlink)" button-color="#387ef5" icon-color="#fff" text="{{'REBLOG'|translate}}" text-class="text-class"></ion-floating-item>
   </ion-floating-menu>
-  <ion-content class="padding has-header" delegate-handle="mainScroll" overflow-scroll="true"><!---->
+  <ion-content class="padding has-header" delegate-handle="mainScroll" overflow-scroll="true" ng-class="{'theme-dark':$root.$storage.theme == 'night'}"><!---->
     <div ng-if='$root.$storage.sitem'>
     	<p class="title h3">{{$root.$storage.sitem.title}}</p>
     	<div class="stitle row gray"><div class="col">

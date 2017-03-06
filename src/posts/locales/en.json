@@ -248,5 +248,8 @@
 	"RATIFICATION_DEADLINE": "Ratification deadline",
     "ESCROW_EXPIRATION": "Escrow expiration",
     "ESCROW_FEE": "Escrow fee",
-    "ESCROW_TERMS": "Escrow terms"
+    "ESCROW_TERMS": "Escrow terms",
+    "NIGHT_MODE": "Night mode",
+    "DAY_MODE": "Day mode"
+    
 }

@@ -279,9 +279,14 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $rootScope.$storage.view = view;
     $rootScope.$broadcast('changeView');
   }
+  $scope.changeLight = function(light) {
+    $rootScope.$storage.theme = light;
+    $rootScope.$broadcast('changeLight');
+  }
 
   $scope.$on("$ionicView.enter", function(){
     $rootScope.$broadcast('refreshLocalUserData');
+    $scope.theme = $rootScope.$storage.theme;
   });
 
   // get app version
@@ -1211,6 +1216,14 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
   });
 
+  $rootScope.$on('changeLight', function(){
+    //$scope.menupopover.hide();
+    $rootScope.$broadcast('close:popover');
+    if (!$scope.$$phase){
+      $scope.$apply();
+    }
+  });
+
   function arrayObjectIndexOf(myArray, searchTerm, property) {
     var llen = myArray.length;
     for(var i = 0; i < llen; i++) {
@@ -1426,6 +1439,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   });
   
   $scope.$on('$ionicView.beforeEnter', function(){
+    $scope.theme = $rootScope.$storage.theme;
     if ($stateParams.tags) {
       $rootScope.$storage.tag = $stateParams.tags;
     }

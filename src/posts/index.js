@@ -255,6 +255,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$storage.users = [];
     }
     
+    if (!$rootScope.$storage.theme) {
+      $rootScope.$storage.theme = 'day';
+    }
+
     if (!$rootScope.$storage.socketgolos)
       $rootScope.$storage.socketgolos = "wss://ws.golos.io/";
     if (!$rootScope.$storage.socketsteem)

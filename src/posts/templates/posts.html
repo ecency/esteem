@@ -15,12 +15,12 @@
 	      <a href class="button button-icon ion-more" on-tap="openMenuPopover($event)" ng-if="$root.voiceOver">{{'OPTIONS'|translate}}</a>
 	    </ion-nav-buttons>
 	</ion-nav-bar>
-  <ion-content class="has-header" scroll="true" delegate-handle="mainScroll" overflow-scroll="true">
+  <ion-content class="has-header" scroll="true" delegate-handle="mainScroll" overflow-scroll="true" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 		<ion-refresher pulling-text="{{'PULL_DOWN_TO_REFRESH'|translate}}" on-refresh="refresh()">
   	</ion-refresher>
   		<div ng-if="$root.$storage.view=='compact' && data.length>0" class="masonry-layout">
 	    	<div ng-repeat="d in data track by $index" class="masonry-layout__panel">
-	    	   <div class="list masonry-layout__panel-content">
+	    	   <div class="list masonry-layout__panel-content" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 		    	<div class="item">
 				    <div on-tap="open(d)">
 				    <span ng-if="d.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{'RESTEEMED_BY'|translate}} {{d.reblogged_by}}</span>
@@ -53,9 +53,9 @@
 		</div>
 		<div ng-if="$root.$storage.view=='card' && data.length>0" class="masonry-layout">
 			<div ng-repeat="ds in data track by $index" class="masonry-layout__panel">
-	    	   <div class="list card masonry-layout__panel-content" ng-if="ds">
+	    	   <div class="list card masonry-layout__panel-content" ng-if="ds" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 
-				<div class="item" on-tap="open(ds)">
+				<div class="item" on-tap="open(ds)" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 					<span ng-if="ds.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{'RESTEEMED_BY'|translate}} {{ds.reblogged_by}}</span>
 				    <h2><i class="fa fa-money positive" ng-if="ds.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="ds.percent_steem_dollars === 0"></i>{{ds.title}}</h2>
 				    <div class="row postdetails wrap"><div class="col"><i class="icon ion-android-time"></i> {{ds.created|timeago}}&nbsp;{{'BY'|translate}}&nbsp;<b>{{ds.author}}</b>&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div> {{'IN'|translate}} {{ds.category|detransliterate:false}} &middot; {{ds.body|readingtime}} {{'MIN_READ'|translate}}</div></div>
