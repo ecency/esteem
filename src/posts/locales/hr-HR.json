@@ -204,7 +204,7 @@
   "SAVED":"Spremljeno",
   "CLEARED":"Izbrisano",
   "FLAGGING_TEXT":"Prijava objave može maknuti nagrade i učiniti njen sadržaj manje vidljiv.<br><br>Prijava bi se trebala koristiti za:<ul><li>Prevare i plagijate</li><li>Govor mržnje ili provociranje</li><li>pogrešn</ul></ul>o kategorizirani sadržaj ili spam</li></ul>",
-  "REQUEST_LIMIT_TEXT":"",
+  "REQUEST_LIMIT_TEXT":"Nema sadržaja. Pogledajte druge stranice/tagove!",
   "POST_IS_UNBOOKMARK":"Objava je izbrisana iz oznaka!",
   "POST_IS_BOOKMARK":"Objava je dodana u oznake!",
   "RESET":"Resetiraj",
