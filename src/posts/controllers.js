@@ -3283,6 +3283,9 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         }
       });
     });
+    if(!$scope.$$phase){
+      $scope.$apply();
+    }
   }
 
 })

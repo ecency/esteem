@@ -88,6 +88,7 @@
                 <div class="wrap">
                   <h2><i class="fa fa-money positive" ng-if="playlist.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="playlist.percent_steem_dollars === 0"></i>{{playlist.root_title}}</h2>
                 </div>
+                <p ng-bind-html="playlist.body|limitTo:50|parseUrl" ng-if="active!='blog'"></p>
                 <div class="postdetails"><i class="icon ion-android-time"></i>&nbsp;{{playlist.created|timeago}}&nbsp;{{'BY'|translate}}&nbsp;<i class="icon ion-android-person"></i>&nbsp;{{playlist.author}}&nbsp;<div class="reputation">{{playlist.author_reputation|reputation|number:0}}</div></div>
                 </div>
                 <div class="row gray profile">
