@@ -4,7 +4,6 @@ var app = angular.module('steem', [
 	'ionic',
 	'ngStorage',
 	'ngCordova',
-  'rzModule',
   'ion-floating-menu',
   'pascalprecht.translate',
   'ja.qr'

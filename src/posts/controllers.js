@@ -11,7 +11,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   });
 
   //window.ejs.ChainConfig.setChainId("782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12");
-  console.log(window.ejs);
+  //console.log(window.ejs);
 
   //var {key} = require($rootScope.$storage.chain+"js-lib");
   /*console.log(window.steemJS);
@@ -149,7 +149,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
             $scope.loginData.post_count = dd.post_count;
             $scope.loginData.voting_power = dd.voting_power;
             $scope.loginData.witness_votes = dd.witness_votes;
-            $scope.login = new window[$scope.loginData.chain+"JS"].Login();
+            $scope.login = new window.ejs.Login();
             $scope.login.setRoles(["posting"]);
             
             var loginSuccess = $scope.login.checkKeys({
@@ -651,7 +651,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       //showSelectionBar: true,
     }
   };
-  
+
   $ionicPopover.fromTemplateUrl('popoverSlider.html', {
       scope: $scope
   }).then(function(popover) {
@@ -660,23 +660,16 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   
   $scope.openSlider = function($event, d) {
     $scope.votingPost = d;
-    $scope.pslider = {
-      value: $rootScope.$storage.voteWeight/100,
-      options: {
-        floor: 0,
-        ceil: 100,
-        hideLimitLabels: true,
-        showTicksValues: 25,
-        translate: formatToPercentage,
-        //showSelectionBar: true,
-        //ticksArray: [1, 10, 25, 50, 100]
-      }
-    };
     if (!$scope.$$phase) {
       $scope.$apply();
     }
+    $scope.rangeValue = $rootScope.$storage.voteWeight/100;
     $scope.tooltipSlider.show($event);
   };
+  $scope.drag = function(v) {
+    //console.log(v);
+    $rootScope.$storage.voteWeight = v*100;
+  }
   $scope.votePostS = function() {
     $scope.tooltipSlider.hide();
     $scope.votePost($scope.votingPost);
@@ -684,14 +677,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.closeSlider = function() {
     $scope.tooltipSlider.hide();
   };
-
-  $scope.$watch('pslider', function(newValue, oldValue){
-    //console.log(newValue.value);
-    if (newValue.value) {
-      $rootScope.$storage.voteWeight = newValue.value*100;
-    }
-  }, true);
-
 
   $scope.options = {
     loop: false,
@@ -1480,53 +1465,32 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.spost = {};
   $scope.replying = false;
 
-  var formatToPercentage = function (value) {
-    return value + '%';
-  };
-
-  $scope.pslider = {
-    value: $rootScope.$storage.voteWeight/100,
-    options: {
-      floor: 1,
-      ceil: 100,
-      translate: formatToPercentage,
-      showSelectionBar: true
-    }
-  };
-
   $ionicPopover.fromTemplateUrl('popoverSliderr.html', {
       scope: $scope
   }).then(function(popover) {
       $scope.tooltipSliderr = popover;
   });
   
-  $scope.openSliderr = function($event) {
-    $scope.pslider = {
-      value: $rootScope.$storage.voteWeight/100,
-      options: {
-        floor: 1,
-        ceil: 100,
-        translate: formatToPercentage,
-        showSelectionBar: true
-      }
-    };
+  $scope.openSliderr = function($event, d) {
+    $scope.votingPost = d;
     if (!$scope.$$phase) {
       $scope.$apply();
     }
+    $scope.rangeValue = $rootScope.$storage.voteWeight/100;
     $scope.tooltipSliderr.show($event);
+  };
+  $scope.votePostS = function() {
+    $scope.tooltipSliderr.hide();
+    $scope.upvotePost($scope.votingPost);
+  }
+  $scope.drag = function(v) {
+    //console.log(v);
+    $rootScope.$storage.voteWeight = v*100;
   };
 
   $scope.closeSliderr = function() {
     $scope.tooltipSliderr.hide();
   };
-
-  $scope.$watch('pslider', function(newValue, oldValue){
-    //console.log(newValue.value);
-    if (newValue.value) {
-      $rootScope.$storage.voteWeight = newValue.value*100;
-    }
-  }, true);
-
 
   $scope.isBookmarked = function() {
     var bookm = $rootScope.$storage.bookmark || undefined;
@@ -2147,36 +2111,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
   $rootScope.$on("update:content", function(){
     $rootScope.log("update:content");
-    window.Api.initPromise.then(function(response) {
-      window.Api.database_api().exec("get_content_replies", [$scope.post.author, $scope.post.permlink]).then(function(result){
-        //todo fix active_votes
-        console.log(result);
-        if (result) {
-          /*angular.forEach(result, function(v,k){
-            var len = v.active_votes.length;
-            var user = $rootScope.$storage.user;
-            if (user) {
-              for (var j = len - 1; j >= 0; j--) {
-                if (v.active_votes[j].voter === user.username) {
-                  if (v.active_votes[j].percent > 0) {
-                    v.upvoted = true;
-                  } else if (v.active_votes[j].percent < 0) {
-                    v.downvoted = true;
-                  } else {
-                    v.downvoted = false;
-                    v.upvoted = false;
-                  }
-                }
-              }
-            }
-          });*/
-          $scope.comments = result;
-          console.log(result);
-        }
-
-        $rootScope.$broadcast('hide:loading');
-      });
-    });
+    $scope.getContent($scope.post.author, $scope.post.permlink);
     $rootScope.$broadcast('hide:loading');
   });
   $ionicModal.fromTemplateUrl('templates/reply.html', {
@@ -2540,52 +2475,32 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
 
 app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicActionSheet, $cordovaCamera, ImageUploadService, $ionicPopup, $ionicSideMenuDelegate, $ionicHistory, $state, APIs, $ionicPopover, $filter) {
 
-  var formatToPercentage = function (value) {
-    return value + '%';
-  };
-
-  $scope.pslider = {
-    value: $rootScope.$storage.voteWeight/100,
-    options: {
-      floor: 1,
-      ceil: 100,
-      translate: formatToPercentage,
-      showSelectionBar: true
-    }
-  };
-
   $ionicPopover.fromTemplateUrl('popoverSliderrp.html', {
       scope: $scope
   }).then(function(popover) {
       $scope.tooltipSlider = popover;
   });
   
-  $scope.openSlider = function($event) {
-    $scope.pslider = {
-      value: $rootScope.$storage.voteWeight/100,
-      options: {
-        floor: 1,
-        ceil: 100,
-        translate: formatToPercentage,
-        showSelectionBar: true
-      }
-    };
+  $scope.openSlider = function($event, d) {
+    $scope.votingPost = d;
     if (!$scope.$$phase) {
       $scope.$apply();
     }
+    $scope.rangeValue = $rootScope.$storage.voteWeight/100;
     $scope.tooltipSlider.show($event);
+  };
+  $scope.drag = function(v) {
+    //console.log(v);
+    $rootScope.$storage.voteWeight = v*100;
+  }
+  $scope.votePostS = function() {
+    $scope.tooltipSlider.hide();
+    $scope.upvotePost($scope.votingPost);
   };
 
   $scope.closeSlider = function() {
     $scope.tooltipSlider.hide();
   };
-
-  $scope.$watch('pslider', function(newValue, oldValue){
-    //console.log(newValue.value);
-    if (newValue.value) {
-      $rootScope.$storage.voteWeight = newValue.value*100;
-    }
-  }, true);
 
   $scope.translationData = { platformname: $rootScope.$storage.platformname, platformpower: $rootScope.$storage.platformpower, platformsunit:"$1.00" };
 
@@ -3521,7 +3436,9 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       }
     }, 1);
   }
-
+  $scope.drag = function(v) {
+    $rootScope.$storage.voteWeight = v*100;
+  }
   $scope.$on('$ionicView.beforeEnter', function(){
     $rootScope.$storage["socket"+$rootScope.$storage.chain] = localStorage.socketUrl;
     $scope.data = {};
@@ -3534,14 +3451,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     if(!$scope.$$phase){
       $scope.$apply();
     }
-    $scope.slider = {
-      value: $scope.vvalue,
-      options: {
-        floor: 1,
-        ceil: 100
-      }
-    };
-
+    
     if ($rootScope.$storage.pincode) {
       $scope.data = {pin: true};
     } else {
@@ -3585,13 +3495,6 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     });
 
   }
-
-  $scope.$watch('slider', function(newValue, oldValue){
-    //console.log(newValue.value);
-    if (newValue.value) {
-      $rootScope.$storage.voteWeight = newValue.value*100;
-    }
-  }, true);
 
   $scope.pinChange = function() {
     $rootScope.log("pinChange");

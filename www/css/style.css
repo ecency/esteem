@@ -43,7 +43,6 @@
   right: 0;
   top: 0;
 }
-
 .wrapword{
   white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
   white-space: -pre-wrap !important;      /* Opera 4-6 */
@@ -53,9 +52,7 @@
   white-space: -webkit-pre-wrap !important; /* Newer versions of Chrome/Safari*/
   word-break: break-all !important;
   white-space: normal !important;
-  text-overflow: 
 }
-
 .wrap {
 	text-overflow: wrap!important;
 	white-space: normal!important;
@@ -1168,10 +1165,10 @@ img.round-avatar{
 }
 
 .menuPopover {
-  height: 170px!important;
+  height: 210px!important;
 }
 .menuPopoverLog {
-  height: 120px!important;
+  height: 160px!important;
 }
 
 .detailedPost {
@@ -1189,6 +1186,10 @@ img.round-avatar{
 .detailedSlide .row .col {
   margin: 0px 5px;
   padding: 0px;
+}
+.detailedSlide .row .col.col-10 {
+  margin: 5px 5px;
+  padding: 0px 2px;
 }
 .text-class {
   background-color: #000!important;

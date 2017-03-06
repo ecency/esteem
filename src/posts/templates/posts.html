@@ -102,7 +102,11 @@
         <ion-content>
           	<div class="row">
           		<div class="col col-10"><button class="button button-icon fa fa-chevron-circle-up fa-lg" on-tap="votePostS()"></button></div>
-          		<div class="col"><rzslider rz-slider-model="pslider.value" rz-slider-options="pslider.options"></rzslider></div>
+          		<div class="col">
+          			<div class = "item range range-positive">
+					   {{rangeValue}} <input type="range" name="range1" min="1" max="100" ng-model="rangeValue" ng-change="drag(rangeValue)">
+					</div>
+          		</div>
           		<div class="col col-10"><button class="button button-icon ion-close-round" ng-click="closeSlider()"></button></div>
           	</div>
         </ion-content>
