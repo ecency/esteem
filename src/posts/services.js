@@ -667,6 +667,14 @@ module.exports = function (app) {
           }
         };
     });
+
+    app.filter('ldots', function() {
+        return function(text) {
+          if (text) {
+            return text+'...';
+          }
+        };
+    });
     
     app.filter('detransliterate', function(){
       // copypaste from https://gist.github.com/tamr/5fb00a1c6214f5cab4f6

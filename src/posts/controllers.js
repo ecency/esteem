@@ -2147,7 +2147,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     var url = "/"+$stateParams.category+"/@"+author+"/"+permlink;
     window.Api.initPromise.then(function(response) {
       window.Api.database_api().exec("get_state", [url]).then(function(dd){
-        //console.log(dd);
+        console.log(dd);
         var con = dd.content;
         var acon = dd.accounts;
 
@@ -2160,7 +2160,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           var vperm = v.parent_author==""?v.permlink:v.parent_permlink;
           var keyy = vparent+"/"+vperm;
           if (v.parent_permlink!==v.category) {
-            con[keyy].comments.push(v);  
+            if (con[keyy])
+              con[keyy].comments.push(v);  
           }
         });
         //console.log(acon);  
@@ -2193,10 +2194,11 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         }
 
         result.json_metadata = angular.fromJson(result.json_metadata);
-        //$rootScope.$storage.sitem = result;
+        
         //console.log(result);
         $rootScope.$broadcast('hide:loading');
         $scope.post = result;
+        $rootScope.$storage.sitem = result;
         $rootScope.$storage.paccounts = acon;
 
         if (!$scope.$$phase) {
@@ -2248,6 +2250,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       $scope.post = ttemp;
       $rootScope.$broadcast('update:content');
     } else {
+      if ($stateParams.author.indexOf('@')>-1){
+        $stateParams.author = $stateParams.author.substr(1);
+      }
       $scope.getContent($stateParams.author, $stateParams.permlink);
       //$scope.post = $rootScope.$storage.sitem;
       //$rootScope.$broadcast('update:content');
