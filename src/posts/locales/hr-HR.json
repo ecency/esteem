@@ -45,7 +45,7 @@
   "UPVOTE":"Glas-ZA",
   "DOWNVOTE":"Glas-PROTIV",
   "UNVOTE_DOWNVOTED":"Poništi Glas-PROTIV",
-  "UNVOTE_UPVOTED":"Poništi Glas-ZA",
+  "UNVOTE_UPVOTED":"",
   "REPLY":"Odgovor",
   "EDIT":"Uredi",
   "POST_1":"Povucite u lijevo komentare da bi ste vidjeli opcije",
