@@ -44,7 +44,17 @@
   top: 0;
 }
 
-
+.wrapword{
+  white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+  white-space: -pre-wrap !important;      /* Opera 4-6 */
+  white-space: -o-pre-wrap !important;    /* Opera 7 */
+  white-space: pre-wrap !important;       /* css-3 */
+  word-wrap: break-word !important;       /* Internet Explorer 5.5+ */
+  white-space: -webkit-pre-wrap !important; /* Newer versions of Chrome/Safari*/
+  word-break: break-all !important;
+  white-space: normal !important;
+  text-overflow: 
+}
 
 .wrap {
 	text-overflow: wrap!important;
