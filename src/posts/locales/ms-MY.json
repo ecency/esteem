@@ -248,5 +248,8 @@
   "RATIFICATION_DEADLINE":"Tarikh akhir kelulusan",
   "ESCROW_EXPIRATION":"Escrow tamat",
   "ESCROW_FEE":"Yuran escrow",
-  "ESCROW_TERMS":"Terma-terma escrow"
+  "ESCROW_TERMS":"Terma-terma escrow",
+  "NIGHT_MODE":"",
+  "DAY_MODE":"",
+  "VIEW_CONTEXT":""
 }
