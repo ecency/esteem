@@ -452,12 +452,82 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
 })
 
-app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $filter, $q, $timeout, $cordovaBarcodeScanner, $ionicPlatform) {
+app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $filter, $q, $timeout, $cordovaBarcodeScanner, $ionicPlatform, $ionicModal) {
 
   if ($rootScope.$storage.chain == "steem") {
     $scope.data = {types: [{type: "steem", name:"Steem", id:1},{type: "sbd", name:"Steem Dollar", id:2}, {type: "sp", name:"Steem Power", id:3}], type: "steem", amount: 0.001};
   } else {
     $scope.data = {types: [{type: "golos", name: "ГОЛОС", id:1},{type: "gbg", name:"ЗОЛОТОЙ", id:2}, {type: "golosp", name:"СИЛА ГОЛОСА", id:3}], type: "golos", amount: 0.001};
+  }
+  $scope.ttype = 'transfer';
+  $scope.changeTransfer = function(type){
+    $scope.ttype = type;
+  }
+  $ionicModal.fromTemplateUrl('my-modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+  $scope.openUModal = function() {
+    $scope.modal.show();
+  };
+  $scope.closeUModal = function() {
+    $scope.modal.hide();
+  };
+  // Cleanup the modal when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.modal.remove();
+  });
+  // Execute action on hide modal
+  $scope.$on('modal.hidden', function() {
+    // Execute action
+  });
+  $scope.showLiquid = function (token) {
+    return token.type !== $filter('lowercase')($rootScope.$storage.platformpunit);
+  }
+  $scope.searchUser = function(query) {
+    return window.Api.initPromise.then(function(response) {
+      return window.Api.database_api().exec("lookup_accounts", [query, 15]).then(function(response){
+        return response;
+      });
+    });
+  }
+  $scope.selectAgent = function(agent) {
+    $scope.data.agent = agent;
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
+    $scope.closeUModal();
+  }
+  $scope.getUserAgent = function(query){
+    $scope.res = [];
+    if (query) {
+      window.Api.database_api().exec("lookup_account_names", [[query]]).then(function(response){
+        //console.log(response)
+        var dd = response[0];
+        if (dd && dd.json_metadata) {
+          var vv = angular.fromJson(dd.json_metadata);
+          if (vv.escrow) {
+            console.log('escrow');
+            $scope.res.push({name: query, escrow: vv.escrow});
+          } else {
+            console.log('noescrow');
+            $scope.res.push({name: query, escrow: {terms: "-", fees: {"STEEM": 0.001, "SBD": 0.001, "GBG": 0.001, "GOLOS": 0.001}} });
+          }
+        }
+      });
+      setTimeout(function() {
+        if (query && $scope.res) {
+          $scope.data.searchResult = $scope.res;
+        } else {
+          $scope.data.searchResult = [];  
+        }
+        if (!$scope.$$phase) {
+          $scope.$apply();
+        }
+      }, 500);   
+    }
   }
   $scope.changeUsername = function(typed) {
     $rootScope.log('searching');
@@ -505,7 +575,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
       });
     });
   };
-  $scope.transfer = function () {
+  $scope.transfer = function (type) {
     if ($rootScope.$storage.user) {
       if (!$rootScope.$storage.user.password && !$rootScope.$storage.user.privateActiveKey) {
         $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('ACTIVE_KEY_REQUIRED_TEXT'));
@@ -539,63 +609,115 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
             if(res) {
               $rootScope.log('You are sure');
               $rootScope.$broadcast('show:loading');
-              $scope.mylogin = new window.ejs.Login();
-              $scope.mylogin.setRoles(["active"]);
-              var loginSuccess = $scope.mylogin.checkKeys({
-                  accountName: $rootScope.$storage.user.username,
-                  password: $rootScope.$storage.user.password || null,
-                  auths: {
-                    active: $rootScope.$storage.user.active.key_auths
-                  },
-                  privateKey: $rootScope.$storage.user.privateActiveKey || null
-                }
-              );
-              if (loginSuccess) {
-                var tr = new window.ejs.TransactionBuilder();
-                if ($scope.data.type !== 'sp' && $scope.data.type !== 'golosp') {
-
-                  var tt = $filter('number')($scope.data.amount) +" "+angular.uppercase($scope.data.type);
-                  tr.add_type_operation("transfer", {
-                    from: $rootScope.$storage.user.username,
-                    to: $scope.data.username,
-                    amount: tt,
-                    memo: $scope.data.memo || ""
-                  });
-                  localStorage.error = 0;
-                  tr.process_transaction($scope.mylogin, null, true);
-                  setTimeout(function() {
-                    if (localStorage.error == 1) {
-                      $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
-                    } else {
-                      $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
-                        $scope.data.type=$rootScope.$storage.chain;
-                        $scope.data.amount= 0.001;
-                      });
-                    }
-                  }, 3000);
+              
+              if (type == 'transfer') {
+                $scope.mylogin = new window.ejs.Login();
+                $scope.mylogin.setRoles(["active"]);
+                var loginSuccess = $scope.mylogin.checkKeys({
+                    accountName: $rootScope.$storage.user.username,
+                    password: $rootScope.$storage.user.password || null,
+                    auths: {
+                      active: $rootScope.$storage.user.active.key_auths
+                    },
+                    privateKey: $rootScope.$storage.user.privateActiveKey || null
+                  }
+                );
+                if (loginSuccess) {
+                  var tr = new window.ejs.TransactionBuilder();
+                  //transfer
+                  if ($scope.data.type !== 'sp' && $scope.data.type !== 'golosp') {
+                    var tt = $filter('number')($scope.data.amount) +" "+angular.uppercase($scope.data.type);
+                    tr.add_type_operation("transfer", {
+                      from: $rootScope.$storage.user.username,
+                      to: $scope.data.username,
+                      amount: tt,
+                      memo: $scope.data.memo || ""
+                    });
+                    localStorage.error = 0;
+                    tr.process_transaction($scope.mylogin, null, true);
+                    setTimeout(function() {
+                      if (localStorage.error == 1) {
+                        $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
+                      } else {
+                        $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
+                          $scope.data.type=$rootScope.$storage.chain;
+                          $scope.data.amount= 0.001;
+                        });
+                      }
+                    }, 3000);
+                  } else {
+                    var tt = $filter('number')($scope.data.amount) + " "+$filter('uppercase')($rootScope.$storage.chain);
+                    tr.add_type_operation("transfer_to_vesting", {
+                      from: $rootScope.$storage.user.username,
+                      to: $scope.data.username,
+                      amount: tt
+                    });
+                    localStorage.error = 0;
+                    tr.process_transaction($scope.mylogin, null, true);
+                    setTimeout(function() {
+                      if (localStorage.error == 1) {
+                        $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
+                      } else {
+                        $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
+                          $scope.data.type=$rootScope.$storage.chain;
+                          $scope.data.amount= 0.001;
+                        });
+                      }
+                    }, 3000);
+                  }
                 } else {
-                  var tt = $filter('number')($scope.data.amount) + " "+$filter('uppercase')($rootScope.$storage.chain);
-                  tr.add_type_operation("transfer_to_vesting", {
-                    from: $rootScope.$storage.user.username,
-                    to: $scope.data.username,
-                    amount: tt
-                  });
-                  localStorage.error = 0;
-                  tr.process_transaction($scope.mylogin, null, true);
-                  setTimeout(function() {
-                    if (localStorage.error == 1) {
-                      $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
-                    } else {
-                      $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
-                        $scope.data.type=$rootScope.$storage.chain;
-                        $scope.data.amount= 0.001;
-                      });
-                    }
-                  }, 3000);
-
+                  $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL_A'));
                 }
-              } else {
-                $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL_A'));
+              }
+
+              if (type == 'escrow') {
+                $scope.mylogin = new window.ejs.Login();
+                $scope.mylogin.setRoles(["active"]);
+                var loginSuccess = $scope.mylogin.checkKeys({
+                    accountName: $rootScope.$storage.user.username,
+                    password: $rootScope.$storage.user.password || null,
+                    auths: {
+                      active: $rootScope.$storage.user.active.key_auths
+                    },
+                    privateKey: $rootScope.$storage.user.privateActiveKey || null
+                  }
+                );
+                if (loginSuccess) {
+                  var tre = new window.ejs.TransactionBuilder();
+                  console.log('escrow_transfer', $scope.data.type);
+
+                  var escrow_id = (new Date().getTime())>>>0;
+                    var tt = $filter('number')($scope.data.amount) +" "+angular.uppercase($scope.data.type);
+                    var sbd = ($scope.data.type=='sbd'||$scope.data.type=='gbg')?tt:("0.000 "+angular.uppercase($rootScope.$storage.platformdunit));
+                    var stem = ($scope.data.type=='steem'||$scope.data.type=='golos')?tt:("0.000 "+angular.uppercase($rootScope.$storage.platformlunit));
+                    var fe = $scope.data.agent.escrow.fees[angular.uppercase($scope.data.type)]+" "+angular.uppercase($scope.data.type);
+                    tre.add_type_operation("escrow_transfer", {
+                      from: $rootScope.$storage.user.username,
+                      to: $scope.data.username,
+                      agent: $scope.data.agent.name,
+                      escrow_id: 1234,
+                      sbd_amount: sbd,
+                      steem_amount: stem,
+                      fee: fe,
+                      ratification_deadline: new Date($scope.data.ratification),
+                      escrow_expiration: new Date($scope.data.expiration),
+                      json_metadata: "{'terms': '"+$scope.data.agent.escrow.terms+"', 'memo': '"+($scope.data.memo||"")+" "+escrow_id+"'}"
+                    });
+                    localStorage.error = 0;
+                    tre.process_transaction($scope.mylogin, null, true);
+                    setTimeout(function() {
+                      if (localStorage.error == 1) {
+                        $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage);
+                      } else {
+                        $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
+                          $scope.data.type=$rootScope.$storage.chain;
+                          $scope.data.amount= 0.001;
+                        });
+                      }
+                    }, 3000);
+                } else {
+                  $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL_A'));
+                }
               }
               $rootScope.$broadcast('hide:loading');
              } else {
@@ -609,6 +731,8 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
       $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
     }
   };
+
+
   $scope.refresh = function() {
     $rootScope.$broadcast('show:loading');
     window.Api.initPromise.then(function(response) {
@@ -3418,8 +3542,8 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       $rootScope.$storage.platformsunit = "Голос";
       $rootScope.$storage.platformdollar = "ЗОЛОТОЙ";
       $rootScope.$storage.platformdunit = "GBG";
-      $rootScope.$storage.platformpunit = "СИЛА ГОЛОСА";
-      $rootScope.$storage.platformlunit = "ГОЛОС";
+      $rootScope.$storage.platformpunit = "GOLOSP";
+      $rootScope.$storage.platformlunit = "GOLOS";
       $rootScope.$storage.socketgolos = "wss://ws.golos.io/";
       //$scope.socket = "wss://golos.steem.ws";
       $scope.socket = "wss://ws.golos.io/";

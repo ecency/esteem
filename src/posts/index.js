@@ -6,7 +6,8 @@ var app = angular.module('steem', [
 	'ngCordova',
   'ion-floating-menu',
   'pascalprecht.translate',
-  'ja.qr'
+  'ja.qr',
+  'ion-datetime-picker'
 ]);
 
 if (localStorage.getItem("socketUrl") === null) {
