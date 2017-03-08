@@ -4,10 +4,10 @@ var app = angular.module('steem', [
 	'ionic',
 	'ngStorage',
 	'ngCordova',
-  'rzModule',
   'ion-floating-menu',
   'pascalprecht.translate',
-  'ja.qr'
+  'ja.qr',
+  'ion-datetime-picker'
 ]);
 
 if (localStorage.getItem("socketUrl") === null) {
@@ -222,6 +222,11 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('zh-CN', require('./locales/ready/zh-CN')); //Chinese simplified
   $translateProvider.translations('dolan', require('./locales/ready/dol')); //Dolan
   $translateProvider.translations('sv-SE', require('./locales/ready/sv-SE')); //Chinese simplified
+  $translateProvider.translations('uk-UA', require('./locales/ready/uk-UA')); //Ukrainian
+  $translateProvider.translations('ms-MY', require('./locales/ready/ms-MY')); //Malay
+  $translateProvider.translations('hr-HR', require('./locales/ready/hr-HR')); //Croatian
+  $translateProvider.translations('fa-IR', require('./locales/ready/fa-IR')); //Persian
+  $translateProvider.translations('it-IT', require('./locales/ready/it-IT')); //Persian
 
   $translateProvider.useSanitizeValueStrategy(null);
 
@@ -250,6 +255,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$storage.users = [];
     }
     
+    if (!$rootScope.$storage.theme) {
+      $rootScope.$storage.theme = 'day';
+    }
+
     if (!$rootScope.$storage.socketgolos)
       $rootScope.$storage.socketgolos = "wss://ws.golos.io/";
     if (!$rootScope.$storage.socketsteem)
@@ -307,7 +316,13 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       {id:'id-ID', name: 'Bahasa Indonesia'}, 
       {id:'zh-CN', name: '繁體中文'}, 
       {id:'zh-TW', name: '简体中文'},
-      {id:'dolan', name: 'Dolan'}
+      {id:'dolan', name: 'Dolan'},
+      {id:'uk-UA', name: 'Українська'},
+      {id:'ms-MY', name: 'Bahasa Melayu'},
+      {id:'hr-HR', name: 'Hrvatski'},
+      {id:'fa-IR', name: 'Fārsi'},
+      {id:'it-IT', name: 'Italiano'}
+      
     ];
 
     $rootScope.$storage.chains = [{id:'steem', name: 'Steem'}, {id:'golos', name: 'Golos'}];

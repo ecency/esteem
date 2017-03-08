@@ -96,7 +96,9 @@
       <span class="slabel" ng-click='openTooltip($event,"{{"VOTING_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i> {{'VOTING'|translate}} (%)</span>
       </div>
       <div class="col">
-      <rzslider rz-slider-model="slider.value" rz-slider-options="slider.options"></rzslider>
+        <div class = "item range range-positive">
+           {{vvalue}} <input type="range" name="range1" min="1" max="100" ng-model="vvalue" ng-change="drag(vvalue)">
+        </div>
       </div>
     </div>
 

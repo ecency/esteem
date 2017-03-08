@@ -3,7 +3,7 @@
  * Copyright 2015 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.3.1
+ * Ionic, v1.3.2
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -5338,7 +5338,7 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
   position: absolute;
   top: 0;
   z-index: 10;
-  overflow: auto;
+  overflow: hidden;
   min-height: 100%;
   width: 100%;
   background-color: #fff; }

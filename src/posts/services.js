@@ -667,6 +667,14 @@ module.exports = function (app) {
           }
         };
     });
+
+    app.filter('ldots', function() {
+        return function(text) {
+          if (text) {
+            return text+'...';
+          }
+        };
+    });
     
     app.filter('detransliterate', function(){
       // copypaste from https://gist.github.com/tamr/5fb00a1c6214f5cab4f6
@@ -931,7 +939,7 @@ module.exports = function (app) {
                         <div class="ion-comment--author"><img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.$storage.paccounts[comment.author].json_metadata.user_image||$root.$storage.paccounts[comment.author].json_metadata.profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{comment.author}}">{{comment.author}}</a></b>&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
                         <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> {{comment.total_pending_payout_value.split(" ")[0]|rate|number}} </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
                         <div class="ion-comment--text bodytext selectable" ng-bind-html="comment.body | parseUrl "></div>\
-                        <div class="ion-comment--replies"><span on-tap="upvotePost(comment)" on-hold="openSliderr($event)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UPVOTE"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.$storage.user.username && compateDate(comment)" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.$storage.user.username" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{\'REMOVE\'|translate}}</span></div>\
+                        <div class="ion-comment--replies"><span on-tap="upvotePost(comment)" on-hold="openSliderr($event, comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UPVOTE"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.$storage.user.username && compateDate(comment)" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.$storage.user.username" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{\'REMOVE\'|translate}}</span></div>\
                     </ion-item>',
             controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopover, $ionicPopup, $ionicActionSheet, $cordovaCamera, $filter) {
                   $ionicPopover.fromTemplateUrl('popoverTr.html', {
@@ -939,49 +947,32 @@ module.exports = function (app) {
                    }).then(function(popover) {
                       $scope.tooltip = popover;
                    });
-                  var formatToPercentage = function (value) {
-                    return value + '%';
-                  };
-                  $scope.pslider = {
-                    value: $rootScope.$storage.voteWeight/100,
-                    options: {
-                      floor: 1,
-                      ceil: 100,
-                      translate: formatToPercentage,
-                      showSelectionBar: true
-                    }
-                  };
+                  
                   $ionicPopover.fromTemplateUrl('popoverSliderr.html', {
                       scope: $scope
                   }).then(function(popover) {
                       $scope.tooltipSliderr = popover;
                   });
-                  
-                  $scope.openSliderr = function($event) {
-                    $scope.pslider = {
-                      value: $rootScope.$storage.voteWeight/100,
-                      options: {
-                        floor: 1,
-                        ceil: 100,
-                        translate: formatToPercentage,
-                        showSelectionBar: true
-                      }
-                    };
+
+                  $scope.openSliderr = function($event, d) {
+                    $scope.votingPost = d;
+                    $scope.rangeValue = $rootScope.$storage.voteWeight/100;
                     $scope.tooltipSliderr.show($event);
+                  };
+                  $scope.votePostS = function() {
+                    $scope.tooltipSliderr.hide();
+                    $scope.upvotePost($scope.votingPost);
+                  }
+                  $scope.drag = function(v) {
+                    //console.log(v);
+                    $rootScope.$storage.voteWeight = v*100;
                   };
 
                   $scope.closeSliderr = function() {
                     $scope.tooltipSliderr.hide();
                   };
 
-                  $scope.$watch('pslider', function(newValue, oldValue){
-                    //console.log(newValue.value);
-                    if (newValue.value) {
-                      $rootScope.$storage.voteWeight = newValue.value*100;
-                    }
-                  }, true);
-
-                   $scope.openTooltip = function($event, d) {
+                  $scope.openTooltip = function($event, d) {
                     var tppv = Number(d.total_pending_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
                     var p = Number(d.promoted.split(' ')[0])*$rootScope.$storage.currencyRate;
                     var tpv = Number(d.total_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
@@ -990,16 +981,16 @@ module.exports = function (app) {
                     var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CYCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(tppv, 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(tpv,3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
                     $scope.tooltipText = texth;
                     $scope.tooltip.show($event);
-                   };
+                  };
 
-                   $scope.closeTooltip = function() {
+                  $scope.closeTooltip = function() {
                       $scope.tooltip.hide();
-                   };
+                  };
 
-                   //Cleanup the popover when we're done with it!
-                   $scope.$on('$destroy', function() {
+                  //Cleanup the popover when we're done with it!
+                  $scope.$on('$destroy', function() {
                       $scope.tooltip.remove();
-                   });
+                  });
 
 
                   $scope.compateDate = function(comment) {

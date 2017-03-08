@@ -244,9 +244,14 @@
 	"FOUNDER": "Founder and Lead developer",
 	"ADD_ACCOUNT": "Add account",
 	"PLATFORM": "Platform",
+	"ESCROW": "Escrow",
 	"ESCROW_AGENT": "Escrow agent",
 	"RATIFICATION_DEADLINE": "Ratification deadline",
     "ESCROW_EXPIRATION": "Escrow expiration",
     "ESCROW_FEE": "Escrow fee",
-    "ESCROW_TERMS": "Escrow terms"
+    "ESCROW_TERMS": "Escrow terms",
+    "NIGHT_MODE": "Night mode",
+    "DAY_MODE": "Day mode",
+    "VIEW_CONTEXT": "View the full context",
+    "USER_NOTFOUND": "User Not Found"
 }

@@ -24,8 +24,9 @@
     <ion-floating-item icon="ion-image" click="showImages(0)" ng-if="isImages()" button-color="#387ef5" icon-color="#fff" text="{{'GALLERY'|translate}}" text-class="text-class"></ion-floating-item>
     <ion-floating-item icon="ion-arrow-return-right" ng-if="$root.$storage.user.username !== $root.$storage.sitem.author" click="$root.reBlog($root.$storage.sitem.author, $root.$storage.sitem.permlink)" button-color="#387ef5" icon-color="#fff" text="{{'REBLOG'|translate}}" text-class="text-class"></ion-floating-item>
   </ion-floating-menu>
-  <ion-content class="padding has-header" delegate-handle="mainScroll" overflow-scroll="true"><!---->
+  <ion-content class="padding has-header" delegate-handle="mainScroll" overflow-scroll="true" ng-class="{'theme-dark':$root.$storage.theme == 'night'}"><!---->
     <div ng-if='$root.$storage.sitem'>
+      <p class="title h3" ng-if="$root.$storage.sitem.root_title && $root.$storage.sitem.title==''"><a href="#/app/post{{$root.$storage.sitem.url.split('#')[0]}}">{{"VIEW_CONTEXT"|translate}}</a></p>
     	<p class="title h3">{{$root.$storage.sitem.title}}</p>
     	<div class="stitle row gray"><div class="col">
         <img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.$storage.paccounts[$root.$storage.sitem.author].json_metadata.user_image||$root.$storage.paccounts[$root.$storage.sitem.author].json_metadata.profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /> <b><a href="#/app/profile/{{$root.$storage.sitem.author}}">{{$root.$storage.sitem.author}}</a></b>&nbsp;<div class="reputation">{{$root.$storage.sitem.author_reputation|reputation|number:0}}</div>&middot;{{$root.$storage.sitem.created|timeago}} {{'IN'|translate}}&nbsp;{{$root.$storage.sitem.category|detransliterate:false}}</div><div class="pull-right"><span ng-if="$root.voiceOver"><i class="fa fa-flag" on-tap="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted">{{'DOWNVOTE'|translate}}</i><i class="fa fa-flag positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted">{{'UNVOTE_DOWNVOTED'|translate}}</i></span><span ng-if="!$root.voiceOver"><i class="fa fa-flag" on-tap="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted"></i><i class="fa fa-flag positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted"></i></span></div></div>
@@ -41,10 +42,10 @@
 
       <div class="row gray">
         <div class="col col-33" ng-if="!$root.voiceOver"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
-        <i class="fa fa-chevron-circle-up fa-lg" on-tap="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted && !$root.$storage.sitem.invoting" on-hold="openSliderr($event)"></i><i class="fa fa-chevron-circle-up fa-lg positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted && !$root.$storage.sitem.invoting"></i>&nbsp;&nbsp;&nbsp;<span on-tap="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
+        <i class="fa fa-chevron-circle-up fa-lg" on-tap="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted && !$root.$storage.sitem.invoting" on-hold="openSliderr($event, $root.$storage.sitem)"></i><i class="fa fa-chevron-circle-up fa-lg positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted && !$root.$storage.sitem.invoting"></i>&nbsp;&nbsp;&nbsp;<span on-tap="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
 
         <div class="col col-33" ng-if="$root.voiceOver"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
-        <i class="icon ion-android-arrow-dropup-circle" on-tap="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted" on-hold="openSliderr($event)">{{'UPVOTE'|translate}}</i><i class="icon ion-android-arrow-dropup-circle positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted">{{'UNVOTE_UPVOTED'|translate}}</i>&nbsp;&nbsp;&nbsp;<span on-tap="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
+        <i class="icon ion-android-arrow-dropup-circle" on-tap="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted" on-hold="openSliderr($event, $root.$storage.sitem)">{{'UPVOTE'|translate}}</i><i class="icon ion-android-arrow-dropup-circle positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted">{{'UNVOTE_UPVOTED'|translate}}</i>&nbsp;&nbsp;&nbsp;<span on-tap="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
         <div class="col col-33" on-tap="openTooltip($event,$root.$storage.sitem)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> {{$root.$storage.sitem | sumPostTotal:$root.$storage.currencyRate | number}}</div>
         <div class="col" on-tap="isreplying($root.$storage.sitem, true)"><i class="fa fa-reply"></i> {{$root.$storage.sitem.children}}</div>
         <div class="col" on-tap="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode=='first_payout' && $root.$storage.sitem.author==$root.$storage.user.username"><i class="fa  fa-pencil-square-o"></i></div>
@@ -63,7 +64,15 @@
     <script id = "popoverSliderr.html" type="text/ng-template">
       <ion-popover-view class="detailedSlide">
         <ion-content class="padding">
-          <rzslider rz-slider-model="pslider.value" rz-slider-options="pslider.options"></rzslider>
+          <div class="row">
+              <div class="col col-10"><button class="button button-icon fa fa-chevron-circle-up fa-lg" on-tap="votePostS()"></button></div>
+              <div class="col">
+                <div class = "item range range-positive">
+             {{rangeValue}} <input type="range" name="range2" min="1" max="100" ng-model="rangeValue" ng-change="drag(rangeValue)">
+                </div>
+              </div>
+              <div class="col col-10"><button class="button button-icon ion-close-round" ng-click="closeSliderr()"></button></div>
+          </div>
         </ion-content>
       </ion-popover-view>
     </script>

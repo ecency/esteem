@@ -13,6 +13,14 @@
     <i class="icon ion-navicon-round"></i>
       {{'COMPACT_VIEW'|translate}}
     </a>
+    <a class="item" href="#" ng-if="$root.$storage.theme == 'day'" ng-click="changeLight('night')">
+    <i class="icon ion-ios-lightbulb"></i>
+      {{'NIGHT_MODE'|translate}}
+    </a>
+    <a class="item" href="#" ng-if="$root.$storage.theme == 'night'" ng-click="changeLight('day')">
+    <i class="icon ion-ios-lightbulb-outline"></i>
+      {{'DAY_MODE'|translate}}
+    </a>
     <a class="item" href="#"  ng-click="openSmodal()">
       <i class="icon ion-android-search"></i>
       {{'SEARCH'|translate}}

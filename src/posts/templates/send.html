@@ -1,19 +1,31 @@
 <ion-view view-cache="false" view-title="{{'TRANSFER'|translate}}">
-  <ion-content class="padding">
+  <div class="tabs-striped tabs-top tabs-background-positive tabs-color-light">
+    <div class="tabs">
+      <a class="tab-item" href ng-click="changeTransfer('transfer')" ng-class="{'active': ttype=='transfer'}">
+        {{"TRANSFER"|translate}}
+      </a>
+      <a class="tab-item" href ng-click="changeTransfer('escrow')" ng-class="{'active': ttype=='escrow'}">
+        {{"ESCROW"|translate}}
+      </a>
+    </div>
+  </div>
+
+  <ion-content class="padding has-tabs-top">
+
     <div class="list">
       <div class="item item-input item-icon-right">
         <span class="input-label">{{'TO'|translate}}</span>
         <input type="text" ng-model="data.username" placeholder="{{'TO_DESC'|translate}}" ng-change="changeUsername()">
         <i class="icon ion-ios-camera-outline" ng-click="qrScan()"></i>
       </div>
+      <label class="item item-input" ng-if="ttype=='escrow'">
+          <span class="input-label">{{"ESCROW_AGENT"|translate}}</span>
+          <input type="text" readonly="readonly" ng-model="data.agent.name" ng-click="openUModal(data.agent)"/>
+      </label>
       <label class="item item-input item-select">
         <span class="input-label">{{'ASSET'|translate}}</span>
-        <!--<select ng-model="data.type" ng-change="typechange()">
-            <option value="steem">STEEM</option>
-            <option value="sbd">SBD</option>
-            <option value="sp">SP</option>
-        </select>-->
-        <select ng-model="data.type" ng-options="item.type as item.name for item in data.types track by item.id"></select>
+        <select ng-model="data.type" ng-if="ttype=='escrow'" ng-options="item.type as item.name for item in data.types | filter:showLiquid track by item.id"></select>
+        <select ng-model="data.type" ng-if="ttype=='transfer'" ng-options="item.type as item.name for item in data.types track by item.id"></select>
       </label>
       <label class="item item-input">
         <span class="input-label">{{'AMOUNT'|translate}}</span>
@@ -23,14 +35,46 @@
         <span class="input-label">{{'MEMO'|translate}}</span>
         <textarea ng-model="data.memo" rows="3" placeholder="{{'PUBLIC_MEMO'|translate}}"></textarea>
       </label>
+      <div class="item" ion-datetime-picker ng-model="data.ratification" only-valid="{'after': 'today', 'inclusive': true}" ng-if="ttype=='escrow'">{{'RATIFICATION_DEADLINE'|translate}}: {{data.ratification| date: "yyyy-MM-dd H:mm:ss"}}</div>
+      <div class="item" ion-datetime-picker ng-model="data.expiration" only-valid="{'after': 'today', 'inclusive': false}" ng-if="ttype=='escrow'">{{'ESCROW_EXPIRATION'|translate}}: {{data.expiration| date: "yyyy-MM-dd H:mm:ss"}}</div>
       <p class="item" ng-if="balance">{{'AVAILABLE'|translate}}: {{balance.balance}}, {{balance.sbd_balance}} <i class="icon ion-refresh pull-right" ng-click="refresh()"></i></p>
       <br>
-      <center><button class="button button-positive" ng-click="transfer()">
+      <center ng-if="ttype=='transfer'"><button class="button button-positive" ng-click="transfer('transfer')">
+        {{'SEND'|translate}}
+      </button></center>
+      <center ng-if="ttype=='escrow'"><button class="button button-positive" ng-click="transfer('escrow')">
         {{'SEND'|translate}}
       </button></center>
       <br>
-      <center><qr text="$root.$storage.user.username"></qr></center>
-      <center><i class="italic">{{$root.$storage.user.username}}</i></center>
+      <center ng-if="ttype=='transfer'"><qr text="$root.$storage.user.username"></qr></center>
+      <center ng-if="ttype=='transfer'"><i class="italic">{{$root.$storage.user.username}}</i></center>
     </div>
   </ion-content>
+  <script id="my-modal.html" type="text/ng-template">
+    <ion-modal-view>
+      <div class="bar bar-header bar-positive item-input-inset">
+        <label class="item-input-wrapper">
+          <i class="icon ion-ios-search placeholder-icon"></i>
+          <input type="search" placeholder="{{'SEARCH'|translate}}" ng-change="getUserAgent(data.query)" ng-model="data.query">
+        </label>
+        <button class="button button-clear button-outline" ng-click="closeUModal()">
+          {{"CANCEL"|translate}}
+        </button>
+      </div>
+      <ion-content class="has-header">
+        <div class="list" ng-if="data.searchResult.length>0">
+          <a class="item" ng-repeat="x in data.searchResult" ng-click="selectAgent(x)">
+            <h2>{{'ESCROW_AGENT'|translate}}: {{x.name}}</h2>
+            <div ng-if="x.escrow">{{'ESCROW_TERMS'|translate}}: {{x.escrow.terms}}</div>
+            <p class="wrap">{{'ESCROW_FEE'|translate}}: {{x.escrow.fees[$root.$storage.platformlunit]}} {{$root.$storage.platformlunit}} / {{x.escrow.fees[$root.$storage.platformdunit]}} {{$root.$storage.platformdunit}}
+            </p>
+          </a>
+        </div>
+        <center class="padding" ng-if="data.searchResult.length==0">
+          {{"USER_NOTFOUND"|translate}}
+        </center>
+      </ion-content>
+    </ion-modal-view>
+
+  </script>
 </ion-view>

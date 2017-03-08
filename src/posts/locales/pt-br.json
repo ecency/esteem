@@ -42,7 +42,7 @@
   "MENU":"",
   "BOOKMARK":"Favoritos",
   "REBLOG":"Repostar",
-  "UPVOTE":"Upvote ",
+  "UPVOTE":"Upvote",
   "DOWNVOTE":"",
   "UNVOTE_DOWNVOTED":"Cancelar Downvote",
   "UNVOTE_UPVOTED":"Cancelar Upvote",
@@ -92,7 +92,8 @@
   "FOLLOW_TEXT":"Você receberá uma notificação quando alguém Seguir ou Deixar de seguir você!",
   "MENTIONS":"Menções",
   "MENTIONS_TEXT":"Você receberá uma notificação quando alguém mencionar você em alguma postagem ou comentário!",
-  "RESTEEM_TEXT":"Irá receber notificação quando alguem republicar a sua publicaçã!",
+  "RESTEEM":"",
+  "RESTEEM_TEXT":"",
   "CONFIGURATIONS":"Configurações",
   "VOTING":"Votando",
   "VOTING_TEXT":"O peso de voto ou percentagem afeta o poder de voto na app, por isso pode regular o seu recompensa de voto <br/><br/><b>Nota:</b> Isto irá modificar o pseso/percentagem para votar para baixo também e em todo o lado na App",
@@ -242,5 +243,10 @@
   "ABOUT_11":"",
   "FOUNDER":"",
   "ADD_ACCOUNT":"",
-  "PLATFORM":""
+  "PLATFORM":"",
+  "ESCROW_AGENT":"",
+  "RATIFICATION_DEADLINE":"",
+  "ESCROW_EXPIRATION":"",
+  "ESCROW_FEE":"",
+  "ESCROW_TERMS":""
 }
