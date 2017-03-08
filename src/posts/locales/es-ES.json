@@ -244,6 +244,7 @@
   "FOUNDER":"Fundador y desarrollador Principal",
   "ADD_ACCOUNT":"Añadir cuenta",
   "PLATFORM":"Plataforma",
+  "ESCROW":"",
   "ESCROW_AGENT":"Agente Escrow",
   "RATIFICATION_DEADLINE":"Fecha límite de ratificación",
   "ESCROW_EXPIRATION":"Vencimiento Escrow",
@@ -251,5 +252,6 @@
   "ESCROW_TERMS":"Términos de Escrow",
   "NIGHT_MODE":"",
   "DAY_MODE":"",
-  "VIEW_CONTEXT":""
+  "VIEW_CONTEXT":"",
+  "USER_NOTFOUND":""
 }
