@@ -244,6 +244,7 @@
   "FOUNDER":"Fondatore e responsabile dello sviluppo",
   "ADD_ACCOUNT":"Aggiungi account",
   "PLATFORM":"Piattaforma",
+  "ESCROW":"",
   "ESCROW_AGENT":"Depositario",
   "RATIFICATION_DEADLINE":"Scadenza della ratificazione",
   "ESCROW_EXPIRATION":"Scadenza del deposito",
@@ -251,5 +252,6 @@
   "ESCROW_TERMS":"Condizioni e termini del Deposito",
   "NIGHT_MODE":"",
   "DAY_MODE":"",
-  "VIEW_CONTEXT":""
+  "VIEW_CONTEXT":"",
+  "USER_NOTFOUND":""
 }
