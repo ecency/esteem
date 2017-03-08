@@ -248,5 +248,8 @@
   "RATIFICATION_DEADLINE":"Fecha límite de ratificación",
   "ESCROW_EXPIRATION":"Vencimiento Escrow",
   "ESCROW_FEE":"Tarifa de Escrow",
-  "ESCROW_TERMS":"Términos de Escrow"
+  "ESCROW_TERMS":"Términos de Escrow",
+  "NIGHT_MODE":"",
+  "DAY_MODE":"",
+  "VIEW_CONTEXT":""
 }
