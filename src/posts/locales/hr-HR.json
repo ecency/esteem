@@ -244,6 +244,7 @@
   "FOUNDER":"Osnivač i glavni programer",
   "ADD_ACCOUNT":"Dodaj račun",
   "PLATFORM":"Platforma",
+  "ESCROW":"",
   "ESCROW_AGENT":"Namjenski agent",
   "RATIFICATION_DEADLINE":"Rok potvrđivanja",
   "ESCROW_EXPIRATION":"Namjenski istek",
@@ -251,5 +252,6 @@
   "ESCROW_TERMS":"Namjenski uvjeti",
   "NIGHT_MODE":"",
   "DAY_MODE":"",
-  "VIEW_CONTEXT":""
+  "VIEW_CONTEXT":"",
+  "USER_NOTFOUND":""
 }
