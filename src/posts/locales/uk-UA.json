@@ -244,6 +244,7 @@
   "FOUNDER":"Засновник та провідний розробник",
   "ADD_ACCOUNT":"Додати акаунт",
   "PLATFORM":"Платформа",
+  "ESCROW":"",
   "ESCROW_AGENT":"Агент угоди",
   "RATIFICATION_DEADLINE":"Кінцевий термін ратифікації",
   "ESCROW_EXPIRATION":"Термін дії угоди",
@@ -251,5 +252,6 @@
   "ESCROW_TERMS":"Умови угоди",
   "NIGHT_MODE":"",
   "DAY_MODE":"",
-  "VIEW_CONTEXT":""
+  "VIEW_CONTEXT":"",
+  "USER_NOTFOUND":""
 }
