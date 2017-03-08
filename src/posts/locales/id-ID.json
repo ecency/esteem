@@ -244,6 +244,7 @@
   "FOUNDER":"Pendiri dan pengembang",
   "ADD_ACCOUNT":"Tambah akun",
   "PLATFORM":"Platform",
+  "ESCROW":"",
   "ESCROW_AGENT":"Agen escrow",
   "RATIFICATION_DEADLINE":"Ratifikasi tenggat waktu",
   "ESCROW_EXPIRATION":"Escrow kadaluarsa",
@@ -251,5 +252,6 @@
   "ESCROW_TERMS":"Escrow persyaratan",
   "NIGHT_MODE":"",
   "DAY_MODE":"",
-  "VIEW_CONTEXT":""
+  "VIEW_CONTEXT":"",
+  "USER_NOTFOUND":""
 }
