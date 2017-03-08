@@ -244,6 +244,7 @@
   "FOUNDER":"",
   "ADD_ACCOUNT":"Lisa konto",
   "PLATFORM":"Platvorm",
+  "ESCROW":"",
   "ESCROW_AGENT":"",
   "RATIFICATION_DEADLINE":"",
   "ESCROW_EXPIRATION":"",
@@ -251,5 +252,6 @@
   "ESCROW_TERMS":"",
   "NIGHT_MODE":"",
   "DAY_MODE":"",
-  "VIEW_CONTEXT":""
+  "VIEW_CONTEXT":"",
+  "USER_NOTFOUND":""
 }
