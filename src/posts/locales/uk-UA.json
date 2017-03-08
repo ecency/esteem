@@ -248,5 +248,8 @@
   "RATIFICATION_DEADLINE":"Кінцевий термін ратифікації",
   "ESCROW_EXPIRATION":"Термін дії угоди",
   "ESCROW_FEE":"Комісія за угоду",
-  "ESCROW_TERMS":"Умови угоди"
+  "ESCROW_TERMS":"Умови угоди",
+  "NIGHT_MODE":"",
+  "DAY_MODE":"",
+  "VIEW_CONTEXT":""
 }

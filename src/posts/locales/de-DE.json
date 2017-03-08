@@ -248,5 +248,8 @@
   "RATIFICATION_DEADLINE":"Ratifizierungsfrist",
   "ESCROW_EXPIRATION":"Escrow Ablaufdatum",
   "ESCROW_FEE":"Escrow Gebühr",
-  "ESCROW_TERMS":"Escrow Bedingungen"
+  "ESCROW_TERMS":"Escrow Bedingungen",
+  "NIGHT_MODE":"",
+  "DAY_MODE":"",
+  "VIEW_CONTEXT":""
 }

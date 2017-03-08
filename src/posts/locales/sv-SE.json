@@ -248,5 +248,8 @@
   "RATIFICATION_DEADLINE":"Ratificeringen tidsfristen",
   "ESCROW_EXPIRATION":"Escrow förfallodatum",
   "ESCROW_FEE":"Escrow avgift",
-  "ESCROW_TERMS":"Escrow villkor"
+  "ESCROW_TERMS":"Escrow villkor",
+  "NIGHT_MODE":"",
+  "DAY_MODE":"",
+  "VIEW_CONTEXT":""
 }

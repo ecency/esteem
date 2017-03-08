@@ -248,5 +248,8 @@
   "RATIFICATION_DEADLINE":"Срок ратификации сделки",
   "ESCROW_EXPIRATION":"Срок действия сделки",
   "ESCROW_FEE":"Комиссия гаранта",
-  "ESCROW_TERMS":"Условия сделки"
+  "ESCROW_TERMS":"Условия сделки",
+  "NIGHT_MODE":"",
+  "DAY_MODE":"",
+  "VIEW_CONTEXT":""
 }

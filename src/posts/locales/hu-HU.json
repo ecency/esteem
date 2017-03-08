@@ -248,5 +248,8 @@
   "RATIFICATION_DEADLINE":"Megerősítési határidő",
   "ESCROW_EXPIRATION":"Letét lejárta",
   "ESCROW_FEE":"Letéti díj",
-  "ESCROW_TERMS":"Letéti feltételek"
+  "ESCROW_TERMS":"Letéti feltételek",
+  "NIGHT_MODE":"",
+  "DAY_MODE":"",
+  "VIEW_CONTEXT":""
 }

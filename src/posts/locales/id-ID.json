@@ -248,5 +248,8 @@
   "RATIFICATION_DEADLINE":"Ratifikasi tenggat waktu",
   "ESCROW_EXPIRATION":"Escrow kadaluarsa",
   "ESCROW_FEE":"Escrow biaya",
-  "ESCROW_TERMS":"Escrow persyaratan"
+  "ESCROW_TERMS":"Escrow persyaratan",
+  "NIGHT_MODE":"",
+  "DAY_MODE":"",
+  "VIEW_CONTEXT":""
 }

@@ -248,5 +248,8 @@
   "RATIFICATION_DEADLINE":"Краен срок за ратифициране",
   "ESCROW_EXPIRATION":"Изтичане на Escrow",
   "ESCROW_FEE":"Escrow такса",
-  "ESCROW_TERMS":"Escrow правила"
+  "ESCROW_TERMS":"Escrow правила",
+  "NIGHT_MODE":"",
+  "DAY_MODE":"",
+  "VIEW_CONTEXT":""
 }

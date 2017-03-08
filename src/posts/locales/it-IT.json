@@ -248,5 +248,8 @@
   "RATIFICATION_DEADLINE":"Scadenza della ratificazione",
   "ESCROW_EXPIRATION":"Scadenza del deposito",
   "ESCROW_FEE":"Tassa del deposito",
-  "ESCROW_TERMS":"Condizioni e termini del Deposito"
+  "ESCROW_TERMS":"Condizioni e termini del Deposito",
+  "NIGHT_MODE":"",
+  "DAY_MODE":"",
+  "VIEW_CONTEXT":""
 }
