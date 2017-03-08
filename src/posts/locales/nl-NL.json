@@ -248,5 +248,8 @@
   "RATIFICATION_DEADLINE":"Ratificatie termijn",
   "ESCROW_EXPIRATION":"Escrow verlopen",
   "ESCROW_FEE":"Escrow vergoeding",
-  "ESCROW_TERMS":"Escrow voorwaarden"
+  "ESCROW_TERMS":"Escrow voorwaarden",
+  "NIGHT_MODE":"",
+  "DAY_MODE":"",
+  "VIEW_CONTEXT":""
 }
