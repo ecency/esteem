@@ -248,5 +248,8 @@
   "RATIFICATION_DEADLINE":"مهلت تصویب",
   "ESCROW_EXPIRATION":"پایان زمان وکالت",
   "ESCROW_FEE":"هزینه وکالت",
-  "ESCROW_TERMS":"شرایط وکالت"
+  "ESCROW_TERMS":"شرایط وکالت",
+  "NIGHT_MODE":"",
+  "DAY_MODE":"",
+  "VIEW_CONTEXT":""
 }
