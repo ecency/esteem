@@ -244,6 +244,7 @@
   "FOUNDER":"Oprichter en Hoofdontwikkelaar",
   "ADD_ACCOUNT":"Account toevoegen",
   "PLATFORM":"Platform",
+  "ESCROW":"",
   "ESCROW_AGENT":"Escrow-agent",
   "RATIFICATION_DEADLINE":"Ratificatie termijn",
   "ESCROW_EXPIRATION":"Escrow verlopen",
@@ -251,5 +252,6 @@
   "ESCROW_TERMS":"Escrow voorwaarden",
   "NIGHT_MODE":"",
   "DAY_MODE":"",
-  "VIEW_CONTEXT":""
+  "VIEW_CONTEXT":"",
+  "USER_NOTFOUND":""
 }
