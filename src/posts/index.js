@@ -220,7 +220,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('id-ID', require('./locales/ready/id-ID')); //Indonesian
   $translateProvider.translations('zh-TW', require('./locales/ready/zh-TW')); //Chinese traditional
   $translateProvider.translations('zh-CN', require('./locales/ready/zh-CN')); //Chinese simplified
-  $translateProvider.translations('dolan', require('./locales/ready/dol')); //Dolan
+  $translateProvider.translations('dolan', require('./locales/ready/dolan')); //Dolan
   $translateProvider.translations('sv-SE', require('./locales/ready/sv-SE')); //Chinese simplified
   $translateProvider.translations('uk-UA', require('./locales/ready/uk-UA')); //Ukrainian
   $translateProvider.translations('ms-MY', require('./locales/ready/ms-MY')); //Malay

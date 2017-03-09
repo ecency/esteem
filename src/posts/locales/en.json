@@ -253,5 +253,15 @@
     "NIGHT_MODE": "Night mode",
     "DAY_MODE": "Day mode",
     "VIEW_CONTEXT": "View the full context",
-    "USER_NOTFOUND": "User Not Found"
+    "USER_NOTFOUND": "User Not Found",
+    "APPROVE": "Approve",
+    "DISPUTE": "Dispute",
+    "RELEASE": "Release",
+    "FROM": "From",
+    "ID": "id",
+    "SUBMIT": "Submit",
+    "RECEIVER": "Receiver",
+    "LOCATION": "Location",
+    "WEBSITE": "Website",
+    "DISPLAY_NAME": "Display name"
 }

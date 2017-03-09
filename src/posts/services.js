@@ -45,7 +45,10 @@ module.exports = function (app) {
       },
 			fetchImages: function(user) {
         return $http.get(API_END_POINT+"/api/images/"+user);
-      }
+      },
+      searchEscrow: function(id) {
+        return $http.get(API_END_POINT+"/api/escrow/"+$rootScope.$storage.chain+"/"+id);
+      },
 		};
 	}])
   app.directive('backImg', function(){

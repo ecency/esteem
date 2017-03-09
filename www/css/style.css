@@ -254,7 +254,13 @@ textarea.markdown-input {
   margin-bottom: 5px!important;
   bottom: 0!important;
 }
-
+.profilebtn_edit {
+  position: absolute!important;
+  left: 0!important;
+  margin-right: 5px!important;
+  margin-bottom: 5px!important;
+  bottom: 0!important;
+}
 /***************************************/
 /*Comments                             */
 /***************************************/

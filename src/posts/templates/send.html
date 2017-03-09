@@ -13,37 +13,66 @@
   <ion-content class="padding has-tabs-top">
 
     <div class="list">
-      <div class="item item-input item-icon-right">
+      <div class="item item-input item-icon-right" ng-if="!data.advanced">
         <span class="input-label">{{'TO'|translate}}</span>
         <input type="text" ng-model="data.username" placeholder="{{'TO_DESC'|translate}}" ng-change="changeUsername()">
-        <i class="icon ion-ios-camera-outline" ng-click="qrScan()"></i>
+        <i class="icon ion-ios-camera-outline" ng-click="qrScan()" ng-if="ttype=='transfer'"></i>
       </div>
-      <label class="item item-input" ng-if="ttype=='escrow'">
+      <label class="item item-input" ng-if="ttype=='escrow'&&!data.advanced">
           <span class="input-label">{{"ESCROW_AGENT"|translate}}</span>
-          <input type="text" readonly="readonly" ng-model="data.agent.name" ng-click="openUModal(data.agent)"/>
+          <input type="text" readonly="readonly" placeholder="{{'USERNAME'|translate}}" ng-model="data.agent.name" ng-click="openUModal(data.agent)"/>
       </label>
-      <label class="item item-input item-select">
+      <div class="item item-input item-icon-right" ng-if="ttype=='escrow'&&data.advanced">
+        <span class="input-label">{{'ESCROW'|translate}} {{'ID'|translate}}</span>
+        <input type="text" ng-model="data.escrow_id" placeholder="{{'SEARCH'|translate}}" ng-change="searchEscrowID(data.escrow_id)">
+      </div>
+      <label class="item item-input item-select" ng-if="data.advanced">
+        <span class="input-label">{{'OPTIONS'|translate}}</span>
+        <select ng-model="data.etype" ng-if="ttype=='escrow'" ng-options="item.type as item.name for item in data.etypes track by item.id" ng-change="actionEChange()"></select>
+      </label>
+      <label class="item item-input item-select" ng-if="data.advanced&&data.etype=='release'">
+        <span class="input-label">{{'RECEIVER'|translate}}</span>
+        <select ng-model="escrow.receiver">
+          <option value="{{escrow.to}}" ng-if="escrow.to!=$root.$storage.user.username">{{escrow.to}}</option>
+          <option value="{{escrow.from}}" ng-if="escrow.from!=$root.$storage.user.username">{{escrow.from}}</option>
+        </select>
+      </label>
+      <label class="item item-input item-select" ng-if="!data.advanced">
         <span class="input-label">{{'ASSET'|translate}}</span>
         <select ng-model="data.type" ng-if="ttype=='escrow'" ng-options="item.type as item.name for item in data.types | filter:showLiquid track by item.id"></select>
         <select ng-model="data.type" ng-if="ttype=='transfer'" ng-options="item.type as item.name for item in data.types track by item.id"></select>
       </label>
-      <label class="item item-input">
+      <label class="item item-input" ng-if="!data.advanced">
         <span class="input-label">{{'AMOUNT'|translate}}</span>
         <input type="number" placeholder="{{'AMOUNT'|translate}}" step="0.001" ng-model="data.amount">
       </label>
-      <label class="item item-input" ng-if="data.type != 'sp'&&data.type != 'golosp'">
+      <label class="item item-input" ng-if="data.type != 'sp'&&data.type != 'golosp' && !data.advanced">
         <span class="input-label">{{'MEMO'|translate}}</span>
         <textarea ng-model="data.memo" rows="3" placeholder="{{'PUBLIC_MEMO'|translate}}"></textarea>
       </label>
-      <div class="item" ion-datetime-picker ng-model="data.ratification" only-valid="{'after': 'today', 'inclusive': true}" ng-if="ttype=='escrow'">{{'RATIFICATION_DEADLINE'|translate}}: {{data.ratification| date: "yyyy-MM-dd H:mm:ss"}}</div>
-      <div class="item" ion-datetime-picker ng-model="data.expiration" only-valid="{'after': 'today', 'inclusive': false}" ng-if="ttype=='escrow'">{{'ESCROW_EXPIRATION'|translate}}: {{data.expiration| date: "yyyy-MM-dd H:mm:ss"}}</div>
-      <p class="item" ng-if="balance">{{'AVAILABLE'|translate}}: {{balance.balance}}, {{balance.sbd_balance}} <i class="icon ion-refresh pull-right" ng-click="refresh()"></i></p>
+      <div class="item" ion-datetime-picker ng-model="data.ratification" only-valid="{'after': 'today', 'inclusive': true}" ng-if="ttype=='escrow'&&!data.advanced">{{'RATIFICATION_DEADLINE'|translate}}: {{data.ratification| date: "yyyy-MM-dd H:mm:ss"}}</div>
+      <div class="item" ion-datetime-picker ng-model="data.expiration" only-valid="{'after': 'today', 'inclusive': false}" ng-if="ttype=='escrow'&&!data.advanced">{{'ESCROW_EXPIRATION'|translate}}: {{data.expiration| date: "yyyy-MM-dd H:mm:ss"}}</div>
+      <ion-toggle ng-if="ttype=='escrow'" ng-model="data.advanced" toggle-class="toggle-calm" ng-change="advancedEChange()">{{'ADVANCED'|translate}}</ion-toggle>
+      <p class="item" ng-if="balance && !data.advanced">{{'AVAILABLE'|translate}}: {{balance.balance}}, {{balance.sbd_balance}} <i class="icon ion-refresh pull-right" ng-click="refresh()"></i></p>
       <br>
+      <div ng-if="ttype=='escrow' && data.advanced && escrow.escrow_id">
+        <div class="row"><div class="col">{{"FROM"|translate}}:</div><div class="col">{{escrow.from}}</div></div>
+        <div class="row"><div class="col">{{"TO"|translate}}:</div><div class="col">{{escrow.to}}</div></div>
+        <div class="row"><div class="col">{{"ESCROW_AGENT"|translate}}:</div><div class="col">{{escrow.agent}}</div></div>
+        <div class="row"><div class="col">{{"ESCROW_FEE"|translate}}:</div><div class="col">{{escrow.fee}} {{escrow.fee_symbol}}</div></div>
+        <div class="row"><div class="col">{{'RATIFICATION_DEADLINE'|translate}}:</div><div class="col">{{escrow.ratification_deadline|date:'short'}}</div></div>
+        <div class="row"><div class="col">{{'ESCROW_EXPIRATION'|translate}}:</div><div class="col">{{escrow.escrow_expiration|date:'short'}}</div></div>
+        <div class="row"><div class="col">{{"ESCROW_TERMS"|translate}}:</div><div class="col">{{escrow.json_meta.terms}}</div></div>
+        <div class="row"><div class="col">{{'MEMO'|translate}}:</div><div class="col">{{escrow.json_meta.memo}}</div></div>
+      </div>
       <center ng-if="ttype=='transfer'"><button class="button button-positive" ng-click="transfer('transfer')">
         {{'SEND'|translate}}
       </button></center>
-      <center ng-if="ttype=='escrow'"><button class="button button-positive" ng-click="transfer('escrow')">
+      <center ng-if="ttype=='escrow'&&!data.advanced"><button class="button button-positive" ng-click="transfer('escrow')">
         {{'SEND'|translate}}
+      </button></center>
+      <center ng-if="ttype=='escrow'&&data.advanced"><button class="button button-positive" ng-click="escrowAction()">
+        {{'SUBMIT'|translate}}
       </button></center>
       <br>
       <center ng-if="ttype=='transfer'"><qr text="$root.$storage.user.username"></qr></center>
@@ -65,7 +94,7 @@
         <div class="list" ng-if="data.searchResult.length>0">
           <a class="item" ng-repeat="x in data.searchResult" ng-click="selectAgent(x)">
             <h2>{{'ESCROW_AGENT'|translate}}: {{x.name}}</h2>
-            <div ng-if="x.escrow">{{'ESCROW_TERMS'|translate}}: {{x.escrow.terms}}</div>
+            <div ng-if="x.escrow" class="wrap">{{'ESCROW_TERMS'|translate}}: {{x.escrow.terms}}</div>
             <p class="wrap">{{'ESCROW_FEE'|translate}}: {{x.escrow.fees[$root.$storage.platformlunit]}} {{$root.$storage.platformlunit}} / {{x.escrow.fees[$root.$storage.platformdunit]}} {{$root.$storage.platformdunit}}
             </p>
           </a>
