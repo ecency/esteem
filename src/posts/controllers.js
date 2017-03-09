@@ -1555,7 +1555,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     var params = {};
 
     if (type === "feed" && $rootScope.$storage.user) {
-      params = {tag: $rootScope.$storage.user.username, limit: limit, filter_tags: ["bm-nursultan", "bm-open"]};
+      params = {tag: $rootScope.$storage.user.username, limit: limit, filter_tags: ["bm-open"]};
     } else {
       if ($rootScope.$storage.filter === "feed") {
         $rootScope.$storage.filter = "trending";
