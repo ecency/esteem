@@ -253,5 +253,15 @@
   "NIGHT_MODE":"Ночной режим",
   "DAY_MODE":"Дневной режим",
   "VIEW_CONTEXT":"Просмотр полного контекста",
-  "USER_NOTFOUND":"Пользователь не найден"
+  "USER_NOTFOUND":"Пользователь не найден",
+  "APPROVE":"",
+  "DISPUTE":"",
+  "RELEASE":"",
+  "FROM":"",
+  "ID":"",
+  "SUBMIT":"",
+  "RECEIVER":"",
+  "LOCATION":"",
+  "WEBSITE":"",
+  "DISPLAY_NAME":""
 }
