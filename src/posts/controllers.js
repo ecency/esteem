@@ -1555,13 +1555,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     var params = {};
 
     if (type === "feed" && $rootScope.$storage.user) {
-      params = {tag: $rootScope.$storage.user.username, limit: limit, filter_tags: []};
+      params = {tag: $rootScope.$storage.user.username, limit: limit, filter_tags: ["bm-nursultan", "bm-open"]};
     } else {
       if ($rootScope.$storage.filter === "feed") {
         $rootScope.$storage.filter = "trending";
         type = "trending";
       }
-      params = {tag: tag, limit: limit, filter_tags: []};
+      params = {tag: tag, limit: limit, filter_tags: ["bm-open"]};
     }
     if ($scope.data && $scope.data.length>0) {
       params.start_author = $scope.data[$scope.data.length-1].author;
@@ -3431,52 +3431,50 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         });
       });
     };
-    $scope.getFollows = function(r,d) {
-
-      $scope.dfetching = function(){
-        window.Api.initPromise.then(function(response) {
-          window.Api.follow_api().exec("get_following", [$stateParams.username, $scope.tt.duser, "blog", $scope.limit]).then(function(res){
-            if (res && res.length===$scope.limit) {
-              $scope.tt.duser = res[res.length-1].following;
+    $scope.dfetching = function(){
+      window.Api.initPromise.then(function(response) {
+        window.Api.follow_api().exec("get_following", [$stateParams.username, $scope.tt.duser, "blog", $scope.limit]).then(function(res){
+          if (res && res.length===$scope.limit) {
+            $scope.tt.duser = res[res.length-1].following;
+          }
+          var len = res.length;
+          for (var i = 0; i < len; i++) {
+            $scope.following.push(res[i].following);
+          }
+          if (res.length<$scope.limit) {
+            if (!$scope.$$phase) {
+              $scope.$apply();
             }
-            var len = res.length;
-            for (var i = 0; i < len; i++) {
-              $scope.following.push(res[i].following);
-            }
-            if (res.length<$scope.limit) {
-              if (!$scope.$$phase) {
-                $scope.$apply();
-              }
-            } else {
-              setTimeout($scope.dfetching, 5);
-            }
-          });
+          } else {
+            setTimeout($scope.dfetching, 5);
+          }
         });
-      };
-      $scope.rfetching = function(){
-        window.Api.initPromise.then(function(response) {
-          window.Api.follow_api().exec("get_followers", [$stateParams.username, $scope.tt.ruser, "blog", $scope.limit]).then(function(res){
-            if (res && res.length===$scope.limit) {
-              $scope.tt.ruser = res[res.length-1].follower;
+      });
+    };
+    $scope.rfetching = function(){
+      window.Api.initPromise.then(function(response) {
+        window.Api.follow_api().exec("get_followers", [$stateParams.username, $scope.tt.ruser, "blog", $scope.limit]).then(function(res){
+          if (res && res.length===$scope.limit) {
+            $scope.tt.ruser = res[res.length-1].follower;
+          }
+          var len = res.length;
+          for (var i = 0; i < len; i++) {
+            $scope.follower.push(res[i].follower);
+          }
+          if (res.length<$scope.limit) {
+            if (!$scope.$$phase) {
+              $scope.$apply();
             }
-            var len = res.length;
-            for (var i = 0; i < len; i++) {
-              $scope.follower.push(res[i].follower);
-            }
-            if (res.length<$scope.limit) {
-              if (!$scope.$$phase) {
-                $scope.$apply();
-              }
-            } else {
-              setTimeout($scope.rfetching, 10);
-            }
-          });
+          } else {
+            setTimeout($scope.rfetching, 10);
+          }
         });
-      };
+      });
+    };
+    $scope.getFollows = function(r,d) {      
       if (r) {
         $rootScope.log("rfetching");
         $scope.rfetching();
-
       }
       if (d) {
         $rootScope.log("dfetching");
