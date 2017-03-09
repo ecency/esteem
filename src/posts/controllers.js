@@ -60,7 +60,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.open = function(item) {
     item.json_metadata = angular.fromJson(item.json_metadata);
     $rootScope.$storage.sitem = item;
-    //console.log(item);
+    console.log(item);
 
     //$state.go('app.single');*/
     $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});
@@ -829,7 +829,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
                     if (localStorage.error == 1) {
                       $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage);
                     } else {
-                      $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
+                      $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED') + " "+$filter('translate')('ESCROW')+" "+$filter('translate')('ID')+": "+escrow_id).then(function(){
                         $scope.data.type=$rootScope.$storage.chain;
                         $scope.data.amount= 0.001;
                       });
