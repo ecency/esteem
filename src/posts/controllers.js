@@ -429,11 +429,13 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.openTag = function(xx, yy) {
     $rootScope.log("opening tag "+xx);
     $rootScope.$storage.tag = xx;
+    $rootScope.$storage.filter = 'created';
     $rootScope.$storage.taglimits = yy;
     if ($scope.smodal.isShown()){
       $scope.closeSmodal();
     }
     $rootScope.$broadcast('close:popover');
+    //$rootScope.$broadcast('filter:change');
     $state.go("app.posts", {tags: xx});
   };
   $scope.openUser = function(xy) {
@@ -3482,7 +3484,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       }
     };
     $scope.getOtherUsersData = function() {
-      //console.log("getOtherUsersData");
+      console.log("getOtherUsersData");
       window.Api.initPromise.then(function(response) {
         window.Api.database_api().exec("get_accounts", [[$stateParams.username]]).then(function(dd){
           dd = dd[0];
