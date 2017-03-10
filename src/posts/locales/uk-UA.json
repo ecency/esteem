@@ -257,11 +257,11 @@
   "APPROVE":"",
   "DISPUTE":"",
   "RELEASE":"",
-  "FROM":"",
+  "FROM":"Від",
   "ID":"",
-  "SUBMIT":"",
-  "RECEIVER":"",
-  "LOCATION":"",
-  "WEBSITE":"",
-  "DISPLAY_NAME":""
+  "SUBMIT":"Відправити",
+  "RECEIVER":"Отримувач",
+  "LOCATION":"Місцезнаходження",
+  "WEBSITE":"Веб-сторінка",
+  "DISPLAY_NAME":"Відображуване ім'я"
 }
