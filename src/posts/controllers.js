@@ -40,9 +40,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     console.log('close:popover');
     $scope.menupopover.hide();
 
-    $ionicHistory.nextViewOptions({
+    /*$ionicHistory.nextViewOptions({
       disableBack: true
-    });
+    });*/
     //$scope.closeMenuPopover();
     //$scope.fetchPosts();
   });
@@ -1555,13 +1555,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     var params = {};
 
     if (type === "feed" && $rootScope.$storage.user) {
-      params = {tag: $rootScope.$storage.user.username, limit: limit, filter_tags: ["bm-open"]};
+      params = {tag: $rootScope.$storage.user.username, limit: limit, filter_tags:[]};
     } else {
       if ($rootScope.$storage.filter === "feed") {
         $rootScope.$storage.filter = "trending";
         type = "trending";
       }
-      params = {tag: tag, limit: limit, filter_tags: ["bm-open"]};
+      params = {tag: tag, limit: limit, filter_tags:[]};
     }
     if ($scope.data && $scope.data.length>0) {
       params.start_author = $scope.data[$scope.data.length-1].author;
@@ -1607,7 +1607,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
                       }
                     }
                   }
-                  $scope.data.push(response[i]);
+                  //if (!/bm.*/.test(response[i].category)) {
+                    $scope.data.push(response[i]);
+                  //}
                 }
               }
             }
@@ -2452,8 +2454,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         }
 
       });
-    });
-    /*window.Api.database_api().exec("get_content", [author, permlink]).then(function(result){
+    /*
+    window.Api.database_api().exec("get_content", [author, permlink]).then(function(result){
       //console.log(result);
         var len = result.active_votes.length;
         var user = $rootScope.$storage.user;
@@ -2481,9 +2483,10 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       if (!$scope.$$phase) {
         $scope.$apply();
       }
-    });
+    });*/
+  });
     //$rootScope.$broadcast('hide:loading');
-    */
+    
   };
   $scope.fetchComments = function(){
     $rootScope.$broadcast('update:content');
@@ -2696,12 +2699,12 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
   };
   $scope.change = function(type){
     $scope.active = type;
-    $rootScope.log(type);
+    console.log(type);
 
-    $ionicScrollDelegate.$getByHandle('listScroll').scrollTop();
     if (!$scope.$$phase) {
       $scope.$apply();
     }
+    $ionicScrollDelegate.$getByHandle('listScroll').scrollTop();
     //$scope.loadMore(type);
   }
 
@@ -3263,12 +3266,13 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
 
   $scope.loadmore = function() {
     //console.log('loadmore');
-    var params = {tag: $stateParams.username, limit: 20};
+    var params = {tag: $stateParams.username, limit: 20, filter_tags:[]};
     var len = $scope.data.profile?$scope.data.profile.length:0;
 
     //console.log($scope.data.profile);
 
     if (len>0) {
+      delete params.limit;
       params.start_author = $scope.data.profile[len-1].author;
       params.start_permlink = $scope.data.profile[len-1].permlink;
 
@@ -3553,6 +3557,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   }
   $scope.change = function(type){
     $scope.data = undefined;
+    console.log(type);
     $scope.data = {profile: []};
     $scope.accounts = [];
     $scope.active = type;

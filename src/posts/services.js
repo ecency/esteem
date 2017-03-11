@@ -678,6 +678,19 @@ module.exports = function (app) {
           }
         };
     });
+
+    app.filter('regex', function() {
+      return function(input, field, regex) {
+          var patt = new RegExp(regex);      
+          var out = [];
+          for (var i = 0; i < input.length; i++){
+            //console.log(patt.test(input[i][field]));
+            if(!patt.test(input[i][field]))
+              out.push(input[i]);
+          }      
+        return out;
+      };
+    });
     
     app.filter('detransliterate', function(){
       // copypaste from https://gist.github.com/tamr/5fb00a1c6214f5cab4f6
