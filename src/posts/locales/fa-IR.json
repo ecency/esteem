@@ -256,12 +256,12 @@
   "USER_NOTFOUND":"کاربر یافت نشد",
   "APPROVE":"تایید",
   "DISPUTE":"",
-  "RELEASE":"انتشار",
+  "RELEASE":"انتشار نسخه",
   "FROM":"از طرف",
   "ID":"شناسه کاربر",
   "SUBMIT":"ثبت",
   "RECEIVER":"دریافت کننده",
   "LOCATION":"محل",
-  "WEBSITE":"",
-  "DISPLAY_NAME":""
+  "WEBSITE":"وب سایت",
+  "DISPLAY_NAME":"نامی که نمایش داده می شود"
 }
