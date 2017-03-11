@@ -450,7 +450,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         }, 15000);
       });
       //}
-      window.FirebasePlugin.onNotificationOpen(function(data) {
+      /*window.FirebasePlugin.onNotificationOpen(function(data) {
         $rootScope.log(angular.toJson(data));
         if(data.tap){
           //Notification was received on device tray and tapped by the user.
@@ -490,7 +490,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         }
       }, function(error) {
           console.error(error);
-      });
+      });*/
 
       if ($rootScope.$storage.pincode) {
         $rootScope.pincheck = true;
@@ -1207,6 +1207,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                   alertPopup.then(function(res) {
                     $rootScope.log('Thank you for seeing alert from tray');
                     if (res) {
+                      if (data.chain !== $rootScope.$storage.chain) {
+                        $rootScope.$storage.chain = data.chain;
+                        $rootScope.$broadcast('changedChain');
+                        $rootScope.$broadcast('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
+                      }
                       setTimeout(function() {
                         $rootScope.getContentAndOpen({author:data.author, permlink:data.permlink});
                       }, 10);
