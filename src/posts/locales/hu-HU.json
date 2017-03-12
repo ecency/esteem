@@ -244,6 +244,7 @@
   "FOUNDER":"Alapító és Vezető fejlesztő",
   "ADD_ACCOUNT":"Fiók hozzáadása",
   "PLATFORM":"Platform",
+  "ESCROW":"",
   "ESCROW_AGENT":"Letéti ügynök",
   "RATIFICATION_DEADLINE":"Megerősítési határidő",
   "ESCROW_EXPIRATION":"Letét lejárta",
@@ -251,5 +252,16 @@
   "ESCROW_TERMS":"Letéti feltételek",
   "NIGHT_MODE":"",
   "DAY_MODE":"",
-  "VIEW_CONTEXT":""
+  "VIEW_CONTEXT":"",
+  "USER_NOTFOUND":"",
+  "APPROVE":"",
+  "DISPUTE":"",
+  "RELEASE":"",
+  "FROM":"",
+  "ID":"",
+  "SUBMIT":"",
+  "RECEIVER":"",
+  "LOCATION":"",
+  "WEBSITE":"",
+  "DISPLAY_NAME":""
 }

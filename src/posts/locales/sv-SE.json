@@ -244,6 +244,7 @@
   "FOUNDER":"Grundare och Lead Developer",
   "ADD_ACCOUNT":"Lägg till konto",
   "PLATFORM":"Plattform",
+  "ESCROW":"",
   "ESCROW_AGENT":"Escrow agent",
   "RATIFICATION_DEADLINE":"Ratificeringen tidsfristen",
   "ESCROW_EXPIRATION":"Escrow förfallodatum",
@@ -251,5 +252,16 @@
   "ESCROW_TERMS":"Escrow villkor",
   "NIGHT_MODE":"",
   "DAY_MODE":"",
-  "VIEW_CONTEXT":""
+  "VIEW_CONTEXT":"",
+  "USER_NOTFOUND":"",
+  "APPROVE":"",
+  "DISPUTE":"",
+  "RELEASE":"",
+  "FROM":"",
+  "ID":"",
+  "SUBMIT":"",
+  "RECEIVER":"",
+  "LOCATION":"",
+  "WEBSITE":"",
+  "DISPLAY_NAME":""
 }
