@@ -244,6 +244,7 @@
   "FOUNDER":"Основател и главен програмист",
   "ADD_ACCOUNT":"Добавяне на допълнителен профил",
   "PLATFORM":"Платформа",
+  "ESCROW":"",
   "ESCROW_AGENT":"Escrow агент",
   "RATIFICATION_DEADLINE":"Краен срок за ратифициране",
   "ESCROW_EXPIRATION":"Изтичане на Escrow",
@@ -251,5 +252,16 @@
   "ESCROW_TERMS":"Escrow правила",
   "NIGHT_MODE":"",
   "DAY_MODE":"",
-  "VIEW_CONTEXT":""
+  "VIEW_CONTEXT":"",
+  "USER_NOTFOUND":"",
+  "APPROVE":"",
+  "DISPUTE":"",
+  "RELEASE":"",
+  "FROM":"",
+  "ID":"",
+  "SUBMIT":"",
+  "RECEIVER":"",
+  "LOCATION":"",
+  "WEBSITE":"",
+  "DISPLAY_NAME":""
 }

@@ -244,6 +244,7 @@
   "FOUNDER":"Pengasas dan pemaju utama",
   "ADD_ACCOUNT":"Tambah akaun",
   "PLATFORM":"Platform",
+  "ESCROW":"",
   "ESCROW_AGENT":"Ejen escrow",
   "RATIFICATION_DEADLINE":"Tarikh akhir kelulusan",
   "ESCROW_EXPIRATION":"Escrow tamat",
@@ -251,5 +252,16 @@
   "ESCROW_TERMS":"Terma-terma escrow",
   "NIGHT_MODE":"",
   "DAY_MODE":"",
-  "VIEW_CONTEXT":""
+  "VIEW_CONTEXT":"",
+  "USER_NOTFOUND":"",
+  "APPROVE":"",
+  "DISPUTE":"",
+  "RELEASE":"",
+  "FROM":"",
+  "ID":"",
+  "SUBMIT":"",
+  "RECEIVER":"",
+  "LOCATION":"",
+  "WEBSITE":"",
+  "DISPLAY_NAME":""
 }
