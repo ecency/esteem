@@ -3580,6 +3580,11 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     $scope.accounts = [];
     $scope.active = type;
     $scope.end = false;
+    
+    if(!$scope.$$phase){
+      $scope.$apply();
+    }
+
     if (type != "blog") {
       $scope.rest = "/"+type;
     } else {
@@ -3637,9 +3642,6 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         }
       });
     });
-    if(!$scope.$$phase){
-      $scope.$apply();
-    }
   }
 
 })
