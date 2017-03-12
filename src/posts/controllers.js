@@ -225,6 +225,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $rootScope.$storage.user = user;
     
     if ($rootScope.$storage.chain !== user.chain) {
+      $scope.data = {};
       $rootScope.$storage.chain = user.chain;  
       $rootScope.$broadcast('changedChain');
     }
@@ -2361,7 +2362,26 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     $rootScope.log("update:content");
     setTimeout(function() {
       $scope.getContent($scope.post.author, $scope.post.permlink);  
+
+    /*window.Api.initPromise.then(function(response) {
+      window.Api.database_api().exec("get_content_replies", [$scope.post.author, $scope.post.permlink]).then(function(result){
+        //todo fix active_votes
+        console.log(result);
+        if (result) {
+          $scope.comments = result;
+          console.log(result);
+        }
+        $rootScope.$broadcast('hide:loading');
+      });
+    });*/
+    $rootScope.$broadcast('hide:loading');
+
+
+
     }, 100);
+
+
+
     $rootScope.$broadcast('hide:loading');
   });
   $ionicModal.fromTemplateUrl('templates/reply.html', {
@@ -2393,9 +2413,10 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.accounts = {};
   $scope.getContent = function(author, permlink) {
     var url = "/"+$stateParams.category+"/@"+author+"/"+permlink;
+    //console.log(url);
     window.Api.initPromise.then(function(response) {
       window.Api.database_api().exec("get_state", [url]).then(function(dd){
-        console.log(dd);
+        //console.log(dd);
         var con = dd.content;
         var acon = dd.accounts;
 
@@ -2417,9 +2438,13 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         angular.forEach(acon, function(v,k){
           //console.log(v.json_metadata);
           if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
-            //console.log(v.json_metadata);
-            if (v.json_metadata)
-              v.json_metadata = angular.fromJson(v.json_metadata);
+            if (v.json_metadata) {
+              if (v.json_metadata.indexOf("created_at")>-1) {
+                v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
+              } else {
+                v.json_metadata = angular.fromJson(v.json_metadata);
+              }
+            }
           }
         });
         var result = con[author+"/"+permlink];
@@ -3243,13 +3268,16 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     $rootScope.votePost(post, 'unvote', 'profileRefresh');
   };
 
-  $scope.isFollowing = function(xx) {
+  $scope.isAmFollowing = function(xx) {
     if ($scope.following && $scope.following.indexOf(xx)!==-1) {
       return true;
     } else {
       return false;
     }
   };
+  /*$scope.$watch('following', function() {
+    console.log('hey, myVar has changed!');
+  });*/
   $scope.ifExists = function(xx){
     for (var i = 0; i < $scope.data.profile.length; i++) {
       if ($scope.data.profile[i].permlink === xx){
@@ -3437,7 +3465,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     };
     $scope.dfetching = function(){
       window.Api.initPromise.then(function(response) {
-        window.Api.follow_api().exec("get_following", [$stateParams.username, $scope.tt.duser, "blog", $scope.limit]).then(function(res){
+        window.Api.follow_api().exec("get_following", [$rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit]).then(function(res){
           if (res && res.length===$scope.limit) {
             $scope.tt.duser = res[res.length-1].following;
           }
@@ -3457,7 +3485,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     };
     $scope.rfetching = function(){
       window.Api.initPromise.then(function(response) {
-        window.Api.follow_api().exec("get_followers", [$stateParams.username, $scope.tt.ruser, "blog", $scope.limit]).then(function(res){
+        window.Api.follow_api().exec("get_followers", [$rootScope.$storage.user.username, $scope.tt.ruser, "blog", $scope.limit]).then(function(res){
           if (res && res.length===$scope.limit) {
             $scope.tt.ruser = res[res.length-1].follower;
           }
@@ -3523,22 +3551,12 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         $scope.getOtherUsersData();
       } else {
           $rootScope.log("get follows counts");
-          if ($rootScope.$storage.chain == "steem") {
-            window.Api.initPromise.then(function(response) {
-              window.Api.follow_api().exec("get_follow_count", [$stateParams.username]).then(function(res){
-                //console.log(res);
-                $scope.followdetails = res;
-              });
+          window.Api.initPromise.then(function(response) {
+            window.Api.follow_api().exec("get_follow_count", [$stateParams.username]).then(function(res){
+              //console.log(res);
+              $scope.followdetails = res;
             });
-          } else {
-            $scope.getFollows("r","d");
-            setTimeout(function() {
-              $scope.followdetails = {follower_count: $scope.follower.length, following_count: $scope.following.length}; 
-              if (!$scope.$$phase) {
-                $scope.$apply();
-              } 
-            }, 2000);            
-          }
+          });
       }
     } else {
       if ($stateParams.username) {
