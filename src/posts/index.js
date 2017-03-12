@@ -226,7 +226,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('ms-MY', require('./locales/ready/ms-MY')); //Malay
   $translateProvider.translations('hr-HR', require('./locales/ready/hr-HR')); //Croatian
   $translateProvider.translations('fa-IR', require('./locales/ready/fa-IR')); //Persian
-  $translateProvider.translations('it-IT', require('./locales/ready/it-IT')); //Persian
+  $translateProvider.translations('it-IT', require('./locales/ready/it-IT')); //Italian
 
   $translateProvider.useSanitizeValueStrategy(null);
 
