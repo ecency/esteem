@@ -505,6 +505,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
     $scope.closeUModal();
   }
   $scope.getUserAgent = function(query){
+    query = angular.lowercase(query);
     $scope.res = [];
     if (query) {
       window.Api.database_api().exec("lookup_account_names", [[query]]).then(function(response){

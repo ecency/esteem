@@ -1018,8 +1018,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.$storage.platformsunit = "Голос";
         $rootScope.$storage.platformdollar = "ЗОЛОТОЙ";
         $rootScope.$storage.platformdunit = "GBG";
-        $rootScope.$storage.platformpunit = "СИЛА ГОЛОСА";
-        $rootScope.$storage.platformlunit = "ГОЛОС";
+        $rootScope.$storage.platformpunit = "GOLOSP";
+        $rootScope.$storage.platformlunit = "GOLOS";
         $rootScope.$storage.socketgolos = "wss://ws.golos.io/";
         //$scope.socket = "wss://golos.steem.ws";
       }
