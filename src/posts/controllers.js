@@ -40,9 +40,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     console.log('close:popover');
     $scope.menupopover.hide();
 
-    /*$ionicHistory.nextViewOptions({
+    $ionicHistory.nextViewOptions({
       disableBack: true
-    });*/
+    });
     //$scope.closeMenuPopover();
     //$scope.fetchPosts();
   });
@@ -223,7 +223,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
   $scope.selectAccount = function(user) {
     $rootScope.$storage.user = user;
-    
+    $ionicHistory.nextViewOptions({
+      disableBack: true
+    });
     if ($rootScope.$storage.chain !== user.chain) {
       $scope.data = {};
       $rootScope.$storage.chain = user.chain;  
@@ -242,7 +244,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         $rootScope.$apply();
       }
       $state.go('app.posts',{renew:true},{reload: true});
-    }, 1000);
+    }, 500);
   }
 
   $rootScope.$on('refreshLocalUserData', function() {
@@ -1438,7 +1440,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
   $rootScope.$on('changeView', function(){
     //$scope.menupopover.hide();
-    $rootScope.$broadcast('close:popover');
+    //$rootScope.$broadcast('close:popover');
+    $scope.menupopover.hide();
     if (!$scope.$$phase){
       $scope.$apply();
     }
@@ -1450,8 +1453,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   });
 
   $rootScope.$on('changeLight', function(){
-    //$scope.menupopover.hide();
-    $rootScope.$broadcast('close:popover');
+    $scope.menupopover.hide();
+    //$rootScope.$broadcast('close:popover');
     if (!$scope.$$phase){
       $scope.$apply();
     }
