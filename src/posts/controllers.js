@@ -1425,13 +1425,19 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $scope.$broadcast('scroll.refreshComplete');
   }
 
-  $scope.$on('$stateChangeSuccess', function() {
+  $scope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
     console.log('stateChangeSuccess', $stateParams.renew);
-    if ($stateParams.renew) {
-      $scope.data = null;
-      $scope.data = [];
+    if (from.name == 'app.posts' && to.name == 'app.post') {
+
+    } else {
+      if (from.name !== 'app.post') {
+        if ($stateParams.renew) {
+          $scope.data = null;
+          $scope.data = [];
+        }
+        $scope.loadMore();
+      }
     }
-    $scope.loadMore();
   });
 
   $scope.moreDataCanBeLoaded = function(){
@@ -1671,9 +1677,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       }*/
     }
 
-    setTimeout(function() {
+    /*setTimeout(function() {
       $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
-    }, 10);
+    }, 10);*/
   });
   
   $scope.$on('$ionicView.beforeEnter', function(){
@@ -2416,6 +2422,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   };
   $scope.accounts = {};
   $scope.getContent = function(author, permlink) {
+    //console.time('someFunction1');
+
     var url = "/"+$stateParams.category+"/@"+author+"/"+permlink;
     //console.log(url);
     window.Api.initPromise.then(function(response) {
@@ -2475,7 +2483,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         //console.log(result);
         $rootScope.$broadcast('hide:loading');
         $scope.post = result;
-        $rootScope.$storage.sitem = result;
+        //$rootScope.$storage.sitem = result;
         $rootScope.$storage.paccounts = acon;
 
         if (!$scope.$$phase) {
@@ -2483,39 +2491,13 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         }
 
       });
-    /*
-    window.Api.database_api().exec("get_content", [author, permlink]).then(function(result){
-      //console.log(result);
-        var len = result.active_votes.length;
-        var user = $rootScope.$storage.user;
-        if (user) {
-          for (var j = len - 1; j >= 0; j--) {
-            if (result.active_votes[j].voter === user.username) {
-              if (result.active_votes[j].percent > 0) {
-                result.upvoted = true;
-              } else if (result.active_votes[j].percent < 0) {
-                result.downvoted = true;
-              } else {
-                result.downvoted = false;
-                result.upvoted = false;
-              }
-            }
-          }
-        }
-        result.json_metadata = angular.fromJson(result.json_metadata);
-        $rootScope.$storage.sitem = result;
-        console.log(result);
-        $scope.post = result;
-        //$ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
-      $rootScope.$broadcast('hide:loading');
-      //console.log($scope.post);
-      if (!$scope.$$phase) {
-        $scope.$apply();
-      }
-    });*/
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
   });
     //$rootScope.$broadcast('hide:loading');
-    
+  //console.timeEnd('someFunction1');
+
   };
   $scope.fetchComments = function(){
     $rootScope.$broadcast('update:content');
@@ -2531,7 +2513,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       if ($stateParams.author.indexOf('@')>-1){
         $stateParams.author = $stateParams.author.substr(1);
       }
+      console.log('someFunction');
       $scope.getContent($stateParams.author, $stateParams.permlink);
+      //console.timeEnd('someFunction');
       //$scope.post = $rootScope.$storage.sitem;
       //$rootScope.$broadcast('update:content');
     }
