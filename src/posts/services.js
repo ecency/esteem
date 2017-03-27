@@ -881,7 +881,7 @@ module.exports = function (app) {
       if (value && value.pending_payout_value) {
         //value.total_payout_value.split(" ")[0])+parseFloat(value.total_pending_payout_value.split(" ")[0])
         //return (parseFloat(value.pending_payout_value.split(" ")[0])*rate);
-        return ((parseFloat(value.total_payout_value.split(" ")[0]))+(parseFloat(value.total_pending_payout_value.split(" ")[0]))*rate).toFixed(2);
+        return ((parseFloat(value.total_payout_value.split(" ")[0]))+(parseFloat(value.pending_payout_value.split(" ")[0]))*rate).toFixed(2);
       }
     }
     //SumPostTotal.$stateful = true;
