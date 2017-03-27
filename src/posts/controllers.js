@@ -60,7 +60,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.open = function(item) {
     item.json_metadata = angular.fromJson(item.json_metadata);
     $rootScope.$storage.sitem = item;
-    console.log(item);
+    //console.log(item);
 
     //$state.go('app.single');*/
     $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});
@@ -1430,6 +1430,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     if (from.name == 'app.posts' && to.name == 'app.post') {
 
     } else {
+      if (from.name == 'app.post' && to.name == 'app.posts') {
+        $rootScope.$storage.sitem = null;
+      }
       if (from.name !== 'app.post') {
         if ($stateParams.renew) {
           $scope.data = null;
@@ -2423,7 +2426,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.accounts = {};
   $scope.getContent = function(author, permlink) {
     //console.time('someFunction1');
-
     var url = "/"+$stateParams.category+"/@"+author+"/"+permlink;
     //console.log(url);
     window.Api.initPromise.then(function(response) {
@@ -2483,7 +2485,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         //console.log(result);
         $rootScope.$broadcast('hide:loading');
         $scope.post = result;
-        //$rootScope.$storage.sitem = result;
+        $rootScope.$storage.sitem = result;
         $rootScope.$storage.paccounts = acon;
 
         if (!$scope.$$phase) {
@@ -2491,11 +2493,11 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         }
 
       });
-    if (!$scope.$$phase) {
+    /*if (!$scope.$$phase) {
       $scope.$apply();
-    }
-  });
-    //$rootScope.$broadcast('hide:loading');
+    }*/
+    });
+  //$rootScope.$broadcast('hide:loading');
   //console.timeEnd('someFunction1');
 
   };
