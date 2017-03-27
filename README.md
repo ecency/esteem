@@ -43,19 +43,12 @@ Start developing with Ionic.
 
 Please use [issue tracker](https://github.com/feruzm/esteem/issues) for questions or feedbacks
 
-### What's Steem?
+### What's Steem/Golos?
 
-Steem is a blockchain-based social media platform where anyone can earn rewards.
+Steem and Golos is a blockchain-based social media platform where anyone can earn rewards. Consensus algorithm of both chains are same aside from they have different community/culture of people with similar vision and goals. eSteem support both communities and bring them closer by offering similar feature set and combination of services.
 
-Visit: http://www.esteem.ws
+Visit http://www.esteem.ws for more info about development and project.
 
-more info: http://steem.io
-
-more info on eSteem development updates:
-
-http://steemit.com/@good-karma
-or 
-https://steemit.com/active/esteem
 
 # License
 

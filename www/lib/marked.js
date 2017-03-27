@@ -909,11 +909,20 @@ Renderer.prototype.link = function(href, title, text) {
   var out = "";
 
   if (href.match(imgs)){
-    if (href.indexOf('http://dirtyimg.com/')>-1){
-      //href='https://img1.steemit.com/0x0/'+href;
-      out = href.replace(imgs, '<img src="https://img1.steemit.com/0x0/$1" class="postimg" onerror="this.src=\'img/noimage.png\'" />');  
+    //console.log(href,title,text);
+    if (href == text) {
+      if (href.indexOf('http://dirtyimg.com/')>-1){
+        //href='https://img1.steemit.com/0x0/'+href;
+        out = href.replace(imgs, '<img src="https://img1.steemit.com/0x0/$1" class="postimg" onerror="this.src=\'img/noimage.png\'" />');  
+      } else {
+        out = href.replace(imgs, '<img src="$1" class="postimg" onerror="this.src=\'img/noimage.png\'" />');  
+      }  
     } else {
-      out = href.replace(imgs, '<img src="$1" class="postimg" onerror="this.src=\'img/noimage.png\'" />');  
+      out = '<a href onClick=\'window.open("' + href + '", \"_system\", \"location=yes\");return false;\'';
+      if (title) {
+        out += ' title="' + title + '"';
+      }
+      out += '>' + text + '</a>'; 
     }
   } else {
     if (href.match(youtube)) {
@@ -930,7 +939,7 @@ Renderer.prototype.link = function(href, title, text) {
             if (parts.length===4) {
               out = '<a href="#/app/profile/'+parts[3].substr(1)+'">'+text+'</a>';
             } else {
-              out = '<a href onClick=\'window.open("' + href + '", \"_blank\", \"location=yes\");return false;\'';
+              out = '<a href onClick=\'window.open("' + href + '", \"_system\", \"location=yes\");return false;\'';
               if (title) {
                 out += ' title="' + title + '"';
               }
@@ -938,7 +947,7 @@ Renderer.prototype.link = function(href, title, text) {
             }
           }
       } else {
-        out = '<a href onClick=\'window.open("' + href + '", \"_blank\", \"location=yes\");return false;\'';
+        out = '<a href onClick=\'window.open("' + href + '", \"_system\", \"location=yes\");return false;\'';
         if (title) {
           out += ' title="' + title + '"';
         }

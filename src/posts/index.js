@@ -124,6 +124,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
 
   .state('app.posts', {
     url: '/posts/:tags/:renew',
+    params: {renew: true},
     views: {
       'menuContent': {
         //templateUrl: 'templates/posts.html',
@@ -189,7 +190,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/posts//');
+  $urlRouterProvider.otherwise('/app/posts//true');
   $ionicConfigProvider.navBar.alignTitle('left')
   $ionicConfigProvider.backButton.text('').icon('ion-chevron-left');
   $ionicConfigProvider.views.swipeBackEnabled(false);
@@ -220,13 +221,13 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('id-ID', require('./locales/ready/id-ID')); //Indonesian
   $translateProvider.translations('zh-TW', require('./locales/ready/zh-TW')); //Chinese traditional
   $translateProvider.translations('zh-CN', require('./locales/ready/zh-CN')); //Chinese simplified
-  $translateProvider.translations('dolan', require('./locales/ready/dol')); //Dolan
+  $translateProvider.translations('dolan', require('./locales/ready/dolan')); //Dolan
   $translateProvider.translations('sv-SE', require('./locales/ready/sv-SE')); //Chinese simplified
   $translateProvider.translations('uk-UA', require('./locales/ready/uk-UA')); //Ukrainian
   $translateProvider.translations('ms-MY', require('./locales/ready/ms-MY')); //Malay
   $translateProvider.translations('hr-HR', require('./locales/ready/hr-HR')); //Croatian
   $translateProvider.translations('fa-IR', require('./locales/ready/fa-IR')); //Persian
-  $translateProvider.translations('it-IT', require('./locales/ready/it-IT')); //Persian
+  $translateProvider.translations('it-IT', require('./locales/ready/it-IT')); //Italian
 
   $translateProvider.useSanitizeValueStrategy(null);
 
@@ -450,7 +451,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         }, 15000);
       });
       //}
-      window.FirebasePlugin.onNotificationOpen(function(data) {
+      /*window.FirebasePlugin.onNotificationOpen(function(data) {
         $rootScope.log(angular.toJson(data));
         if(data.tap){
           //Notification was received on device tray and tapped by the user.
@@ -490,7 +491,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         }
       }, function(error) {
           console.error(error);
-      });
+      });*/
 
       if ($rootScope.$storage.pincode) {
         $rootScope.pincheck = true;
@@ -1018,8 +1019,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.$storage.platformsunit = "Голос";
         $rootScope.$storage.platformdollar = "ЗОЛОТОЙ";
         $rootScope.$storage.platformdunit = "GBG";
-        $rootScope.$storage.platformpunit = "СИЛА ГОЛОСА";
-        $rootScope.$storage.platformlunit = "ГОЛОС";
+        $rootScope.$storage.platformpunit = "GOLOSP";
+        $rootScope.$storage.platformlunit = "GOLOS";
         $rootScope.$storage.socketgolos = "wss://ws.golos.io/";
         //$scope.socket = "wss://golos.steem.ws";
       }
@@ -1207,6 +1208,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                   alertPopup.then(function(res) {
                     $rootScope.log('Thank you for seeing alert from tray');
                     if (res) {
+                      if (data.chain !== $rootScope.$storage.chain) {
+                        $rootScope.$storage.chain = data.chain;
+                        $rootScope.$broadcast('changedChain');
+                        $rootScope.$broadcast('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
+                      }
                       setTimeout(function() {
                         $rootScope.getContentAndOpen({author:data.author, permlink:data.permlink});
                       }, 10);

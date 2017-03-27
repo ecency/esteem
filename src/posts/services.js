@@ -45,7 +45,10 @@ module.exports = function (app) {
       },
 			fetchImages: function(user) {
         return $http.get(API_END_POINT+"/api/images/"+user);
-      }
+      },
+      searchEscrow: function(id) {
+        return $http.get(API_END_POINT+"/api/escrow/"+$rootScope.$storage.chain+"/"+id);
+      },
 		};
 	}])
   app.directive('backImg', function(){
@@ -675,6 +678,19 @@ module.exports = function (app) {
           }
         };
     });
+
+    app.filter('regex', function() {
+      return function(input, field, regex) {
+          var patt = new RegExp(regex);      
+          var out = [];
+          for (var i = 0; i < input.length; i++){
+            //console.log(patt.test(input[i][field]));
+            if(!patt.test(input[i][field]))
+              out.push(input[i]);
+          }      
+        return out;
+      };
+    });
     
     app.filter('detransliterate', function(){
       // copypaste from https://gist.github.com/tamr/5fb00a1c6214f5cab4f6
@@ -688,7 +704,8 @@ module.exports = function (app) {
       rus = "щ    ш  ч  ц  й  ё  э  ю  я  х  ж  а б в г д е з и к л м н о п р с т у ф ъ  ы ь".split(d),
       eng = "shch sh ch cz ij yo ye yu ya kh zh a b v g d e z i k l m n o p r s t u f xx y x".split(d);
       return function (str, reverse) {
-        if (!reverse && str.substring(0, 4) !== 'ru--') return str
+        if (!str) return str;
+        if (!reverse && str.substring(0, 4) !== 'ru--') return str;
         if (!reverse) str = str.substring(4)
 
         // TODO rework this
@@ -863,7 +880,8 @@ module.exports = function (app) {
       //console.log(value, rate);
       if (value && value.pending_payout_value) {
         //value.total_payout_value.split(" ")[0])+parseFloat(value.total_pending_payout_value.split(" ")[0])
-        return (parseFloat(value.pending_payout_value.split(" ")[0])*rate);
+        //return (parseFloat(value.pending_payout_value.split(" ")[0])*rate);
+        return ((parseFloat(value.total_payout_value.split(" ")[0]))+(parseFloat(value.total_pending_payout_value.split(" ")[0]))*rate).toFixed(2);
       }
     }
     //SumPostTotal.$stateful = true;
