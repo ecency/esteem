@@ -731,7 +731,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
                   var tr = new window.ejs.TransactionBuilder();
                   //transfer
                   if ($scope.data.type !== 'sp' && $scope.data.type !== 'golosp') {
-                    var tt = $filter('number')($scope.data.amount) +" "+angular.uppercase($scope.data.type);
+                    var tt = $filter('number')($scope.data.amount, 3) +" "+angular.uppercase($scope.data.type);
                     tr.add_type_operation("transfer", {
                       from: $rootScope.$storage.user.username,
                       to: $scope.data.username,
@@ -751,7 +751,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
                       }
                     }, 3000);
                   } else {
-                    var tt = $filter('number')($scope.data.amount) + " "+$filter('uppercase')($rootScope.$storage.chain);
+                    var tt = $filter('number')($scope.data.amount, 3) + " "+$filter('uppercase')($rootScope.$storage.chain);
                     tr.add_type_operation("transfer_to_vesting", {
                       from: $rootScope.$storage.user.username,
                       to: $scope.data.username,

@@ -20,7 +20,7 @@
   <ion-floating-menu menu-color="#387ef5" menu-open-color="#387ef5" has-footer="true">
     <ion-floating-item icon="ion-chatbubbles" click="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username" button-color="#387ef5" icon-color="#fff" text="{{'REPLY'|translate}}" text-class="text-class"></ion-floating-item>
     <ion-floating-item icon="ion-android-arrow-dropup-circle" click="upvotePost($root.$storage.sitem)" button-color="#387ef5" icon-color="#fff" text="{{'UPVOTE'|translate}}" text-class="text-class"></ion-floating-item>
-    <ion-floating-item icon="ion-edit" click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode!=='archived' && $root.$storage.sitem.author==$root.$storage.user.username" button-color="#387ef5" icon-color="#fff" text="{{'EDIT'|translate}}" text-class="text-class"></ion-floating-item>
+    <ion-floating-item icon="ion-edit" click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.author==$root.$storage.user.username" button-color="#387ef5" icon-color="#fff" text="{{'EDIT'|translate}}" text-class="text-class"></ion-floating-item>
     <ion-floating-item icon="ion-image" click="showImages(0)" ng-if="isImages()" button-color="#387ef5" icon-color="#fff" text="{{'GALLERY'|translate}}" text-class="text-class"></ion-floating-item>
     <ion-floating-item icon="ion-arrow-return-right" ng-if="$root.$storage.user.username !== $root.$storage.sitem.author" click="$root.reBlog($root.$storage.sitem.author, $root.$storage.sitem.permlink)" button-color="#387ef5" icon-color="#fff" text="{{'REBLOG'|translate}}" text-class="text-class"></ion-floating-item>
   </ion-floating-menu>
@@ -48,7 +48,7 @@
         <i class="icon ion-android-arrow-dropup-circle" on-tap="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted" on-hold="openSliderr($event, $root.$storage.sitem)">{{'UPVOTE'|translate}}</i><i class="icon ion-android-arrow-dropup-circle positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted">{{'UNVOTE_UPVOTED'|translate}}</i>&nbsp;&nbsp;&nbsp;<span on-tap="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
         <div class="col col-33" on-tap="openTooltip($event,$root.$storage.sitem)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> {{$root.$storage.sitem | sumPostTotal:$root.$storage.currencyRate | number}}</div>
         <div class="col" on-tap="isreplying($root.$storage.sitem, true)"><i class="fa fa-reply"></i> {{$root.$storage.sitem.children}}</div>
-        <div class="col" on-tap="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode=='first_payout' && $root.$storage.sitem.author==$root.$storage.user.username"><i class="fa  fa-pencil-square-o"></i></div>
+        <div class="col" on-tap="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.author==$root.$storage.user.username"><i class="fa  fa-pencil-square-o"></i></div>
         <div class="col" on-tap="deletePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.net_votes==0 && $root.$storage.sitem.author==$root.$storage.user.username"><i class="fa fa-trash-o"></i></div>
       </div>
       <ion-thread comments="post.comments"></ion-thread>

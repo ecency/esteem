@@ -955,7 +955,7 @@ module.exports = function (app) {
             },
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
                         <div class="ion-comment--author"><img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.$storage.paccounts[comment.author].json_metadata.user_image||$root.$storage.paccounts[comment.author].json_metadata.profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{comment.author}}">{{comment.author}}</a></b>&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
-                        <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> {{comment.total_pending_payout_value.split(" ")[0]|rate|number}} </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
+                        <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> {{comment.pending_payout_value.split(" ")[0]|rate|number}} </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
                         <div class="ion-comment--text bodytext selectable" ng-bind-html="comment.body | parseUrl "></div>\
                         <div class="ion-comment--replies"><span on-tap="upvotePost(comment)" on-hold="openSliderr($event, comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UPVOTE"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.$storage.user.username && compateDate(comment)" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.$storage.user.username" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{\'REMOVE\'|translate}}</span></div>\
                     </ion-item>',
@@ -991,12 +991,12 @@ module.exports = function (app) {
                   };
 
                   $scope.openTooltip = function($event, d) {
-                    var tppv = Number(d.total_pending_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
+                    var tppv = Number(d.pending_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
                     var p = Number(d.promoted.split(' ')[0])*$rootScope.$storage.currencyRate;
                     var tpv = Number(d.total_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
                     var ar = Number(d.total_payout_value.split(' ')[0]-d.curator_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
                     var crp = Number(d.curator_payout_value.split(' ')[0])*$rootScope.$storage.currencyRate;
-                    var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT_CYCLE')+"</b></div><div class='col'>"+d.mode.replace('_',' ')+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(tppv, 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(tpv,3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
+                    var texth = "<div class='row'><div class='col'><b>"+$filter('translate')('POTENTIAL_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(tppv, 3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAST_PAYOUT')+"</b></div><div class='col'>"+$filter('getCurrencySymbol')($rootScope.$storage.currency)+$filter('number')(tpv,3)+"</div></div><div class='row'><div class='col'><b>"+$filter('translate')('PAYOUT')+"</b></div><div class='col'>"+$filter('timeago')(d.cashout_time, true)+"</div></div>";
                     $scope.tooltipText = texth;
                     $scope.tooltip.show($event);
                   };

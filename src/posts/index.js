@@ -228,6 +228,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('hr-HR', require('./locales/ready/hr-HR')); //Croatian
   $translateProvider.translations('fa-IR', require('./locales/ready/fa-IR')); //Persian
   $translateProvider.translations('it-IT', require('./locales/ready/it-IT')); //Italian
+  $translateProvider.translations('fil-PH', require('./locales/ready/fil-PH')); //Filipino
 
   $translateProvider.useSanitizeValueStrategy(null);
 
@@ -322,7 +323,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       {id:'ms-MY', name: 'Bahasa Melayu'},
       {id:'hr-HR', name: 'Hrvatski'},
       {id:'fa-IR', name: 'Fārsi'},
-      {id:'it-IT', name: 'Italiano'}
+      {id:'it-IT', name: 'Italiano'},
+      {id:'fil-PH', name: 'Wikang Filipino'}
       
     ];
 
