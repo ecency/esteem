@@ -256,12 +256,12 @@
   "USER_NOTFOUND":"",
   "APPROVE":"",
   "DISPUTE":"",
-  "RELEASE":"",
+  "RELEASE":"Lançamento",
   "FROM":"",
-  "ID":"",
-  "SUBMIT":"",
-  "RECEIVER":"",
-  "LOCATION":"",
-  "WEBSITE":"",
-  "DISPLAY_NAME":""
+  "ID":"identificação",
+  "SUBMIT":"Submeter",
+  "RECEIVER":"Destinatário",
+  "LOCATION":"Localização",
+  "WEBSITE":"Website",
+  "DISPLAY_NAME":"Nome a exibir"
 }
