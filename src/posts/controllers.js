@@ -2443,8 +2443,26 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           var vperm = v.parent_author==""?v.permlink:v.parent_permlink;
           var keyy = vparent+"/"+vperm;
           if (v.parent_permlink!==v.category) {
-            if (con[keyy])
+            if (con[keyy]) {
+              //console.log(v);
+              var llen = v.active_votes.length;
+              var luser = $rootScope.$storage.user;
+              if (luser) {
+                for (var jl = llen - 1; jl >= 0; jl--) {
+                  if (v.active_votes[jl].voter === luser.username) {
+                    if (v.active_votes[jl].percent > 0) {
+                      v.upvoted = true;
+                    } else if (v.active_votes[jl].percent < 0) {
+                      v.downvoted = true;
+                    } else {
+                      v.downvoted = false;
+                      v.upvoted = false;
+                    }
+                  }
+                }
+              }
               con[keyy].comments.push(v);  
+            }
           }
         });
         //console.log(acon);  
