@@ -1370,7 +1370,7 @@ module.exports = function (app) {
                             </ion-comment>\
                             <div class="reddit-post--comment--container">\
                                  <ul ng-if="!comment.showChildren" class="animate-if ion-comment--children">\
-                                    <li ng-repeat="comment in comment.comments | orderBy:\'-net_votes\' track by $index ">\
+                                    <li ng-repeat="comment in comment.comments | orderBy:\'-pending_payout_value\' track by $index ">\
                                         <ng-include src="\'node.html\'"/>\
                                     </li>\
                                 </ul>\
@@ -1378,7 +1378,7 @@ module.exports = function (app) {
                         </script>\
                         <ion-list ng-if="comments && comments.length > 0">\
                           <ul>\
-                            <li ng-repeat="comment in comments | orderBy:\'-net_votes\' track by $index">\
+                            <li ng-repeat="comment in comments | orderBy:\'-pending_payout_value\' track by $index">\
                                 <ng-include src="\'node.html\'"/>\
                             </li>\
                           </ul>\
