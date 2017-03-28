@@ -925,8 +925,9 @@ Renderer.prototype.link = function(href, title, text) {
       out += '>' + text + '</a>'; 
     }
   } else {
-    if (href.match(youtube)) {
+    if (href.match(youtubeid)) {
       var YouTube1 = mediaParseIdFromUrl('youtube', href);
+      console.log(YouTube1, href);
       out = href.replace(youtube, '<iframe width="100%" height="280" src="http://www.youtube.com/embed/' + YouTube1 + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
     } else if (href.indexOf('https://steemit.com') === 0) {
         var parts = href.split('/');

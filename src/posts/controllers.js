@@ -119,6 +119,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.loginChain = function(x){
     console.log(x);
     $scope.loginData.chain = x;
+
   }
   
   $scope.doLogin = function() {
@@ -213,7 +214,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
             }*/
           });
         });
-      }, 1000);
+      }, 200);
       
     } else {
       $scope.loginModal.hide();
@@ -1756,7 +1757,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
   $scope.isBookmarked = function() {
     var bookm = $rootScope.$storage.bookmark || undefined;
-    if (bookm) {
+    if (bookm && $rootScope.$storage.sitem) {
       var len = bookm.length;
       for (var i = 0; i < len; i++) {
         if (bookm[i] && bookm[i].permlink === $rootScope.$storage.sitem.permlink) {
