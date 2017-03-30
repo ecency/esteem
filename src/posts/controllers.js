@@ -60,7 +60,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.open = function(item) {
     item.json_metadata = angular.fromJson(item.json_metadata);
     $rootScope.$storage.sitem = item;
-    //console.log(item);
+    console.log(item);
 
     //$state.go('app.single');*/
     $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});
@@ -2313,64 +2313,66 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     if (!$scope.$$phase){
       $scope.$apply();
     }
-    $rootScope.$broadcast('show:loading');
-    if ($rootScope.$storage.user) {
-      $scope.mylogin = new window.ejs.Login();
-      $scope.mylogin.setRoles(["posting"]);
-      var loginSuccess = $scope.mylogin.checkKeys({
-          accountName: $rootScope.$storage.user.username,
-          password: $rootScope.$storage.user.password || null,
-          auths: {
-              posting: $rootScope.$storage.user.posting.key_auths
-          },
-          privateKey: $rootScope.$storage.user.privatePostingKey || null
-        }
-      );
-      if (loginSuccess) {
-        var tr = new window.ejs.TransactionBuilder();
-        var t = new Date();
-        var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
-        var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ["esteem"] , app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
-        tr.add_type_operation("comment", {
-          parent_author: $scope.post.author,
-          parent_permlink: $scope.post.permlink,
-          author: $rootScope.$storage.user.username,
-          permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink+"-"+timeformat,
-          title: "",
-          body: $scope.data.comment,
-          json_metadata: angular.toJson(json)
-        });
-        localStorage.error = 0;
-        tr.process_transaction($scope.mylogin, null, true);
-        $scope.replying = false;
-        setTimeout(function() {
-          $rootScope.$broadcast('hide:loading');
-          if (localStorage.error == 1) {
-            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
-          } else {
-            $scope.closeModal();
-            $scope.data.comment = "";
-
-            $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
-            window.Api.initPromise.then(function(response) {
-              window.Api.database_api().exec("get_content_replies", [$rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink]).then(function(result){
-                if (result)
-                  $scope.comments = result;
-                if (!$scope.$$phase) {
-                  $scope.$apply();
-                }
-              });
-            });
+    window.Api.initPromise.then(function(response) {
+      $rootScope.$broadcast('show:loading');
+      if ($rootScope.$storage.user) {
+        $scope.mylogin = new window.ejs.Login();
+        $scope.mylogin.setRoles(["posting"]);
+        var loginSuccess = $scope.mylogin.checkKeys({
+            accountName: $rootScope.$storage.user.username,
+            password: $rootScope.$storage.user.password || null,
+            auths: {
+                posting: $rootScope.$storage.user.posting.key_auths
+            },
+            privateKey: $rootScope.$storage.user.privatePostingKey || null
           }
-        }, 3000);
+        );
+        if (loginSuccess) {
+          var tr = new window.ejs.TransactionBuilder();
+          var t = new Date();
+          var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
+          var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ["esteem"] , app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
+          tr.add_type_operation("comment", {
+            parent_author: $scope.post.author,
+            parent_permlink: $scope.post.permlink,
+            author: $rootScope.$storage.user.username,
+            permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink+"-"+timeformat,
+            title: "",
+            body: $scope.data.comment,
+            json_metadata: angular.toJson(json)
+          });
+          localStorage.error = 0;
+          tr.process_transaction($scope.mylogin, null, true);
+          $scope.replying = false;
+          setTimeout(function() {
+            $rootScope.$broadcast('hide:loading');
+            if (localStorage.error == 1) {
+              $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
+            } else {
+              $scope.closeModal();
+              $scope.data.comment = "";
+
+              $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
+              window.Api.initPromise.then(function(response) {
+                window.Api.database_api().exec("get_content_replies", [$rootScope.$storage.sitem.author, $rootScope.$storage.sitem.permlink]).then(function(result){
+                  if (result)
+                    $scope.comments = result;
+                  if (!$scope.$$phase) {
+                    $scope.$apply();
+                  }
+                });
+              });
+            }
+          }, 3000);
+        } else {
+          $rootScope.$broadcast('hide:loading');
+          $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
+        }
       } else {
         $rootScope.$broadcast('hide:loading');
-        $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
+        $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
       }
-    } else {
-      $rootScope.$broadcast('hide:loading');
-      $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
-    }
+    });
   }
   $rootScope.$on("update:content", function(){
     $rootScope.log("update:content");

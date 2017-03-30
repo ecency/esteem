@@ -957,7 +957,7 @@ module.exports = function (app) {
                         <div class="ion-comment--author"><img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.$storage.paccounts[comment.author].json_metadata.user_image||$root.$storage.paccounts[comment.author].json_metadata.profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{comment.author}}">{{comment.author}}</a></b>&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
                         <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> {{comment.pending_payout_value.split(" ")[0]|rate|number}} </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
                         <div class="ion-comment--text bodytext selectable" ng-bind-html="comment.body | parseUrl "></div>\
-                        <div class="ion-comment--replies"><span on-tap="upvotePost(comment)" on-hold="openSliderr($event, comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UPVOTE"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.$storage.user.username && compateDate(comment)" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.$storage.user.username" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{\'REMOVE\'|translate}}</span></div>\
+                        <div class="ion-comment--replies"><ion-spinner ng-if="comment.invoting"></ion-spinner><span on-tap="upvotePost(comment)" on-hold="openSliderr($event, comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UPVOTE"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.$storage.user.username && compateDate(comment)" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.$storage.user.username && comment.abs_rshares == 0" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{\'REMOVE\'|translate}}</span></div>\
                     </ion-item>',
             controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopover, $ionicPopup, $ionicActionSheet, $cordovaCamera, $filter) {
                   $ionicPopover.fromTemplateUrl('popoverTr.html', {
@@ -1174,120 +1174,122 @@ module.exports = function (app) {
                       return patch;
                   }
                   $scope.reply = function (xx) {
-                    if (!$scope.editc) {
-                        $rootScope.$broadcast('show:loading');
-                        if ($rootScope.$storage.user) {
-                          $scope.mylogin = new window.ejs.Login();
-                          $scope.mylogin.setRoles(["posting"]);
-                          var loginSuccess = $scope.mylogin.checkKeys({
-                              accountName: $rootScope.$storage.user.username,
-                              password: $rootScope.$storage.user.password || null,
-                              auths: {
-                                  posting: $rootScope.$storage.user.posting.key_auths
-                              },
-                              privateKey: $rootScope.$storage.user.privatePostingKey || null
-                            }
-                          );
-                          if (loginSuccess) {
-                            var tr = new window.ejs.TransactionBuilder();
-                            var t = new Date();
-                            var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
-
-                            var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
-                            tr.add_type_operation("comment", {
-                              parent_author: $scope.post.author,
-                              parent_permlink: $scope.post.permlink,
-                              author: $rootScope.$storage.user.username,
-                              permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink+"-"+timeformat,
-                              title: "",
-                              body: $scope.data.comment,
-                              json_metadata: angular.toJson(json)
-                            });
-                            //$rootScope.log(my_pubkeys);
-                            localStorage.error = 0;
-                            tr.process_transaction($scope.mylogin, null, true);
-
-                            $scope.replying = false;
-                            setTimeout(function() {
-                              if (localStorage.error == 1) {
-                                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
-                              } else {
-                                $scope.closeModal();
-                                $scope.data.comment = "";
-                                $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
-                                $rootScope.$broadcast("update:content");
+                    window.Api.initPromise.then(function(response) {
+                      if (!$scope.editc) {
+                          $rootScope.$broadcast('show:loading');
+                          if ($rootScope.$storage.user) {
+                            $scope.mylogin = new window.ejs.Login();
+                            $scope.mylogin.setRoles(["posting"]);
+                            var loginSuccess = $scope.mylogin.checkKeys({
+                                accountName: $rootScope.$storage.user.username,
+                                password: $rootScope.$storage.user.password || null,
+                                auths: {
+                                    posting: $rootScope.$storage.user.posting.key_auths
+                                },
+                                privateKey: $rootScope.$storage.user.privatePostingKey || null
                               }
+                            );
+                            if (loginSuccess) {
+                              var tr = new window.ejs.TransactionBuilder();
+                              var t = new Date();
+                              var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
+
+                              var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
+                              tr.add_type_operation("comment", {
+                                parent_author: $scope.post.author,
+                                parent_permlink: $scope.post.permlink,
+                                author: $rootScope.$storage.user.username,
+                                permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink+"-"+timeformat,
+                                title: "",
+                                body: $scope.data.comment,
+                                json_metadata: angular.toJson(json)
+                              });
+                              //$rootScope.log(my_pubkeys);
+                              localStorage.error = 0;
+                              tr.process_transaction($scope.mylogin, null, true);
+
+                              $scope.replying = false;
+                              setTimeout(function() {
+                                if (localStorage.error == 1) {
+                                  $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
+                                } else {
+                                  $scope.closeModal();
+                                  $scope.data.comment = "";
+                                  $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
+                                  $rootScope.$broadcast("update:content");
+                                }
+                                $rootScope.$broadcast('hide:loading');
+                              }, 3000);
+                            } else {
                               $rootScope.$broadcast('hide:loading');
-                            }, 3000);
+                              $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
+                            }
                           } else {
                             $rootScope.$broadcast('hide:loading');
-                            $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
+                            $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
                           }
-                        } else {
-                          $rootScope.$broadcast('hide:loading');
-                          $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
-                        }
-                    } else {
+                      } else {
 
-                        var patch = createPatch($scope.patchbody, $scope.data.comment)
-                        // Putting body into buffer will expand Unicode characters into their true length
-                        if (patch && patch.length < new Buffer($scope.data.comment, 'utf-8').length) {
-                          $scope.data.comment2 = patch;
-                          //$rootScope.log(patch);
-                        }
+                          var patch = createPatch($scope.patchbody, $scope.data.comment)
+                          // Putting body into buffer will expand Unicode characters into their true length
+                          if (patch && patch.length < new Buffer($scope.data.comment, 'utf-8').length) {
+                            $scope.data.comment2 = patch;
+                            //$rootScope.log(patch);
+                          }
 
-                        $rootScope.$broadcast('show:loading');
-                        if ($rootScope.$storage.user) {
-                          $scope.mylogin = new window.ejs.Login();
-                          $scope.mylogin.setRoles(["posting"]);
-                          var loginSuccess = $scope.mylogin.checkKeys({
-                              accountName: $rootScope.$storage.user.username,
-                              password: $rootScope.$storage.user.password || null,
-                              auths: {
-                                  posting: $rootScope.$storage.user.posting.key_auths
-                              },
-                              privateKey: $rootScope.$storage.user.privatePostingKey || null
-                            }
-                          );
-                          if (loginSuccess) {
-                            var tr = new window.ejs.TransactionBuilder();
-
-                            var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
-                            tr.add_type_operation("comment", {
-                              parent_author: $scope.post.parent_author,
-                              parent_permlink: $scope.post.parent_permlink,
-                              author: $scope.post.author,
-                              permlink: $scope.post.permlink,
-                              title: "",
-                              body: $scope.data.comment2 || $scope.data.comment,
-                              json_metadata: $scope.post.json_metadata
-                            });
-                            //$rootScope.log(my_pubkeys);
-                            localStorage.error = 0;
-                            tr.process_transaction($scope.mylogin, null, true);
-
-                            $scope.closeModal();
-                            $scope.replying = false;
-                            setTimeout(function() {
-                              if (localStorage.error == 1) {
-                                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
-                              } else {
-                                $scope.data.comment = "";
-                                $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
-                                $rootScope.$broadcast("update:content");
+                          $rootScope.$broadcast('show:loading');
+                          if ($rootScope.$storage.user) {
+                            $scope.mylogin = new window.ejs.Login();
+                            $scope.mylogin.setRoles(["posting"]);
+                            var loginSuccess = $scope.mylogin.checkKeys({
+                                accountName: $rootScope.$storage.user.username,
+                                password: $rootScope.$storage.user.password || null,
+                                auths: {
+                                    posting: $rootScope.$storage.user.posting.key_auths
+                                },
+                                privateKey: $rootScope.$storage.user.privatePostingKey || null
                               }
+                            );
+                            if (loginSuccess) {
+                              var tr = new window.ejs.TransactionBuilder();
+
+                              var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
+                              tr.add_type_operation("comment", {
+                                parent_author: $scope.post.parent_author,
+                                parent_permlink: $scope.post.parent_permlink,
+                                author: $scope.post.author,
+                                permlink: $scope.post.permlink,
+                                title: "",
+                                body: $scope.data.comment2 || $scope.data.comment,
+                                json_metadata: $scope.post.json_metadata
+                              });
+                              //$rootScope.log(my_pubkeys);
+                              localStorage.error = 0;
+                              tr.process_transaction($scope.mylogin, null, true);
+
+                              $scope.closeModal();
+                              $scope.replying = false;
+                              setTimeout(function() {
+                                if (localStorage.error == 1) {
+                                  $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
+                                } else {
+                                  $scope.data.comment = "";
+                                  $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
+                                  $rootScope.$broadcast("update:content");
+                                }
+                                $rootScope.$broadcast('hide:loading');
+                              }, 3000);
+                            } else {
                               $rootScope.$broadcast('hide:loading');
-                            }, 3000);
+                              $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
+                            }
                           } else {
                             $rootScope.$broadcast('hide:loading');
-                            $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
+                            $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
                           }
-                        } else {
-                          $rootScope.$broadcast('hide:loading');
-                          $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
-                        }
-                    }
-                  $rootScope.$broadcast('hide:loading');
+                      }
+                    $rootScope.$broadcast('hide:loading');
+                  });
                 }
                 $scope.replyToComment = function(comment) {
                     $rootScope.log('reply to comment')
