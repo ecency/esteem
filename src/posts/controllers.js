@@ -2445,7 +2445,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     var url = "/"+$stateParams.category+"/@"+author+"/"+permlink;
     //console.log(url);
     window.Api.initPromise.then(function(response) {
-
       window.Api.database_api().exec("get_content", [author, permlink]).then(function(result){
         //console.log(result);
         var len = result.active_votes.length;
@@ -2600,12 +2599,10 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           var p2 = document.querySelector('.my-handle');
           $scope.quotePosition = $ionicPosition.position(angular.element(p2));
           $ionicScrollDelegate.$getByHandle('mainScroll').scrollTo(0,$scope.quotePosition.top, true);  
+          $scope.$broadcast('postAccounts');
           if (!$scope.$$phase){
             $scope.$apply();
           }
-        }, 1);
-        setTimeout(function() {
-          $scope.$broadcast('postAccounts');
         }, 10);
         if (!$scope.$$phase){
           $scope.$apply();
