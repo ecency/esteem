@@ -1074,6 +1074,7 @@ module.exports = function (app) {
                           console.log('depth5');
                           $rootScope.$broadcast('openComments', { data: comment });
                         } else {
+                          window.Api.initPromise.then(function(response) {
                           window.Api.database_api().exec("get_content_replies", [comment.author, comment.permlink]).then(function(dd){
                             comment.comments = dd;
 
@@ -1092,6 +1093,7 @@ module.exports = function (app) {
                             }
                             comment.showChildren = true;
                             console.log(comment);
+                          });
                           });  
                         }
                       }
@@ -1101,6 +1103,7 @@ module.exports = function (app) {
                   $scope.$on('postAccounts', function(){
                     //$rootScope.$storage.paccounts = {};
                     //console.log($rootScope.$storage.paccounts)
+                    window.Api.initPromise.then(function(response) {
                     window.Api.database_api().exec("get_accounts", [$rootScope.$storage.postAccounts]).then(function(res){
                       for (var i = 0, len = res.length; i < len; i++) {
                         var v = res[i];
@@ -1119,6 +1122,7 @@ module.exports = function (app) {
                       if (!$scope.$$phase){
                         $scope.$apply();
                       }
+                    });
                     });
                   });
                   $scope.upvotePost = function(post) {

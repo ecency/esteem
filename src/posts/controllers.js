@@ -60,7 +60,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.open = function(item) {
     item.json_metadata = angular.fromJson(item.json_metadata);
     $rootScope.$storage.sitem = item;
-    console.log(item);
+    //console.log(item);
 
     //$state.go('app.single');*/
     $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});
@@ -519,6 +519,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
     query = angular.lowercase(query);
     $scope.res = [];
     if (query) {
+      window.Api.initPromise.then(function(response) {
       window.Api.database_api().exec("lookup_account_names", [[query]]).then(function(response){
         //console.log(response)
         var dd = response[0];
@@ -532,6 +533,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
             $scope.res.push({name: query, escrow: {terms: "-", fees: {"STEEM": 0.001, "SBD": 0.001, "GBG": 0.001, "GOLOS": 0.001}} });
           }
         }
+      });
       });
       setTimeout(function() {
         if (query && $scope.res) {
@@ -2576,6 +2578,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.fetchComments = function(author, permlink){
     $rootScope.fetching = true;
     //console.log(author,permlink);
+    window.Api.initPromise.then(function(response) {
     window.Api.database_api().exec("get_content_replies", [author, permlink]).then(function(dd){
       /*for (var i = 0; i < dd.length; i++) {
         window.Api.database_api().exec("get_active_votes", [dd[i].author, dd[i].permlink]).then(function(res){
@@ -2585,7 +2588,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       }*/
       $scope.comments = dd;
       $rootScope.$storage.comments = dd;
-      console.log(dd.active_votes);
+      //console.log(dd.active_votes);
       $rootScope.fetching = false;
       for (var i = 0, len = dd.length; i < len; i++) {
         var v = dd[i];
@@ -2600,9 +2603,11 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $scope.$apply();
       }
     });
+    });
   }
   $scope.$on('postAccounts', function(){
     $rootScope.$storage.paccounts = {};
+    window.Api.initPromise.then(function(response) {
     window.Api.database_api().exec("get_accounts", [$rootScope.$storage.postAccounts]).then(function(res){
       for (var i = 0, len = res.length; i < len; i++) {
         var v = res[i];
@@ -2621,6 +2626,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       if (!$scope.$$phase){
         $scope.$apply();
       }
+    });
     });
   });
   
