@@ -269,6 +269,7 @@ textarea.markdown-input {
   overflow: visible;
   white-space: normal;
   border: none;
+  width: 100%;
 }
 .ion-comment .item-options .button {
   background-color: #fff;
@@ -354,6 +355,13 @@ img.round-avatar{
   height: 16px;
 }
 
+.my-custom-popup .popup {
+  width: 100vw!important;
+}
+select-input {
+  width: 100%!important;
+}
+
 @media only screen and (min-device-width:320px) {
   img {
     max-width: 100%;
@@ -375,7 +383,7 @@ img.round-avatar{
   background-color: #f8f8f8;
 }
 .ion-comment--children {
-  margin-left: 20px;
+  margin-left: 10px;
 }
 .ion-android-arrow-dropup-circle {
 	font-size: 20px;

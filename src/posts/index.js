@@ -194,7 +194,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $ionicConfigProvider.navBar.alignTitle('left')
   $ionicConfigProvider.backButton.text('').icon('ion-chevron-left');
   $ionicConfigProvider.views.swipeBackEnabled(false);
-  $ionicConfigProvider.views.maxCache(2);
+  $ionicConfigProvider.views.maxCache(3);
 
   $animateProvider.classNameFilter( /\banimated\b/ );
   $ionicConfigProvider.scrolling.jsScrolling(false);
@@ -666,6 +666,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.infomodal = modal;
     });
     $rootScope.openInfo = function(xx) {
+      if (xx.active_votes.length==0) {
+        window.Api.database_api().exec("get_active_votes", [xx.author, xx.permlink]).then(function(dd){
+          xx.active_votes = dd;
+        });
+      }
       $rootScope.voters = xx;
       $rootScope.infomodal.show();
     };
