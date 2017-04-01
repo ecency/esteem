@@ -52,6 +52,9 @@
         <div class="col" on-tap="deletePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.net_votes==0 && $root.$storage.sitem.author==$root.$storage.user.username"><i class="fa fa-trash-o"></i></div>
       </div>
       <center><button class="button button-positive button-outline button-icon ion-refresh icon-right" on-tap="fetchComments($root.$storage.sitem.author, $root.$storage.sitem.permlink)"><ion-spinner class="spinner-positive" ng-if="$root.fetching"></ion-spinner> {{"COMMENTS"|translate}}</button></center>
+      <br>
+      <div class="my-handle"></div>
+      
       <ion-thread comments="comments"></ion-thread>
     </div>
     <script id = "popoverTr.html" type="text/ng-template">

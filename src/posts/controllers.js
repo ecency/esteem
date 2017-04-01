@@ -1735,7 +1735,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
 })
 
-app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPopover, $filter, $state, APIs, $ionicHistory) {
+app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPopover, $filter, $state, APIs, $ionicHistory, $ionicPosition) {
   $scope.post = $rootScope.$storage.sitem;
   $scope.data = {};
   $scope.spost = {};
@@ -2579,54 +2579,71 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     $rootScope.fetching = true;
     //console.log(author,permlink);
     window.Api.initPromise.then(function(response) {
-    window.Api.database_api().exec("get_content_replies", [author, permlink]).then(function(dd){
-      /*for (var i = 0; i < dd.length; i++) {
-        window.Api.database_api().exec("get_active_votes", [dd[i].author, dd[i].permlink]).then(function(res){
-          //console.log(res);
-          dd[i].active_votes = res;
-        });
-      }*/
-      $scope.comments = dd;
-      $rootScope.$storage.comments = dd;
-      //console.log(dd.active_votes);
-      $rootScope.fetching = false;
-      for (var i = 0, len = dd.length; i < len; i++) {
-        var v = dd[i];
-        if ($rootScope.$storage.postAccounts && $rootScope.$storage.postAccounts.indexOf(v.author) == -1) {
-          $rootScope.$storage.postAccounts.push(v.author);
-        }  
-      }
-      setTimeout(function() {
-        $scope.$broadcast('postAccounts');
-      }, 10);
+      window.Api.database_api().exec("get_content_replies", [author, permlink]).then(function(dd){
+        /*for (var i = 0; i < dd.length; i++) {
+          window.Api.database_api().exec("get_active_votes", [dd[i].author, dd[i].permlink]).then(function(res){
+            //console.log(res);
+            dd[i].active_votes = res;
+          });
+        }*/
+        $scope.comments = dd;
+        $rootScope.$storage.comments = dd;
+        //console.log(dd.active_votes);
+        $rootScope.fetching = false;
+        for (var i = 0, len = dd.length; i < len; i++) {
+          var v = dd[i];
+          if ($rootScope.$storage.postAccounts && $rootScope.$storage.postAccounts.indexOf(v.author) == -1) {
+            $rootScope.$storage.postAccounts.push(v.author);
+          }  
+        }
+        setTimeout(function() {
+          var p2 = document.querySelector('.my-handle');
+          $scope.quotePosition = $ionicPosition.position(angular.element(p2));
+          $ionicScrollDelegate.$getByHandle('mainScroll').scrollTo(0,$scope.quotePosition.top, true);  
+          if (!$scope.$$phase){
+            $scope.$apply();
+          }
+        }, 1);
+        setTimeout(function() {
+          $scope.$broadcast('postAccounts');
+        }, 10);
+        if (!$scope.$$phase){
+          $scope.$apply();
+        }
+      });
       if (!$scope.$$phase){
         $scope.$apply();
       }
-    });
     });
   }
   $scope.$on('postAccounts', function(){
     $rootScope.$storage.paccounts = {};
+    //console.log(window.Api);
+    //window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
+
     window.Api.initPromise.then(function(response) {
-    window.Api.database_api().exec("get_accounts", [$rootScope.$storage.postAccounts]).then(function(res){
-      for (var i = 0, len = res.length; i < len; i++) {
-        var v = res[i];
-        if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
-          if (v.json_metadata) {
-            if (v.json_metadata.indexOf("created_at")>-1) {
-              v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
-            } else {
-              v.json_metadata = angular.fromJson(v.json_metadata);
+      window.Api.database_api().exec("get_accounts", [$rootScope.$storage.postAccounts]).then(function(res){
+        for (var i = 0, len = res.length; i < len; i++) {
+          var v = res[i];
+          if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
+            if (v.json_metadata) {
+              if (v.json_metadata.indexOf("created_at")>-1) {
+                v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
+              } else {
+                v.json_metadata = angular.fromJson(v.json_metadata);
+              }
+              var key = v.name;
+              $rootScope.$storage.paccounts[key] = v.json_metadata;
             }
-            var key = v.name;
-            $rootScope.$storage.paccounts[key] = v.json_metadata;
           }
         }
-      }
+        if (!$scope.$$phase){
+          $scope.$apply();
+        }
+      });
       if (!$scope.$$phase){
         $scope.$apply();
       }
-    });
     });
   });
   
