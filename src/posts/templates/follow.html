@@ -3,13 +3,13 @@
     <div class="list list-inset" ng-if="active=='followers'">
       <label class="item item-input">
         <i class="icon ion-search placeholder-icon"></i>
-        <input type="text" ng-model="searchu.follower" placeholder="{{'SEARCH_FOLLOWERS' | translate}}">
+        <input type="text" ng-model="searchu.follower" placeholder="{{'SEARCH_FOLLOWERS' | translate}}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       </label>
     </div>
     <div class="list list-inset" ng-if="active=='following'">
       <label class="item item-input">
         <i class="icon ion-search placeholder-icon"></i>
-        <input type="text" ng-model="searchu.following" placeholder="{{'SEARCH_FOLLOWING' | translate}}">
+        <input type="text" ng-model="searchu.following" placeholder="{{'SEARCH_FOLLOWING' | translate}}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       </label>
     </div>
     <div class="list" ng-if="active=='followers' && followers.length>0">

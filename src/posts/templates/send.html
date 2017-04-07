@@ -15,16 +15,16 @@
     <div class="list">
       <div class="item item-input item-icon-right" ng-if="!data.advanced">
         <span class="input-label">{{'TO'|translate}}</span>
-        <input type="text" ng-model="data.username" placeholder="{{'TO_DESC'|translate}}" ng-change="changeUsername()">
+        <input type="text" ng-model="data.username" placeholder="{{'TO_DESC'|translate}}" ng-change="changeUsername()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         <i class="icon ion-ios-camera-outline" ng-click="qrScan()" ng-if="ttype=='transfer'"></i>
       </div>
       <label class="item item-input" ng-if="ttype=='escrow'&&!data.advanced">
           <span class="input-label">{{"ESCROW_AGENT"|translate}}</span>
-          <input type="text" readonly="readonly" placeholder="{{'USERNAME'|translate}}" ng-model="data.agent.name" ng-click="openUModal(data.agent)"/>
+          <input type="text" readonly="readonly" placeholder="{{'USERNAME'|translate}}" ng-model="data.agent.name" ng-click="openUModal(data.agent)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       </label>
       <div class="item item-input item-icon-right" ng-if="ttype=='escrow'&&data.advanced">
         <span class="input-label">{{'ESCROW'|translate}} {{'ID'|translate}}</span>
-        <input type="text" ng-model="data.escrow_id" placeholder="{{'SEARCH'|translate}}" ng-change="searchEscrowID(data.escrow_id)">
+        <input type="text" ng-model="data.escrow_id" placeholder="{{'SEARCH'|translate}}" ng-change="searchEscrowID(data.escrow_id)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       </div>
       <label class="item item-input item-select" ng-if="data.advanced">
         <span class="input-label">{{'OPTIONS'|translate}}</span>
@@ -44,7 +44,7 @@
       </label>
       <label class="item item-input" ng-if="!data.advanced">
         <span class="input-label">{{'AMOUNT'|translate}}</span>
-        <input type="number" placeholder="{{'AMOUNT'|translate}}" step="0.001" ng-model="data.amount">
+        <input type="number" placeholder="{{'AMOUNT'|translate}}" step="0.001" ng-model="data.amount" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       </label>
       <label class="item item-input" ng-if="data.type != 'sp'&&data.type != 'golosp' && !data.advanced">
         <span class="input-label">{{'MEMO'|translate}}</span>
@@ -84,7 +84,7 @@
       <div class="bar bar-header bar-positive item-input-inset">
         <label class="item-input-wrapper">
           <i class="icon ion-ios-search placeholder-icon"></i>
-          <input type="search" placeholder="{{'SEARCH'|translate}}" ng-change="getUserAgent(data.query)" ng-model="data.query">
+          <input type="search" placeholder="{{'SEARCH'|translate}}" ng-change="getUserAgent(data.query)" ng-model="data.query" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         </label>
         <button class="button button-clear button-outline" ng-click="closeUModal()">
           {{"CANCEL"|translate}}
