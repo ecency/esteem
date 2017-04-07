@@ -134,14 +134,17 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       $rootScope.$broadcast('show:loading');
       $scope.loginData.username = $scope.loginData.username.trim();
       console.log('doLogin'+$scope.loginData.username+$scope.loginData.password);
-      window.Api.close();
-      window.Api = null;
-      window.steemRPC.Client.close();
       
-      var socketUrl = $rootScope.$storage["socket"+$scope.loginData.chain];
-      console.log(socketUrl);
+      if ($scope.loginData.chain !== $rootScope.$storage.chain) {
+        window.Api.close();
+        window.Api = null;
+        window.steemRPC.Client.close();
+        
+        var socketUrl = $rootScope.$storage["socket"+$scope.loginData.chain];
+        //console.log(socketUrl);
 
-      window.Api = window.steemRPC.Client.get({url:socketUrl}, true);
+        window.Api = window.steemRPC.Client.get({url:socketUrl}, true);
+      }
       setTimeout(function() {
         window.Api.initPromise.then(function(response) {
           window.Api.database_api().exec("get_accounts", [[$scope.loginData.username]]).then(function(dd){
@@ -174,7 +177,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                 $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('PASSWORD_INCORRECT'));
             } else {
               $rootScope.$storage.user = $scope.loginData;
+              $scope.loginData = {};
               var found = false;
+
               if ($rootScope.$storage.users.length>0){
                 for (var i = 0, len = $rootScope.$storage.users.length; i < len; i++) {
                   var v = $rootScope.$storage.users[i];
@@ -184,29 +189,22 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                 }
               }
               if (found) {
+
               } else {
                 $rootScope.$storage.users.push($rootScope.$storage.user);  
               }
               $rootScope.$storage.mylogin = $scope.login;
               APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date(), 'medium'), appversion: $rootScope.$storage.appversion}).then(function(res){
                 $rootScope.$broadcast('hide:loading');
-                //$state.go($state.current, {}, {reload: true});
-                //$state.go('app.posts', {}, { reload: true });
-                //$scope.closeLogin();
+                
                 $scope.loginModal.hide();
-                //$ionicHistory.clearCache();
-                //$ionicHistory.clearHistory();
                 $rootScope.$broadcast('refreshLocalUserData');
                   
-                //window.Api.close();
-                //var steemRPC = require("steem-rpc");
-                //window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
-
-                //window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
-                $rootScope.$storage.chain = $scope.loginData.chain;
-
-                $rootScope.$broadcast('changedChain');
-                $rootScope.$broadcast('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
+                if ($rootScope.$storage.chain !== $rootScope.$storage.user.chain) {
+                  $rootScope.$storage.chain = $rootScope.$storage.user.chain;  
+                  $rootScope.$broadcast('changedChain');
+                  $rootScope.$broadcast('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
+                }
 
                 setTimeout(function() {
                   //$window.location.reload(true);
@@ -221,7 +219,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
             }*/
           });
         });
-      }, 200);
+      }, 500);
       
     } else {
       $scope.loginModal.hide();
@@ -307,18 +305,18 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         $rootScope.$storage.appversion = version;
       });
     } else {
-      $rootScope.$storage.appversion = 'debug';
+      $rootScope.$storage.appversion = '1.4.1';
     }
   });
 
   $scope.logout = function() {
+    for (var i = 0, len = $rootScope.$storage.users.length; i < len; i++) {
+      var v = $rootScope.$storage.users[i];
+      if (v.chain == $rootScope.$storage.user.chain && v.username == $rootScope.$storage.user.username) {
+        $rootScope.$storage.users.splice(i,1);
+      }
+    };
     if ($rootScope.$storage.users.length>1) {
-      for (var i = 0, len = $rootScope.$storage.users.length; i < len; i++) {
-        var v = $rootScope.$storage.users[i];
-        if (v.chain == $rootScope.$storage.user.chain && v.username == $rootScope.$storage.user.username) {
-          $rootScope.$storage.users.splice(i,1);
-        }
-      };
       $rootScope.$storage.user = $rootScope.$storage.users[0];
     } else {
       $rootScope.$storage.user = undefined;
