@@ -1522,3 +1522,11 @@ em {
 .col .fa-lg {
   font-size: 1.7em;
 }
+
+body[dir=rtl] .bar .buttons-left span {
+    margin-right: 75px;
+}
+
+body[dir=rtl] .bar .button.back-button, .bar button.back-button {
+    margin-right: 75px;
+}

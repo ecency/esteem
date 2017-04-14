@@ -1,12 +1,14 @@
 <ion-view view-title="">
 	<ion-nav-bar class="bar-positive">
-		<ion-nav-back-button>
+		  <ion-nav-back-button>
     	</ion-nav-back-button>
-	    <ion-nav-buttons side="left">
+	    <ion-nav-buttons side='left'>
 	      <button class="button button-icon button-clear ion-navicon" ng-if="!$root.voiceOver" menu-toggle="left"></button>
         <a href class="button button-icon ion-more" ng-if="$root.voiceOver" menu-toggle="left">{{'MENU'|translate}}</a>
 	    </ion-nav-buttons>
-	    <ion-nav-buttons side="right">
+      <ion-nav-title>
+      </ion-nav-title>
+	    <ion-nav-buttons side='right'>
       <span ng-if="!$root.voiceOver">
         <button class="button button-icon button-clear" on-tap="bookmark()"><i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i></button> &nbsp; 
 	      <button class="button button-icon button-clear ion-android-share-alt" on-tap="share()"></button>

@@ -229,6 +229,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('fa-IR', require('./locales/ready/fa-IR')); //Persian
   $translateProvider.translations('it-IT', require('./locales/ready/it-IT')); //Italian
   $translateProvider.translations('fil-PH', require('./locales/ready/fil-PH')); //Filipino
+  $translateProvider.translations('ar-SA', require('./locales/ready/ar-SA')); //Arabic
 
   $translateProvider.useSanitizeValueStrategy(null);
 
@@ -324,10 +325,13 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       {id:'hr-HR', name: 'Hrvatski'},
       {id:'fa-IR', name: 'Fārsi'},
       {id:'it-IT', name: 'Italiano'},
-      {id:'fil-PH', name: 'Wikang Filipino'}
+      {id:'fil-PH', name: 'Wikang Filipino'},
+      {id:'ar-SA', name: 'عَرَبِيّ'}
       
     ];
-
+    if (!$rootScope.$storage.dir) {
+      $rootScope.$storage.dir = 'ltr';
+    }
     $rootScope.$storage.chains = [{id:'steem', name: 'Steem'}, {id:'golos', name: 'Golos'}];
 
     if (!$rootScope.$storage.currencies) {

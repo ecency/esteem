@@ -10,19 +10,6 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $scope.loginModal = modal;
   });
 
-  //window.ejs.ChainConfig.setChainId("782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12");
-  //console.log(window.ejs);
-
-  //var {key} = require($rootScope.$storage.chain+"js-lib");
-  /*console.log(window.steemJS);
-  let seed = "THIS IS A TERRIBLE BRAINKEY SEED WORD SEQUENCE";
-  let pkey = window[$rootScope.$storage.chain+"JS"].PrivateKey.fromSeed((window[$rootScope.$storage.chain+"JS"].key).normalize_brainKey(seed) );
-
-  console.log("\nPrivate key:", pkey.toWif());
-  console.log("Public key :", pkey.toPublicKey().toString(), "\n");
-
-  console.log((new window[$rootScope.$storage.chain+"JS"].Login()).generateKeys('mgood',pkey.toWif()));
-  */
   $ionicPopover.fromTemplateUrl('templates/popover.html', {
     scope: $scope,
   }).then(function(popover) {
@@ -1604,6 +1591,10 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           /*window.Api.database_api().exec("get_state", ["/"+type]).then(function(response){
             console.log(response);
           });*/
+          if ($rootScope.$storage.chain == 'golos' && type == 'feed') {
+            params.select_authors = [$rootScope.$storage.user.username]; 
+            delete params.tags; 
+          }
           window.Api.database_api().exec("get_discussions_by_"+type, [params]).then(function(response){
             $rootScope.log(response);
             if (response.length <= 1) {
@@ -1721,7 +1712,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
 
     $scope.activeMenu = $rootScope.$storage.filter || "trending";
-    $scope.mymenu = $rootScope.$storage.user ? [{text: $filter('translate')('FEED'), custom:'feed'}, {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}] : [ {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text: $filter('translate')('TRENDING_30'), custom:'trending30'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}];
+    $scope.mymenu = $rootScope.$storage.user ? [{text: $filter('translate')('FEED'), custom:'feed'}, {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}] : [ {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}];
     for (var i = 0, len = $scope.mymenu.length; i < len; i++) {
       var v = $scope.mymenu[i];
       if (v.custom === $rootScope.$storage.filter) {
@@ -3444,6 +3435,10 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         window.Api.initPromise.then(function(response) {
           if (typeof window.Api.database_api === "function") {
             if ($scope.active == 'blog') {
+              if ($rootScope.$storage.chain == 'golos') {
+                params.select_authors = [$stateParams.username];
+                delete params.tags;   
+              }
               window.Api.database_api().exec("get_discussions_by_blog", [params]).then(function(response){
 
                 if (response) {
@@ -3928,9 +3923,17 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
 
   $scope.changeLanguage = function(locale){
     setTimeout(function() {
+      if (locale == 'ar-SA' || locale == 'he-IL' || locale == 'fa-IR') {
+        $rootScope.$storage.dir = 'rtl';
+      } else {
+        $rootScope.$storage.dir = 'ltr';
+      }
       $translate.use(locale);
       if (!$scope.$$phase) {
         $scope.$apply();
+      }
+      if (!$rootScope.$$phase) {
+        $rootScope.$apply();
       }
     }, 1);
   }

@@ -48,7 +48,7 @@
       </label>
       <label class="item item-input" ng-if="data.type != 'sp'&&data.type != 'golosp' && !data.advanced">
         <span class="input-label">{{'MEMO'|translate}}</span>
-        <textarea ng-model="data.memo" rows="3" placeholder="{{'PUBLIC_MEMO'|translate}}"></textarea>
+        <textarea ng-model="data.memo" rows="3" placeholder="{{'PUBLIC_MEMO'|translate}}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
       </label>
       <div class="item" ion-datetime-picker ng-model="data.ratification" only-valid="{'after': 'today', 'inclusive': true}" ng-if="ttype=='escrow'&&!data.advanced">{{'RATIFICATION_DEADLINE'|translate}}: {{data.ratification| date: "yyyy-MM-dd H:mm:ss"}}</div>
       <div class="item" ion-datetime-picker ng-model="data.expiration" only-valid="{'after': 'today', 'inclusive': false}" ng-if="ttype=='escrow'&&!data.advanced">{{'ESCROW_EXPIRATION'|translate}}: {{data.expiration| date: "yyyy-MM-dd H:mm:ss"}}</div>
