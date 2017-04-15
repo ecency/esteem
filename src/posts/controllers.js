@@ -3468,12 +3468,17 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     var params = {tag: $stateParams.username, limit: 20, filter_tags:[]};
     var len = $scope.data.profile?$scope.data.profile.length:0;
 
-    //console.log($scope.data.profile);
+    console.log($scope.data.profile);
+    if (!$scope.$$phase){
+      $scope.$apply();
+    } else {
+      console.log('phased');
+    }
 
     if (len>0) {
       delete params.limit;
-      params.start_author = $scope.data.profile[len-1].author;
-      params.start_permlink = $scope.data.profile[len-1].permlink;
+      params.start_author = $scope.data.profile[$scope.data.profile.length-1].author;
+      params.start_permlink = $scope.data.profile[$scope.data.profile.length-1].permlink;
 
       if ($scope.end) {
         //$rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REQUEST_LIMIT_TEXT'));
@@ -3490,12 +3495,14 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 delete params.tags;   
               }
               window.Api.database_api().exec("get_discussions_by_blog", [params]).then(function(response){
-
+                console.log(params);
+                console.log(response);
                 if (response) {
                   for (var j = 0; j < response.length; j++) {
                     var v = response[j];
+
                     v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
-                    !$scope.$$phase?$scope.$apply():console.log('phased');
+
                     var found = false;
                     for (var i = $scope.data.profile.length-1; i >= 0; i--) {
                       if ($scope.data.profile[i].id === v.id){
@@ -3505,7 +3512,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                     }
                     if (!found){
                       //console.log(v.id);
-                      $scope.data.profile.push(v);
+                      $scope.data.profile.push(v);  
                     }
                     if (response.length <= 1) {
                       $scope.end = true;
@@ -3514,8 +3521,9 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                     }
                   }
                 }
+                $scope.$broadcast('scroll.infiniteScrollComplete');
               });
-              $scope.$broadcast('scroll.infiniteScrollComplete');
+              
             }
             if ($scope.active == 'posts') {
               window.Api.database_api().exec("get_discussions_by_comments", [params]).then(function(response){
@@ -3801,13 +3809,18 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           }
         }
         if (type==="transfers" || type==="permissions") {
+          window.Api.initPromise.then(function(response) {
+            window.Api.database_api().exec("get_state", ["/@"+$stateParams.username]).then(function(res){
+              console.log(res);
+            });
+          });
           for (var property in res.accounts) {
             if (res.accounts.hasOwnProperty(property)) {
               $scope.accounts = res.accounts[property];
               //$rootScope.log(angular.toJson(res.accounts[property].transfer_history));
 
-              $scope.transfers = res.accounts[property].transfer_history;
-              //console.log($scope.transfers);
+              $scope.transfers = res.accounts[property].transfer_history.slice(Math.max(res.accounts[property].transfer_history.length - 50, 0))//res.accounts[property].transfer_history;
+              //console.log(res.transfers);
               $scope.nonexist = false;
             }
           }
@@ -3818,7 +3831,56 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       });
     });
   }
+  $scope.claim_rewards = function(){
+    if ($rootScope.$storage.user) {
+      window.Api.initPromise.then(function(response) {
+      $rootScope.log("Api ready:" + angular.toJson(response));
+      var mylogin = new window.ejs.Login();
+      mylogin.setRoles(["posting"]);
+      //console.log($rootScope.$storage.user);
+      var loginSuccess = mylogin.checkKeys({
+          accountName: $rootScope.$storage.user.username,
+          password: $rootScope.$storage.user.password || null,
+          auths: {
+              posting: $rootScope.$storage.user.posting.key_auths
+          },
+          privateKey: $rootScope.$storage.user.privatePostingKey || null
+        }
+      );
+      if (loginSuccess) {
+        var tr = new window.ejs.TransactionBuilder();
+        tr.add_type_operation("claim_reward_balance", {
+            account: $rootScope.$storage.user.username,
+            reward_steem: $scope.accounts.reward_steem_balance,
+            reward_sbd: $scope.accounts.reward_sbd_balance,
+            reward_vests: $scope.accounts.reward_vesting_balance
+        });
+        localStorage.error = 0;
+        tr.process_transaction(mylogin, null, true);  
 
+        setTimeout(function() {
+          if (localStorage.error == 1) {
+            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
+          } else {
+            $scope.change('transfers');
+          }
+          $rootScope.$broadcast('hide:loading');
+        }, 3000);
+      } else {
+        $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
+        $rootScope.$broadcast('hide:loading');
+      }
+      $rootScope.$broadcast('hide:loading');
+      if (!$rootScope.$$phase) {
+        $rootScope.$apply();
+      }
+    });
+  } else {
+    $rootScope.$broadcast('hide:loading');
+    post.invoting = false;
+    $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
+  }
+  }
 })
 
 app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope) {

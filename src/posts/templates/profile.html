@@ -104,8 +104,14 @@
           </ion-list>
           <ion-infinite-scroll on-infinite="loadmore()" ng-if="moreDataCanBeLoaded()" distance="15%"></ion-infinite-scroll>
         </div>
-
         <div class="padding" ng-if="active=='transfers'">
+          <p class="tcenter" ng-if="accounts.reward_steem_balance.split(' ')[0]>0 || accounts.reward_sbd_balance.split(' ')[0]>0 || accounts.reward_vesting_steem.split(' ')[0]>0"> {{'UNCLAIMED_REWARDS'|translate}}: 
+          <span ng-if="accounts.reward_steem_balance.split(' ')[0]>0">{{accounts.reward_steem_balance.split(' ')[0]}} {{$root.$storage.platformlunit}}</span>
+          <span ng-if="accounts.reward_sbd_balance.split(' ')[0]>0">{{accounts.reward_sbd_balance.split(' ')[0]}} {{$root.$storage.platformdunit}}</span>
+          <span ng-if="accounts.reward_vesting_steem.split(' ')[0]>0">{{accounts.reward_vesting_steem.split(' ')[0]}} {{$root.$storage.platformpunit}}</span>
+          <br>
+          <button class="button button-positive" ng-if='$root.$storage.user.username === user.username' on-tap="claim_rewards()">{{'CLAIM_REWARDS'|translate}}</button>
+          </p>
           <p class="bold uppercase">
             {{'BALANCES'|translate}}
           </p>

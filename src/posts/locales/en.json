@@ -263,5 +263,7 @@
     "RECEIVER": "Receiver",
     "LOCATION": "Location",
     "WEBSITE": "Website",
-    "DISPLAY_NAME": "Display name"
+    "DISPLAY_NAME": "Display name",
+    "UNCLAIMED_REWARDS": "Unclaimed rewards",
+    "CLAIM_REWARDS": "Claim rewards"
 }
