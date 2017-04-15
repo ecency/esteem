@@ -2709,6 +2709,22 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   };
 
 
+  $scope.pauseVideo = function() {
+    var iframe = document.getElementsByTagName("iframe")[0].contentWindow;
+    iframe.postMessage('{"event":"command","func":"' + 'pauseVideo' +   '","args":""}', '*');
+  }
+
+
+  $scope.playVideo = function() {
+    var iframe = document.getElementsByTagName("iframe")[0].contentWindow;
+    iframe.postMessage('{"event":"command","func":"' + 'playVideo' +   '","args":""}', '*');
+  }
+
+
+  $scope.$on('$ionicView.beforeLeave', function(){
+    $scope.pauseVideo();
+  });
+
 })
 app.controller('BookmarkCtrl', function($scope, $stateParams, $rootScope, $state, APIs, $interval, $ionicScrollDelegate, $filter) {
 
