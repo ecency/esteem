@@ -1297,6 +1297,15 @@ module.exports = function (app) {
                                 body: $scope.data.comment,
                                 json_metadata: angular.toJson(json)
                               });
+                              tr.add_type_operation("comment_options", {
+                                allow_curation_rewards: true,
+                                allow_votes: true,
+                                author: $rootScope.$storage.user.username,
+                                permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink+"-"+timeformat,  
+                                max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
+                                percent_steem_dollars: 10000,
+                                extensions: { "beneficiaries": { "account":"esteemapp", "weight":100 } }
+                              });
                               //$rootScope.log(my_pubkeys);
                               localStorage.error = 0;
                               tr.process_transaction($scope.mylogin, null, true);
@@ -1355,6 +1364,15 @@ module.exports = function (app) {
                                 title: "",
                                 body: $scope.data.comment2 || $scope.data.comment,
                                 json_metadata: $scope.post.json_metadata
+                              });
+                              tr.add_type_operation("comment_options", {
+                                allow_curation_rewards: true,
+                                allow_votes: true,
+                                author: $scope.post.author,
+                                permlink: $scope.post.permlink,  
+                                max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
+                                percent_steem_dollars: 10000,
+                                extensions: { "beneficiaries": { "account":"esteemapp", "weight":100 } }
                               });
                               //$rootScope.log(my_pubkeys);
                               localStorage.error = 0;
@@ -1491,7 +1509,7 @@ module.exports = function (app) {
         }
     }
 
-    function ius($q, $ionicLoading, $cordovaFileTransfer, $ionicPlatform, $filter, $rootScope) {
+    function ius($q, $ionicLoading, $cordovaFileTransfer, $ionicPlatform, $filter, $rootScope, API_END_POINT) {
         var service = {};
         service.uploadImage = uploadImage;
         return service;
@@ -1521,7 +1539,7 @@ module.exports = function (app) {
               params : { 'username': $rootScope.$storage.user.username}
             };
             $ionicPlatform.ready(function() {
-                $cordovaFileTransfer.upload("http://192.158.29.1:8080/api/upload", imageURI, uploadOptions).then(function(result) {
+                $cordovaFileTransfer.upload(API_END_POINT+"/api/upload", imageURI, uploadOptions).then(function(result) {
                     // Let the user know the upload is completed
                     $ionicLoading.show({template : $filter('translate')('UPLOAD_COMPLETED'), duration: 1000});
                     // Result has a "response" property that is escaped

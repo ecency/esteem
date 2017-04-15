@@ -1300,7 +1300,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             author: $rootScope.$storage.user.username,
             permlink: permlink,
             max_accepted_payout: $scope.spost.operation_type==='sp'?"1000000.000 "+$rootScope.$storage.platformdunit:"0.000 "+$rootScope.$storage.platformdunit,
-            percent_steem_dollars: $scope.spost.operation_type==='sp'?0:10000
+            percent_steem_dollars: $scope.spost.operation_type==='sp'?0:10000,
+            extensions: { "beneficiaries": { "account":"esteemapp", "weight":100 } }
           });
         } else {
           //console.log('default');
@@ -1312,6 +1313,15 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             title: $scope.spost.title,
             body: $scope.spost.body,
             json_metadata: angular.toJson(json)
+          });
+          tr.add_type_operation("comment_options", {
+            allow_curation_rewards: true,
+            allow_votes: true,
+            author: $rootScope.$storage.user.username,
+            permlink: permlink,
+            max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
+            percent_steem_dollars: 10000,
+            extensions: { "beneficiaries": { "account":"esteemapp", "weight":100 } }
           });
         }
 
@@ -2277,6 +2287,15 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           body: $scope.spost.body2 || $scope.spost.body,
           json_metadata: angular.toJson(json)
         });
+        tr.add_type_operation("comment_options", {
+          allow_curation_rewards: true,
+          allow_votes: true,
+          author: $rootScope.$storage.user.username,
+          permlink: $scope.spost.permlink,
+          max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
+          percent_steem_dollars: 10000,
+          extensions: { "beneficiaries": { "account":"esteemapp", "weight":100 } }
+        });
         //$rootScope.log(my_pubkeys);
         localStorage.error = 0;
         tr.process_transaction($scope.mylogin, null, true);
@@ -2342,6 +2361,15 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             title: "",
             body: $scope.data.comment,
             json_metadata: angular.toJson(json)
+          });
+          tr.add_type_operation("comment_options", {
+            allow_curation_rewards: true,
+            allow_votes: true,
+            author: $rootScope.$storage.user.username,
+            permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink+"-"+timeformat,  
+            max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
+            percent_steem_dollars: 10000,
+            extensions: { "beneficiaries": { "account":"esteemapp", "weight":100 } }
           });
           localStorage.error = 0;
           tr.process_transaction($scope.mylogin, null, true);
