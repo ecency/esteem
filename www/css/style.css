@@ -50,7 +50,7 @@
   white-space: pre-wrap !important;       /* css-3 */
   word-wrap: break-word !important;       /* Internet Explorer 5.5+ */
   white-space: -webkit-pre-wrap !important; /* Newer versions of Chrome/Safari*/
-  word-break: break-all !important;
+  /*word-break: break-all !important;*/
   white-space: normal !important;
 }
 .wrap {

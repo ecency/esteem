@@ -201,9 +201,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
               });
             }
-            /*if(!$scope.$$phase) {
+            if(!$scope.$$phase) {
               $scope.$apply();
-            }*/
+            }
           });
         });
       }, 500);
@@ -2710,14 +2710,20 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
 
   $scope.pauseVideo = function() {
-    var iframe = document.getElementsByTagName("iframe")[0].contentWindow;
-    iframe.postMessage('{"event":"command","func":"' + 'pauseVideo' +   '","args":""}', '*');
+    var fr = document.getElementsByTagName("iframe")[0];
+    if (fr) {
+      var iframe = fr.contentWindow;
+      iframe.postMessage('{"event":"command","func":"' + 'pauseVideo' +   '","args":""}', '*');
+    }
   }
 
 
   $scope.playVideo = function() {
-    var iframe = document.getElementsByTagName("iframe")[0].contentWindow;
-    iframe.postMessage('{"event":"command","func":"' + 'playVideo' +   '","args":""}', '*');
+    var fr = document.getElementsByTagName("iframe")[0];
+    if (fr) {
+      var iframe = fr.contentWindow;
+      iframe.postMessage('{"event":"command","func":"' + 'playVideo' +   '","args":""}', '*');
+    }
   }
 
 
