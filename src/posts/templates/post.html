@@ -36,10 +36,13 @@
       <div class="bodytext selectable" ng-bind-html="$root.$storage.sitem.body | parseUrl ">
       </div>
 
-      <div ng-if='$root.$storage.sitem.json_metadata.tags' class="tags">
+      <div ng-if='$root.$storage.sitem.parent_author == ""' class="tags">
         <div ng-repeat='tag in $root.$storage.sitem.json_metadata.tags'>
-          <span><div class="tag" on-tap="openTag(tag, 5)">{{tag|detransliterate:false}}</div></li>
+          <span><div class="tag" on-tap="openTag(tag, 5)">{{tag|detransliterate:false}}</div></span>
         </div>
+      </div>
+      <div ng-if='$root.$storage.sitem.parent_author != ""' class="tags">  
+        <span><div class="tag" on-tap="openTag($root.$storage.sitem.category, 5)">{{$root.$storage.sitem.category|detransliterate:false}}</div></span>
       </div>
 
       <div class="row gray">

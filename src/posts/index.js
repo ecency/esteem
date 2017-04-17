@@ -780,7 +780,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                   : $rootScope.$storage.user.privatePostingKey;
 
         window.steem.broadcast.vote(wif, $rootScope.$storage.user.username, post.author, post.permlink, $rootScope.$storage.voteWeight*tt || 10000*tt, function(err, result) {
-          console.log(err, result);
+          //console.log(err, result);
           post.invoting = false;
           if (err) {
             $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
@@ -891,10 +891,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     setTimeout(function() {
       window.steem.api.getFeedHistory(function(err, r) {
-        console.log(err, r);
+        //console.log(err, r);
         $rootScope.$storage.base = r.current_median_history.base.split(" ")[0];
         window.steem.api.getDynamicGlobalProperties(function(err, r) {
-          console.log(err, r);
+          //console.log(err, r);
           $rootScope.log(r);
           $rootScope.$storage.steem_per_mvests = (Number(r.total_vesting_fund_steem.substring(0, r.total_vesting_fund_steem.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;
         });
@@ -916,17 +916,14 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       } else {
         window.steem.config.set('address_prefix','STM');  
       }
-    
+      window.steem.api.stop();
+
       angular.forEach($rootScope.$storage.users, function(v,k){
         if (v.chain == $rootScope.$storage.chain){
           $rootScope.$storage.user = v;
         }
       });
 
-      if (!$rootScope.$$phase) {
-        $rootScope.$apply();
-      }
-    
       if ($rootScope.$storage.chain == 'steem'){
         $rootScope.$storage.platformname = "Steem";
         $rootScope.$storage.platformpower = "Steem Power";
@@ -1133,7 +1130,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                       if (data.chain !== $rootScope.$storage.chain) {
                         $rootScope.$storage.chain = data.chain;
                         $rootScope.$broadcast('changedChain');
-                        $rootScope.$broadcast('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
+                        $rootScope.$emit('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
                       }
                       setTimeout(function() {
                         $rootScope.getContentAndOpen({author:data.author, permlink:data.permlink});

@@ -19,7 +19,7 @@
           <input type="text" ng-model="loginData.username" placeholder="{{'USERNAME'|translate}}" ng-change="changeUsername()" required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         </label>
         <label class="item item-input">
-          <input type="password" placeholder="{{'MASTER_PASS'|translate}}" ng-model="loginData.password" ng-disabled="loginData.advanced" ng-required="!loginData.advanced" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <input type="password" placeholder="{{'MASTER_PASS'|translate}}" ng-model="loginData.password" ng-disabled="loginData.advanced" ng-hide="loginData.advanced" ng-required="!loginData.advanced" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         </label>
         <div ng-if="loginData.advanced">
           <label class="item item-input">
