@@ -1,4 +1,4 @@
-//angular.module('steem.services', [])
+//angular.module('window.steem.services', [])
 module.exports = function (app) {
 	app.service('APIs', ['$http', '$rootScope', 'API_END_POINT', function ($http, $rootScope, API_END_POINT) {
 		'use strict';
@@ -1074,8 +1074,8 @@ module.exports = function (app) {
                           console.log('depth5');
                           $rootScope.$broadcast('openComments', { data: comment });
                         } else {
-                          window.Api.initPromise.then(function(response) {
-                          window.Api.database_api().exec("get_content_replies", [comment.author, comment.permlink]).then(function(dd){
+                          window.steem.api.getContentReplies(comment.author, comment.permlink, function(err, dd) {
+                            console.log(err, dd);
                             comment.comments = dd;
 
                             for (var i = 0, len = dd.length; i < len; i++) {
@@ -1085,7 +1085,7 @@ module.exports = function (app) {
                               }  
                             }
                             setTimeout(function() {
-                              $scope.$broadcast('postAccounts');
+                              $scope.$emit('postAccounts');
                             }, 10);
 
                             if (!$scope.$$phase){
@@ -1094,7 +1094,6 @@ module.exports = function (app) {
                             comment.showChildren = true;
                             console.log(comment);
                           });
-                          });  
                         }
                       }
                         //$rootScope.$broadcast('update:content');
@@ -1103,9 +1102,9 @@ module.exports = function (app) {
                   $scope.$on('postAccounts', function(){
                     //$rootScope.$storage.paccounts = {};
                     //console.log($rootScope.$storage.paccounts)
-                    window.Api.initPromise.then(function(response) {
-                    window.Api.database_api().exec("get_accounts", [$rootScope.$storage.postAccounts]).then(function(res){
-                      for (var i = 0, len = res.length; i < len; i++) {
+                    window.steem.api.getAccounts($rootScope.$storage.postAccounts, function(err, res){
+                        //console.log(err, res);
+                        for (var i = 0, len = res.length; i < len; i++) {
                         var v = res[i];
                         if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
                           if (v.json_metadata) {
@@ -1122,7 +1121,6 @@ module.exports = function (app) {
                       if (!$scope.$$phase){
                         $scope.$apply();
                       }
-                    });
                     });
                   });
                   $scope.upvotePost = function(post) {
@@ -1267,140 +1265,110 @@ module.exports = function (app) {
                       return patch;
                   }
                   $scope.reply = function (xx) {
-                    window.Api.initPromise.then(function(response) {
-                      if (!$scope.editc) {
-                          $rootScope.$broadcast('show:loading');
-                          if ($rootScope.$storage.user) {
-                            $scope.mylogin = new window.ejs.Login();
-                            $scope.mylogin.setRoles(["posting"]);
-                            var loginSuccess = $scope.mylogin.checkKeys({
-                                accountName: $rootScope.$storage.user.username,
-                                password: $rootScope.$storage.user.password || null,
-                                auths: {
-                                    posting: $rootScope.$storage.user.posting.key_auths
-                                },
-                                privateKey: $rootScope.$storage.user.privatePostingKey || null
+                    
+                    const wif = $rootScope.$storage.user.password
+                    ? window.steem.auth.toWif($rootScope.$storage.user.username, $rootScope.$storage.user.password, 'posting')
+                    : $rootScope.$storage.user.privatePostingKey;
+
+                    if (!$scope.editc) {
+                        $rootScope.$broadcast('show:loading');
+                        if ($rootScope.$storage.user) {
+
+                          var t = new Date();
+                          var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
+                          var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };                              
+                          var operations_array = [];
+
+                          operations_array = [
+                            ['comment', {
+                              parent_author: $scope.post.author,
+                              parent_permlink: $scope.post.permlink,
+                              author: $rootScope.$storage.user.username,
+                              permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink+"-"+timeformat,
+                              title: "",
+                              body: $scope.data.comment,
+                              json_metadata: angular.toJson(json)
+                            }],
+                            ['comment_options', {
+                              allow_curation_rewards: true,
+                              allow_votes: true,
+                              author: $rootScope.$storage.user.username,
+                              permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink+"-"+timeformat,  
+                              max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
+                              percent_steem_dollars: 10000,
+                              extensions: [[0, { "beneficiaries": [{ "account":"esteemapp", "weight":100 }] }]]
+                            }]
+                            ];
+                          
+                          window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
+                            console.log(err, result);
+                            $scope.replying = false;
+                            if (err) {
+                                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err)
+                              } else {
+                                $scope.closeModal();
+                                $scope.data.comment = "";
+                                $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
+                                $rootScope.$broadcast("update:content");
                               }
-                            );
-                            if (loginSuccess) {
-                              var tr = new window.ejs.TransactionBuilder();
-                              var t = new Date();
-                              var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
-
-                              var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
-                              tr.add_type_operation("comment", {
-                                parent_author: $scope.post.author,
-                                parent_permlink: $scope.post.permlink,
-                                author: $rootScope.$storage.user.username,
-                                permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink+"-"+timeformat,
-                                title: "",
-                                body: $scope.data.comment,
-                                json_metadata: angular.toJson(json)
-                              });
-                              tr.add_type_operation("comment_options", {
-                                allow_curation_rewards: true,
-                                allow_votes: true,
-                                author: $rootScope.$storage.user.username,
-                                permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink+"-"+timeformat,  
-                                max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
-                                percent_steem_dollars: 10000,
-                                extensions: { "beneficiaries": { "account":"esteemapp", "weight":100 } }
-                              });
-                              //$rootScope.log(my_pubkeys);
-                              localStorage.error = 0;
-                              tr.process_transaction($scope.mylogin, null, true);
-
-                              $scope.replying = false;
-                              setTimeout(function() {
-                                if (localStorage.error == 1) {
-                                  $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
-                                } else {
-                                  $scope.closeModal();
-                                  $scope.data.comment = "";
-                                  $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
-                                  $rootScope.$broadcast("update:content");
-                                }
-                                $rootScope.$broadcast('hide:loading');
-                              }, 3000);
-                            } else {
                               $rootScope.$broadcast('hide:loading');
-                              $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
-                            }
-                          } else {
-                            $rootScope.$broadcast('hide:loading');
-                            $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
-                          }
-                      } else {
+                          });
+                        } else {
+                          $rootScope.$broadcast('hide:loading');
+                          $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
+                        }
+                    } else {
 
-                          var patch = createPatch($scope.patchbody, $scope.data.comment)
-                          // Putting body into buffer will expand Unicode characters into their true length
-                          if (patch && patch.length < new Buffer($scope.data.comment, 'utf-8').length) {
-                            $scope.data.comment2 = patch;
-                            //$rootScope.log(patch);
-                          }
-
-                          $rootScope.$broadcast('show:loading');
-                          if ($rootScope.$storage.user) {
-                            $scope.mylogin = new window.ejs.Login();
-                            $scope.mylogin.setRoles(["posting"]);
-                            var loginSuccess = $scope.mylogin.checkKeys({
-                                accountName: $rootScope.$storage.user.username,
-                                password: $rootScope.$storage.user.password || null,
-                                auths: {
-                                    posting: $rootScope.$storage.user.posting.key_auths
-                                },
-                                privateKey: $rootScope.$storage.user.privatePostingKey || null
+                        var patch = createPatch($scope.patchbody, $scope.data.comment)
+                        // Putting body into buffer will expand Unicode characters into their true length
+                        if (patch && patch.length < new Buffer($scope.data.comment, 'utf-8').length) {
+                          $scope.data.comment2 = patch;
+                          //$rootScope.log(patch);
+                        }
+                        $rootScope.$broadcast('show:loading');
+                        if ($rootScope.$storage.user) {
+                          var operations_array = [];
+                          var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
+                          operations_array = [
+                            ['comment', {
+                              parent_author: $scope.post.parent_author,
+                              parent_permlink: $scope.post.parent_permlink,
+                              author: $scope.post.author,
+                              permlink: $scope.post.permlink,
+                              title: "",
+                              body: $scope.data.comment2 || $scope.data.comment,
+                              json_metadata: $scope.post.json_metadata
+                            }],
+                            ['comment_options', {
+                              allow_curation_rewards: true,
+                              allow_votes: true,
+                              author: $scope.post.author,
+                              permlink: $scope.post.permlink,  
+                              max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
+                              percent_steem_dollars: 10000,
+                              extensions: [[0, { "beneficiaries": [{ "account":"esteemapp", "weight":100 }] }]]
+                            }]
+                            ];
+                          
+                          window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
+                            console.log(err, result);
+                            $scope.replying = false;
+                            if (err) {
+                                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err)
+                              } else {
+                                $scope.closeModal();
+                                $scope.data.comment = "";
+                                $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
+                                $rootScope.$broadcast("update:content");
                               }
-                            );
-                            if (loginSuccess) {
-                              var tr = new window.ejs.TransactionBuilder();
-
-                              var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
-                              tr.add_type_operation("comment", {
-                                parent_author: $scope.post.parent_author,
-                                parent_permlink: $scope.post.parent_permlink,
-                                author: $scope.post.author,
-                                permlink: $scope.post.permlink,
-                                title: "",
-                                body: $scope.data.comment2 || $scope.data.comment,
-                                json_metadata: $scope.post.json_metadata
-                              });
-                              tr.add_type_operation("comment_options", {
-                                allow_curation_rewards: true,
-                                allow_votes: true,
-                                author: $scope.post.author,
-                                permlink: $scope.post.permlink,  
-                                max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
-                                percent_steem_dollars: 10000,
-                                extensions: { "beneficiaries": { "account":"esteemapp", "weight":100 } }
-                              });
-                              //$rootScope.log(my_pubkeys);
-                              localStorage.error = 0;
-                              tr.process_transaction($scope.mylogin, null, true);
-
-                              $scope.closeModal();
-                              $scope.replying = false;
-                              setTimeout(function() {
-                                if (localStorage.error == 1) {
-                                  $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
-                                } else {
-                                  $scope.data.comment = "";
-                                  $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
-                                  $rootScope.$broadcast("update:content");
-                                }
-                                $rootScope.$broadcast('hide:loading');
-                              }, 3000);
-                            } else {
                               $rootScope.$broadcast('hide:loading');
-                              $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('LOGIN_FAIL'));
-                            }
-                          } else {
-                            $rootScope.$broadcast('hide:loading');
-                            $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
-                          }
-                      }
-                    $rootScope.$broadcast('hide:loading');
-                  });
+                          });
+                        } else {
+                          $rootScope.$broadcast('hide:loading');
+                          $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
+                        }
+                    }
+                  $rootScope.$broadcast('hide:loading');
                 }
                 $scope.replyToComment = function(comment) {
                     $rootScope.log('reply to comment')
@@ -1423,40 +1391,21 @@ module.exports = function (app) {
                             $rootScope.log('You are sure');
                             $rootScope.$broadcast('show:loading');
                             if ($rootScope.$storage.user) {
-                              $scope.mylogin = new window.ejs.Login();
-                              $scope.mylogin.setRoles(["posting"]);
-                              var loginSuccess = $scope.mylogin.checkKeys({
-                                  accountName: $rootScope.$storage.user.username,
-                                  password: $rootScope.$storage.user.password || null,
-                                  auths: {
-                                      posting: $rootScope.$storage.user.posting.key_auths
-                                  },
-                                  privateKey: $rootScope.$storage.user.privatePostingKey || null
+
+                              const wif = $rootScope.$storage.user.password
+                              ? window.steem.auth.toWif($rootScope.$storage.user.username, $rootScope.$storage.user.password, 'posting')
+                              : $rootScope.$storage.user.privatePostingKey;
+
+                              window.steem.broadcast.deleteComment(wif, comment.author, comment.permlink, function(err, result) {
+                                console.log(err, result);
+                                if (err) {
+                                  $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err)
+                                } else {
+                                  $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('DELETED_COMMENT'));
+                                  $rootScope.$broadcast("update:content");                                
                                 }
-                              );
-                              if (loginSuccess) {
-                                var tr = new window.ejs.TransactionBuilder();
-
-                                tr.add_type_operation("delete_comment", {
-                                  author: comment.author,
-                                  permlink: comment.permlink
-                                });
-                                //$rootScope.log(my_pubkeys);
-                                localStorage.error = 0;
-                                tr.process_transaction($scope.mylogin, null, true);
-
-                                setTimeout(function() {
-                                  if (localStorage.error == 1) {
-                                    $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
-                                  } else {
-                                    $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('DELETED_COMMENT'));
-                                    $rootScope.$broadcast("update:content");
-                                  }
-                                  $rootScope.$broadcast('hide:loading');
-                                }, 3000);
-                              } else {
                                 $rootScope.$broadcast('hide:loading');
-                              }
+                              });
                             } else {
                               $rootScope.$broadcast('hide:loading');
                               $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));

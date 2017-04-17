@@ -164,7 +164,7 @@
               <p ng-if="tr[1].op[0]=='transfer'">{{tr[1].op[1].from}} {{'TO'|translate}}  {{tr[1].op[1].to}}</p>
               <p ng-if="tr[1].op[0]=='transfer_to_vesting'"> {{tr[1].op[1].from}} {{'TO'|translate}}  {{tr[1].op[1].to}}</p>
               <p ng-if="tr[1].op[0]=='withdraw_vesting'">{{tr[1].op[1].account}}</p>
-
+              <p ng-if="tr[1].op[0]=='claim_reward_balance'">{{tr[1].op[1].reward_steem}} | {{tr[1].op[1].reward_sbd}} | {{tr[1].op[1].reward_vests}}</p>
             </div>
           </div>
         </div>
