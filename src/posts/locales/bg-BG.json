@@ -263,5 +263,7 @@
   "RECEIVER":"Получател",
   "LOCATION":"Местоположение",
   "WEBSITE":"Страница",
-  "DISPLAY_NAME":"Име"
+  "DISPLAY_NAME":"Име",
+  "UNCLAIMED_REWARDS":"",
+  "CLAIM_REWARDS":""
 }
