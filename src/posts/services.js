@@ -1338,15 +1338,6 @@ module.exports = function (app) {
                               title: "",
                               body: $scope.data.comment2 || $scope.data.comment,
                               json_metadata: $scope.post.json_metadata
-                            }],
-                            ['comment_options', {
-                              allow_curation_rewards: true,
-                              allow_votes: true,
-                              author: $scope.post.author,
-                              permlink: $scope.post.permlink,  
-                              max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
-                              percent_steem_dollars: 10000,
-                              extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":100 }] }]]
                             }]
                             ];
                           
