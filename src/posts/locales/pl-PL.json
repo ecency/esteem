@@ -263,5 +263,7 @@
   "RECEIVER":"Odbiorca",
   "LOCATION":"Lokalizacja",
   "WEBSITE":"Witryna internetowa",
-  "DISPLAY_NAME":"Nazwa wyświetlana"
+  "DISPLAY_NAME":"Nazwa wyświetlana",
+  "UNCLAIMED_REWARDS":"",
+  "CLAIM_REWARDS":""
 }
