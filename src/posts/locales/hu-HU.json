@@ -263,5 +263,7 @@
   "RECEIVER":"Fogadó",
   "LOCATION":"Hely",
   "WEBSITE":"Weboldal",
-  "DISPLAY_NAME":"Megjelenítendő név"
+  "DISPLAY_NAME":"Megjelenítendő név",
+  "UNCLAIMED_REWARDS":"",
+  "CLAIM_REWARDS":""
 }
