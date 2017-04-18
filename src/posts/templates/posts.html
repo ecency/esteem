@@ -20,8 +20,8 @@
   	</ion-refresher>
   		<div ng-if="$root.$storage.view=='compact' && data.length>0" class="masonry-layout">
 	    	<div ng-repeat="d in data | regex:'category':'bm.*' track by $index" class="masonry-layout__panel">
-	    	   <div class="list masonry-layout__panel-content" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
-		    	<div class="item">
+	    	   <div class="list masonry-layout__panel-content" >
+		    	<div class="item" ng-class="{'theme-dark':$root.$storage.theme == 'night', 'mask': ds.json_metadata.tags.indexOf('nsfw')>-1}">
 				    <div on-tap="open(d)">
 				    <span ng-if="d.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{'RESTEEMED_BY'|translate}} {{d.reblogged_by}}</span>
 				    <p><h2 class="wrapword"><i class="fa fa-money positive" ng-if="d.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="d.percent_steem_dollars === 0"></i> {{d.title}}</h2></p>
@@ -54,7 +54,7 @@
 			<div ng-repeat="ds in data | regex:'category':'bm.*' track by $index" class="masonry-layout__panel">
 	    	   <div class="list card masonry-layout__panel-content" ng-if="ds" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 
-				<div class="item" on-tap="open(ds)" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
+				<div class="item" on-tap="open(ds)" ng-class="{'theme-dark':$root.$storage.theme == 'night', 'mask': ds.json_metadata.tags.indexOf('nsfw')>-1}">
 					<span ng-if="ds.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{'RESTEEMED_BY'|translate}} {{ds.reblogged_by}}</span>
 				    <h2 class="wrapword"><i class="fa fa-money positive" ng-if="ds.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="ds.percent_steem_dollars === 0"></i> {{ds.title}}</h2>
 				    <div class="row postdetails wrap"><div class="col"><i class="icon ion-android-time"></i> {{ds.created|timeago}}&nbsp;{{'BY'|translate}}&nbsp;<b>{{ds.author}}</b>&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div> {{'IN'|translate}} {{ds.category|detransliterate:false}} &middot; {{ds.body|readingtime}} {{'MIN_READ'|translate}}</div></div>

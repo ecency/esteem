@@ -375,14 +375,17 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       ];
     } else {
       if (!$rootScope.$storage.addition) {
-        $rootScope.$storage.addition = [
+        var x = [
           {id:'cad', name: 'CAD', rate: 0, date: "1/1/2016"},
           {id:'chf', name: 'CHF', rate: 0, date: "1/1/2016"},
           {id:'aud', name: 'AUD', rate: 0, date: "1/1/2016"},
           {id:'nok', name: 'NOK', rate: 0, date: "1/1/2016"},
           {id:'pln', name: 'PLN', rate: 0, date: "1/1/2016"},
           {id:'php', name: 'PHP', rate: 0, date: "1/1/2016"}];
-        $rootScope.$storage.currencies = $rootScope.$storage.currencies.concat($rootScope.$storage.addition);
+        $rootScope.$storage.currencies = $rootScope.$storage.currencies.concat(x);
+        $rootScope.$storage.addition = true;
+      } else {
+        $rootScope.$storage.addition = true;
       }
     }
 

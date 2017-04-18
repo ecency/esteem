@@ -112,7 +112,22 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.loginChain = function(x){
     console.log(x);
     $scope.loginData.chain = x;
+    $rootScope.$storage.chain = x;
 
+    localStorage.socketUrl = $rootScope.$storage["socket"+$scope.loginData.chain];
+    
+    console.log(localStorage.socketUrl);
+
+    window.steem.config.set('websocket',localStorage.socketUrl);
+    window.steem.config.set('chain_id',localStorage[$scope.loginData.chain+"Id"]);
+
+    if ($scope.loginData.chain == 'golos') {
+      window.steem.config.set('address_prefix','GLS');  
+    } else {
+      window.steem.config.set('address_prefix','STM');  
+    }
+    window.steem.api.stop();
+    $rootScope.$emit('changedCurrency',{currency: $rootScope.$storage.currency, enforce: true});
   }
   
   $scope.doLogin = function() {
@@ -184,7 +199,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                     
                   if ($rootScope.$storage.chain !== $rootScope.$storage.user.chain) {
                     $rootScope.$storage.chain = $rootScope.$storage.user.chain;  
-                    $rootScope.$broadcast('changedChain');
+                    $rootScope.$emit('changedChain');
                     $rootScope.$emit('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
                   }
 
@@ -233,7 +248,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                   
                 if ($rootScope.$storage.chain !== $rootScope.$storage.user.chain) {
                   $rootScope.$storage.chain = $rootScope.$storage.user.chain;  
-                  $rootScope.$broadcast('changedChain');
+                  $rootScope.$emit('changedChain');
                   $rootScope.$emit('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
                 }
 
@@ -269,7 +284,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     if ($rootScope.$storage.chain !== user.chain) {
       $scope.data = {};
       $rootScope.$storage.chain = user.chain;  
-      $rootScope.$broadcast('changedChain');
+      $rootScope.$emit('changedChain');
     }
     setTimeout(function() {
       $rootScope.$emit('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
@@ -1552,10 +1567,10 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       window.steem.api[xyz](params, function(err, response) {
         //console.log(err, response);
         //$rootScope.log(response);
-        if (response.length <= 1) {
-          $scope.error = true;
-        }
         if (response) {
+          if (response.length <= 1) {
+            $scope.error = true;
+          }
           for (var i = 0; i < response.length; i++) {
             response[i].json_metadata = response[i].json_metadata?angular.fromJson(response[i].json_metadata):response[i].json_metadata;
             var permlink = response[i].permlink;
@@ -2337,7 +2352,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         }
         result.json_metadata = angular.fromJson(result.json_metadata);
         //$scope.post.body = result.body;
-        console.log(result);
+        //console.log(result);
         $rootScope.$storage.sitem = result;
         
         setTimeout(function() {
