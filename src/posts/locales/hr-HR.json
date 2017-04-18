@@ -263,5 +263,7 @@
   "RECEIVER":"Primatelj",
   "LOCATION":"Lokacija",
   "WEBSITE":"Web stranica",
-  "DISPLAY_NAME":"Prikazani naziv"
+  "DISPLAY_NAME":"Prikazani naziv",
+  "UNCLAIMED_REWARDS":"",
+  "CLAIM_REWARDS":""
 }
