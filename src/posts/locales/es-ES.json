@@ -263,5 +263,7 @@
   "RECEIVER":"Recibir",
   "LOCATION":"Localización",
   "WEBSITE":"Página Web",
-  "DISPLAY_NAME":"Mostrar nombre"
+  "DISPLAY_NAME":"Mostrar nombre",
+  "UNCLAIMED_REWARDS":"",
+  "CLAIM_REWARDS":""
 }
