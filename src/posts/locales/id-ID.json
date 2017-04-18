@@ -263,5 +263,7 @@
   "RECEIVER":"Penerima",
   "LOCATION":"Lokasi",
   "WEBSITE":"Website",
-  "DISPLAY_NAME":"Nama tampilan"
+  "DISPLAY_NAME":"Nama tampilan",
+  "UNCLAIMED_REWARDS":"",
+  "CLAIM_REWARDS":""
 }
