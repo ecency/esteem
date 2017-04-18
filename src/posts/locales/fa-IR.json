@@ -263,5 +263,7 @@
   "RECEIVER":"دریافت کننده",
   "LOCATION":"محل",
   "WEBSITE":"وب سایت",
-  "DISPLAY_NAME":"نامی که نمایش داده می شود"
+  "DISPLAY_NAME":"نامی که نمایش داده می شود",
+  "UNCLAIMED_REWARDS":"",
+  "CLAIM_REWARDS":""
 }
