@@ -263,5 +263,7 @@
   "RECEIVER":"Příjemce",
   "LOCATION":"Umístění",
   "WEBSITE":"Web",
-  "DISPLAY_NAME":"Zobrazované jméno"
+  "DISPLAY_NAME":"Zobrazované jméno",
+  "UNCLAIMED_REWARDS":"",
+  "CLAIM_REWARDS":""
 }
