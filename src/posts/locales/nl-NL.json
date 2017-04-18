@@ -263,5 +263,7 @@
   "RECEIVER":"Ontvanger",
   "LOCATION":"Plaats",
   "WEBSITE":"Website",
-  "DISPLAY_NAME":"Toon naam"
+  "DISPLAY_NAME":"Toon naam",
+  "UNCLAIMED_REWARDS":"",
+  "CLAIM_REWARDS":""
 }
