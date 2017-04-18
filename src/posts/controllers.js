@@ -1262,6 +1262,15 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":100 }] }]]
           }]
           ];
+          if ($scope.spost.upvote_this) {
+            var vote = ['vote', {
+              voter: $rootScope.$storage.user.username, 
+              author: $rootScope.$storage.user.username, 
+              permlink: permlink, 
+              weight: $rootScope.$storage.voteWeight || 10000
+            }];
+            operations_array.push(vote);
+          }
       } else {
         operations_array = [
           ['comment', {
@@ -1283,6 +1292,15 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":100 }] }]]
           }]
           ];
+          if ($scope.spost.upvote_this) {
+            var vote = ['vote', {
+              voter: $rootScope.$storage.user.username, 
+              author: $rootScope.$storage.user.username, 
+              permlink: permlink, 
+              weight: $rootScope.$storage.voteWeight || 10000
+            }];
+            operations_array.push(vote);
+          }
       }
      
       window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
