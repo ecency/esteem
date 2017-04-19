@@ -264,6 +264,6 @@
   "LOCATION":"Lokasyon",
   "WEBSITE":"Website",
   "DISPLAY_NAME":"Pangalan na nakadisplay",
-  "UNCLAIMED_REWARDS":"",
-  "CLAIM_REWARDS":""
+  "UNCLAIMED_REWARDS":"Gantimpalang di nakuha",
+  "CLAIM_REWARDS":"Kunin ang gantimpala"
 }
