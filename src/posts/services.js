@@ -1284,7 +1284,7 @@ module.exports = function (app) {
                               parent_author: $scope.post.author,
                               parent_permlink: $scope.post.permlink,
                               author: $rootScope.$storage.user.username,
-                              permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink,
+                              permlink: "re-"+$scope.post.author+"-"+timeformat,
                               title: "",
                               body: $scope.data.comment,
                               json_metadata: angular.toJson(json)
@@ -1293,7 +1293,7 @@ module.exports = function (app) {
                               allow_curation_rewards: true,
                               allow_votes: true,
                               author: $rootScope.$storage.user.username,
-                              permlink: "re-"+$scope.post.author+"-"+$scope.post.permlink,  
+                              permlink: "re-"+$scope.post.author+"-"+timeformat,  
                               max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
                               percent_steem_dollars: 10000,
                               extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":100 }] }]]
