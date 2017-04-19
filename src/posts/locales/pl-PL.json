@@ -264,6 +264,6 @@
   "LOCATION":"Lokalizacja",
   "WEBSITE":"Witryna internetowa",
   "DISPLAY_NAME":"Nazwa wyświetlana",
-  "UNCLAIMED_REWARDS":"",
-  "CLAIM_REWARDS":""
+  "UNCLAIMED_REWARDS":"Nieodebrane wynagrodzenia",
+  "CLAIM_REWARDS":"Odbierz wynagrodzenia"
 }
