@@ -264,6 +264,6 @@
   "LOCATION":"Lokacija",
   "WEBSITE":"Web stranica",
   "DISPLAY_NAME":"Prikazani naziv",
-  "UNCLAIMED_REWARDS":"",
-  "CLAIM_REWARDS":""
+  "UNCLAIMED_REWARDS":"Ne prihvaćene nagrade",
+  "CLAIM_REWARDS":"Prihvati nagradu"
 }
