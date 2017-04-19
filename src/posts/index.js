@@ -876,12 +876,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 : $rootScope.$storage.user.privatePostingKey;
 
           window.steem.broadcast.customJson(wif, [], [$rootScope.$storage.user.password], "follow", angular.toJson(json), function(err, result) {
-            console.log(err, result);
+            //console.log(err, result);
             if (err) {
-              $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REBLOG_TEXT')+" "+localStorage.errormessage)
+              $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err)
             } else {
-              //$scope.refreshFollowers();
-              $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('REBLOGGED_POST'));
+              $rootScope.$broadcast('current:reload');
             }
             $rootScope.$broadcast('hide:loading');
           });
