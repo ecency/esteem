@@ -264,6 +264,6 @@
   "LOCATION":"Місцезнаходження",
   "WEBSITE":"Веб-сторінка",
   "DISPLAY_NAME":"Відображуване ім'я",
-  "UNCLAIMED_REWARDS":"",
-  "CLAIM_REWARDS":""
+  "UNCLAIMED_REWARDS":"Незатребувана винагорода",
+  "CLAIM_REWARDS":"Затребувати винагороду"
 }
