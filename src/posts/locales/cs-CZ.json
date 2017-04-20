@@ -264,6 +264,6 @@
   "LOCATION":"Umístění",
   "WEBSITE":"Web",
   "DISPLAY_NAME":"Zobrazované jméno",
-  "UNCLAIMED_REWARDS":"",
-  "CLAIM_REWARDS":""
+  "UNCLAIMED_REWARDS":"Nepřijmuté odměny",
+  "CLAIM_REWARDS":"Přijmout odměny"
 }
