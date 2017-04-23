@@ -264,6 +264,6 @@
   "LOCATION":"Plaats",
   "WEBSITE":"Website",
   "DISPLAY_NAME":"Toon naam",
-  "UNCLAIMED_REWARDS":"",
-  "CLAIM_REWARDS":""
+  "UNCLAIMED_REWARDS":"Niet opgeëiste beloningen",
+  "CLAIM_REWARDS":"Opgeëiste beloningen"
 }
