@@ -264,6 +264,6 @@
   "LOCATION":"Position",
   "WEBSITE":"Webseite",
   "DISPLAY_NAME":"Angezeigter Name",
-  "UNCLAIMED_REWARDS":"",
-  "CLAIM_REWARDS":""
+  "UNCLAIMED_REWARDS":"Nicht abgeholte Belohnungen",
+  "CLAIM_REWARDS":"Prämien"
 }
