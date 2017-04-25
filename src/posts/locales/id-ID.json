@@ -7,7 +7,7 @@
   "BOOKMARKS":"Tandai",
   "TRANSFER":"Transfer",
   "MARKET":"Pasar",
-  "SETTINGS":"Setelan",
+  "SETTINGS":"Pengaturan",
   "ABOUT":"Tentang",
   "ABOUT_1":"Siapapun bisa mendapatkan keuntungan dari konten",
   "ABOUT_2":"Applikasi dibuat oleh",
@@ -264,6 +264,6 @@
   "LOCATION":"Lokasi",
   "WEBSITE":"Website",
   "DISPLAY_NAME":"Nama tampilan",
-  "UNCLAIMED_REWARDS":"",
-  "CLAIM_REWARDS":""
+  "UNCLAIMED_REWARDS":"Reward tidak diklaim",
+  "CLAIM_REWARDS":"Mengklaim reward"
 }
