@@ -264,6 +264,6 @@
   "LOCATION":"Localización",
   "WEBSITE":"Página Web",
   "DISPLAY_NAME":"Mostrar nombre",
-  "UNCLAIMED_REWARDS":"",
-  "CLAIM_REWARDS":""
+  "UNCLAIMED_REWARDS":"Premios no reclamados",
+  "CLAIM_REWARDS":"Reclamar premios"
 }
