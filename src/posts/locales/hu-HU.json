@@ -264,6 +264,6 @@
   "LOCATION":"Hely",
   "WEBSITE":"Weboldal",
   "DISPLAY_NAME":"Megjelenítendő név",
-  "UNCLAIMED_REWARDS":"",
-  "CLAIM_REWARDS":""
+  "UNCLAIMED_REWARDS":"Nem várt jutalom",
+  "CLAIM_REWARDS":"Azt állítják, jutalmak"
 }
