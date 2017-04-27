@@ -118,16 +118,16 @@ hr {
 }
 .platform-browser .mysubheader {
   top: 0px;
-  height: 227px!important;
+  height: auto;
 }
 .platform-android .mysubheader {
   top: 0px;
-  height: 227px!important;
+  height: auto;
 }
 .platform-ios .mysubheader {
   padding-top: 20px!important;
   top: 0px!important;
-  height: 247px!important;
+  height: auto;
 }
 .platform-browser .has-mysubheader {
   padding-top: 227px!important;
@@ -1546,4 +1546,14 @@ body[dir=rtl] .bar .button.back-button, .bar button.back-button {
     -o-filter: blur(10px);
     -ms-filter: blur(10px);
     filter: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='svgMask'><feGaussianBlur stdDeviation='10' /></filter></svg>#svgMask");
+}
+
+.bar.bar-positive {
+  background-color: #00396B;
+}
+.tabs-striped.tabs-background-positive .tabs {
+  background-color: #00396B;
+}
+.button-bar .button.button-royal {
+  background-color: #00396B;
 }

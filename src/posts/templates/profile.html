@@ -102,7 +102,7 @@
                 </div>
             </div>
           </ion-list>
-          <ion-infinite-scroll on-infinite="loadmore()" ng-if="moreDataCanBeLoaded()" distance="15%"></ion-infinite-scroll>
+          <ion-infinite-scroll on-infinite="loadmore()" ng-if="moreDataCanBeLoaded()" distance="50%"></ion-infinite-scroll>
         </div>
         <div class="padding" ng-if="active=='transfers'">
           <p class="tcenter" ng-if="accounts.reward_steem_balance.split(' ')[0]>0 || accounts.reward_sbd_balance.split(' ')[0]>0 || accounts.reward_vesting_steem.split(' ')[0]>0"> {{'UNCLAIMED_REWARDS'|translate}}: 
@@ -240,10 +240,10 @@
   <div class="profile bar bar-footer">
     <div class="button-bar">
       <!--<a class="button button-large button-positive icon ion-ios-heart" ng-class="{'active':active=='feed'}" on-tap="change('feed')">&nbsp;Feeds</a>-->
-      <a class="button button-large button-positive icon ion-compose" ng-class="{'active':active=='blog'}" on-tap="change('blog')">&nbsp;{{'BLOG'|translate}}</a>
-      <a class="button button-positive icon ion-document-text" ng-class="{'active':active=='posts'}" on-tap="change('posts')">&nbsp;{{'POSTS'|translate}}</a>
-      <a class="button button-positive icon ion-chatbubbles" ng-class="{'active':active=='recent-replies'}" on-tap="change('recent-replies')">&nbsp;{{'REPLIES'|translate}}</a>
-      <a class="button button-positive icon ion-card" ng-class="{'active':active=='transfers'}"  on-tap="change('transfers')">&nbsp;{{'WALLET'|translate}}</a>
+      <a class="button button-large button-royal icon ion-compose" ng-class="{'active':active=='blog'}" on-tap="change('blog')">&nbsp;{{'BLOG'|translate}}</a>
+      <a class="button button-royal icon ion-document-text" ng-class="{'active':active=='posts'}" on-tap="change('posts')">&nbsp;{{'POSTS'|translate}}</a>
+      <a class="button button-royal icon ion-chatbubbles" ng-class="{'active':active=='recent-replies'}" on-tap="change('recent-replies')">&nbsp;{{'REPLIES'|translate}}</a>
+      <a class="button button-royal icon ion-card" ng-class="{'active':active=='transfers'}"  on-tap="change('transfers')">&nbsp;{{'WALLET'|translate}}</a>
       <!--<a class="button button-royal icon ion-lock-combination" ng-class="{'active':active=='permissions'}" on-tap="change('permissions')">Keys</a>-->
     </div>
   </div>

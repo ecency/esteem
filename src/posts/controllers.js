@@ -3167,7 +3167,6 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     var params = {tag: $stateParams.username, limit: 20, filter_tags:[]};
     var len = $scope.data.profile?$scope.data.profile.length:0;
 
-    console.log($scope.data.profile);
     if (!$scope.$$phase){
       $scope.$apply();
     } else {
@@ -3192,8 +3191,13 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             delete params.tags;   
           }
           window.steem.api.getDiscussionsByBlog(params, function(err, response) {
-            console.log(err, response);
+            //console.log(err, response);
             if (response) {
+              if (response.length <= 1) {
+                $scope.end = true;
+              } else {
+                $scope.end = false;
+              }
               for (var j = 0; j < response.length; j++) {
                 var v = response[j];
 
@@ -3209,11 +3213,6 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 if (!found){
                   //console.log(v.id);
                   $scope.data.profile.push(v);  
-                }
-                if (response.length <= 1) {
-                  $scope.end = true;
-                } else {
-                  $scope.end = false;
                 }
               }
             }
@@ -3343,7 +3342,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     };
     $scope.dfetching = function(){
       window.steem.api.getFollowing($rootScope.$storage.user.username, $scope.tt.duser, "blog", $scope.limit, function(err, res) {
-        console.log(err, res);
+        //console.log(err, res);
         if (res && res.length===$scope.limit) {
           $scope.tt.duser = res[res.length-1].following;
         }
@@ -3356,7 +3355,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             $scope.$apply();
           }
         } else {
-          setTimeout($scope.dfetching, 5);
+          setTimeout($scope.dfetching, 50);
         }
       });
     };
@@ -3375,7 +3374,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             $scope.$apply();
           }
         } else {
-          setTimeout($scope.rfetching, 10);
+          setTimeout($scope.rfetching, 50);
         }
       });
     };
