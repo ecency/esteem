@@ -2166,6 +2166,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       }
       $scope.spost.tags = angular.fromJson(xx.json_metadata).tags.join().replace(/\,/g,' ');
     }, 10);
+    console.log($scope.spost.operation_type);
   }
 
   $scope.submitStory = function() {
@@ -2198,7 +2199,21 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
 
       var operations_array = [];
-      operations_array = [
+      //simultaneously
+      if (!$scope.spost.operation_type) {
+        operations_array = [
+        ['comment', {
+          parent_author: "",
+          parent_permlink: $scope.spost.parent_permlink,
+          author: $rootScope.$storage.user.username,
+          permlink: $scope.spost.permlink,
+          title: $scope.spost.title,
+          body: $scope.spost.body2 || $scope.spost.body,
+          json_metadata: angular.toJson(json)
+        }]
+        ];
+      } else {
+        operations_array = [
         ['comment', {
           parent_author: "",
           parent_permlink: $scope.spost.parent_permlink,
@@ -2218,6 +2233,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           extensions: $scope.edit ? []:( $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":100 }] }]] )
         }]
         ];
+      }
+      
       
       window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
         console.log(err, result);
