@@ -1557,3 +1557,13 @@ body[dir=rtl] .bar .button.back-button, .bar button.back-button {
 .button-bar .button.button-royal {
   background-color: #00396B;
 }
+.overlay:before {
+  /*content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: linear-gradient(to bottom right,#002f4b,#dc4225);
+  opacity: .6; */
+}
