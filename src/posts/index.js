@@ -217,7 +217,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('zh-TW', require('./locales/ready/zh-TW')); //Chinese traditional
   $translateProvider.translations('zh-CN', require('./locales/ready/zh-CN')); //Chinese simplified
   $translateProvider.translations('dolan', require('./locales/ready/dolan')); //Dolan
-  $translateProvider.translations('sv-SE', require('./locales/ready/sv-SE')); //Chinese simplified
+  $translateProvider.translations('sv-SE', require('./locales/ready/sv-SE')); //Swedish
   $translateProvider.translations('uk-UA', require('./locales/ready/uk-UA')); //Ukrainian
   $translateProvider.translations('ms-MY', require('./locales/ready/ms-MY')); //Malay
   $translateProvider.translations('hr-HR', require('./locales/ready/hr-HR')); //Croatian
@@ -739,10 +739,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                   ? window.steem.auth.toWif($rootScope.$storage.user.username, $rootScope.$storage.user.password, 'posting')
                   : $rootScope.$storage.user.privatePostingKey;
 
-            window.steem.broadcast.customJson(wif, [], [$rootScope.$storage.user.password], "follow", angular.toJson(json), function(err, result) {
+            window.steem.broadcast.customJson(wif, [], [$rootScope.$storage.user.username], "follow", angular.toJson(json), function(err, result) {
               console.log(err, result);
               if (err) {
-                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REBLOG_TEXT')+" "+localStorage.errormessage)
+                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REBLOG_TEXT')+" "+err)
               } else {
                 //$scope.refreshFollowers();
                 $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('REBLOGGED_POST'));
@@ -875,7 +875,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 ? window.steem.auth.toWif($rootScope.$storage.user.username, $rootScope.$storage.user.password, 'posting')
                 : $rootScope.$storage.user.privatePostingKey;
 
-          window.steem.broadcast.customJson(wif, [], [$rootScope.$storage.user.password], "follow", angular.toJson(json), function(err, result) {
+          window.steem.broadcast.customJson(wif, [], [$rootScope.$storage.user.username], "follow", angular.toJson(json), function(err, result) {
             //console.log(err, result);
             if (err) {
               $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err)
