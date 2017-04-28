@@ -350,7 +350,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         $rootScope.$storage.appversion = version;
       });
     } else {
-      $rootScope.$storage.appversion = '1.4.2';
+      $rootScope.$storage.appversion = '1.4.3';
     }
   });
 
