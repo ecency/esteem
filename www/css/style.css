@@ -249,6 +249,7 @@ textarea.markdown-input {
 .bodytext i {
   font-style: italic!important;
 }
+
 .markdown-toolbar button {
   width: 20px!important;
 }
@@ -1398,7 +1399,7 @@ div.text-left {
   text-align: center;
   padding: 10px;
   font-style: bold;
-  height: 50px;
+  height: auto;
 }
 .posting input, .posting textarea, .posting button.button {
   border: 1px solid #ddd!important;
