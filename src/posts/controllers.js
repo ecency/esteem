@@ -70,7 +70,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   
   $scope.openSignUP = function() {
     $scope.chainurl = $rootScope.$storage.chain=='steem'?'https://steemit.com/create_account':'https://golos.io/create_account';
-    window.open($scope.chainurl, '_blank', 'location=yes');
+    window.open($scope.chainurl, '_system', 'location=yes');
     return false;  
   }
   $scope.openLogin = function() {
