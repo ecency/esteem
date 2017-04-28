@@ -98,14 +98,16 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     var message = "Hey! Checkout blog post on Steem "+link;
     var subject = "Via eSteem Mobile";
     var file = null;
-    $cordovaSocialSharing.share(message, subject, file, link) // Share via native share sheet
-    .then(function(result) {
-      // Success!
-      $rootScope.log("shared");
-    }, function(err) {
-      // An error occured. Show a message to the user
-      $rootScope.log("not shared");
-    });
+    setTimeout(function() {
+      $cordovaSocialSharing.share(message, subject, file, link) // Share via native share sheet
+      .then(function(result) {
+        // Success!
+        $rootScope.log("shared");
+      }, function(err) {
+        // An error occured. Show a message to the user
+        $rootScope.log("not shared");
+      });
+    }, 300);
   }
 
 
