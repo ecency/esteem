@@ -1342,9 +1342,20 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $rootScope.showMessage($filter('translate')('SAVED'), $filter('translate')('POST_LATER'));
   }
   $scope.clearPost = function() {
-    $rootScope.$storage.spost = {};
-    $scope.spost = {};
-    $rootScope.showMessage($filter('translate')('CLEARED'), $filter('translate')('POST'));
+    var confirmPopup = $ionicPopup.confirm({
+      title: $filter('translate')('ARE_YOU_SURE'),
+      template: ""
+    });
+    confirmPopup.then(function(res) {
+      if(res) {
+        $rootScope.log('You are sure');
+        $rootScope.$storage.spost = {};
+        $scope.spost = {};
+        $rootScope.showMessage($filter('translate')('CLEARED'), $filter('translate')('POST'));
+      } else {
+        $rootScope.log('You are not sure');
+      }
+    });
   }
 
 
