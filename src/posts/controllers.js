@@ -707,9 +707,10 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   $scope.searchEscrowID = function(id){
     if (id.length>3){
       APIs.searchEscrow(id).then(function(res){
-        //console.log(res.data);
-        $scope.escrow = res.data[0];
-        $scope.escrow.json_meta = angular.fromJson($scope.escrow.json_meta);
+        if (res.data.length>0) {
+          $scope.escrow = res.data[0];
+          $scope.escrow.json_meta = angular.fromJson($scope.escrow.json_meta);  
+        }
       });  
     }
   }
