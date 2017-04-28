@@ -3175,8 +3175,9 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
 
     if (len>0) {
       delete params.limit;
-      params.start_author = $scope.data.profile[19].author;
-      params.start_permlink = $scope.data.profile[19].permlink;
+      var ll = $scope.data.profile.length;
+      params.start_author = $scope.data.profile[ll-1].author;
+      params.start_permlink = $scope.data.profile[ll-1].permlink;
 
       if ($scope.end) {
         //$rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REQUEST_LIMIT_TEXT'));

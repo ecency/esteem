@@ -116,27 +116,37 @@ hr {
   -o-background-size: cover!important;
   background-size: cover!important;
 }
+.profilepage {
+  position: absolute;
+}
 .platform-browser .mysubheader {
   top: 0px;
   height: auto;
+  position: relative;
 }
 .platform-android .mysubheader {
   top: 0px;
   height: auto;
+  position: relative;
 }
 .platform-ios .mysubheader {
   padding-top: 20px!important;
-  top: 0px!important;
+  top: 0px;
   height: auto;
+  position: relative;
 }
 .platform-browser .has-mysubheader {
-  padding-top: 227px!important;
+  position: relative;
+  top:1px;
 }
 .platform-android .has-mysubheader {
-  padding-top: 227px!important;
+  position: relative;
+  top:1px;
 }
 .platform-ios .has-mysubheader {
-  padding-top: 247px!important;
+  padding-top: 1px!important;
+  position: relative;
+  top:1px;
 }
 .platform-browser .footprofileinfo {
   margin-top: 15px!important;
@@ -145,7 +155,7 @@ hr {
   margin-top: 15px!important;
 }
 .platform-ios .footprofileinfo {
-  margin-top: 25px!important;
+  margin-top: 15px!important;
 }
 .footprofileinfomenu div {
   color: #fff;
@@ -473,7 +483,7 @@ select-input {
   /*border-radius: 5px;*/
   margin: 0;
   font: 14px Sans-Serif;
-  line-height: 8pt;
+  line-height: 12pt;
 }
 .about {
   line-height: 12pt;

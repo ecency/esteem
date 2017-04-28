@@ -25,7 +25,7 @@
     "path": "^0.12.7",
     "plist": "^1.2.0",
     "require-main-filename": "^1.0.1",
-    "steem": "^0.5.4",
+    "steem": "^0.5.5",
     "steem-rpc": "^0.6.6"
   },
   "devDependencies": {
