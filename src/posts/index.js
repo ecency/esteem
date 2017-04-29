@@ -422,7 +422,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         navigator.splashscreen.hide();
       }, 1000);
     }
-    if ($cordovaSplashscreen) {
+    if (angular.isDefined($cordovaSplashscreen)) {
       setTimeout(function() {
         console.log('-----hide splash------');
         $cordovaSplashscreen.hide();

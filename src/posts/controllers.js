@@ -1255,6 +1255,14 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     if (!$scope.$$phase){
       $scope.$apply();
     }
+    if (!$scope.spost.title) {
+      $rootScope.showAlert('Missing', 'Title');
+      return;
+    }
+    if ($scope.spost.category.length<1) {
+      $rootScope.showAlert('Missing', 'Tags');
+      return;
+    }
     $rootScope.$broadcast('show:loading');
     if ($rootScope.$storage.user) {
        const wif = $rootScope.$storage.user.password
@@ -2210,6 +2218,14 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
 
   $scope.submitStory = function() {
+    if (!$scope.spost.title) {
+      $rootScope.showAlert('Missing', 'Title');
+      return;
+    }
+    if (!$scope.spost.tags) {
+      $rootScope.showAlert('Missing', 'Tags');
+      return;
+    }
     if (!$scope.$$phase){
       $scope.$apply();
     }
