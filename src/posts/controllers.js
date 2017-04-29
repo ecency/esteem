@@ -2291,7 +2291,11 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           $scope.spost = {};
           $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_SUBMITTED'));
           //$scope.closeMenuPopover();
-          $state.go("app.profile", {username: $rootScope.$storage.user.username});
+          if ($scope.edit) {
+            $rootScope.$broadcast('update:content');
+          } else {
+            $state.go("app.profile", {username: $rootScope.$storage.user.username});  
+          }
         }
       });
     } else {
@@ -2432,7 +2436,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         
         setTimeout(function() {
           $scope.$emit('postAccounts');
-        }, 1);
+        }, 10);
       }
     });
   };

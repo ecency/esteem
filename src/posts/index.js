@@ -420,13 +420,13 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       setTimeout(function() {
         console.log('-----hiding splash------');
         navigator.splashscreen.hide();
-      }, 3000);
+      }, 1000);
     }
     if ($cordovaSplashscreen) {
       setTimeout(function() {
         console.log('-----hide splash------');
         $cordovaSplashscreen.hide();
-      }, 3000);
+      }, 1000);
     }
     $rootScope.log("app start ready");
     setTimeout(function() {
