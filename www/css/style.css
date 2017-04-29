@@ -1578,3 +1578,6 @@ body[dir=rtl] .bar .button.back-button, .bar button.back-button {
      bottom: 5%;
   }
 }
+.smaller-text {
+  font-size: 8pt;
+}

@@ -16,7 +16,7 @@
       <div class="item item-input item-icon-right" ng-if="!data.advanced">
         <span class="input-label">{{'TO'|translate}}</span>
         <input type="text" ng-model="data.username" placeholder="{{'TO_DESC'|translate}}" ng-change="changeUsername()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-        <i class="icon ion-ios-camera-outline" ng-click="qrScan()" ng-if="ttype=='transfer'"></i>
+        <i class="icon fa fa-qrcode" ng-click="qrScan()" ng-if="ttype=='transfer'"></i>
       </div>
       <label class="item item-input" ng-if="ttype=='escrow'&&!data.advanced">
           <span class="input-label">{{"ESCROW_AGENT"|translate}}</span>

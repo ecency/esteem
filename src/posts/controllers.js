@@ -1,7 +1,7 @@
 module.exports = function (app) {
 //angular.module('window.steem.controllers', [])
 
-app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform, $filter, APIs, $window, $ionicPopover) {
+app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform, $filter, APIs, $window, $ionicPopover, $cordovaBarcodeScanner) {
 
   $scope.loginData = {};
 
@@ -15,6 +15,32 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   }).then(function(popover) {
     $scope.menupopover = popover;
   });
+
+
+  $scope.qrScanL = function(type) {
+    $ionicPlatform.ready(function() {
+      $cordovaBarcodeScanner.scan({
+          "preferFrontCamera" : false, // iOS and Android
+          "showFlipCameraButton" : false, // iOS and Android
+          "prompt" : $filter('translate')('QR_TEXT'), // supported on Android only
+          "formats" : "QR_CODE" // default: all but PDF_417 and RSS_EXPANDED
+          //"orientation" : "landscape" // Android only (portrait|landscape), default unset so it rotates with the device
+        }).then(function(barcodeData) {
+        //alert(barcodeData);
+        if (barcodeData.text) {
+          console.log(barcodeData);
+          if (type == 'posting') {
+            $scope.loginData.privatePostingKey = barcodeData.text;
+          } else {
+            $scope.loginData.privateActiveKey = barcodeData.text;
+          }
+        }
+
+      }, function(error) {
+        $rootScope.showMessage('Error',angular.toJson(error));
+      });
+    });
+  };
 
   $scope.openMenuPopover = function($event) {
     $scope.menupopover.show($event);
