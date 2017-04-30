@@ -480,7 +480,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         if ($scope.data.type == "user"){
           var ee = [];
           window.steem.api.lookupAccounts($scope.data.search, 15, function(err, result) {
-            console.log(err, result);
+            //console.log(err, result);
             if (result){
               $scope.data.searchResult = result;
             }
