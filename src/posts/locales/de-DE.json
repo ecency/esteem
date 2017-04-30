@@ -263,5 +263,7 @@
   "RECEIVER":"Empfänger",
   "LOCATION":"Position",
   "WEBSITE":"Webseite",
-  "DISPLAY_NAME":"Angezeigter Name"
+  "DISPLAY_NAME":"Angezeigter Name",
+  "UNCLAIMED_REWARDS":"Nicht abgeholte Belohnungen",
+  "CLAIM_REWARDS":"Prämien"
 }
