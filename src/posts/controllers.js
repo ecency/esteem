@@ -333,11 +333,12 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $rootScope.$on('refreshLocalUserData', function() {
     $rootScope.log('refreshLocalUserData');
     if ($rootScope.$storage.user && $rootScope.$storage.user.username && $rootScope.$storage.user.chain == $rootScope.$storage.chain) {
-      window.steem.api.getAccounts([$scope.loginData.username], function(err, dd){
+      window.steem.api.getAccounts([$rootScope.$storage.user.username], function(err, dd){
         dd = dd[0];
         if (dd && dd.json_metadata) {
           dd.json_metadata = angular.fromJson(dd.json_metadata);
         }
+        console.log(dd);
         angular.merge($rootScope.$storage.user, dd);
 
         $scope.mcss = ($rootScope.$storage.user.json_metadata && $rootScope.$storage.user.json_metadata.profile && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
