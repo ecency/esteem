@@ -43,7 +43,7 @@
   "BOOKMARK":"Záložka",
   "REBLOG":"Reblog",
   "UPVOTE":"Hlasujte pro",
-  "DOWNVOTE":"Hlasujte proti",
+  "DOWNVOTE":"Dát Downvote",
   "UNVOTE_DOWNVOTED":"Vraťte hlas proti",
   "UNVOTE_UPVOTED":"Vraťte hlas pro",
   "REPLY":"Odpovězte",
@@ -163,7 +163,7 @@
   "DOWNVOTE_FLAG":"Hlasujte proti nebo označte jako závadné",
   "CAPTURE_PICTURE":"Zachyťte obrázek",
   "SELECT_PICTURE":"Vyberte obrázek",
-  "SET_CUSTOM_URL":"Nastavte zákaznické URL",
+  "SET_CUSTOM_URL":"Nastavte vlastní URL",
   "INSERT_PICTURE":"Vložte obrázek",
   "ERROR":"Chyba",
   "UPLOAD_ERROR":"Nahrajte chybu",
@@ -263,5 +263,7 @@
   "RECEIVER":"Příjemce",
   "LOCATION":"Umístění",
   "WEBSITE":"Web",
-  "DISPLAY_NAME":"Zobrazované jméno"
+  "DISPLAY_NAME":"Zobrazované jméno",
+  "UNCLAIMED_REWARDS":"Nepřijmuté odměny",
+  "CLAIM_REWARDS":"Přijmout odměny"
 }

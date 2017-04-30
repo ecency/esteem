@@ -258,10 +258,12 @@
   "DISPUTE":"",
   "RELEASE":"",
   "FROM":"",
-  "ID":"",
+  "ID":"id",
   "SUBMIT":"",
   "RECEIVER":"",
   "LOCATION":"",
   "WEBSITE":"",
-  "DISPLAY_NAME":""
+  "DISPLAY_NAME":"",
+  "UNCLAIMED_REWARDS":"",
+  "CLAIM_REWARDS":""
 }

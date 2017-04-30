@@ -7,9 +7,9 @@
   "BOOKMARKS":"Tandai",
   "TRANSFER":"Transfer",
   "MARKET":"Pasar",
-  "SETTINGS":"Setelan",
+  "SETTINGS":"Pengaturan",
   "ABOUT":"Tentang",
-  "ABOUT_1":"Siapapun bisa mendapatkan keuntungan dari konten",
+  "ABOUT_1":"siapapun bisa mendapatkan keuntungan dari konten mereka!",
   "ABOUT_2":"Applikasi dibuat oleh",
   "ABOUT_3":"dan ini adalah open source, proyek mobile berbasis masyarakat. Ini menawarkan akses konten untuk membaca, berkomentar, voting, posting, mentransfer pendapatan, dll fitur yang ditawarkan oleh {{platformname}} blockchain dan {{sitename}}.",
   "ABOUT_4":"1. Aplikasi tidak pernah mengakses atau memegang dana pengguna.",
@@ -52,7 +52,7 @@
   "POST_2":"Ketuk pada komentar untuk melihat sub-komentar",
   "OPTIONS":"Opsi",
   "RESTEEMED_BY":"Resteemed Oleh",
-  "NOTHING_HERE":"Tidak ada di sini...",
+  "NOTHING_HERE":"Belum tertera di sini...",
   "BALANCES":"Saldo",
   "PROFILE_1":"{{Platformname}}, token tradeable yang dapat ditransfer kapan saja. {{Platformname}} dapat dikonversi ke {{kekuatan platform yang}} dalam proses yang disebut powering up.",
   "PROFILE_2":"{{Platformpower}}, mempengaruhi token yang mendapatkan lebih banyak kekuatan untuk memegang jangka panjang dan suara pada posting. Semakin satu memegang lebih satu dapat mempengaruhi imbalan lain dan mendapatkan imbalan untuk voting akurat.",
@@ -96,7 +96,7 @@
   "RESTEEM_TEXT":"Anda akan mendapatkan notifikasi ketika seseorang reblogs posting Anda!",
   "CONFIGURATIONS":"Konfigurasi",
   "VOTING":"Voting",
-  "VOTING_TEXT":"Kekuatan Voting atau persentase mempengaruhi hak suara pada aplikasi, sehingga Anda dapat mengatur reward Voting Anda. <br/><br/><b>Catatan:</b> ini akan mengubah kekuatan voting/persentase untuk downvoting juga dan itu adalah di mana-mana pada aplikasi",
+  "VOTING_TEXT":"Kekuatan Voting atau persentase mempengaruhi hak suara pada aplikasi, sehingga Anda dapat mengatur reward Voting Anda. <br/><br/><b>Catatan:</b> ini akan mengubah kekuatan untuk voting/persentase serta downvoting dan itu terdapat dimanapun di dalam aplikasi",
   "SERVER":"Server",
   "SERVER_TEXT":"Direkomendasikan",
   "SAVE_CHANGES":"Simpan perubahan",
@@ -263,5 +263,7 @@
   "RECEIVER":"Penerima",
   "LOCATION":"Lokasi",
   "WEBSITE":"Website",
-  "DISPLAY_NAME":"Nama tampilan"
+  "DISPLAY_NAME":"Nama tampilan",
+  "UNCLAIMED_REWARDS":"Reward tidak diklaim",
+  "CLAIM_REWARDS":"Mengklaim reward"
 }

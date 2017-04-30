@@ -256,12 +256,14 @@
   "USER_NOTFOUND":"",
   "APPROVE":"",
   "DISPUTE":"",
-  "RELEASE":"",
+  "RELEASE":"Lepaskan",
   "FROM":"",
-  "ID":"",
+  "ID":"id",
   "SUBMIT":"",
   "RECEIVER":"",
   "LOCATION":"",
   "WEBSITE":"",
-  "DISPLAY_NAME":""
+  "DISPLAY_NAME":"",
+  "UNCLAIMED_REWARDS":"",
+  "CLAIM_REWARDS":""
 }

@@ -263,5 +263,7 @@
   "RECEIVER":"المستقبل",
   "LOCATION":"العنوان",
   "WEBSITE":"الموقع",
-  "DISPLAY_NAME":"إسم المستخدم"
+  "DISPLAY_NAME":"إسم المستخدم",
+  "UNCLAIMED_REWARDS":"مكافآت غير مستلمة",
+  "CLAIM_REWARDS":"المطالبة بالمكافآت"
 }
