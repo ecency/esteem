@@ -440,19 +440,32 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   // Open the login modal
   $scope.openSmodal = function() {
     //if(!$scope.smodal) return;
+    $scope.data.searchResult = [];
     $rootScope.$broadcast('close:popover');
-    setTimeout(function() {
-      $scope.data.type="tag";
-      $scope.data.searchResult = [];
-      $scope.smodal.show();
-    }, 5);
+    window.steem.api.getState("/tags", function(err, res) {
+      if (res) {
+        angular.forEach(res.tags, function(k,v){
+          if (v) {
+            if (!(v.indexOf("'")>-1 || v.indexOf("#")>-1)) {
+              $scope.data.searchResult.push(k);
+            }
+          }
+        });
+      }
+      setTimeout(function() {
+        $scope.data.type="tag";
+        //console.log($scope.data.searchResult);
+        $scope.smodal.show();
+      }, 5);
+    });
   };
   $scope.clearSearch = function() {
     if ($rootScope.$storage.tag) {
       $rootScope.$storage.tag = undefined;
       $rootScope.$storage.taglimits = undefined;
       $rootScope.$broadcast('close:popover');
-      $rootScope.$broadcast('fetchPosts');
+      //$rootScope.$broadcast('fetchPosts');
+      $rootScope.$broadcast('filter:change');
     }
   };
   $scope.showMeExtra = function() {
