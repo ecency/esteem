@@ -338,7 +338,6 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         if (dd && dd.json_metadata) {
           dd.json_metadata = angular.fromJson(dd.json_metadata);
         }
-        console.log(dd);
         angular.merge($rootScope.$storage.user, dd);
 
         $scope.mcss = ($rootScope.$storage.user.json_metadata && $rootScope.$storage.user.json_metadata.profile && $rootScope.$storage.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.$storage.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed'} : null;
@@ -2476,7 +2475,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     //console.log(author,permlink);
 
     window.steem.api.getContentReplies(author, permlink, function(err, dd) {
-      console.log(err, dd);
+      //console.log(err, dd);
       if (dd) {
         $scope.comments = dd;
         $rootScope.$storage.comments = dd;
@@ -3248,7 +3247,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     }
 
     if (len>0) {
-      delete params.limit;
+      //delete params.limit;
       var ll = $scope.data.profile.length;
       params.start_author = $scope.data.profile[ll-1].author;
       params.start_permlink = $scope.data.profile[ll-1].permlink;
@@ -3266,7 +3265,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             delete params.tags;   
           }
           window.steem.api.getDiscussionsByBlog(params, function(err, response) {
-            //console.log(err, response);
+            console.log(err, response, params);
             if (response) {
               if (response.length <= 1) {
                 $scope.end = true;
@@ -3296,7 +3295,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         }
         if ($scope.active == 'posts') {
           window.steem.api.getDiscussionsByComments(params, function(err, response) {
-            console.log(err, response);
+            //console.log(err, response);
             if (response) {
               for (var j = 0; j < response.length; j++) {
                 var v = response[j];

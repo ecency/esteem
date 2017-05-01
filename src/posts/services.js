@@ -1075,7 +1075,7 @@ module.exports = function (app) {
                           $rootScope.$broadcast('openComments', { data: comment });
                         } else {
                           window.steem.api.getContentReplies(comment.author, comment.permlink, function(err, dd) {
-                            console.log(err, dd);
+                            //console.log(err, dd);
                             comment.comments = dd;
 
                             for (var i = 0, len = dd.length; i < len; i++) {
@@ -1092,7 +1092,7 @@ module.exports = function (app) {
                               $scope.$apply();
                             }
                             comment.showChildren = true;
-                            console.log(comment);
+                            //console.log(comment);
                           });
                         }
                       }
