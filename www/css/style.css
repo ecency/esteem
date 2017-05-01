@@ -464,16 +464,16 @@ select-input {
 	padding: 0px;
 }
 .item-myavatar > img:first-child {
-  max-width: 90px;
-  max-height: 90px;
-  width: 100%;
-  background: #387ef5;
   height: 100%;
+  width: auto;
+  max-width: 90px!important;
+  max-height: 90px!important;
+  background: #387ef5;
   margin-right: auto;
   margin-left: auto;
   border-radius: 50%!important;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%!important;
+  -moz-border-radius: 50%!important;
   -webkit-box-shadow: 0 0 0 1px #fff, 0 0 0 1px #999, 0 1px 1px 1px rgba(0,0,0,.2);
   -moz-box-shadow: 0 0 0 1px #fff, 0 0 0 1px #999, 0 1px 1px 1px rgba(0,0,0,.2);
   box-shadow: 0 0 0 1px #fff, 0 0 0 1px #999, 0 1px 1px 1px rgba(0,0,0,.2);
