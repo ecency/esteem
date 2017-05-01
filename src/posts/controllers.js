@@ -3479,13 +3479,13 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         } else {
           $scope.css = null;
         }
-        console.log($scope.css);
+        //console.log($scope.css);
         if (!$scope.$$phase){
           $scope.$apply();
         }
       });
       window.steem.api.getFollowCount($stateParams.username, function(err, res) {
-        console.log(err, res);
+        //console.log(err, res);
         $scope.followdetails = res;
       });
       $scope.getFollows(null, "d");
@@ -3538,7 +3538,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       $scope.rest = "";
     }
     window.steem.api.getState("/@"+$stateParams.username+$scope.rest, function(err, res) {
-      console.log(err, res);
+      //console.log(err, res);
       if (res.content) {
         if (Object.keys(res.content).length>0) {
           angular.forEach(res.content, function(v,k){
