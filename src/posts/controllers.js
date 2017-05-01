@@ -3265,7 +3265,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             delete params.tags;   
           }
           window.steem.api.getDiscussionsByBlog(params, function(err, response) {
-            console.log(err, response, params);
+            //console.log(err, response, params);
             if (response) {
               if (response.length <= 1) {
                 $scope.end = true;
