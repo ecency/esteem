@@ -125,7 +125,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     var subject = "Via eSteem Mobile";
     var file = null;
     setTimeout(function() {
-      $cordovaSocialSharing.share(message, subject, file, link) // Share via native share sheet
+      $cordovaSocialSharing.share(message, subject, file) // Share via native share sheet
       .then(function(result) {
         // Success!
         $rootScope.log("shared");
