@@ -3781,7 +3781,7 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope, $filte
         //console.log(h);
         var o = parseFloat(h.open_pays.split(' ')[0]);
         var c = parseFloat(h.current_pays.split(' ')[0]);
-        var p = o/c;
+        var p = c/o;
         h.price = p;
       return h;
     });
@@ -3808,6 +3808,11 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope, $filte
         //chartType: 'stock',
         xAxis: {
             categories: ddd.x
+        },
+        yAxis: {
+          title: {
+                text: null
+            }
         },
         tooltip: {
             shared: true,
@@ -3880,7 +3885,7 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope, $filte
         $scope.history = [];
         window.steem.api.getRecentTrades(25, function(err, result) {
           $scope.recent_trades = result;
-          //console.log(result);
+          console.log(result);
 
           setTimeout(function() {
             $scope.history_chart_config = generateHistoryChart($scope.recent_trades);
