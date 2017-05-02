@@ -3661,10 +3661,9 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope, $filte
   }
 
   function generateDepthChart(bidsArray, asksArray) {
-
     var dd = generateBidAsk(bidsArray, asksArray);
     let series = [];
-    console.log(dd);
+    //console.log(dd);
 
     var mm = getMinMax(dd.bids, dd.asks);
     //if(process.env.BROWSER) {
@@ -3773,10 +3772,87 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope, $filte
     return depth_chart_config;
   }
 
-  window.steem.api.getOrderBook(20, function(err, result) {
-      //console.log(err, result);
+  function generateHistory(historyArray){
+    if(typeof historyArray == 'undefined') {
+      return [];
+    }
+
+    var nh = historyArray.map(function(h) {
+        //console.log(h);
+        var o = parseFloat(h.open_pays.split(' ')[0]);
+        var c = parseFloat(h.current_pays.split(' ')[0]);
+        var p = o/c;
+        h.price = p;
+      return h;
+    });
+    var prices = [];
+    var dates = [];
+    for (var i = 0; i < nh.length; i++) {
+      dates.push($filter('timeago')(nh[i].date));
+      prices.push(nh[i].price);
+    }
+    var x = dates.reverse();
+    var y = prices.reverse();
+    return {x, y};
+  };
+  
+  function generateHistoryChart(historyArray) {
+    
+    var ddd = generateHistory(historyArray);
+    
+
+    var history_chart_config = {
+        title:    {text: null},
+        subtitle: {text: null},
+        //chart:    {type: 'area', zoomType: 'x'},
+        //chartType: 'stock',
+        xAxis: {
+            categories: ddd.x
+        },
+        tooltip: {
+            shared: true,
+            useHTML: true,
+            headerFormat: '<small>{point.key}</small><table>',
+            pointFormat: '<tr><td style="color: {series.color}">{series.name}: </td>' +
+                '<td style="text-align: right"><b>{point.y} EUR</b></td></tr>',
+            footerFormat: '</table>',
+            valueDecimals: 2
+        },
+
+        series: [{
+            name: 'Price',
+            data: ddd.y
+        }],
+        legend: {enabled: false},
+        credits: {
+            enabled: false
+        },
+        rangeSelector: {
+            enabled: false
+        },
+        navigator: {
+            enabled: false
+        },
+        scrollbar: {
+            enabled: false
+        },
+        dataGrouping: {
+            enabled: false
+        },
+        plotOptions: {series: {animation: false}},
+    };
+    //------------------------------
+    return history_chart_config;
+  }
+
+
+  $scope.$on('$ionicView.beforeEnter', function(){
+    $scope.active = 'buy';
+    $scope.orders = [];
+    window.steem.api.getOrderBook(25, function(err, result) {
+      console.log(err, result);
       $scope.orders = result;
-      
+
       setTimeout(function() {
         $scope.depth_chart_config = generateDepthChart($scope.orders.bids, $scope.orders.asks);
         //console.log($scope.depth_chart_config);
@@ -3784,16 +3860,7 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope, $filte
           $scope.$apply();
         }
       },3);
-    });
-
-  
-
-  $scope.$on('$ionicView.beforeEnter', function(){
-    $scope.active = 'buy';
-    $scope.orders = [];
-    window.steem.api.getOrderBook(15, function(err, result) {
-      console.log(err, result);
-      $scope.orders = result;
+      
       if (!$scope.$$phase) {
         $scope.$apply();
       }
@@ -3811,8 +3878,18 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope, $filte
       }
       if (type == "history"){
         $scope.history = [];
-        window.steem.api.getRecentTrades(15, function(err, result) {
+        window.steem.api.getRecentTrades(25, function(err, result) {
           $scope.recent_trades = result;
+          //console.log(result);
+
+          setTimeout(function() {
+            $scope.history_chart_config = generateHistoryChart($scope.recent_trades);
+            //console.log($scope.depth_chart_config);
+            if (!$scope.$$phase) {
+              $scope.$apply();
+            }
+          },3);
+
           if (!$scope.$$phase) {
             $scope.$apply();
           }
