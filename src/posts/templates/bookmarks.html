@@ -1,5 +1,5 @@
 <ion-view view-title="{{'BOOKMARKS' | translate}}">
-  <ion-content class="has-header">
+  <ion-content class="has-header" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 	<ion-list ng-if="$root.$storage.bookmark" can-swipe="true">
   		<ion-item ng-repeat="item in $root.$storage.bookmark" ng-click="$root.getContentAndOpen(item)">
 		    <p><h2>{{item.author}}</h2></p>

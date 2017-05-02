@@ -1,5 +1,5 @@
 <ion-view view-cache="false" view-title="{{'SETTINGS'|translate}}">
-  <ion-content class="padding has-header settings">
+  <ion-content class="padding has-header settings" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
     <br/>
     <div class="item item-divider">
       {{'SECURITY'|translate}}

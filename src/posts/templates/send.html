@@ -10,7 +10,7 @@
     </div>
   </div>
 
-  <ion-content class="padding has-tabs-top">
+  <ion-content class="padding has-tabs-top" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 
     <div class="list">
       <div class="item item-input item-icon-right" ng-if="!data.advanced">

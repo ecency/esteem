@@ -1,5 +1,5 @@
 <ion-view view-cache="false" view-title="{{'FOLLOW' | translate}}">
-  <ion-content class="padding has-footer" delegate-handle="listScroll">
+  <ion-content class="padding has-footer" delegate-handle="listScroll" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
     <div class="list list-inset" ng-if="active=='followers'">
       <label class="item item-input">
         <i class="icon ion-search placeholder-icon"></i>

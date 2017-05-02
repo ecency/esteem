@@ -11,7 +11,7 @@
   color: #ddca7e;
 }
 
-.theme-dark .item, .theme-dark p {
+.theme-dark .item, .theme-dark p, .theme-dark div, .theme-dark .item-content, .theme-dark span {
   color: #aaa;
   background: #444;
 }

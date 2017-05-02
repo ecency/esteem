@@ -1,5 +1,5 @@
 <ion-view view-title="{{'DRAFTS' | translate}}">
-  <ion-content class="has-header">
+  <ion-content class="has-header" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 	<ion-list ng-if="drafts" can-swipe="true">
   		<ion-item ng-repeat="item in drafts" ng-click="$root.openDraft(item)">
 		    <p><h2>{{item.title}}</h2></p>
