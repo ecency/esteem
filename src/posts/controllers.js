@@ -3859,7 +3859,7 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope, $filte
         if (!$scope.$$phase) {
           $scope.$apply();
         }
-      },3);
+      },1);
       
       if (!$scope.$$phase) {
         $scope.$apply();
@@ -3888,7 +3888,7 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope, $filte
             if (!$scope.$$phase) {
               $scope.$apply();
             }
-          },3);
+          },1);
 
           if (!$scope.$$phase) {
             $scope.$apply();

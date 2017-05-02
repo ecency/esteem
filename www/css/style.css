@@ -261,7 +261,7 @@ textarea.markdown-input {
   right: 0!important;
   margin-right: 5px!important;
   margin-bottom: 5px!important;
-  bottom: 0!important;
+  top: 5px!important;
 }
 .profilebtn_edit {
   position: absolute!important;
