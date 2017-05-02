@@ -2495,7 +2495,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           if (!$scope.$$phase){
             $scope.$apply();
           }
-        }, 100);
+        }, 200);
         if (!$scope.$$phase){
           $scope.$apply();
         }
@@ -3617,8 +3617,176 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   }
 })
 
-app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope) {
+app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope, $filter) {
   $scope.username = $stateParams.username;
+
+  var power = 100;
+  var precision = 1000;
+
+  function generateBidAsk(bidsArray, asksArray) {
+    // Input raw orders (from TOP of order book DOWN), output grouped depth
+    function aggregateOrders(orders) {
+        if(typeof orders == 'undefined') {
+          return [];
+        }
+        let ttl = 0
+        return orders.map( o => {
+            ttl += o.sbd;
+            return [parseFloat(o.real_price) * power, ttl]
+        }).sort((a, b) => { // Sort here to make sure arrays are in the right direction for HighCharts
+            return a[0] - b[0];
+        });
+    }
+    var bids = aggregateOrders(bidsArray);
+
+    // Insert a 0 entry to make sure the chart is centered properly
+    bids.unshift([0, bids[0][1]]);
+    var asks = aggregateOrders(asksArray);
+    // Insert a final entry to make sure the chart is centered properly
+    asks.push([asks[asks.length - 1][0] * 4, asks[asks.length - 1][1]]);
+    
+    return {bids, asks};
+  }
+
+  function getMinMax(bids, asks) {
+      var highestBid = bids.length ? bids[bids.length-1][0] : 0;
+      var lowestAsk = asks.length ? asks[0][0] : 1;
+
+      var middle = (highestBid + lowestAsk) / 2;
+
+      return {
+          min: Math.max(middle * 0.65, bids[0][0]),
+          max: Math.min(middle * 1.35, asks[asks.length-1][0])
+      }
+  }
+
+  function generateDepthChart(bidsArray, asksArray) {
+
+    var dd = generateBidAsk(bidsArray, asksArray);
+    let series = [];
+    console.log(dd);
+
+    var mm = getMinMax(dd.bids, dd.asks);
+    //if(process.env.BROWSER) {
+        /*if(dd.bids[0]) {
+            series.push({step: 'right', name: $filter('translate')('BUY'), color: 'rgba(0,150,0,1.0)', fillColor: 'rgba(0,150,0,0.2)', tooltip: {valueSuffix: ' STEEM'},
+             data:  dd.bids})
+        }
+        if(dd.asks[0]) {
+            series.push({step: 'left', name: $filter('translate')('SELL'), color: 'rgba(150,0,0,1.0)', fillColor: 'rgba(150,0,0,0.2)', tooltip: {valueSuffix: ' STEEM'},
+             data: dd.asks})
+        }*/
+    //}
+    
+    var depth_chart_config = {
+        title:    {text: null},
+        subtitle: {text: null},
+        chart:    {type: 'area', zoomType: 'x'},
+        //chartType: 'stock',
+        xAxis:    {
+            min: mm.min,
+            max: mm.max,
+            labels: {
+                formatter: function() {return this.value / power;}
+            },
+            ordinal: false,
+            lineColor: "#000000",
+            title: {
+                text: null
+            }
+        },
+        yAxis:    {
+            title: {text: null},
+            lineWidth: 2,
+            labels: {
+                //align: "left",
+                formatter: function () {
+                  //console.log(this.value, precision);
+                    var value = this.value/precision;
+                    return '$' + (value > 10e6 ? (value/10e6) + "M" :
+                        value > 10000 ? (value/10e3) + "k" :
+                        value);
+                }
+            },
+            gridLineWidth: 1,
+        },
+        legend: {enabled: false},
+        credits: {
+            enabled: false
+        },
+        rangeSelector: {
+            enabled: false
+        },
+        navigator: {
+            enabled: false
+        },
+        scrollbar: {
+            enabled: false
+        },
+        dataGrouping: {
+            enabled: false
+        },
+        plotOptions: {series: {animation: false}},
+        //series,
+        series: [{
+            type: 'area',
+            step: 'right', 
+            name: $filter('translate')('BUY'), 
+            color: 'rgba(0,150,0,1.0)', 
+            fillColor: 'rgba(0,150,0,0.2)', 
+            tooltip: {
+              shared: false,
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
+              headerFormat: null,
+              pointFormatter: function() {
+                var ll = '<span>\u25CF</span><span>'+$filter('translate')('PRICE')+': '+(this.x / power).toFixed(6)+' '+$filter('getCurrencySymbol')($rootScope.$storage.currency)+'/'+$rootScope.$storage.platformlunit+'</span><br/><span>\u25CF</span>'+this.series.name+': <b>'+(this.y / 1000).toFixed(3)+' '+$filter('getCurrencySymbol')($rootScope.$storage.currency)+ '('+$rootScope.$storage.platformdunit+')</b>';
+                return ll;
+              }
+            },
+            data:  dd.bids,
+            style: {
+                color: "#FFFFFF"
+            }
+          },
+          {
+            type: 'area',
+            step: 'left', 
+            name: $filter('translate')('SELL'), 
+            color: 'rgba(150,0,0,1.0)', 
+            fillColor: 'rgba(150,0,0,0.2)', 
+            tooltip: {
+              shared: false,
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
+              headerFormat: null,
+              pointFormatter: function() {
+              var ll = '<span>\u25CF</span><span>'+$filter('translate')('PRICE')+': '+(this.x / power).toFixed(6)+' '+$filter('getCurrencySymbol')($rootScope.$storage.currency)+'/'+$rootScope.$storage.platformlunit+'</span><br/><span>\u25CF</span>'+this.series.name+': <b>'+(this.y / 1000).toFixed(3)+' '+$filter('getCurrencySymbol')($rootScope.$storage.currency)+ '('+$rootScope.$storage.platformdunit+')</b>';
+              return ll;
+              }
+            },
+            data: dd.asks,
+            style: {
+                color: "#FFFFFF"
+            }
+          }]
+    };
+    //------------------------------
+    return depth_chart_config;
+  }
+
+  window.steem.api.getOrderBook(20, function(err, result) {
+      //console.log(err, result);
+      $scope.orders = result;
+      
+      setTimeout(function() {
+        $scope.depth_chart_config = generateDepthChart($scope.orders.bids, $scope.orders.asks);
+        //console.log($scope.depth_chart_config);
+        if (!$scope.$$phase) {
+          $scope.$apply();
+        }
+      },3);
+    });
+
+  
 
   $scope.$on('$ionicView.beforeEnter', function(){
     $scope.active = 'buy';

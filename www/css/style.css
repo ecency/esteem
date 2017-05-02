@@ -1581,3 +1581,10 @@ body[dir=rtl] .bar .button.back-button, .bar button.back-button {
 .smaller-text {
   font-size: 8pt;
 }
+
+highchart {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+

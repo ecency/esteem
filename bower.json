@@ -1,5 +1,5 @@
 {
-  "name": "eSteem",
+  "name": "esteem",
   "private": "true",
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.3.2",
@@ -20,10 +20,12 @@
     "ion-floating-menu": "^1.0.1",
     "qrcode.js": "qrcode#^1.0.2",
     "angular-qr": "^0.2.0",
-    "ionic": "^1.3.2"
+    "ionic": "^1.3.2",
+    "highcharts-ng": "0.0.13",
+    "angular": "1.5.3"
   },
   "resolutions": {
-    "angular": "1.5.3",
-    "angular-sanitize": "1.5.3"
+    "angular": "1.5.8",
+    "angular-sanitize": "1.5.8"
   }
 }

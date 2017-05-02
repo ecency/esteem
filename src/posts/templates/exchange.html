@@ -1,5 +1,8 @@
 <ion-view view-cache="false" view-title="{{'MARKET_VIEW' | translate}}">
   <ion-content class="padding has-footer exchange">
+    <div class="padding">
+      <highchart id="chart1" config="depth_chart_config"></highchart>  
+    </div>
     <div class="" ng-if="active=='buy'">
       <div class="row header">
         <div class="col">{{'PRICE' | translate}}</div>

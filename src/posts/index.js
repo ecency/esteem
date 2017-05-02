@@ -7,7 +7,8 @@ var app = angular.module('steem', [
   'ion-floating-menu',
   'pascalprecht.translate',
   'ja.qr',
-  'ion-datetime-picker'
+  'ion-datetime-picker',
+  'highcharts-ng'
 ]);
 
 if (localStorage.getItem("socketUrl") === null) {
