@@ -2340,7 +2340,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_SUBMITTED'));
           //$scope.closeMenuPopover();
           if ($scope.edit) {
-            $rootScope.$broadcast('update:content');
+            $rootScope.$emit('update:content');
           } else {
             $state.go("app.profile", {username: $rootScope.$storage.user.username});  
           }
@@ -2494,7 +2494,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     //console.log(author,permlink);
 
     window.steem.api.getContentReplies(author, permlink, function(err, dd) {
-      console.log(err, dd);
+      //console.log(err, dd);
       if (dd) {
         $scope.comments = dd;
         $rootScope.$storage.comments = dd;
@@ -2560,7 +2560,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     if ($stateParams.category === '111') {
       var ttemp = $rootScope.$storage.sitem;
       $scope.post = ttemp;
-      $rootScope.$broadcast('update:content');
+      $rootScope.$emit('update:content');
     } else {
       if ($stateParams.author.indexOf('@')>-1){
         $stateParams.author = $stateParams.author.substr(1);

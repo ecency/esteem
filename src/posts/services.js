@@ -1304,14 +1304,15 @@ module.exports = function (app) {
                             console.log(err, result);
                             $scope.replying = false;
                             if (err) {
-                                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err)
-                              } else {
-                                $scope.closeModal();
-                                $scope.data.comment = "";
-                                $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
-                                $rootScope.$broadcast("update:content");
-                              }
+                              $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err)
+                            } else {
+                              $scope.closeModal();
+                              $scope.data.comment = "";
+                              $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
                               $rootScope.$broadcast('hide:loading');
+                              $rootScope.$emit("update:content");
+                            }
+                            $rootScope.$broadcast('hide:loading');
                           });
                         } else {
                           $rootScope.$broadcast('hide:loading');
@@ -1350,7 +1351,8 @@ module.exports = function (app) {
                                 $scope.closeModal();
                                 $scope.data.comment = "";
                                 $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
-                                $rootScope.$broadcast("update:content");
+                                $rootScope.$broadcast('hide:loading');
+                                $rootScope.$emit("update:content");
                               }
                               $rootScope.$broadcast('hide:loading');
                           });
@@ -1393,7 +1395,7 @@ module.exports = function (app) {
                                   $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err)
                                 } else {
                                   $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('DELETED_COMMENT'));
-                                  $rootScope.$broadcast("update:content");                                
+                                  $rootScope.$emit("update:content");                                
                                 }
                                 $rootScope.$broadcast('hide:loading');
                               });
