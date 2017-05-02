@@ -1567,6 +1567,10 @@ body[dir=rtl] .bar .button.back-button, .bar button.back-button {
     filter: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='svgMask'><feGaussianBlur stdDeviation='10' /></filter></svg>#svgMask");
 }
 
+.mask img {
+  width: 0;
+  height: 0;
+}
 .bar.bar-positive {
   background-color: #00396B;
 }

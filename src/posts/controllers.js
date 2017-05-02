@@ -2494,7 +2494,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     //console.log(author,permlink);
 
     window.steem.api.getContentReplies(author, permlink, function(err, dd) {
-      //console.log(err, dd);
+      console.log(err, dd);
       if (dd) {
         $scope.comments = dd;
         $rootScope.$storage.comments = dd;
