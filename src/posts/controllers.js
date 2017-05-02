@@ -1729,7 +1729,26 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
 
     $scope.activeMenu = $rootScope.$storage.filter || "trending";
-    $scope.mymenu = $rootScope.$storage.user ? [{text: $filter('translate')('FEED'), custom:'feed'}, {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}] : [ {text: $filter('translate')('TRENDING'), custom:'trending'}, {text: $filter('translate')('HOT'), custom:'hot'}, {text: $filter('translate')('NEW'), custom:'created'}, {text: $filter('translate')('ACTIVE'), custom:'active'}, {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, {text:$filter('translate')('VOTES'), custom:'votes'}, {text: $filter('translate')('COMMENTS'), custom:'children'}, {text: $filter('translate')('PAYOUT'), custom: 'cashout'}];
+    $scope.mymenu = $rootScope.$storage.user ? [
+    {text: $filter('translate')('FEED'), custom:'feed'}, 
+    {text: $filter('translate')('TRENDING'), custom:'trending'}, 
+    {text: $filter('translate')('HOT'), custom:'hot'}, 
+    {text: $filter('translate')('NEW'), custom:'created'}, 
+    {text: $filter('translate')('ACTIVE'), custom:'active'}, 
+    {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, 
+    {text:$filter('translate')('VOTES'), custom:'votes'}, 
+    {text: $filter('translate')('COMMENTS'), custom:'children'}, 
+    {text: $filter('translate')('PAYOUT'), custom: 'payout'}] : 
+    [ 
+    {text: $filter('translate')('TRENDING'), custom:'trending'}, 
+    {text: $filter('translate')('HOT'), custom:'hot'}, 
+    {text: $filter('translate')('NEW'), custom:'created'}, 
+    {text: $filter('translate')('ACTIVE'), custom:'active'}, 
+    {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, 
+    {text:$filter('translate')('VOTES'), custom:'votes'}, 
+    {text: $filter('translate')('COMMENTS'), custom:'children'}, 
+    {text: $filter('translate')('PAYOUT'), custom: 'payout'}];
+
     for (var i = 0, len = $scope.mymenu.length; i < len; i++) {
       var v = $scope.mymenu[i];
       if (v.custom === $rootScope.$storage.filter) {
