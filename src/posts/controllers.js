@@ -3858,13 +3858,13 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope, $filte
       console.log(err, result);
       $scope.orders = result;
 
-      setTimeout(function() {
+      //setTimeout(function() {
         $scope.depth_chart_config = generateDepthChart($scope.orders.bids, $scope.orders.asks);
         //console.log($scope.depth_chart_config);
         if (!$scope.$$phase) {
           $scope.$apply();
         }
-      },1);
+      //},1);
       
       if (!$scope.$$phase) {
         $scope.$apply();
@@ -3887,13 +3887,13 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope, $filte
           $scope.recent_trades = result;
           console.log(result);
 
-          setTimeout(function() {
+          //setTimeout(function() {
             $scope.history_chart_config = generateHistoryChart($scope.recent_trades);
             //console.log($scope.depth_chart_config);
             if (!$scope.$$phase) {
               $scope.$apply();
             }
-          },1);
+          //},1);
 
           if (!$scope.$$phase) {
             $scope.$apply();
