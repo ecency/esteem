@@ -442,6 +442,11 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     //if(!$scope.smodal) return;
     $scope.data.searchResult = [];
     $rootScope.$broadcast('close:popover');
+    setTimeout(function() {
+      $scope.data.type="tag";
+      //console.log($scope.data.searchResult);
+      $scope.smodal.show();
+    }, 1);
     window.steem.api.getState("/tags", function(err, res) {
       if (res) {
         angular.forEach(res.tags, function(k,v){
@@ -452,11 +457,6 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
           }
         });
       }
-      setTimeout(function() {
-        $scope.data.type="tag";
-        //console.log($scope.data.searchResult);
-        $scope.smodal.show();
-      }, 5);
     });
   };
   $scope.clearSearch = function() {
@@ -2402,7 +2402,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     setTimeout(function() {
       $scope.getContent($scope.post.author, $scope.post.permlink);  
       $rootScope.$broadcast('hide:loading');
-    }, 10);
+    }, 1);
     $rootScope.$broadcast('hide:loading');
   });
   $ionicModal.fromTemplateUrl('templates/reply.html', {
