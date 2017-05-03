@@ -3307,10 +3307,19 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   //console.log(v.id);
                   $scope.data.profile.push(v);  
                 }
+                if(!$scope.$$phase){
+                  $scope.$apply();
+                }
               }
+            }
+            if(!$scope.$$phase){
+              $scope.$apply();
             }
             $scope.$broadcast('scroll.infiniteScrollComplete');
           });
+          if(!$scope.$$phase){
+            $scope.$apply();
+          }
         }
         if ($scope.active == 'posts') {
           window.steem.api.getDiscussionsByComments(params, function(err, response) {
@@ -3422,6 +3431,9 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 }
               }
               $scope.data.profile.push(v);
+              if(!$scope.$$phase){
+                $scope.$apply();
+              }
             });
             $scope.nonexist = false;
             if(!$scope.$$phase){
