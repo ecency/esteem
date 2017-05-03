@@ -2500,24 +2500,27 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $rootScope.$storage.comments = dd;
         //console.log(dd.active_votes);
         $rootScope.fetching = false;
+        if (!$scope.$$phase){
+          $scope.$apply();
+        }
         for (var i = 0, len = dd.length; i < len; i++) {
           var v = dd[i];
           if ($rootScope.$storage.postAccounts && $rootScope.$storage.postAccounts.indexOf(v.author) == -1) {
             $rootScope.$storage.postAccounts.push(v.author);
-          }  
+          }
+          if (!$scope.$$phase){
+            $scope.$apply();
+          }
         }
         setTimeout(function() {
           var p2 = document.querySelector('.my-handle');
           $scope.quotePosition = $ionicPosition.position(angular.element(p2));
           $ionicScrollDelegate.$getByHandle('mainScroll').scrollTo(0,$scope.quotePosition.top, true);  
-          $scope.$emit('postAccounts');
+          $scope.$broadcast('postAccounts');
           if (!$scope.$$phase){
             $scope.$apply();
           }
         }, 200);
-        if (!$scope.$$phase){
-          $scope.$apply();
-        }
       }
     });
   }
