@@ -227,6 +227,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('fil-PH', require('./locales/ready/fil-PH')); //Filipino
   $translateProvider.translations('ar-SA', require('./locales/ready/ar-SA')); //Arabic
   $translateProvider.translations('lt-LT', require('./locales/ready/lt-LT')); //Lithuanian
+  $translateProvider.translations('lv-LV', require('./locales/ready/lv-LV')); //Latvian
 
   $translateProvider.useSanitizeValueStrategy(null);
 
@@ -347,7 +348,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       {id:'it-IT', name: 'Italiano'},
       {id:'fil-PH', name: 'Wikang Filipino'},
       {id:'ar-SA', name: 'عَرَبِيّ'},
-      {id:'lt-LT', name: 'Lietuvių'}
+      {id:'lt-LT', name: 'Lietuvių'},
+      {id:'lv-LV', name: 'Latviešu'}
       
     ];
     if (!$rootScope.$storage.dir) {
