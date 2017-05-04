@@ -8,6 +8,7 @@
     "bs58": "^4.0.0",
     "create-hash": "^1.1.2",
     "create-hmac": "^1.1.4",
+    "crypto-browserify": "^3.11.0",
     "currency-symbol-map": "^3.1.0",
     "diff-match-patch": "^1.0.0",
     "ecurve": "^1.0.5",

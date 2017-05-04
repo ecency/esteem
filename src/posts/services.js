@@ -522,6 +522,12 @@ module.exports = function (app) {
             nowTime = (new Date()).getTime(),
             date = (new Date(input)).getTime(),
             //refreshMillis= 6e4, //A minute
+            // get difference between UTC and local time in milliseconds
+            timeZoneOffset = (new Date().getTimezoneOffset()) * 60000,
+
+            // convert local to UTC
+            nowTime = nowTime + timeZoneOffset,
+
             allowFuture = p_allowFuture || false,
             strings= {
                 prefixAgo: '',
@@ -1307,10 +1313,14 @@ module.exports = function (app) {
                               $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err)
                             } else {
                               $scope.closeModal();
+                              $scope.replying = false;
+                              $scope.cmodal.hide();
                               $scope.data.comment = "";
-                              $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
-                              $rootScope.$broadcast('hide:loading');
-                              $rootScope.$emit("update:content");
+                              setTimeout(function() {
+                                $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
+                                $rootScope.$broadcast('hide:loading');
+                                $rootScope.$emit("update:content");  
+                              }, 10);
                             }
                             $rootScope.$broadcast('hide:loading');
                           });
@@ -1349,10 +1359,14 @@ module.exports = function (app) {
                                 $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err)
                               } else {
                                 $scope.closeModal();
+                                $scope.replying = false;
+                                $scope.cmodal.hide();
                                 $scope.data.comment = "";
-                                $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
-                                $rootScope.$broadcast('hide:loading');
-                                $rootScope.$emit("update:content");
+                                setTimeout(function() {
+                                  $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
+                                  $rootScope.$broadcast('hide:loading');
+                                  $rootScope.$emit("update:content");  
+                                }, 10);
                               }
                               $rootScope.$broadcast('hide:loading');
                           });

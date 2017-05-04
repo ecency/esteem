@@ -1360,11 +1360,10 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         if (err) {
           $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err)
         } else {
-          //$scope.closePostModal();
+          $scope.closePostModal();
           $rootScope.$broadcast('closePostModal');
-
-          //$scope.menupopover.hide();
           $rootScope.$broadcast('close:popover');
+          //$scope.menupopover.hide();
           $scope.spost = {};
           $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_SUBMITTED'));
           //$scope.closeMenuPopover();
@@ -2333,9 +2332,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         } else {
           //$scope.closePostModal();
           $rootScope.$broadcast('closePostModal');
-
-          //$scope.menupopover.hide();
           $rootScope.$broadcast('close:popover');
+          //$scope.menupopover.hide();
+          
           $scope.spost = {};
           $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_SUBMITTED'));
           //$scope.closeMenuPopover();
@@ -2494,7 +2493,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     //console.log(author,permlink);
 
     window.steem.api.getContentReplies(author, permlink, function(err, dd) {
-      //console.log(err, dd);
+      console.log(err, dd);
       if (dd) {
         $scope.comments = dd;
         $rootScope.$storage.comments = dd;

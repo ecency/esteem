@@ -1331,9 +1331,18 @@ div.text-left {
   text-align: left;
 }
 
+.item-body {
+
+}
 
 .full-image {
-
+  /*height: 100%;
+  width: 100;
+  max-height: 200px;
+  max-width: 200px;*/
+  /*display: block;
+  max-width: 100%;*/
+  
 }
 
 .masonry-layout {
