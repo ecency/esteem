@@ -1091,7 +1091,7 @@ module.exports = function (app) {
                               }  
                             }
                             setTimeout(function() {
-                              $scope.$emit('postAccounts');
+                              $scope.$broadcast('postAccounts');
                             }, 10);
 
                             if (!$scope.$$phase){

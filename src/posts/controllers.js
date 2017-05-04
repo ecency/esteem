@@ -2493,7 +2493,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     //console.log(author,permlink);
 
     window.steem.api.getContentReplies(author, permlink, function(err, dd) {
-      console.log(err, dd);
+      //console.log(err, dd);
       if (dd) {
         $scope.comments = dd;
         $rootScope.$storage.comments = dd;
@@ -2511,15 +2511,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             $scope.$apply();
           }
         }
-        setTimeout(function() {
-          var p2 = document.querySelector('.my-handle');
-          $scope.quotePosition = $ionicPosition.position(angular.element(p2));
-          $ionicScrollDelegate.$getByHandle('mainScroll').scrollTo(0,$scope.quotePosition.top, true);  
-          $scope.$broadcast('postAccounts');
-          if (!$scope.$$phase){
-            $scope.$apply();
-          }
-        }, 200);
+        $scope.$emit('postAccounts');
       }
     });
   }
@@ -2544,6 +2536,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             }
           }
         }
+        var p2 = document.querySelector('.my-handle');
+        $scope.quotePosition = $ionicPosition.position(angular.element(p2));
+        $ionicScrollDelegate.$getByHandle('mainScroll').scrollTo(0,$scope.quotePosition.top, true);  
       }
       if (!$scope.$$phase){
         $scope.$apply();
