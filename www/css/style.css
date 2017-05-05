@@ -265,11 +265,11 @@ textarea.markdown-input {
 }
 .platform-ios .profilebtn_follow {
   position: absolute!important;
-  padding-top: 15px!important;
+  top: 5px!important;
+  margin-top: 15px!important;
   right: 0!important;
   margin-right: 5px!important;
   margin-bottom: 5px!important;
-  top: 5px!important;
 }
 .profilebtn_edit {
   position: absolute!important;
