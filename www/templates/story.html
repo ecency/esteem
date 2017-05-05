@@ -5,7 +5,7 @@
     <button class="button button-positive button-primary" ng-disabled="disableBtn" ng-click="submitStory()">{{'POST'|translate}}</button>
   </ion-header-bar>
   <ion-content class="padding posting" overflow-scroll="false">
-    <input type="text" name="title" placeholder="{{'TITLE'|translate}}" ng-model="spost.title" style="width:100%;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <input type="text" name="title" placeholder="{{'TITLE'|translate}}" ng-model="spost.title" style="width:100%;" autocomplete="off">
 
     <textarea ng-model='spost.body' autofocus rows="15" placeholder="{{'POST_CONTENT'|translate}}" class="width100" ng-focus='cfocus()'></textarea>
       <input type="text" name="categories" placeholder="{{'TAGS'|translate}}" ng-model="spost.tags" ng-change="tagsChange()" style="width:100%;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">

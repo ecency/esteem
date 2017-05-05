@@ -6,7 +6,7 @@
   </ion-header-bar>
   <ion-content class="padding posting" overflow-scroll="false">
     <div ng-if="post.body&&post.parent_author!=''" class="padding bodytext selectable" ng-bind-html="post.body | parseUrl"></div>
-    <textarea autofocus ng-model='data.comment' rows="10" placeholder="{{'COMMENT_CONTENT'|translate}}" class="width100" ng-focus='cfocus()' autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+    <textarea autofocus ng-model='data.comment' rows="10" placeholder="{{'COMMENT_CONTENT'|translate}}" class="width100" ng-focus='cfocus()' autocomplete="off""></textarea>
       <p ng-if="data.comment">{{'PREVIEW'|translate}}</p>
       <div ng-if="data.comment" class="padding bodytext" ng-bind-html="data.comment | parseUrl "></div>
   </ion-content>
