@@ -1091,11 +1091,14 @@ module.exports = function (app) {
                               }  
                             }
                             setTimeout(function() {
-                              $scope.$broadcast('postAccounts');
+                              $scope.$emit('postAccounts');
                             }, 10);
 
                             if (!$scope.$$phase){
                               $scope.$apply();
+                            }
+                            if (!$rootScope.$$phase){
+                              $rootScope.$apply();
                             }
                             comment.showChildren = true;
                             //console.log(comment);

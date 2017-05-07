@@ -2560,8 +2560,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $rootScope.sitem = result;
         
         setTimeout(function() {
-          $scope.$broadcast('postAccounts');
-        }, 1000);
+          $scope.$emit('postAccounts');
+        }, 10);
       }
     });
   };
@@ -2610,13 +2610,18 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           if (!$scope.$$phase){
             $scope.$apply();
           }
+          if (!$rootScope.$$phase){
+            $rootScope.$apply();
+          }
         }
         
         var p2 = document.querySelector('.my-handle');
         $scope.quotePosition = $ionicPosition.position(angular.element(p2));
         $ionicScrollDelegate.$getByHandle('mainScroll').scrollTo(0,$scope.quotePosition.top, true); 
 
-        $scope.$broadcast('postAccounts');
+        setTimeout(function() {
+          $scope.$emit('postAccounts');  
+        }, 10);
       }
     });
   }
