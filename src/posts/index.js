@@ -680,7 +680,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.infomodal = modal;
     });
     $rootScope.openInfo = function(xx) {
-      console.log(xx);
+      //console.log(xx);
       if (xx.active_votes.length==0) {
         window.steem.api.getActiveVotes(xx.author, xx.permlink, function(err, dd) {
           //console.log(err, dd);
