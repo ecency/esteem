@@ -722,7 +722,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           }
           result.json_metadata = angular.fromJson(result.json_metadata);
           var item = result;
-          $rootScope.$storage.sitem = item;
+          $rootScope.sitem = item;
           setTimeout(function() {
             //$state.go('app.post');
             $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});

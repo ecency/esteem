@@ -1000,7 +1000,7 @@ module.exports = function (app) {
                 comment: '='
             },
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
-                        <div class="ion-comment--author"><img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.$storage.paccounts[comment.author].user_image||$root.$storage.paccounts[comment.author].profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{comment.author}}">{{comment.author}}</a></b>&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
+                        <div class="ion-comment--author"><img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.paccounts[comment.author].user_image||$root.paccounts[comment.author].profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{comment.author}}">{{comment.author}}</a></b>&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
                         <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="comment.max_accepted_payout.split(\' \')[0] === \'0.000\'"><del>{{comment | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="comment.max_accepted_payout.split(\' \')[0] !== \'0.000\'">{{comment | sumPostTotal:$root.$storage.currencyRate | number}}</span> </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
                         <div class="ion-comment--text bodytext selectable" ng-class="{\'mask\': comment.net_rshares<0}" ng-bind-html="comment.body | parseUrl "></div>\
                         <div class="ion-comment--replies"><ion-spinner ng-if="comment.invoting"></ion-spinner><span on-tap="upvotePost(comment)" on-hold="openSliderr($event, comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UPVOTE"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.$storage.user.username && compateDate(comment)" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.$storage.user.username && comment.abs_rshares == 0" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{\'REMOVE\'|translate}}</span></div>\
@@ -1086,8 +1086,8 @@ module.exports = function (app) {
 
                             for (var i = 0, len = dd.length; i < len; i++) {
                               var v = dd[i];
-                              if ($rootScope.$storage.postAccounts.indexOf(v.author) == -1) {
-                                $rootScope.$storage.postAccounts.push(v.author);
+                              if ($rootScope.postAccounts.indexOf(v.author) == -1) {
+                                $rootScope.postAccounts.push(v.author);
                               }  
                             }
                             setTimeout(function() {
@@ -1106,9 +1106,7 @@ module.exports = function (app) {
                     //$rootScope.$broadcast('hide:loading');
                   };
                   $scope.$on('postAccounts', function(){
-                    //$rootScope.$storage.paccounts = {};
-                    //console.log($rootScope.$storage.paccounts)
-                    window.steem.api.getAccounts($rootScope.$storage.postAccounts, function(err, res){
+                    window.steem.api.getAccounts($rootScope.postAccounts, function(err, res){
                         //console.log(err, res);
                         for (var i = 0, len = res.length; i < len; i++) {
                         var v = res[i];
@@ -1120,7 +1118,7 @@ module.exports = function (app) {
                               v.json_metadata = angular.fromJson(v.json_metadata);
                             }
                             var key = v.name;
-                            $rootScope.$storage.paccounts[key] = v.json_metadata;
+                            $rootScope.paccounts[key] = v.json_metadata;
                           }
                         }
                       }
