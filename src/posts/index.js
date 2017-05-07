@@ -237,14 +237,14 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
 
 });
 
-app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state, $log, $ionicScrollDelegate, $filter, $translate) {
+app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state, $log, $ionicScrollDelegate, $filter, $translate, $ionicHistory) {
   $rootScope.$storage = $localStorage;
   $rootScope.log = function(message) {
     $log.info(message);
   };
   window.steem.config.set('websocket',localStorage.socketUrl); 
 
-  $ionicPlatform.registerBackButtonAction(function (event) {
+  /*$ionicPlatform.registerBackButtonAction(function (event) {
   if ( ($state.$current.name=="app.posts") ){
           // H/W BACK button is disabled for these states (these views)
           // Do not go to the previous state (or view) for these states. 
@@ -254,6 +254,31 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           navigator.app.backHistory();
       }
   }, 100);
+  */
+  $ionicPlatform.registerBackButtonAction(function(e){
+    if ($rootScope.backButtonPressedOnceToExit) {
+      ionic.Platform.exitApp();
+    } else if ($ionicHistory.backView()) {
+      $ionicHistory.goBack();
+    }
+    else {
+      $rootScope.backButtonPressedOnceToExit = true;
+
+      $cordovaToast.showShortBottom("Press back button again to exit").then(function(success) {
+        // success
+        console.log('exit');
+      }, function (error) {
+        // error
+        console.log('err exit');
+      });
+      setTimeout(function(){
+        $rootScope.backButtonPressedOnceToExit = false;
+      }, 2000);
+    }
+    e.preventDefault();
+    return false;
+  }, 101);
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)

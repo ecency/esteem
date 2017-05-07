@@ -99,6 +99,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     window.open($scope.chainurl, '_system', 'location=yes');
     return false;  
   }
+  
   $scope.openLogin = function() {
     if ($rootScope.$storage.language == 'ru-RU') {
       $scope.loginData.chain = "golos";
@@ -621,7 +622,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
         if (!$scope.$$phase) {
           $scope.$apply();
         }
-      }, 500);   
+      }, 50);   
     }
   }
   $scope.changeUsername = function(typed) {
@@ -2679,7 +2680,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $rootScope.$on('getContent', function() {
     setTimeout(function() {
       $scope.getContent($rootScope.sitem.author, $rootScope.sitem.permlink);  
-    }, 100);
+    }, 10);
   });
   $scope.downvotePost = function(post) {
     var confirmPopup = $ionicPopup.confirm({
@@ -2819,7 +2820,7 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
             $scope.$apply();
           }
         } else {
-          setTimeout($scope.rfetching, 5);
+          setTimeout($scope.rfetching, 20);
         }
       });
     };
@@ -2842,7 +2843,7 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
             $scope.$apply();
           }
         } else {
-          setTimeout($scope.dfetching, 5);
+          setTimeout($scope.dfetching, 20);
         }
       });
     };
@@ -3561,7 +3562,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             $scope.$apply();
           }
         } else {
-          setTimeout($scope.dfetching, 50);
+          setTimeout($scope.dfetching, 20);
         }
       });
     };
@@ -3580,7 +3581,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             $scope.$apply();
           }
         } else {
-          setTimeout($scope.rfetching, 50);
+          setTimeout($scope.rfetching, 20);
         }
       });
     };
@@ -4165,7 +4166,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       if (!$rootScope.$$phase) {
         $rootScope.$apply();
       }
-    }, 1);
+    }, 5);
   }
   $scope.drag = function(v) {
     $rootScope.$storage.voteWeight = v*100;
