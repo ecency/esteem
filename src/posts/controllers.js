@@ -378,7 +378,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         $rootScope.$storage.appversion = version;
       });
     } else {
-      $rootScope.$storage.appversion = '1.4.3';
+      $rootScope.$storage.appversion = '1.4.4';
     }
   });
 
@@ -1069,7 +1069,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   });
 
   $scope.closePostModal = function() {
-    $rootScope.$broadcast('closePostModal');
+    $rootScope.$emit('closePostModal');
     $scope.modalp.hide();
   };
 
@@ -1214,7 +1214,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $scope.showgallery = false;
   }
   $scope.manageGallery = function(){
-    $rootScope.$broadcast('closePostModal');
+    $rootScope.$emit('closePostModal');
     $state.go('app.images');
   }
   function slug(text) {
@@ -1361,7 +1361,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err)
         } else {
           $scope.closePostModal();
-          $rootScope.$broadcast('closePostModal');
+          $rootScope.$emit('closePostModal');
           $rootScope.$broadcast('close:popover');
           //$scope.menupopover.hide();
           $scope.spost = {};
@@ -1384,7 +1384,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       console.log(res.data);
       //$scope.drafts = res.data;
     });
-    $rootScope.$broadcast('closePostModal');
+    $rootScope.$emit('closePostModal');
     $rootScope.$broadcast('close:popover');
     $scope.modalp.hide();
     $rootScope.showMessage($filter('translate')('SAVED'), $filter('translate')('POST_LATER'));
@@ -1905,7 +1905,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       input.focus();
     }
     input.scrollTop = scrollPos;
-    console.log(angular.element(input).val());
+    //console.log(angular.element(input).val());
     angular.element(input).trigger('input');
   }
 
@@ -2175,7 +2175,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   };
 
   $rootScope.$on('closePostModal', function(){
-    $rootScope.$broadcast('closePostModal');
     $scope.pmodal.hide();
   });
 
@@ -2344,7 +2343,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err)
         } else {
           //$scope.closePostModal();
-          $rootScope.$broadcast('closePostModal');
+          $rootScope.$emit('closePostModal');
           $rootScope.$broadcast('close:popover');
           //$scope.menupopover.hide();
           
@@ -2580,6 +2579,11 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             $scope.$apply();
           }
         }
+        
+        var p2 = document.querySelector('.my-handle');
+        $scope.quotePosition = $ionicPosition.position(angular.element(p2));
+        $ionicScrollDelegate.$getByHandle('mainScroll').scrollTo(0,$scope.quotePosition.top, true); 
+
         $scope.$emit('postAccounts');
       }
     });
@@ -2605,9 +2609,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             }
           }
         }
-        var p2 = document.querySelector('.my-handle');
-        $scope.quotePosition = $ionicPosition.position(angular.element(p2));
-        $ionicScrollDelegate.$getByHandle('mainScroll').scrollTo(0,$scope.quotePosition.top, true);  
       }
       if (!$scope.$$phase){
         $scope.$apply();
@@ -2631,7 +2632,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       if ($stateParams.author.indexOf('@')>-1){
         $stateParams.author = $stateParams.author.substr(1);
       }
-      console.log('someFunction');
       $scope.getContent($stateParams.author, $stateParams.permlink);
     }
   });
@@ -4186,7 +4186,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       resteem: $scope.data.resteem,
       device: ionic.Platform.platform(),
       timestamp: $filter('date')(new Date(), 'medium'),
-      appversion: '1.3.9'
+      appversion: '1.4.4'
     }
     APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.$storage.user.username, $rootScope.$storage.subscription).then(function(res){
       console.log(angular.toJson(res));
