@@ -263,7 +263,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
+      //StatusBar.styleDefault();
+      StatusBar.styleLightContent();
     }
     if (!$rootScope.$storage.users) {
       $rootScope.$storage.users = [];
