@@ -22,7 +22,7 @@
           </p>
         </center>
       </div>
-      <div ng-if="$root.$storage.user" class="side-cover" ng-style="$root.$storage.user.json_metadata.profile.cover_image ? mcss : null">
+      <div ng-if="$root.$storage.user" ng-style="mcss">
       <br>
         <center>
           <a menu-close href="#/app/profile/{{$root.$storage.user.username}}" class="item-myavatar" ng-if="$root.$storage.user">

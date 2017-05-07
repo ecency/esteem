@@ -494,11 +494,9 @@ select-input {
   font: 14px Sans-Serif;
   line-height: 12pt;
 }
-.side-cover, .side-cover .h4 {
-  background: #00396B;
-  color: white;
+.h4 {
+  color: inherit;
 }
-
 .about {
   line-height: 12pt;
 }
