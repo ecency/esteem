@@ -1484,7 +1484,7 @@ module.exports = function (app) {
             fileEntry.file(function(fileObj) {
               fileSize = fileObj.size;
               // Display a loading indicator reporting the start of the upload
-              $ionicLoading.show({template : $filter('translate')('UPLOADING_PICTURE') + 0 + '%'});
+              $ionicLoading.show({template : $filter('translate')('UPLOADING_PICTURE') +' '+ 0 + '%'});
               // Trigger the upload
               uploadFile();
             });
@@ -1512,7 +1512,7 @@ module.exports = function (app) {
                     // The upload plugin gives you information about how much data has been transferred
                     // on some interval.  Use this with the original file size to show a progress indicator.
                     percentage = Math.floor((progress.loaded / fileSize) * 100);
-                    $ionicLoading.show({template : $filter('translate')('UPLOADING_PICTURE') + percentage + '%'});
+                    $ionicLoading.show({template : $filter('translate')('UPLOADING_PICTURE') +' '+ percentage + '%'});
                   });
             });
           }
