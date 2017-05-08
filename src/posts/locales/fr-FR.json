@@ -265,5 +265,7 @@
   "WEBSITE":"Site internet",
   "DISPLAY_NAME":"Pseudo",
   "UNCLAIMED_REWARDS":"Récompenses non réclamées",
-  "CLAIM_REWARDS":"Récompenses réclamées"
+  "CLAIM_REWARDS":"Récompenses réclamées",
+  "DOWNLOAD_COMPLETED":"",
+  "DOWNLOADING_PICTURE":""
 }
