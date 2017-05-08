@@ -2481,7 +2481,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             parent_author: $scope.post.author,
             parent_permlink: $scope.post.permlink,
             author: $rootScope.user.username,
-            permlink: "re-"+$scope.post.author+"-"+timeformat,
+            permlink: "re-"+$scope.post.author.replace(/\./g, "")+"-"+timeformat,
             title: "",
             body: $scope.data.comment,
             json_metadata: angular.toJson(json)
@@ -2490,7 +2490,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             allow_curation_rewards: true,
             allow_votes: true,
             author: $rootScope.user.username,
-            permlink: "re-"+$scope.post.author+"-"+timeformat,  
+            permlink: "re-"+$scope.post.author.replace(/\./g, "")+"-"+timeformat,  
             max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
             percent_steem_dollars: 10000,
             extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":100 }] }]]
@@ -2553,16 +2553,20 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
   $scope.isreplying = function(cho, xx, edit) {
     $scope.replying = xx;
+    //console.log(cho, $scope.post);
     angular.merge($scope.post, cho);
     if (edit) {
-      $scope.post.author = $scope.post.parent_author;
-      $scope.post.body = "";
+      //$scope.post.author = $scope.post.parent_author;
       $scope.editreply = true;
-      $scope.data.comment = cho.body;    
+      $scope.data.comment = cho.body;
+      $scope.post.body = "";
     } else {
       $scope.post.author = $scope.post.author;
       $scope.data.comment = "";    
       $scope.editreply = false;
+    }
+    if (!$scope.$$phase) {
+      $scope.$apply();
     }
     if (xx) {
       $scope.openModal();
@@ -2599,7 +2603,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           $rootScope.postAccounts.push(result.author);
         }
         result.json_metadata = angular.fromJson(result.json_metadata);
-        //$scope.post.body = result.body;
+        $scope.post = result;
         //console.log(result);
         $rootScope.sitem = result;
         
