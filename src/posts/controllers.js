@@ -1772,7 +1772,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
 })
 
-app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPopover, $filter, $state, APIs, $ionicHistory, $ionicPosition) {
+app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPopover, $filter, $state, APIs, $ionicHistory, $ionicPosition, $cordovaFileTransfer, $ionicLoading) {
   $scope.post = $rootScope.sitem;
   $scope.data = {};
   $scope.spost = {};
@@ -2002,6 +2002,37 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       $ionicSlideBoxDelegate.enableSlide(false);
     }
   };
+
+  $scope.downloadImage = function(img) {
+    //window.open(img, '_system');
+    $ionicPlatform.ready(function() {
+      // File name only
+      var filename = img.split("/").pop();
+      var path;
+      // Save location
+      if (ionic.Platform.isAndroid()) {
+        path = cordova.file.externalRootDirectory + 'Download/';
+        var targetPath = path + filename;
+        
+        $cordovaFileTransfer.download(img, targetPath, {}, true).then(function (result) {
+            console.log('Success');
+            refreshMedia.refresh(targetPath);
+            $ionicLoading.show({template : $filter('translate')('DOWNLOAD_COMPLETED'), duration: 1000});
+        }, function (error) {
+            console.log('Error');
+        }, function (progress) {
+            // PROGRESS HANDLING GOES HERE
+          percentage = Math.floor((progress.loaded / progress.total) * 100);
+          $ionicLoading.show({template : $filter('translate')('DOWNLOADING_PICTURE') +' '+ percentage + '%'});
+        });
+
+      } else {
+        window.plugins.socialsharing.share(null, null, img, null);
+      }
+      
+
+    });
+  }
 
   $scope.showImg = function() {
    var hideSheet = $ionicActionSheet.show({

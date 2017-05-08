@@ -2,6 +2,7 @@
   <ion-slide-box on-slide-changed="slideChanged(index)" active-slide="activeSlide">
     <ion-slide ng-repeat="image in images">
       <ion-scroll direction="xy" scrollbar-x="false" overflow-scroll="false" scrollbar-y="false" zooming="true" min-zoom="{{zoomMin}}" style="width: 100%; height: 100%" delegate-handle="scrollHandle{{$index}}" on-scroll="updateSlideStatus(activeSlide)" on-release="updateSlideStatus(activeSlide)"><div class="gallery-image" style="background-image: url( {{image}} )!important;"></div></ion-scroll>
+      <button class="button button-clear download" on-tap="downloadImage(image)">&nbsp;<i class="icon ion-ios-download-outline"></i>&nbsp;</button>
   </ion-slide>
 </ion-slide-box>
 </div>

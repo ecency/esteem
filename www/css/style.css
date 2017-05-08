@@ -1260,6 +1260,16 @@ select-input {
     background-repeat: no-repeat;
     background-position: center, center;
 }
+.gallery-transparent .download {
+  background: rgba(0,0,0,1);
+  color: white;
+  position: absolute!important;
+  top: 5px!important;
+  margin-top: 15px!important;
+  right: 0!important;
+  margin-right: 5px!important;
+  margin-bottom: 5px!important;
+}
 
 .platform-ios.sr-on .pane,
 .platform-ios.sr-on .scroll-content{

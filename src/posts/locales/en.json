@@ -265,5 +265,7 @@
     "WEBSITE": "Website",
     "DISPLAY_NAME": "Display name",
     "UNCLAIMED_REWARDS": "Unclaimed rewards",
-    "CLAIM_REWARDS": "Claim rewards"
+    "CLAIM_REWARDS": "Claim rewards",
+    "DOWNLOAD_COMPLETED": "Download completed",
+    "DOWNLOADING_PICTURE": "Downloading picture"
 }
