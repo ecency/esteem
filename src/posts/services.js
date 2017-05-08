@@ -250,7 +250,7 @@ module.exports = function (app) {
             }
             //$rootScope.log('initialIndex '+initialIndex);
             if ($rootScope.$storage.filter) {
-              if ($rootScope..user) {
+              if ($rootScope.user) {
                 if ($rootScope.$storage.filter === 'feed') {
                   //$scope.events.trigger("slideChange", {"index" : 0});
                   initialIndex = 0;

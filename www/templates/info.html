@@ -6,7 +6,7 @@
   <ion-content class="padding" delegate-handle="modalContent">
     <div class="row" ng-repeat="v in $root.voters.active_votes | orderBy:'-time'">
       <div class="col col-50">
-      {{v.voter}}<div class="reputation">{{v.reputation|reputation}}</div>
+      <a ng-click="$root.openAccount(v.voter)">{{v.voter}}<div class="reputation">{{v.reputation|reputation}}</div></a>
       </div>
       <div class="col">
       {{v.percent/100}}%

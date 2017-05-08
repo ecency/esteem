@@ -728,6 +728,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       //$rootScope.infomodal.remove();
     };
 
+    $rootScope.openAccount = function(account) {
+      $rootScope.infomodal.hide();
+      $state.go("app.profile", {username: account});
+    };
+
     String.prototype.replaceAt=function(index, character) {
         return this.substr(0, index) + character + this.substr(index+character.length);
     }
