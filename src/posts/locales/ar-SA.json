@@ -265,5 +265,7 @@
   "WEBSITE":"الموقع",
   "DISPLAY_NAME":"إسم المستخدم",
   "UNCLAIMED_REWARDS":"مكافآت غير مستلمة",
-  "CLAIM_REWARDS":"المطالبة بالمكافآت"
+  "CLAIM_REWARDS":"المطالبة بالمكافآت",
+  "DOWNLOAD_COMPLETED":"",
+  "DOWNLOADING_PICTURE":""
 }
