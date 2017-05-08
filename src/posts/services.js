@@ -522,11 +522,14 @@ module.exports = function (app) {
             nowTime = (new Date()).getTime(),
             date = (new Date(input)).getTime(),
             //refreshMillis= 6e4, //A minute
-            // get difference between UTC and local time in milliseconds
-            timeZoneOffset = (new Date().getTimezoneOffset()) * 60000,
 
+            // get difference between UTC and local time in milliseconds
+            
+            //timeZoneOffset = (new Date().getTimezoneOffset()) * 60000,
+            
             // convert local to UTC
-            nowTime = nowTime + timeZoneOffset,
+            
+            //nowTime = nowTime + timeZoneOffset,
 
             allowFuture = p_allowFuture || false,
             strings= {
@@ -555,9 +558,10 @@ module.exports = function (app) {
             years = days / 365,
             separator = strings.wordSeparator === undefined ?  " " : strings.wordSeparator,
 
-
             prefix = strings.prefixAgo,
             suffix = strings.suffixAgo;
+            
+            //console.log(timeZoneOffset);
 
         if (allowFuture) {
             if (dateDifference < 0) {

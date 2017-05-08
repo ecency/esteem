@@ -711,6 +711,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     }).then(function(modal) {
       $rootScope.infomodal = modal;
     });
+
     $rootScope.openInfo = function(xx) {
       //console.log(xx);
       if (xx.active_votes.length==0) {
@@ -720,7 +721,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         });
       }
       $rootScope.voters = xx;
-      $rootScope.infomodal.show();
+      setTimeout(function() {
+        $rootScope.infomodal.show();  
+      }, 5);
     };
 
     $rootScope.closeInfo = function() {
