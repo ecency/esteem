@@ -265,5 +265,7 @@
   "WEBSITE":"Weboldal",
   "DISPLAY_NAME":"Megjelenítendő név",
   "UNCLAIMED_REWARDS":"Nem várt jutalom",
-  "CLAIM_REWARDS":"Azt állítják, jutalmak"
+  "CLAIM_REWARDS":"Azt állítják, jutalmak",
+  "DOWNLOAD_COMPLETED":"",
+  "DOWNLOADING_PICTURE":""
 }
