@@ -265,5 +265,7 @@
   "WEBSITE":"وب سایت",
   "DISPLAY_NAME":"نامی که نمایش داده می شود",
   "UNCLAIMED_REWARDS":"پاداش های دریافت نشده",
-  "CLAIM_REWARDS":"اضافه نمودن پاداش به حساب"
+  "CLAIM_REWARDS":"اضافه نمودن پاداش به حساب",
+  "DOWNLOAD_COMPLETED":"",
+  "DOWNLOADING_PICTURE":""
 }
