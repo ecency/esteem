@@ -265,5 +265,7 @@
   "WEBSITE":"Witryna internetowa",
   "DISPLAY_NAME":"Nazwa wyświetlana",
   "UNCLAIMED_REWARDS":"Nieodebrane wynagrodzenia",
-  "CLAIM_REWARDS":"Odbierz wynagrodzenia"
+  "CLAIM_REWARDS":"Odbierz wynagrodzenia",
+  "DOWNLOAD_COMPLETED":"",
+  "DOWNLOADING_PICTURE":""
 }
