@@ -265,5 +265,7 @@
   "WEBSITE":"Laman sesawang",
   "DISPLAY_NAME":"Nama dipaparkan",
   "UNCLAIMED_REWARDS":"Bayaran belum dituntut",
-  "CLAIM_REWARDS":"Tuntutkan bayaran"
+  "CLAIM_REWARDS":"Tuntutkan bayaran",
+  "DOWNLOAD_COMPLETED":"",
+  "DOWNLOADING_PICTURE":""
 }
