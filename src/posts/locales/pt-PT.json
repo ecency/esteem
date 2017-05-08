@@ -265,5 +265,7 @@
   "WEBSITE":"Website",
   "DISPLAY_NAME":"Nome a exibir",
   "UNCLAIMED_REWARDS":"Recompensas não reclamadas",
-  "CLAIM_REWARDS":"Reivindicar recompensas"
+  "CLAIM_REWARDS":"Reivindicar recompensas",
+  "DOWNLOAD_COMPLETED":"",
+  "DOWNLOADING_PICTURE":""
 }
