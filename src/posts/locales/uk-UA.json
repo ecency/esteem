@@ -265,5 +265,7 @@
   "WEBSITE":"Веб-сторінка",
   "DISPLAY_NAME":"Відображуване ім'я",
   "UNCLAIMED_REWARDS":"Незатребувана винагорода",
-  "CLAIM_REWARDS":"Затребувати винагороду"
+  "CLAIM_REWARDS":"Затребувати винагороду",
+  "DOWNLOAD_COMPLETED":"",
+  "DOWNLOADING_PICTURE":""
 }
