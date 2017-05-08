@@ -265,5 +265,7 @@
   "WEBSITE":"Website",
   "DISPLAY_NAME":"Nama tampilan",
   "UNCLAIMED_REWARDS":"Reward tidak diklaim",
-  "CLAIM_REWARDS":"Mengklaim reward"
+  "CLAIM_REWARDS":"Mengklaim reward",
+  "DOWNLOAD_COMPLETED":"",
+  "DOWNLOADING_PICTURE":""
 }
