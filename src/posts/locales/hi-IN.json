@@ -265,5 +265,7 @@
   "WEBSITE":"वेबसाइट",
   "DISPLAY_NAME":"प्रदर्शन नाम",
   "UNCLAIMED_REWARDS":"",
-  "CLAIM_REWARDS":""
+  "CLAIM_REWARDS":"",
+  "DOWNLOAD_COMPLETED":"",
+  "DOWNLOADING_PICTURE":""
 }
