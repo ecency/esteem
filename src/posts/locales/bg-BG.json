@@ -265,5 +265,7 @@
   "WEBSITE":"Страница",
   "DISPLAY_NAME":"Име",
   "UNCLAIMED_REWARDS":"Непостъпили награди",
-  "CLAIM_REWARDS":"Събиране на награди"
+  "CLAIM_REWARDS":"Събиране на награди",
+  "DOWNLOAD_COMPLETED":"",
+  "DOWNLOADING_PICTURE":""
 }
