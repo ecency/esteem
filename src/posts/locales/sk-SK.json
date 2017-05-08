@@ -265,5 +265,7 @@
   "WEBSITE":"Webstránka",
   "DISPLAY_NAME":"Zobrazované meno",
   "UNCLAIMED_REWARDS":"",
-  "CLAIM_REWARDS":""
+  "CLAIM_REWARDS":"",
+  "DOWNLOAD_COMPLETED":"",
+  "DOWNLOADING_PICTURE":""
 }
