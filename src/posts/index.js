@@ -279,6 +279,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     return false;
   }, 101);
 
+
+  $rootScope.user = $rootScope.$storage.user || undefined;
+  
+  console.log('Account set: '+$rootScope.user.username);
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -314,6 +319,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       window.steem.config.set('address_prefix','STM');  
     }
     
+
 
     //window.ejs.ChainConfig.setChainId(localStorage[$rootScope.$storage.chain+"Id"]);
 
@@ -736,7 +742,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         console.log(err, result);
         var _len = result.active_votes.length;
           for (var j = _len - 1; j >= 0; j--) {
-            if (result.active_votes[j].voter === $rootScope.$storage.user.username) {
+            if (result.active_votes[j].voter === $rootScope.user.username) {
               if (result.active_votes[j].percent > 0) {
                 result.upvoted = true;
               } else if (result.active_votes[j].percent < 0) {
@@ -772,14 +778,14 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         if(res) {
           $rootScope.log('You are sure');
           $rootScope.$broadcast('show:loading');
-          if ($rootScope.$storage.user) {
-            var json = ["reblog",{account:$rootScope.$storage.user.username, author:author, permlink:permlink}];
+          if ($rootScope.user) {
+            var json = ["reblog",{account:$rootScope.user.username, author:author, permlink:permlink}];
 
-            const wif = $rootScope.$storage.user.password
-                  ? window.steem.auth.toWif($rootScope.$storage.user.username, $rootScope.$storage.user.password, 'posting')
-                  : $rootScope.$storage.user.privatePostingKey;
+            const wif = $rootScope.user.password
+                  ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
+                  : $rootScope.user.privatePostingKey;
 
-            window.steem.broadcast.customJson(wif, [], [$rootScope.$storage.user.username], "follow", angular.toJson(json), function(err, result) {
+            window.steem.broadcast.customJson(wif, [], [$rootScope.user.username], "follow", angular.toJson(json), function(err, result) {
               console.log(err, result);
               if (err) {
                 $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REBLOG_TEXT')+" "+err)
@@ -817,12 +823,12 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       if (!$rootScope.$$phase) {
         $rootScope.$apply();
       }
-      if ($rootScope.$storage.user) {
-        const wif = $rootScope.$storage.user.password
-                  ? window.steem.auth.toWif($rootScope.$storage.user.username, $rootScope.$storage.user.password, 'posting')
-                  : $rootScope.$storage.user.privatePostingKey;
+      if ($rootScope.user) {
+        const wif = $rootScope.user.password
+                  ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
+                  : $rootScope.user.privatePostingKey;
 
-        window.steem.broadcast.vote(wif, $rootScope.$storage.user.username, post.author, post.permlink, $rootScope.$storage.voteWeight*tt || 10000*tt, function(err, result) {
+        window.steem.broadcast.vote(wif, $rootScope.user.username, post.author, post.permlink, $rootScope.$storage.voteWeight*tt || 10000*tt, function(err, result) {
           //console.log(err, result);
           post.invoting = false;
           if (err) {
@@ -855,7 +861,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     };
 
     $rootScope.isWitnessVoted = function() {
-      if ($rootScope.$storage.user && $rootScope.$storage.user.witness_votes.indexOf("good-karma")>-1) {
+      if ($rootScope.user && $rootScope.user.witness_votes.indexOf("good-karma")>-1) {
         return true;
       } else {
         return false;
@@ -870,14 +876,14 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           if(res) {
             $rootScope.log('You are sure');
             $rootScope.$broadcast('show:loading');
-            if ($rootScope.$storage.user) {
-              if ($rootScope.$storage.user.password || $rootScope.$storage.user.privateActiveKey) {
+            if ($rootScope.user) {
+              if ($rootScope.user.password || $rootScope.user.privateActiveKey) {
                 
-                const wif = $rootScope.$storage.user.password
-                  ? window.steem.auth.toWif($rootScope.$storage.user.username, $rootScope.$storage.user.password, 'active')
-                  : $rootScope.$storage.user.privateActiveKey;
+                const wif = $rootScope.user.password
+                  ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'active')
+                  : $rootScope.user.privateActiveKey;
 
-                window.steem.broadcast.accountWitnessVote(wif, $rootScope.$storage.user.username, "good-karma", true, function(err, result) {
+                window.steem.broadcast.accountWitnessVote(wif, $rootScope.user.username, "good-karma", true, function(err, result) {
                   console.log(err, result);
                   if (err === 1) {
                     $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
@@ -904,18 +910,18 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     $rootScope.following = function(xx, mtype) {
       $rootScope.$broadcast('show:loading');
       $rootScope.log(xx);
-      if ($rootScope.$storage.user) {
+      if ($rootScope.user) {
           var json;
           if (mtype === "follow") {
-            json = ['follow',{follower:$rootScope.$storage.user.username, following:xx, what: ["blog"]}];
+            json = ['follow',{follower:$rootScope.user.username, following:xx, what: ["blog"]}];
           } else {
-            json = ['follow',{follower:$rootScope.$storage.user.username, following:xx, what: []}];
+            json = ['follow',{follower:$rootScope.user.username, following:xx, what: []}];
           }
-          const wif = $rootScope.$storage.user.password
-                ? window.steem.auth.toWif($rootScope.$storage.user.username, $rootScope.$storage.user.password, 'posting')
-                : $rootScope.$storage.user.privatePostingKey;
+          const wif = $rootScope.user.password
+                ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
+                : $rootScope.user.privatePostingKey;
 
-          window.steem.broadcast.customJson(wif, [], [$rootScope.$storage.user.username], "follow", angular.toJson(json), function(err, result) {
+          window.steem.broadcast.customJson(wif, [], [$rootScope.user.username], "follow", angular.toJson(json), function(err, result) {
             //console.log(err, result);
             if (err) {
               $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err)
@@ -963,6 +969,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       angular.forEach($rootScope.$storage.users, function(v,k){
         if (v.chain == $rootScope.$storage.chain){
           $rootScope.$storage.user = v;
+          $rootScope.user = $rootScope.$storage.user;
         }
       });
 
@@ -1064,8 +1071,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           // save this server-side and use it to push notifications to this device
           $rootScope.log("device "+token);
           $rootScope.$storage.deviceid = token;
-          if ($rootScope.$storage.user) {
-            APIs.saveSubscription(token, $rootScope.$storage.user.username, { device: ionic.Platform.platform() }).then(function(res){
+          if ($rootScope.user) {
+            APIs.saveSubscription(token, $rootScope.user.username, { device: ionic.Platform.platform() }).then(function(res){
               $rootScope.log(angular.toJson(res));
             });
           } else {

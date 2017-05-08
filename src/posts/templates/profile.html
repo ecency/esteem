@@ -1,52 +1,52 @@
 <ion-view view-title="" hide-nav-bar="true" view-cache="false"><!--ng-class="{'mpb':$root.$storage.user.json_metadata.profile.cover_image}"-->
   <ion-content class="has-footer profilepage" overflow-scroll="true" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
-    <div class="bar bar-subheader mysubheader bar-positive" ng-style="$root.$storage.user.username != user.username?css:mcss">
+    <div class="bar bar-subheader mysubheader bar-positive" ng-style="$root.user.username != user.username?css:mcss">
       <button class="button button-icon button-clear ion-ios-arrow-back profilebtn" on-tap="goBack()"></button>
-      <button class="button button-outline button-light profilebtn_follow" on-tap="followUser(user.username)" ng-if="$root.$storage.user && $root.$storage.user.username != user.username && !isAmFollowing(user.username)"><!--<i class="fa fa-user-plus fa-lg"></i>-->{{'FOLLOW'|translate}}</button>
-      <button class="button button-clear profilebtn_edit button-icon ion-ios-compose-outline" on-tap="showEdits()" ng-if="$root.$storage.user && $root.$storage.user.username === user.username"></button>
-      <button class="button button-clear profilebtn_follow button-icon ion-camera" on-tap="showCover()" ng-if="$root.$storage.user && $root.$storage.user.username === user.username"></button>
-      <button class="button button-outline button-light profilebtn_follow" on-tap="unfollowUser(user.username)" ng-if="$root.$storage.user && $root.$storage.user.username != user.username && isAmFollowing(user.username)"><!--button-icon button-clear<i class="fa fa-user-times fa-lg"></i>-->{{'UNFOLLOW'|translate}}</button>&nbsp;
+      <button class="button button-outline button-light profilebtn_follow" on-tap="followUser(user.username)" ng-if="$root.user && $root.user.username != user.username && !isAmFollowing(user.username)"><!--<i class="fa fa-user-plus fa-lg"></i>-->{{'FOLLOW'|translate}}</button>
+      <button class="button button-clear profilebtn_edit button-icon ion-ios-compose-outline" on-tap="showEdits()" ng-if="$root.user && $root.user.username === user.username"></button>
+      <button class="button button-clear profilebtn_follow button-icon ion-camera" on-tap="showCover()" ng-if="$root.user && $root.user.username === user.username"></button>
+      <button class="button button-outline button-light profilebtn_follow" on-tap="unfollowUser(user.username)" ng-if="$root.user && $root.user.username != user.username && isAmFollowing(user.username)"><!--button-icon button-clear<i class="fa fa-user-times fa-lg"></i>-->{{'UNFOLLOW'|translate}}</button>&nbsp;
       <div class="center">
-          <div class="item-myavatar" ng-if="$root.$storage.user && $root.$storage.user.username == user.username">
-            <span class="item-myavatar" ng-if="!($root.$storage.user.json_metadata.profile.profile_image||$root.$storage.user.json_metadata.user_image)"><img src="img/user_profile.png" on-tap="showProfile()"></span>
-            <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.user_image}}" ng-if="$root.$storage.user.json_metadata.user_image || $root.$storage.user.json_metadata.profile.profile_image" on-tap="showProfile()" />
+          <div class="item-myavatar" ng-if="$root.user && $root.user.username == user.username">
+            <span class="item-myavatar" ng-if="!($root.$storage.user.json_metadata.profile.profile_image||$root.user.json_metadata.user_image)"><img src="img/user_profile.png" on-tap="showProfile()"></span>
+            <img ng-src="{{$root.user.json_metadata.profile.profile_image || $root.user.json_metadata.user_image}}" ng-if="$root.user.json_metadata.user_image || $root.user.json_metadata.profile.profile_image" on-tap="showProfile()" />
             <div class="footprofileinfo">
               <h4 class="center">
-                <span class="light">@{{$root.$storage.user.username}}</span>
+                <span class="light">@{{$root.user.username}}</span>
                 &nbsp;
-                <div class="reputation">{{$root.$storage.user.reputation|reputation}}
+                <div class="reputation">{{$root.user.reputation|reputation}}
                 </div>
               </h4>
-              <div class="about">{{$root.$storage.user.json_metadata.profile.about}}</div>
+              <div class="about">{{$root.user.json_metadata.profile.about}}</div>
               <div class="padding">
                 <i class="icon ion-android-list"></i>&nbsp;
-                {{$root.$storage.user.post_count}}&nbsp;
+                {{$root.user.post_count}}&nbsp;
                 |&nbsp;
                 <i class="icon ion-arrow-graph-up-right"></i>&nbsp;
-                {{$root.$storage.user.voting_power/100|number:2}}&nbsp;
+                {{$root.user.voting_power/100|number:2}}&nbsp;
                 |&nbsp;<i class="icon ion-ios-people"></i>&nbsp;
                 {{followdetails.follower_count}}&nbsp;
                 |&nbsp;<i class="ion-person-add"></i>&nbsp;
                 {{followdetails.following_count}}
               </div>
-              <p><span ng-if="$root.$storage.user.json_metadata.profile && $root.$storage.user.json_metadata.profile.location">
+              <p><span ng-if="$root.user.json_metadata.profile && $root.user.json_metadata.profile.location">
                 <i class="icon ion-location"></i>&nbsp;
-                {{$root.$storage.user.json_metadata.profile.location}}
+                {{$root.user.json_metadata.profile.location}}
                 &nbsp;
               </span>&nbsp;
-              <span ng-if="$root.$storage.user.json_metadata.profile && $root.$storage.user.json_metadata.profile.website">
+              <span ng-if="$root.user.json_metadata.profile && $root.user.json_metadata.profile.website">
                 <i class="icon ion-link"></i>&nbsp;
-                <a on-tap="window.open('{{$root.$storage.user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</a>
+                <a on-tap="window.open('{{$root.user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</a>
                 &nbsp;
               </span>
-              <span ng-if="$root.$storage.user.created">
+              <span ng-if="$root.user.created">
                 <i class="icon ion-calendar"></i>&nbsp;
-                {{$root.$storage.user.created|date}}
+                {{$root.user.created|date}}
                 &nbsp;
               </span></p>
             </div>
           </div>
-          <div class="item-myavatar" ng-if="$root.$storage.user.username !== user.username">
+          <div class="item-myavatar" ng-if="$root.user.username !== user.username">
             <span class="item-myavatar" ng-if="!(user.json_metadata.profile.profile_image||user.json_metadata.user_image)"><img src="img/user_profile.png" /></span>
             <img ng-src="{{user.json_metadata.profile.profile_image || user.json_metadata.user_image}}" ng-if="user.json_metadata.profile.profile_image || user.json_metadata.user_image" />
             <div class="footprofileinfo">
@@ -110,7 +110,7 @@
           <span ng-if="accounts.reward_sbd_balance.split(' ')[0]>0">{{accounts.reward_sbd_balance.split(' ')[0]}} {{$root.$storage.platformdunit}}</span>
           <span ng-if="accounts.reward_vesting_steem.split(' ')[0]>0">{{accounts.reward_vesting_steem.split(' ')[0]}} {{$root.$storage.platformpunit}}</span>
           <br>
-          <button class="button button-positive" ng-if='$root.$storage.user.username === user.username' on-tap="claim_rewards()">{{'CLAIM_REWARDS'|translate}}</button>
+          <button class="button button-positive" ng-if='$root.user.username === user.username' on-tap="claim_rewards()">{{'CLAIM_REWARDS'|translate}}</button>
           </p>
           <p class="bold uppercase">
             {{'BALANCES'|translate}}
@@ -174,40 +174,40 @@
           <div class="list card">
             <div class="item">
               <h2><div class="bold">{{'POSTING'|translate}}</div></h2>
-              <p class="wrap">{{$root.$storage.user.posting.key_auths[0][0]}}</p>
+              <p class="wrap">{{$root.user.posting.key_auths[0][0]}}</p>
             </div>
             <div class="item item-body">
-              <center><qrcode class="full-image" text="{{$root.$storage.user.posting.key_auths[0][0]}}"></qrcode></center>
+              <center><qrcode class="full-image" text="{{$root.user.posting.key_auths[0][0]}}"></qrcode></center>
               <p>
                 {{'PROFILE_5'|translate}}
               </p>
             </div>
             <div class="item">
               <h2><div class="bold">{{'OWNER'|translate}}</div></h2>
-              <p class="wrap">{{$root.$storage.user.owner.key_auths[0][0]}}</p>
+              <p class="wrap">{{$root.user.owner.key_auths[0][0]}}</p>
             </div>
             <div class="item item-body">
-              <center><qrcode class="full-image" text="{{$root.$storage.user.owner.key_auths[0][0]}}"></qrcode></center>
+              <center><qrcode class="full-image" text="{{$root.user.owner.key_auths[0][0]}}"></qrcode></center>
               <p>
                 {{'PROFILE_6'|translate}}
               </p>
             </div>
             <div class="item">
               <h2><div class="bold">{{'ACTIVE'|translate}}</div></h2>
-              <p class="wrap">{{$root.$storage.user.active.key_auths[0][0]}}</p>
+              <p class="wrap">{{$root.user.active.key_auths[0][0]}}</p>
             </div>
             <div class="item item-body">
-              <center><qrcode class="full-image" text="{{$root.$storage.user.active.key_auths[0][0]}}"></qrcode></center>
+              <center><qrcode class="full-image" text="{{$root.user.active.key_auths[0][0]}}"></qrcode></center>
               <p>
                 {{'PROFILE_7'|translate}}
               </p>
             </div>
             <div class="item">
               <h2><div class="bold">{{'MEMO'|translate}}</div></h2>
-              <p class="wrap">{{$root.$storage.user.memo_key}}</p>
+              <p class="wrap">{{$root.user.memo_key}}</p>
             </div>
             <div class="item item-body">
-              <center><qrcode class="full-image" text="{{$root.$storage.user.memo_key}}"></qrcode></center>
+              <center><qrcode class="full-image" text="{{$root.user.memo_key}}"></qrcode></center>
               <p>
                 {{'PROFILE_8'|translate}}
               </p>

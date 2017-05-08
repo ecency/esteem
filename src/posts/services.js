@@ -250,7 +250,7 @@ module.exports = function (app) {
             }
             //$rootScope.log('initialIndex '+initialIndex);
             if ($rootScope.$storage.filter) {
-              if ($rootScope.$storage.user) {
+              if ($rootScope..user) {
                 if ($rootScope.$storage.filter === 'feed') {
                   //$scope.events.trigger("slideChange", {"index" : 0});
                   initialIndex = 0;
@@ -416,7 +416,7 @@ module.exports = function (app) {
                 $scope.onSlideMove({"index" : eval(index)});
               }
 
-              if ($rootScope.$storage.user) {
+              if ($rootScope.user) {
                 if (index === 0) {
                   $rootScope.$storage.filter = 'feed';
                   $rootScope.$broadcast('filter:change');
@@ -1003,7 +1003,7 @@ module.exports = function (app) {
                         <div class="ion-comment--author"><img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.paccounts[comment.author].user_image||$root.paccounts[comment.author].profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{comment.author}}">{{comment.author}}</a></b>&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
                         <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="comment.max_accepted_payout.split(\' \')[0] === \'0.000\'"><del>{{comment | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="comment.max_accepted_payout.split(\' \')[0] !== \'0.000\'">{{comment | sumPostTotal:$root.$storage.currencyRate | number}}</span> </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
                         <div class="ion-comment--text bodytext selectable" ng-class="{\'mask\': comment.net_rshares<0}" ng-bind-html="comment.body | parseUrl "></div>\
-                        <div class="ion-comment--replies"><ion-spinner ng-if="comment.invoting"></ion-spinner><span on-tap="upvotePost(comment)" on-hold="openSliderr($event, comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UPVOTE"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.$storage.user.username && compateDate(comment)" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.$storage.user.username && comment.abs_rshares == 0" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{\'REMOVE\'|translate}}</span></div>\
+                        <div class="ion-comment--replies"><ion-spinner ng-if="comment.invoting"></ion-spinner><span on-tap="upvotePost(comment)" on-hold="openSliderr($event, comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UPVOTE"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.user.username && compateDate(comment)" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.abs_rshares == 0" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{\'REMOVE\'|translate}}</span></div>\
                     </ion-item>',
             controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopover, $ionicPopup, $ionicActionSheet, $cordovaCamera, $filter, ImageUploadService) {
                   $ionicPopover.fromTemplateUrl('popoverTr.html', {
@@ -1273,13 +1273,13 @@ module.exports = function (app) {
                   }
                   $scope.reply = function (xx) {
                     
-                    const wif = $rootScope.$storage.user.password
-                    ? window.steem.auth.toWif($rootScope.$storage.user.username, $rootScope.$storage.user.password, 'posting')
-                    : $rootScope.$storage.user.privatePostingKey;
+                    const wif = $rootScope.user.password
+                    ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
+                    : $rootScope.user.privatePostingKey;
 
                     if (!$scope.editc) {
                         $rootScope.$broadcast('show:loading');
-                        if ($rootScope.$storage.user) {
+                        if ($rootScope.user) {
 
                           var t = new Date();
                           var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
@@ -1290,7 +1290,7 @@ module.exports = function (app) {
                             ['comment', {
                               parent_author: $scope.post.author,
                               parent_permlink: $scope.post.permlink,
-                              author: $rootScope.$storage.user.username,
+                              author: $rootScope.user.username,
                               permlink: "re-"+$scope.post.author+"-"+timeformat,
                               title: "",
                               body: $scope.data.comment,
@@ -1299,7 +1299,7 @@ module.exports = function (app) {
                             ['comment_options', {
                               allow_curation_rewards: true,
                               allow_votes: true,
-                              author: $rootScope.$storage.user.username,
+                              author: $rootScope.user.username,
                               permlink: "re-"+$scope.post.author+"-"+timeformat,  
                               max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
                               percent_steem_dollars: 10000,
@@ -1338,7 +1338,7 @@ module.exports = function (app) {
                           //$rootScope.log(patch);
                         }
                         $rootScope.$broadcast('show:loading');
-                        if ($rootScope.$storage.user) {
+                        if ($rootScope.user) {
                           var operations_array = [];
                           var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
                           operations_array = [
@@ -1398,11 +1398,11 @@ module.exports = function (app) {
                         if(res) {
                             $rootScope.log('You are sure');
                             $rootScope.$broadcast('show:loading');
-                            if ($rootScope.$storage.user) {
+                            if ($rootScope.user) {
 
-                              const wif = $rootScope.$storage.user.password
-                              ? window.steem.auth.toWif($rootScope.$storage.user.username, $rootScope.$storage.user.password, 'posting')
-                              : $rootScope.$storage.user.privatePostingKey;
+                              const wif = $rootScope.user.password
+                              ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
+                              : $rootScope.user.privatePostingKey;
 
                               window.steem.broadcast.deleteComment(wif, comment.author, comment.permlink, function(err, result) {
                                 console.log(err, result);
@@ -1493,7 +1493,7 @@ module.exports = function (app) {
             // Add the Cloudinary "upload preset" name to the headers
             // "https://api.cloudinary.com/v1_1/esteem/image/upload"
             var uploadOptions = {
-              params : { 'username': $rootScope.$storage.user.username}
+              params : { 'username': $rootScope.user.username}
             };
             $ionicPlatform.ready(function() {
                 $cordovaFileTransfer.upload(API_END_POINT+"/api/upload", imageURI, uploadOptions).then(function(result) {

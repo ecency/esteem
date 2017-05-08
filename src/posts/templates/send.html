@@ -33,8 +33,8 @@
       <label class="item item-input item-select" ng-if="data.advanced&&data.etype=='release'">
         <span class="input-label">{{'RECEIVER'|translate}}</span>
         <select ng-model="escrow.receiver">
-          <option value="{{escrow.to}}" ng-if="escrow.to!=$root.$storage.user.username">{{escrow.to}}</option>
-          <option value="{{escrow.from}}" ng-if="escrow.from!=$root.$storage.user.username">{{escrow.from}}</option>
+          <option value="{{escrow.to}}" ng-if="escrow.to!=$root.user.username">{{escrow.to}}</option>
+          <option value="{{escrow.from}}" ng-if="escrow.from!=$root.user.username">{{escrow.from}}</option>
         </select>
       </label>
       <label class="item item-input item-select" ng-if="!data.advanced">
@@ -75,8 +75,8 @@
         {{'SUBMIT'|translate}}
       </button></center>
       <br>
-      <center ng-if="ttype=='transfer'"><qr text="$root.$storage.user.username"></qr></center>
-      <center ng-if="ttype=='transfer'"><i class="italic">{{$root.$storage.user.username}}</i></center>
+      <center ng-if="ttype=='transfer'"><qr text="$root.user.username"></qr></center>
+      <center ng-if="ttype=='transfer'"><i class="italic">{{$root.user.username}}</i></center>
     </div>
   </ion-content>
   <script id="my-modal.html" type="text/ng-template">
