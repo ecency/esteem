@@ -265,5 +265,7 @@
   "WEBSITE":"Hjemmeside",
   "DISPLAY_NAME":"Visningsnavn",
   "UNCLAIMED_REWARDS":"Uafhentede belønninger",
-  "CLAIM_REWARDS":"Købe belønninger"
+  "CLAIM_REWARDS":"Købe belønninger",
+  "DOWNLOAD_COMPLETED":"",
+  "DOWNLOADING_PICTURE":""
 }
