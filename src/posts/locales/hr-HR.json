@@ -265,5 +265,7 @@
   "WEBSITE":"Web stranica",
   "DISPLAY_NAME":"Prikazani naziv",
   "UNCLAIMED_REWARDS":"Ne prihvaćene nagrade",
-  "CLAIM_REWARDS":"Prihvati nagradu"
+  "CLAIM_REWARDS":"Prihvati nagradu",
+  "DOWNLOAD_COMPLETED":"",
+  "DOWNLOADING_PICTURE":""
 }
