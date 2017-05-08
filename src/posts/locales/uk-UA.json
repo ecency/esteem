@@ -209,7 +209,7 @@
   "POST_IS_BOOKMARK":"Повідомлення додано в закладки!",
   "RESET":"Скинути",
   "MODIFY_PICTURE":"Змінити зображення профілю",
-  "MODIFY_COVER_PICTURE":"Змінити малюнок обкладинки",
+  "MODIFY_COVER_PICTURE":"Змінити зображення обкладинки",
   "ACTIVE_KEY_REQUIRED_TEXT":"Будь ласка, надайте активних закритий ключ, якщо ви обрали розгорнутий режим авторизації!",
   "RESET_PICTURE_TEXT":"Це призведе до скидання зображення профілю користувача",
   "RESET_COVER_PICTURE_TEXT":"Це призведе до скидання зображення обкладинки користувача",
@@ -266,6 +266,6 @@
   "DISPLAY_NAME":"Відображуване ім'я",
   "UNCLAIMED_REWARDS":"Незатребувана винагорода",
   "CLAIM_REWARDS":"Затребувати винагороду",
-  "DOWNLOAD_COMPLETED":"",
-  "DOWNLOADING_PICTURE":""
+  "DOWNLOAD_COMPLETED":"Завантаження завершено",
+  "DOWNLOADING_PICTURE":"Завантаження зображення"
 }
