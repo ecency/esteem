@@ -266,6 +266,6 @@
   "DISPLAY_NAME":"نامی که نمایش داده می شود",
   "UNCLAIMED_REWARDS":"پاداش های دریافت نشده",
   "CLAIM_REWARDS":"اضافه نمودن پاداش به حساب",
-  "DOWNLOAD_COMPLETED":"",
-  "DOWNLOADING_PICTURE":""
+  "DOWNLOAD_COMPLETED":"دانلود انجام شد",
+  "DOWNLOADING_PICTURE":"در حال دانلود تصویر"
 }
