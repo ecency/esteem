@@ -282,7 +282,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
   $rootScope.user = $rootScope.$storage.user || undefined;
   
-  console.log('Account set: '+$rootScope.user.username);
+  if ($rootScope.user) {
+    console.log('Account set: '+$rootScope.user.username);
+  }
 
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard

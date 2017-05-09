@@ -1594,13 +1594,13 @@ body[dir=rtl] .bar .button.back-button, .bar button.back-button {
   height: 0;
 }
 .bar.bar-positive {
-  background-color: #00396B;
+  background-color: rgba(31,83,152,1);
 }
 .tabs-striped.tabs-background-positive .tabs {
-  background-color: #00396B;
+  background-color: rgba(31,83,152,1);
 }
 .button-bar .button.button-royal {
-  background-color: #00396B;
+  background-color: rgba(31,83,152,1);
 }
 @media (min-width: 680px) {
   .mymodal {  
