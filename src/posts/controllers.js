@@ -3413,9 +3413,11 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     if (!$scope.$$phase){
       $scope.$apply();
     } else {
-      console.log('phased');
+      console.log('phased', len);
     }
-
+    if (len < 15) {
+      $scope.end = true;
+    }
     if (len>0) {
       //delete params.limit;
       var ll = $scope.data.profile.length;
@@ -3476,6 +3478,11 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           window.steem.api.getDiscussionsByComments(params, function(err, response) {
             //console.log(err, response);
             if (response) {
+              if (response.length <= 1) {
+                $scope.end = true;
+              } else {
+                $scope.end = false;
+              }
               for (var j = 0; j < response.length; j++) {
                 var v = response[j];
                 v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
@@ -3507,6 +3514,11 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           window.steem.api.getRepliesByLastUpdate($scope.data.profile[$scope.data.profile.length-1].author, $scope.data.profile[$scope.data.profile.length-1].permlink, 20, function(err, response) {
             console.log(err, response);
             if (response) {
+              if (response.length <= 1) {
+                $scope.end = true;
+              } else {
+                $scope.end = false;
+              }
               for (var j = 0; j < response.length; j++) {
                 var v = response[j];
                 v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
