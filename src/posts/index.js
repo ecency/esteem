@@ -500,7 +500,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             $rootScope.log("toast"+error);
           });
         } else {
-          $rootScope.showAlert(title, msg);
+          //$rootScope.showAlert(title, msg);
+          console.log(title, msg);
         }
       }
     };

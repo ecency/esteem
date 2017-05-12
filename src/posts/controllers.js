@@ -1299,7 +1299,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
       var permlink = createPermlink($scope.spost.title);
       var json = $filter("metadata")($scope.spost.body);
-      angular.merge(json, {tags: $scope.spost.category, app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' });
+      angular.merge(json, {tags: $scope.spost.category, app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' });
 
       if (!$scope.spost.operation_type) {
         $scope.spost.operation_type = 'default';
@@ -2339,7 +2339,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       var jjson = $filter("metadata")($scope.spost.body);
       //console.log(jjson);
       //$scope.spost.tags = $filter('lowercase')($scope.spost.tags);
-      var json = angular.merge(jjson, {tags: $scope.spost.tags.split(" "), app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' });
+      var json = angular.merge(jjson, {tags: $scope.spost.tags.split(" "), app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' });
 
 
       var operations_array = [];
@@ -2424,9 +2424,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         var ts = angular.fromJson($scope.post.json_metadata).tags;
         var json;
         if (Array.isArray(ts)) {
-          json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ["esteem"] , app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
+          json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ["esteem"] , app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };
         } else {
-          json = {tags: angular.fromJson($scope.post.json_metadata).tags || ["esteem"] , app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
+          json = {tags: angular.fromJson($scope.post.json_metadata).tags || ["esteem"] , app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };
         }
 
         var operations_array = [];
@@ -2473,7 +2473,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
         var t = new Date();
         var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
-        var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ["esteem"] , app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html' };
+        var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ["esteem"] , app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };
 
         var operations_array = [];
         operations_array = [
