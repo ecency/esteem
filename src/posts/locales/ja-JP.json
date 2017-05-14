@@ -266,6 +266,6 @@
   "DISPLAY_NAME":"表示名",
   "UNCLAIMED_REWARDS":"引き取り手のない報酬",
   "CLAIM_REWARDS":"報酬を請求します。",
-  "DOWNLOAD_COMPLETED":"",
-  "DOWNLOADING_PICTURE":""
+  "DOWNLOAD_COMPLETED":"ダウンロード完了",
+  "DOWNLOADING_PICTURE":"画像をダウンロード中"
 }
