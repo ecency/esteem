@@ -203,7 +203,7 @@
   "POST_LATER":"Posteaza cu întârziere!",
   "SAVED":"Salvat",
   "CLEARED":"Golit",
-  "FLAGGING_TEXT":"",
+  "FLAGGING_TEXT":"Semnalarea unei postări poate elimina recompensele și poate face acest material mai puțin vizibil. <br> <br> Steagul ar trebui să fie utilizat pentru următoarele: <ul> <li> Fraudă sau plagiat </li><li> Conținut intenționat greșit categorisit sau Spam </li> </ul>",
   "REQUEST_LIMIT_TEXT":"Limita de solicitare atinsă. Verificați alte tendințe / etichete!",
   "POST_IS_UNBOOKMARK":"Postarea este eliminată din marcaje!",
   "POST_IS_BOOKMARK":"Postul este adăugat la lista de semne!",
