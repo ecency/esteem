@@ -266,6 +266,6 @@
   "DISPLAY_NAME":"Pseudo",
   "UNCLAIMED_REWARDS":"Récompenses non réclamées",
   "CLAIM_REWARDS":"Récompenses réclamées",
-  "DOWNLOAD_COMPLETED":"",
-  "DOWNLOADING_PICTURE":""
+  "DOWNLOAD_COMPLETED":"Téléchargement terminé",
+  "DOWNLOADING_PICTURE":"Téléchargement de l'image"
 }
