@@ -1,7 +1,7 @@
 {
   "HOME":"Начало",
   "LOGIN":"Вход",
-  "LOGOUT":"Отписване",
+  "LOGOUT":"",
   "PROFILE":"Профил",
   "FOLLOW":"Следване",
   "BOOKMARKS":"Любими",
@@ -117,7 +117,7 @@
   "CARD_VIEW":"Картички",
   "COMPACT_VIEW":"Списъци",
   "SEARCH":"Търси",
-  "SUBMIT_A_STORY":"Публикувайте нещо",
+  "SUBMIT_A_STORY":"Публикувай нещо",
   "REPLYTO":"Отговор на",
   "POST":"Публикуване",
   "PREVIEW":"Преглед",
