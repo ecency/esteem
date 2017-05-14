@@ -1,5 +1,5 @@
 {
-  "HOME":"",
+  "HOME":"Startseite",
   "LOGIN":"Anmelden",
   "LOGOUT":"Abmelden",
   "PROFILE":"Profil",
@@ -266,6 +266,6 @@
   "DISPLAY_NAME":"Angezeigter Name",
   "UNCLAIMED_REWARDS":"Nicht abgeholte Belohnungen",
   "CLAIM_REWARDS":"Prämien",
-  "DOWNLOAD_COMPLETED":"",
-  "DOWNLOADING_PICTURE":""
+  "DOWNLOAD_COMPLETED":"Download abgeschlossen",
+  "DOWNLOADING_PICTURE":"Download Bild"
 }
