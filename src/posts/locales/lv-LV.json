@@ -266,6 +266,6 @@
   "DISPLAY_NAME":"Parādāmais vārds",
   "UNCLAIMED_REWARDS":"Nepieprasīta atlīdzība",
   "CLAIM_REWARDS":"Pieprasīt atlīdzību",
-  "DOWNLOAD_COMPLETED":"",
-  "DOWNLOADING_PICTURE":""
+  "DOWNLOAD_COMPLETED":"Lejupielāde pabeigta",
+  "DOWNLOADING_PICTURE":"Lejupielādē attēlu"
 }
