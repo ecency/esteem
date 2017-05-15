@@ -266,6 +266,6 @@
   "DISPLAY_NAME":"Mostrar nombre",
   "UNCLAIMED_REWARDS":"Premios no reclamados",
   "CLAIM_REWARDS":"Reclamar premios",
-  "DOWNLOAD_COMPLETED":"",
-  "DOWNLOADING_PICTURE":""
+  "DOWNLOAD_COMPLETED":"Descarga completa",
+  "DOWNLOADING_PICTURE":"Descargar imagen"
 }
