@@ -266,6 +266,6 @@
   "DISPLAY_NAME":"Megjelenítendő név",
   "UNCLAIMED_REWARDS":"Nem várt jutalom",
   "CLAIM_REWARDS":"Azt állítják, jutalmak",
-  "DOWNLOAD_COMPLETED":"",
-  "DOWNLOADING_PICTURE":""
+  "DOWNLOAD_COMPLETED":"A letöltés befejeződött",
+  "DOWNLOADING_PICTURE":"Kép letöltése"
 }
