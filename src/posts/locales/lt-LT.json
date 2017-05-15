@@ -266,6 +266,6 @@
   "DISPLAY_NAME":"Rodomas vardas",
   "UNCLAIMED_REWARDS":"Neatsiimti atlygiai",
   "CLAIM_REWARDS":"Pasiimti atlygį",
-  "DOWNLOAD_COMPLETED":"",
-  "DOWNLOADING_PICTURE":""
+  "DOWNLOAD_COMPLETED":"Parsisiųsti baigtas",
+  "DOWNLOADING_PICTURE":"Atsisiuntimas nuotrauka"
 }
