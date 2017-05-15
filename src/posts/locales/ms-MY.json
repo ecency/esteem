@@ -244,16 +244,16 @@
   "FOUNDER":"Pengasas dan pemaju utama",
   "ADD_ACCOUNT":"Tambah akaun",
   "PLATFORM":"Platform",
-  "ESCROW":"",
+  "ESCROW":"Escrow",
   "ESCROW_AGENT":"Ejen escrow",
   "RATIFICATION_DEADLINE":"Tarikh akhir kelulusan",
   "ESCROW_EXPIRATION":"Escrow tamat",
   "ESCROW_FEE":"Yuran escrow",
   "ESCROW_TERMS":"Terma-terma escrow",
   "NIGHT_MODE":"Mod Malam",
-  "DAY_MODE":"",
+  "DAY_MODE":"Mod hari",
   "VIEW_CONTEXT":"Lihat konteks penuh",
-  "USER_NOTFOUND":"",
+  "USER_NOTFOUND":"Pengguna yang tidak dijumpai",
   "APPROVE":"Lulus",
   "DISPUTE":"Pertikaian",
   "RELEASE":"Lepaskan",
@@ -266,6 +266,6 @@
   "DISPLAY_NAME":"Nama dipaparkan",
   "UNCLAIMED_REWARDS":"Bayaran belum dituntut",
   "CLAIM_REWARDS":"Tuntutkan bayaran",
-  "DOWNLOAD_COMPLETED":"",
-  "DOWNLOADING_PICTURE":""
+  "DOWNLOAD_COMPLETED":"Muat turun selesai",
+  "DOWNLOADING_PICTURE":"Muat turun gambar"
 }
