@@ -266,6 +266,6 @@
   "DISPLAY_NAME":"Nazwa wyświetlana",
   "UNCLAIMED_REWARDS":"Nieodebrane wynagrodzenia",
   "CLAIM_REWARDS":"Odbierz wynagrodzenia",
-  "DOWNLOAD_COMPLETED":"",
-  "DOWNLOADING_PICTURE":""
+  "DOWNLOAD_COMPLETED":"Zakończono pobieranie",
+  "DOWNLOADING_PICTURE":"Pobieranie obrazu"
 }
