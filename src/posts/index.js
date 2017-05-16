@@ -843,7 +843,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           //console.log(err, result);
           post.invoting = false;
           if (err) {
-            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
+            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err)
           } else {
             if (tt>0){
               post.upvoted = true;
@@ -896,8 +896,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
                 window.steem.broadcast.accountWitnessVote(wif, $rootScope.user.username, "good-karma", true, function(err, result) {
                   console.log(err, result);
-                  if (err === 1) {
-                    $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+localStorage.errormessage)
+                  if (err) {
+                    $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err)
                   } else {
                     //$scope.refreshFollowers();
                     $rootScope.showMessage($filter('translate')('SUCCESS'),$filter('translate')('VOTED_FOR_WITNESS')+' @good-karma');
