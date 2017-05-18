@@ -913,9 +913,10 @@ Renderer.prototype.link = function(href, title, text) {
     if (href == text) {
       if (href.indexOf('http://dirtyimg.com/')>-1){
         //href='https://img1.steemit.com/0x0/'+href;
-        out = href.replace(imgs, '<img src="https://img1.steemit.com/0x0/$1" class="postimg" onerror="this.src=\'img/noimage.png\'" />');  
+        //https://steemitimages.com/0x0/https://scontent-frt3-2.xx.fbcdn.net/v/t31.0-8/18451703_119604535281306_269245501681123810_o.jpg?oh=bb4511494db5f4fe3aa51e282fe5c361&oe=597629E3
+        out = href.replace(imgs, '<img src="https://steemitimages.com/0x0/$1$2" class="postimg" onerror="this.src=\'img/noimage.png\'" />');  
       } else {
-        out = href.replace(imgs, '<img src="$1" class="postimg" onerror="this.src=\'img/noimage.png\'" />');  
+        out = href.replace(imgs, '<img src="https://steemitimages.com/0x0/$1$2" class="postimg" onerror="this.src=\'img/noimage.png\'" />');  
       }  
     } else {
       out = '<a href onClick=\'window.open("' + href + '", \"_system\", \"location=yes\");return false;\'';

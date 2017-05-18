@@ -1397,7 +1397,7 @@ div.text-left {
   break-inside: avoid;
 }
 .masonry-layout__panel-content {
-  padding: 1px;
+  padding: 0px;
   border-radius: 5px;
 }
 
