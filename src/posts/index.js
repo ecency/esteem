@@ -230,6 +230,13 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('lv-LV', require('./locales/ready/lv-LV')); //Latvian
   $translateProvider.translations('ja-JP', require('./locales/ready/ja-JP')); //Japanese
 
+  $translateProvider.translations('ja-JP', require('./locales/ready/ja-JP')); //Bosnian
+  $translateProvider.translations('ja-JP', require('./locales/ready/ja-JP')); //Korean
+  $translateProvider.translations('ja-JP', require('./locales/ready/ja-JP')); //Finnish
+  $translateProvider.translations('ja-JP', require('./locales/ready/ja-JP')); //Urdu Pakistani
+  $translateProvider.translations('ja-JP', require('./locales/ready/ja-JP')); //Hindi
+
+
   $translateProvider.useSanitizeValueStrategy(null);
 
   $translateProvider.preferredLanguage('en-US');

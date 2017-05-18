@@ -2683,7 +2683,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       
       $scope.comments = po;
       $rootScope.fetching = false;
-
+      setTimeout(function() {
+        var p2 = document.querySelector('.my-handle');
+        $scope.quotePosition = $ionicPosition.position(angular.element(p2));
+        $ionicScrollDelegate.$getByHandle('mainScroll').scrollTo(0,$scope.quotePosition.top, true); 
+      }, 1);
+      
       if (!$scope.$$phase){
         $scope.$apply();
       }
