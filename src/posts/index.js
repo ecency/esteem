@@ -200,7 +200,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
       $compileProvider.debugInfoEnabled(false);
   }
 
-  $translateProvider.translations('en-US', require('./locales/ready/en')); //English
+  $translateProvider.translations('en-US', require('./locales/ready/en-US')); //English
   $translateProvider.translations('ru-RU', require('./locales/ready/ru-RU')); //Russian
   $translateProvider.translations('de-DE', require('./locales/ready/de-DE')); //German
   $translateProvider.translations('fr-FR', require('./locales/ready/fr-FR')); //French
@@ -230,11 +230,11 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('lv-LV', require('./locales/ready/lv-LV')); //Latvian
   $translateProvider.translations('ja-JP', require('./locales/ready/ja-JP')); //Japanese
 
-  $translateProvider.translations('ja-JP', require('./locales/ready/ja-JP')); //Bosnian
-  $translateProvider.translations('ja-JP', require('./locales/ready/ja-JP')); //Korean
-  $translateProvider.translations('ja-JP', require('./locales/ready/ja-JP')); //Finnish
-  $translateProvider.translations('ja-JP', require('./locales/ready/ja-JP')); //Urdu Pakistani
-  $translateProvider.translations('ja-JP', require('./locales/ready/ja-JP')); //Hindi
+  $translateProvider.translations('bs-BA', require('./locales/ready/bs-BA')); //Bosnian
+  $translateProvider.translations('ko-KR', require('./locales/ready/ko-KR')); //Korean
+  $translateProvider.translations('fi-FI', require('./locales/ready/fi-FI')); //Finnish
+  $translateProvider.translations('ur-PK', require('./locales/ready/ur-PK')); //Urdu Pakistani
+  $translateProvider.translations('hi-IN', require('./locales/ready/hi-IN')); //Hindi
 
 
   $translateProvider.useSanitizeValueStrategy(null);
@@ -338,7 +338,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               $translate.use(language.value).then(function(data) {
                   console.log("SUCCESS -> " + data);
                   if (language.value.indexOf("en") == 0) {
-                    $rootScope.$storage.language = 'en';            
+                    $rootScope.$storage.language = 'en-US';            
                   }
                   $rootScope.$storage.language = language.value;
               }, function(error) {
@@ -346,7 +346,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               });
           }, null);
       } else {
-        $rootScope.$storage.language = 'en';
+        $rootScope.$storage.language = 'en-US';
       }
     } else {
       $translate.use($rootScope.$storage.language);
@@ -364,7 +364,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$storage.currencyRate = 1;
     }
     $rootScope.$storage.languages = [
-      {id:'en', name: 'English'}, 
+      {id:'en-US', name: 'English'}, 
       {id:'es-ES', name: 'Español'}, 
       {id:'el-GR', name: 'Ελληνικά'}, 
       {id:'fr-FR', name: 'Français'}, 
@@ -392,7 +392,12 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       {id:'ar-SA', name: 'عَرَبِيّ'},
       {id:'lt-LT', name: 'Lietuvių'},
       {id:'lv-LV', name: 'Latviešu'},
-      {id:'ja-JP', name: '日本語'}
+      {id:'ja-JP', name: '日本語'},
+      {id:'bs-BA', name: 'Bosanski'},
+      {id:'ko-KR', name: '한국어'},
+      {id:'fi-FI', name: 'Suomen kieli'},
+      {id:'ur-PK', name: 'اُردُو'},
+      {id:'hi-IN', name: 'हिन्दी'}
     ];
     if (!$rootScope.$storage.dir) {
       $rootScope.$storage.dir = 'ltr';
