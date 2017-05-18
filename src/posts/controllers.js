@@ -70,9 +70,11 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     }
   }
   $scope.open = function(item) {
-    item.json_metadata = angular.fromJson(item.json_metadata);
+    console.log(item);
+    item.json_metadata = item.json_metadata?angular.fromJson(item.json_metadata):{};
+
     $rootScope.sitem = item;
-    //console.log(item);
+    
 
     //$state.go('app.single');*/
     $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});
@@ -2602,7 +2604,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         if ($rootScope.postAccounts && $rootScope.postAccounts.indexOf(result.author) == -1) {
           $rootScope.postAccounts.push(result.author);
         }
-        result.json_metadata = angular.fromJson(result.json_metadata);
+        result.json_metadata = result.json_metadata?angular.fromJson(result.json_metadata):{};
         $scope.post = result;
         //console.log(result);
         $rootScope.sitem = result;
