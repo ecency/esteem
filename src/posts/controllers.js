@@ -1293,7 +1293,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
     $rootScope.$broadcast('show:loading');
     if ($rootScope.user) {
-       const wif = $rootScope.user.password
+      const wif = $rootScope.user.password
       ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
       : $rootScope.user.privatePostingKey;
 

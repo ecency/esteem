@@ -16,6 +16,14 @@
   background: #444;
 }
 
+.theme-dark .card {
+  background: #111;
+}
+
+.theme-dark .bar {
+  background: #444!important;
+}
+
 .scroll-content.theme-dark {
   background: #444;
   color: #aaa; 
@@ -1057,7 +1065,7 @@ select-input {
   border: 0!important;
 }
 .mynav nav {
-    background: #387ef5 none repeat scroll 0 0;
+    background: rgba(31,83,152,1);
     /*border-bottom: 8px solid #fff;
     border-top: 2px solid #40b5a2;*/
     margin: 0 auto;
