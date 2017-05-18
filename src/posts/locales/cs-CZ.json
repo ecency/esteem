@@ -265,5 +265,7 @@
   "WEBSITE":"Web",
   "DISPLAY_NAME":"Zobrazované jméno",
   "UNCLAIMED_REWARDS":"Nepřijmuté odměny",
-  "CLAIM_REWARDS":"Přijmout odměny"
+  "CLAIM_REWARDS":"Přijmout odměny",
+  "DOWNLOAD_COMPLETED":"Stahování úspěšné",
+  "DOWNLOADING_PICTURE":"Stahování obrázku"
 }

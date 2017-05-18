@@ -265,5 +265,7 @@
   "WEBSITE":"Sito Web",
   "DISPLAY_NAME":"Visualizza nome",
   "UNCLAIMED_REWARDS":"Premi non reclamati",
-  "CLAIM_REWARDS":"Rivendicare premi"
+  "CLAIM_REWARDS":"Rivendicare premi",
+  "DOWNLOAD_COMPLETED":"Il download è stato completato",
+  "DOWNLOADING_PICTURE":"Scaricare l'immagine"
 }

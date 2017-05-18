@@ -203,7 +203,7 @@
   "POST_LATER":"",
   "SAVED":"Uložené",
   "CLEARED":"",
-  "FLAGGING_TEXT":"",
+  "FLAGGING_TEXT":"Označenie príspevku za závadný môže odobrať odmeny a urobiť tento materiál menej viditeľným. <br><br> Toto označenie by malo byť použité na nasledovné: <ul><li> podvod alebo plagiátorstvo </li><li> prejavy nenávisti alebo internetové trolování </li><li> zámerne chybná kategorizácie obsahu alebo spam </li></ul>",
   "REQUEST_LIMIT_TEXT":"",
   "POST_IS_UNBOOKMARK":"Príspevok bol odstranený ze záložiek!",
   "POST_IS_BOOKMARK":"Príspevok bol pridaný do záložiek!",
@@ -265,5 +265,7 @@
   "WEBSITE":"Webstránka",
   "DISPLAY_NAME":"Zobrazované meno",
   "UNCLAIMED_REWARDS":"",
-  "CLAIM_REWARDS":""
+  "CLAIM_REWARDS":"",
+  "DOWNLOAD_COMPLETED":"",
+  "DOWNLOADING_PICTURE":""
 }

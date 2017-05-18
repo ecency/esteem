@@ -1,5 +1,5 @@
 {
-  "HOME":"Home",
+  "HOME":"Hoofdpagina",
   "LOGIN":"Log in",
   "LOGOUT":"Log uit",
   "PROFILE":"Profiel",
@@ -265,5 +265,7 @@
   "WEBSITE":"Website",
   "DISPLAY_NAME":"Toon naam",
   "UNCLAIMED_REWARDS":"Niet opgeëiste beloningen",
-  "CLAIM_REWARDS":"Opgeëiste beloningen"
+  "CLAIM_REWARDS":"Opgeëiste beloningen",
+  "DOWNLOAD_COMPLETED":"Download voltooid",
+  "DOWNLOADING_PICTURE":"Afbeelding downloaden"
 }

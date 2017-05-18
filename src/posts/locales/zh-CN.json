@@ -265,5 +265,7 @@
   "WEBSITE":"网站",
   "DISPLAY_NAME":"用户名",
   "UNCLAIMED_REWARDS":"还没认领的奖励",
-  "CLAIM_REWARDS":"认领奖励"
+  "CLAIM_REWARDS":"认领奖励",
+  "DOWNLOAD_COMPLETED":"",
+  "DOWNLOADING_PICTURE":""
 }
