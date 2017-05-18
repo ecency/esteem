@@ -265,5 +265,7 @@
   "WEBSITE":"Веб-сайт",
   "DISPLAY_NAME":"Отображаемое имя",
   "UNCLAIMED_REWARDS":"Невостребованное вознаграждение",
-  "CLAIM_REWARDS":"Востребовать вознаграждение"
+  "CLAIM_REWARDS":"Востребовать вознаграждение",
+  "DOWNLOAD_COMPLETED":"Загрузка завершена",
+  "DOWNLOADING_PICTURE":"Загрузка изображения"
 }

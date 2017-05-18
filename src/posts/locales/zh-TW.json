@@ -265,5 +265,7 @@
   "WEBSITE":"網站",
   "DISPLAY_NAME":"顯示名稱",
   "UNCLAIMED_REWARDS":"未領取的報酬",
-  "CLAIM_REWARDS":"領取報酬"
+  "CLAIM_REWARDS":"領取報酬",
+  "DOWNLOAD_COMPLETED":"",
+  "DOWNLOADING_PICTURE":""
 }

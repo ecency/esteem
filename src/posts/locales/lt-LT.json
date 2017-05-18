@@ -265,5 +265,7 @@
   "WEBSITE":"Svetainė",
   "DISPLAY_NAME":"Rodomas vardas",
   "UNCLAIMED_REWARDS":"Neatsiimti atlygiai",
-  "CLAIM_REWARDS":"Pasiimti atlygį"
+  "CLAIM_REWARDS":"Pasiimti atlygį",
+  "DOWNLOAD_COMPLETED":"Parsisiųsti baigtas",
+  "DOWNLOADING_PICTURE":"Atsisiuntimas nuotrauka"
 }

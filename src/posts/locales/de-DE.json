@@ -265,5 +265,7 @@
   "WEBSITE":"Webseite",
   "DISPLAY_NAME":"Angezeigter Name",
   "UNCLAIMED_REWARDS":"Nicht abgeholte Belohnungen",
-  "CLAIM_REWARDS":"Prämien"
+  "CLAIM_REWARDS":"Prämien",
+  "DOWNLOAD_COMPLETED":"Download abgeschlossen",
+  "DOWNLOADING_PICTURE":"Download Bild"
 }

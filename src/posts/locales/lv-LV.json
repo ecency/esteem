@@ -265,5 +265,7 @@
   "WEBSITE":"Mājaslapa",
   "DISPLAY_NAME":"Parādāmais vārds",
   "UNCLAIMED_REWARDS":"Nepieprasīta atlīdzība",
-  "CLAIM_REWARDS":"Pieprasīt atlīdzību"
+  "CLAIM_REWARDS":"Pieprasīt atlīdzību",
+  "DOWNLOAD_COMPLETED":"Lejupielāde pabeigta",
+  "DOWNLOADING_PICTURE":"Lejupielādē attēlu"
 }

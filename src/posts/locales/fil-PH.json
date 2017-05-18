@@ -265,5 +265,7 @@
   "WEBSITE":"Website",
   "DISPLAY_NAME":"Pangalan na nakadisplay",
   "UNCLAIMED_REWARDS":"Gantimpalang di nakuha",
-  "CLAIM_REWARDS":"Kunin ang gantimpala"
+  "CLAIM_REWARDS":"Kunin ang gantimpala",
+  "DOWNLOAD_COMPLETED":"Ang pag-Download ay kumpleto na",
+  "DOWNLOADING_PICTURE":"Ang larawan ay dina-Download"
 }
