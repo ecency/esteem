@@ -1087,7 +1087,59 @@ module.exports = function (app) {
                           console.log('depth5');
                           $rootScope.$broadcast('openComments', { data: comment });
                         } else {
-                          window.steem.api.getContentReplies(comment.author, comment.permlink, function(err, dd) {
+                          window.steem.api.getState('tag/@'+comment.author+'/'+comment.permlink, function(err, dd) {
+                            //console.log(dd);
+                            var po = [];
+
+                            angular.forEach(dd.content, function(v,k){
+                              if (v.parent_author==comment.author && v.parent_permlink == comment.permlink) {
+                                var len = v.active_votes.length;
+                                if ($rootScope.user) {
+                                  for (var j = len - 1; j >= 0; j--) {
+                                    if (v.active_votes[j].voter === $rootScope.user.username) {
+                                      if (v.active_votes[j].percent > 0) {
+                                        v.upvoted = true;
+                                      } else if (v.active_votes[j].percent < 0) {
+                                        v.downvoted = true;
+                                      } else {
+                                        v.downvoted = false;
+                                        v.upvoted = false;
+                                      }
+                                    }
+                                  }
+                                }
+                                po.push(v);
+                              }
+                            });
+                            
+                            angular.forEach(dd.accounts, function(v,k){
+                              //console.log(k);
+                              if ($rootScope.postAccounts && $rootScope.postAccounts.indexOf(k) == -1) {
+                                $rootScope.postAccounts.push(k);
+                              }
+
+                              if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
+                                if (v.json_metadata) {
+                                  if (v.json_metadata.indexOf("created_at")>-1) {
+                                    v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
+                                  } else {
+                                    v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):{};
+                                  }
+                                  var key = v.name;
+                                  $rootScope.paccounts[key] = v.json_metadata;
+                                }
+                              }
+                            });
+                            
+                            comment.comments = po;
+                            comment.showChildren = true;
+                            $rootScope.fetching = false;
+
+                            if (!$scope.$$phase){
+                              $scope.$apply();
+                            }
+                          });
+                          /*window.steem.api.getContentReplies(comment.author, comment.permlink, function(err, dd) {
                             //console.log(err, dd);
                             comment.comments = dd;
 
@@ -1109,7 +1161,7 @@ module.exports = function (app) {
                             }
                             comment.showChildren = true;
                             //console.log(comment);
-                          });
+                          });*/
                         }
                       }
                         //$rootScope.$broadcast('update:content');

@@ -723,8 +723,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           xx.active_votes = dd;
         });
       }
-      $rootScope.voters = xx;
       setTimeout(function() {
+        $rootScope.voters = xx;
         $rootScope.infomodal.show();  
       }, 5);
     };

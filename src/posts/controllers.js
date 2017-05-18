@@ -2636,8 +2636,60 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.fetchComments = function(author, permlink){
     $rootScope.fetching = true;
     //console.log(author,permlink);
+    window.steem.api.getState('tag/@'+author+'/'+permlink, function(err, dd) {
+      //console.log(dd);
+      var po = [];
+      $rootScope.paccounts = {};
 
-    window.steem.api.getContentReplies(author, permlink, function(err, dd) {
+      angular.forEach(dd.content, function(v,k){
+        if (v.parent_author==author && v.parent_permlink == permlink) {
+          var len = v.active_votes.length;
+          if ($rootScope.user) {
+            for (var j = len - 1; j >= 0; j--) {
+              if (v.active_votes[j].voter === $rootScope.user.username) {
+                if (v.active_votes[j].percent > 0) {
+                  v.upvoted = true;
+                } else if (v.active_votes[j].percent < 0) {
+                  v.downvoted = true;
+                } else {
+                  v.downvoted = false;
+                  v.upvoted = false;
+                }
+              }
+            }
+          }
+          po.push(v);
+        }
+      });
+      
+      angular.forEach(dd.accounts, function(v,k){
+        //console.log(k);
+        if ($rootScope.postAccounts && $rootScope.postAccounts.indexOf(k) == -1) {
+          $rootScope.postAccounts.push(k);
+        }
+
+        if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
+          if (v.json_metadata) {
+            if (v.json_metadata.indexOf("created_at")>-1) {
+              v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
+            } else {
+              v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):{};
+            }
+            var key = v.name;
+            $rootScope.paccounts[key] = v.json_metadata;
+          }
+        }
+      });
+      
+      $scope.comments = po;
+      $rootScope.fetching = false;
+
+      if (!$scope.$$phase){
+        $scope.$apply();
+      }
+      //console.log(po);
+    });
+    /*window.steem.api.getContentReplies(author, permlink, function(err, dd) {
       //console.log(err, dd);
       if (dd) {
         for (var i = 0; i < dd.length; i++) {
@@ -2645,8 +2697,6 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         }
         //console.log(dd);
         $scope.comments = dd;
-        //$rootScope.$storage.comments = dd;
-        //console.log(dd.active_votes);
         $rootScope.fetching = false;
         if (!$scope.$$phase){
           $scope.$apply();
@@ -2667,12 +2717,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         var p2 = document.querySelector('.my-handle');
         $scope.quotePosition = $ionicPosition.position(angular.element(p2));
         $ionicScrollDelegate.$getByHandle('mainScroll').scrollTo(0,$scope.quotePosition.top, true); 
-
+        
         setTimeout(function() {
           $scope.$emit('postAccounts');  
         }, 10);
       }
-    });
+    });*/
   }
   $scope.$on('postAccounts', function(){
     $rootScope.paccounts = {};
