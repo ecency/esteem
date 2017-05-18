@@ -2688,7 +2688,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               if (v.json_metadata.indexOf("created_at")>-1) {
                 v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
               } else {
-                v.json_metadata = angular.fromJson(v.json_metadata);
+                v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):{};
               }
               var key = v.name;
               $rootScope.paccounts[key] = v.json_metadata;
@@ -3460,6 +3460,24 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 }
                 if (!found){
                   //console.log(v.id);
+                  if ($rootScope.user){
+                    if ($rootScope.user.username !== v.author) {
+                      v.reblogged = true;
+                    }
+                    var len = v.active_votes.length;
+                    for (var j = len - 1; j >= 0; j--) {
+                      if (v.active_votes[j].voter === $rootScope.user.username) {
+                        if (v.active_votes[j].percent > 0) {
+                          v.upvoted = true;
+                        } else if (v.active_votes[j].percent < 0) {
+                          v.downvoted = true;
+                        } else {
+                          v.upvoted = false;
+                          v.downvoted = false;
+                        }
+                      }
+                    }
+                  }
                   $scope.data.profile.push(v);  
                 }
                 if(!$scope.$$phase){
@@ -3498,6 +3516,24 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 }
                 if (!found){
                   //console.log(v.id);
+                  if ($rootScope.user){
+                    if ($rootScope.user.username !== v.author) {
+                      v.reblogged = true;
+                    }
+                    var len = v.active_votes.length;
+                    for (var j = len - 1; j >= 0; j--) {
+                      if (v.active_votes[j].voter === $rootScope.user.username) {
+                        if (v.active_votes[j].percent > 0) {
+                          v.upvoted = true;
+                        } else if (v.active_votes[j].percent < 0) {
+                          v.downvoted = true;
+                        } else {
+                          v.upvoted = false;
+                          v.downvoted = false;
+                        }
+                      }
+                    }
+                  }
                   $scope.data.profile.push(v);
                 }
                 if (response.length <= 1) {
@@ -3534,6 +3570,24 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 }
                 if (!found){
                   //console.log(v.id);
+                  if ($rootScope.user){
+                    if ($rootScope.user.username !== v.author) {
+                      v.reblogged = true;
+                    }
+                    var len = v.active_votes.length;
+                    for (var j = len - 1; j >= 0; j--) {
+                      if (v.active_votes[j].voter === $rootScope.user.username) {
+                        if (v.active_votes[j].percent > 0) {
+                          v.upvoted = true;
+                        } else if (v.active_votes[j].percent < 0) {
+                          v.downvoted = true;
+                        } else {
+                          v.upvoted = false;
+                          v.downvoted = false;
+                        }
+                      }
+                    }
+                  }
                   $scope.data.profile.push(v);
                 }
                 if (response.length <= 1) {
