@@ -1370,7 +1370,7 @@ module.exports = function (app) {
                             console.log(err, result);
                             $scope.replying = false;
                             if (err) {
-                              $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message.split(":")[2].split('.')[0])
+                              $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
                             } else {
                               $scope.closeModal();
                               $scope.replying = false;
@@ -1416,7 +1416,7 @@ module.exports = function (app) {
                             console.log(err, result);
                             $scope.replying = false;
                             if (err) {
-                                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message.split(":")[2].split('.')[0])
+                                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
                               } else {
                                 $scope.closeModal();
                                 $scope.replying = false;
@@ -1466,7 +1466,7 @@ module.exports = function (app) {
                               window.steem.broadcast.deleteComment(wif, comment.author, comment.permlink, function(err, result) {
                                 console.log(err, result);
                                 if (err) {
-                                  $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message.split(":")[2].split('.')[0])
+                                  $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
                                 } else {
                                   $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('DELETED_COMMENT'));
                                   $rootScope.$emit("update:content");                                

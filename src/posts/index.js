@@ -815,7 +815,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             window.steem.broadcast.customJson(wif, [], [$rootScope.user.username], "follow", angular.toJson(json), function(err, result) {
               console.log(err, result);
               if (err) {
-                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REBLOG_TEXT')+" "+err.message.split(":")[2].split('.')[0])
+                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REBLOG_TEXT')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
               } else {
                 //$scope.refreshFollowers();
                 $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('REBLOGGED_POST'));
@@ -851,16 +851,17 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.$apply();
       }
       if ($rootScope.user) {
-        const wif = $rootScope.user.password
+        var wif = $rootScope.user.password
                   ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
                   : $rootScope.user.privatePostingKey;
+        console.log(wif,$rootScope.user.username, post.author, post.permlink);
 
         window.steem.broadcast.vote(wif, $rootScope.user.username, post.author, post.permlink, $rootScope.$storage.voteWeight*tt || 10000*tt, function(err, result) {
           //console.log(err, result);
           post.invoting = false;
           if (err) {
             console.log(err);
-            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message.split(":")[2].split('.')[0]);
+            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err);
           } else {
             if (tt>0){
               post.upvoted = true;
@@ -914,7 +915,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 window.steem.broadcast.accountWitnessVote(wif, $rootScope.user.username, "good-karma", true, function(err, result) {
                   console.log(err, result);
                   if (err) {
-                    $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message.split(":")[2].split('.')[0])
+                    $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
                   } else {
                     //$scope.refreshFollowers();
                     $rootScope.showMessage($filter('translate')('SUCCESS'),$filter('translate')('VOTED_FOR_WITNESS')+' @good-karma');
@@ -952,7 +953,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           window.steem.broadcast.customJson(wif, [], [$rootScope.user.username], "follow", angular.toJson(json), function(err, result) {
             //console.log(err, result);
             if (err) {
-              $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message.split(":")[2].split('.')[0])
+              $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
             } else {
               $rootScope.$broadcast('current:reload');
             }
