@@ -235,6 +235,9 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('fi-FI', require('./locales/ready/fi-FI')); //Finnish
   $translateProvider.translations('ur-PK', require('./locales/ready/ur-PK')); //Urdu Pakistani
   $translateProvider.translations('hi-IN', require('./locales/ready/hi-IN')); //Hindi
+  $translateProvider.translations('th-TH', require('./locales/ready/th-TH')); //Thai
+
+  
 
 
   $translateProvider.useSanitizeValueStrategy(null);
@@ -397,7 +400,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       {id:'ko-KR', name: '한국어'},
       {id:'fi-FI', name: 'Suomen kieli'},
       {id:'ur-PK', name: 'اُردُو'},
-      {id:'hi-IN', name: 'हिन्दी'}
+      {id:'hi-IN', name: 'हिन्दी'},
+      {id:'th-TH', name: 'ภาษาไทย'}
     ];
     if (!$rootScope.$storage.dir) {
       $rootScope.$storage.dir = 'ltr';

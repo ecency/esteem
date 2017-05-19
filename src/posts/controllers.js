@@ -4324,7 +4324,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
 
   $scope.changeLanguage = function(locale){
     setTimeout(function() {
-      if (locale == 'ar-SA' || locale == 'he-IL' || locale == 'fa-IR') {
+      if (locale == 'ar-SA' || locale == 'he-IL' || locale == 'fa-IR' || locale == 'ur-PK') {
         $rootScope.$storage.dir = 'rtl';
       } else {
         $rootScope.$storage.dir = 'ltr';
