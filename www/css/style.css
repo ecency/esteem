@@ -1642,3 +1642,8 @@ highchart {
     height:500px;
   }
 }
+
+.bar-header .button, .bar-subheader .button {
+  margin-right: 5px;
+  margin-left: 5px;
+}
