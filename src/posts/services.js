@@ -525,14 +525,14 @@ module.exports = function (app) {
 
             // get difference between UTC and local time in milliseconds
             
-            var timeZoneOffset = (new Date().getTimezoneOffset()) * 60000;
+            //var timeZoneOffset = (new Date().getTimezoneOffset()) * 60000;
             
             // convert local to UTC
             //console.log(timeZoneOffset);
 
-            if (timeZoneOffset != 0) {
+            /*if (timeZoneOffset != 0) {
               nowTime = nowTime + timeZoneOffset;
-            }
+            }*/
 
             var allowFuture = p_allowFuture || false,
             strings= {

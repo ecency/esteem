@@ -71,13 +71,13 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   }
   $scope.open = function(item) {
     console.log(item);
-    item.json_metadata = item.json_metadata?angular.fromJson(item.json_metadata):{};
+    $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});
 
+    item.json_metadata = item.json_metadata?angular.fromJson(item.json_metadata):{};
     $rootScope.sitem = item;
     
-
     //$state.go('app.single');*/
-    $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});
+    
   };
 
   $rootScope.$on('openComments', function(e, args) {
@@ -2578,11 +2578,68 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   };
   $scope.accounts = {};
   $scope.getContent = function(author, permlink) {
-    //console.time('someFunction1');
-  
-    var url = "/"+$stateParams.category+"/@"+author+"/"+permlink;
+    
+    //var url = "/"+$stateParams.category+"/@"+author+"/"+permlink;
     //console.log(url);
-    window.steem.api.getContent(author, permlink, function(err, result) {
+
+    window.steem.api.getState('tag/@'+author+'/'+permlink, function(err, dd) {
+      //console.log(dd);
+      if (dd) {
+        angular.forEach(dd.content, function(v,k){
+          if (v.parent_author=="" && v.parent_permlink == $stateParams.category) {
+            var len = v.active_votes.length;
+            if ($rootScope.user) {
+              for (var j = len - 1; j >= 0; j--) {
+                if (v.active_votes[j].voter === $rootScope.user.username) {
+                  if (v.active_votes[j].percent > 0) {
+                    v.upvoted = true;
+                  } else if (v.active_votes[j].percent < 0) {
+                    v.downvoted = true;
+                  } else {
+                    v.downvoted = false;
+                    v.upvoted = false;
+                  }
+                }
+              }
+            }
+            
+            v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):{};
+            $scope.post = v;
+            $rootScope.sitem = v;
+          }
+
+        });
+
+        var po = [];
+        $rootScope.paccounts = {};
+      
+        angular.forEach(dd.accounts, function(v,k){
+          //console.log(k);
+          if ($rootScope.postAccounts && $rootScope.postAccounts.indexOf(k) == -1) {
+            $rootScope.postAccounts.push(k);
+          }
+
+          if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
+            if (v.json_metadata) {
+              if (v.json_metadata.indexOf("created_at")>-1) {
+                v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
+              } else {
+                v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):{};
+              }
+              var key = v.name;
+              $rootScope.paccounts[key] = v.json_metadata;
+            }
+          }
+        });
+      }
+      
+      if (!$scope.$$phase){
+        $scope.$apply();
+      }
+      //console.log(po);
+    });
+
+    /*window.steem.api.getContent(author, permlink, function(err, result) {
       //console.log(err, result);
       if (result) {
         var len = result.active_votes.length;
@@ -2613,7 +2670,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           $scope.$emit('postAccounts');
         }, 10);
       }
-    });
+    });*/
   };
   function checkVote(post) {
     var len = post.active_votes.length;
@@ -2780,6 +2837,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   
   $scope.upvotePost = function(post) {
     $rootScope.votePost(post, 'upvote', 'getContent');
+
   };
   $rootScope.$on('getContent', function() {
     setTimeout(function() {
