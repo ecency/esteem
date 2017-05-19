@@ -374,7 +374,7 @@ module.exports = function (app) {
                   //Use this scrollTo, so when scrolling tab manually will not flicker
                   setTimeout(function() {
                     ionicScrollDelegate.scrollTo(Math.abs(leftStr), 0, true);
-                  }, 10);
+                  }, 1);
 
                 } else {
                   if(leftStr > 0){
@@ -382,7 +382,7 @@ module.exports = function (app) {
                   }
                   setTimeout(function() {
                     ionicScrollDelegate.scrollTo(Math.abs(leftStr), 0, true);
-                  }, 10);
+                  }, 1);
                 }
               }
             }
@@ -1010,7 +1010,7 @@ module.exports = function (app) {
                         <div class="ion-comment--author"><img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.paccounts[comment.author].user_image||$root.paccounts[comment.author].profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{comment.author}}">{{comment.author}}</a></b>&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
                         <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="comment.max_accepted_payout.split(\' \')[0] === \'0.000\'"><del>{{comment | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="comment.max_accepted_payout.split(\' \')[0] !== \'0.000\'">{{comment | sumPostTotal:$root.$storage.currencyRate | number}}</span> </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
                         <div class="ion-comment--text bodytext selectable" ng-class="{\'mask\': comment.net_rshares<0}" ng-bind-html="comment.body | parseUrl "></div>\
-                        <div class="ion-comment--replies"><ion-spinner ng-if="comment.invoting"></ion-spinner><span on-tap="upvotePost(comment)" on-hold="openSliderr($event, comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UPVOTE"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.user.username && compateDate(comment)" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.abs_rshares == 0" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{\'REMOVE\'|translate}}</span></div>\
+                        <div class="ion-comment--replies"><ion-spinner ng-if="comment.invoting"></ion-spinner><span ng-click="upvotePost(comment)" on-hold="openSliderr($event, comment)"><span class="fa fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UPVOTE"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.user.username && compateDate(comment)" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.abs_rshares == 0" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{\'REMOVE\'|translate}}</span></div>\
                     </ion-item>',
             controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopover, $ionicPopup, $ionicActionSheet, $cordovaCamera, $filter, ImageUploadService) {
                   $ionicPopover.fromTemplateUrl('popoverTr.html', {
@@ -1380,7 +1380,8 @@ module.exports = function (app) {
                                 $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
                                 $rootScope.$broadcast('hide:loading');
                                 $rootScope.$emit("update:content");  
-                              }, 10);
+                                $rootScope.$broadcast('hide:loading');
+                              }, 1);
                             }
                             $rootScope.$broadcast('hide:loading');
                           });
@@ -1426,7 +1427,7 @@ module.exports = function (app) {
                                   $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
                                   $rootScope.$broadcast('hide:loading');
                                   $rootScope.$emit("update:content");  
-                                }, 10);
+                                }, 1);
                               }
                               $rootScope.$broadcast('hide:loading');
                           });

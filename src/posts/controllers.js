@@ -70,7 +70,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     }
   }
   $scope.open = function(item) {
-    console.log(item);
+    //console.log(item);
     item.json_metadata = item.json_metadata?angular.fromJson(item.json_metadata):{};
     $rootScope.sitem = item;
 
@@ -136,7 +136,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         // An error occured. Show a message to the user
         $rootScope.log("not shared");
       });
-    }, 300);
+    }, 30);
   }
 
 
@@ -240,7 +240,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                     //$window.location.reload(true);
                     $state.go('app.posts',{renew:true},{reload: true});
                     $rootScope.$broadcast('fetchPosts');
-                  }, 500);
+                  }, 100);
 
                 });
               }
@@ -291,7 +291,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                   //$window.location.reload(true);
                   $state.go('app.posts',{renew:true},{reload: true});
                   $rootScope.$broadcast('fetchPosts');
-                }, 2000);
+                }, 100);
 
               });
             }
@@ -327,7 +327,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       $rootScope.$emit('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
     
       $rootScope.$broadcast('refreshLocalUserData');  
-    }, 500);
+    }, 100);
     
     
     setTimeout(function() {
@@ -336,7 +336,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         $rootScope.$apply();
       }
       $state.go('app.posts',{renew:true},{reload: true});
-    }, 50);
+    }, 20);
   }
 
   $rootScope.$on('refreshLocalUserData', function() {
@@ -637,7 +637,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
         if (!$scope.$$phase) {
           $scope.$apply();
         }
-      }, 50);   
+      }, 5);   
     }
   }
   $scope.changeUsername = function(typed) {
@@ -2229,7 +2229,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $scope.lastFocused = document.activeElement;
         console.log(document);
       });*/
-    }, 10);
+    }, 5);
   };
 
   $rootScope.$on('closePostModal', function(){
@@ -2314,7 +2314,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $scope.spost.tags = ts;
       }
       
-    }, 10);
+    }, 5);
     //console.log($scope.spost.operation_type);
   }
 
@@ -2541,10 +2541,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
   $rootScope.$on("update:content", function(){
     $rootScope.log("update:content");
-    setTimeout(function() {
-      $scope.getContent($scope.post.author, $scope.post.permlink);  
-      $rootScope.$broadcast('hide:loading');
-    }, 1);
+    $rootScope.$broadcast('hide:loading');
+    //setTimeout(function() {
+    
+    $scope.getContent($scope.post.author, $scope.post.permlink);  
+      
+    //}, 1);
     $rootScope.$broadcast('hide:loading');
   });
   $ionicModal.fromTemplateUrl('templates/reply.html', {
@@ -2856,7 +2858,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $rootScope.$on('getContent', function() {
     setTimeout(function() {
       $scope.getContent($rootScope.sitem.author, $rootScope.sitem.permlink);  
-    }, 10);
+    }, 1);
   });
   $scope.downvotePost = function(post) {
     var confirmPopup = $ionicPopup.confirm({
