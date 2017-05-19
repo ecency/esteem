@@ -71,11 +71,11 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   }
   $scope.open = function(item) {
     console.log(item);
-    $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});
-
     item.json_metadata = item.json_metadata?angular.fromJson(item.json_metadata):{};
     $rootScope.sitem = item;
-    
+
+    $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});
+
     //$state.go('app.single');*/
     
   };
@@ -1488,6 +1488,17 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
     } else {
       if (from.name == 'app.post' && to.name == 'app.posts') {
+        //console.log($scope.data, $rootScope.sitem);
+        if ($scope.data.length>0) {
+          angular.forEach($scope.data, function(v,k){
+            if (v.author == $rootScope.sitem.author && v.permlink == $rootScope.sitem.permlink) {
+              $scope.data[k] = $rootScope.sitem;
+            }
+          });
+        }
+        if (!$scope.$$phase){
+          $scope.$apply();
+        }
         $rootScope.sitem = null;
       }
       if (from.name !== 'app.post') {
@@ -2635,6 +2646,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       
       if (!$scope.$$phase){
         $scope.$apply();
+      }
+      if (!$rootScope.$$phase){
+        $rootScope.$apply();
       }
       //console.log(po);
     });
