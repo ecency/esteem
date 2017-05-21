@@ -1572,6 +1572,10 @@ em {
   font-size: 1.7em;
 }
 
+.fa.fa-md.fa-chevron-circle-up {
+  font-size: 1.3em;
+}
+
 body[dir=rtl] .bar .buttons-left span {
     margin-right: 75px;
 }
