@@ -2019,26 +2019,66 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.downloadImage = function(img) {
     //window.open(img, '_system');
     $ionicPlatform.ready(function() {
+      
+      
+      
+      
+
       // File name only
       var filename = img.split("/").pop();
       var path;
       // Save location
       if (ionic.Platform.isAndroid()) {
-        path = cordova.file.externalRootDirectory + 'Download/';
-        var targetPath = path + filename;
-        
-        $cordovaFileTransfer.download(img, targetPath, {}, true).then(function (result) {
-            console.log('Success');
-            refreshMedia.refresh(targetPath);
-            $ionicLoading.show({template : $filter('translate')('DOWNLOAD_COMPLETED'), duration: 1000});
-        }, function (error) {
-            console.log('Error');
-        }, function (progress) {
-            // PROGRESS HANDLING GOES HERE
-          percentage = Math.floor((progress.loaded / progress.total) * 100);
-          $ionicLoading.show({template : $filter('translate')('DOWNLOADING_PICTURE') +' '+ percentage + '%'});
-        });
+        if (cordova.plugins.permissions) {
 
+          var permissions = cordova.plugins.permissions;
+          
+          permissions.hasPermission(permissions.WRITE_EXTERNAL_STORAGE, function( status ){
+            if ( status.hasPermission ) {
+              console.log("Yes :D ");
+              path = cordova.file.externalRootDirectory + 'Download/';
+              var targetPath = path + filename;
+              
+              $cordovaFileTransfer.download(img, targetPath, {}, true).then(function (result) {
+                  console.log('Success');
+                  refreshMedia.refresh(targetPath);
+                  $ionicLoading.show({template : $filter('translate')('DOWNLOAD_COMPLETED'), duration: 1000});
+              }, function (error) {
+                  console.log('Error');
+              }, function (progress) {
+                  // PROGRESS HANDLING GOES HERE
+                percentage = Math.floor((progress.loaded / progress.total) * 100);
+                $ionicLoading.show({template : $filter('translate')('DOWNLOADING_PICTURE') +' '+ percentage + '%'});
+              });
+            }
+            else {
+              console.warn("No :( ");
+              permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, success, error);
+              function error() {
+                console.warn('WRITE_EXTERNAL_STORAGE permission is not turned on');
+              }
+
+              function success( status ) {
+                if( !status.hasPermission ) error();
+
+                path = cordova.file.externalRootDirectory + 'Download/';
+                var targetPath = path + filename;
+                
+                $cordovaFileTransfer.download(img, targetPath, {}, true).then(function (result) {
+                    console.log('Success');
+                    refreshMedia.refresh(targetPath);
+                    $ionicLoading.show({template : $filter('translate')('DOWNLOAD_COMPLETED'), duration: 1000});
+                }, function (error) {
+                    console.log('Error');
+                }, function (progress) {
+                    // PROGRESS HANDLING GOES HERE
+                  percentage = Math.floor((progress.loaded / progress.total) * 100);
+                  $ionicLoading.show({template : $filter('translate')('DOWNLOADING_PICTURE') +' '+ percentage + '%'});
+                });
+              }
+            }
+          });
+        }        
       } else {
         window.plugins.socialsharing.share(null, null, img, null);
       }
