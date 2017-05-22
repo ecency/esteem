@@ -3594,10 +3594,49 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   $scope.moreDataCanBeLoaded = function(){
     return ($scope.data.profile && $scope.data.profile.length>0) && !$scope.end;
   }
+  function processData (response) {
+    for (var j = 0; j < response.length; j++) {
+      var v = response[j];
 
+      v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
+
+      var found = false;
+      for (var i = $scope.data.profile.length-1; i >= 0; i--) {
+        if ($scope.data.profile[i].id === v.id){
+          found = true;
+          //console.log($scope.data.profile[i].id, v.id);
+        }
+      }
+      if (!found){
+        //console.log(v.id);
+        if ($rootScope.user){
+          if ($rootScope.user.username !== v.author) {
+            v.reblogged = true;
+          }
+          var len = v.active_votes.length;
+          for (var j = len - 1; j >= 0; j--) {
+            if (v.active_votes[j].voter === $rootScope.user.username) {
+              if (v.active_votes[j].percent > 0) {
+                v.upvoted = true;
+              } else if (v.active_votes[j].percent < 0) {
+                v.downvoted = true;
+              } else {
+                v.upvoted = false;
+                v.downvoted = false;
+              }
+            }
+          }
+        }
+        $scope.data.profile.push(v);  
+      }
+      if(!$scope.$$phase){
+        $scope.$apply();
+      }
+    }
+  }
   $scope.loadmore = function() {
     //console.log('loadmore');
-    var params = {tag: $stateParams.username, limit: 15, filter_tags:[]};
+    var params = {tag: $stateParams.username, limit: 20, filter_tags:[]};
     var len = $scope.data.profile?$scope.data.profile.length:0;
 
     if (!$scope.$$phase){
@@ -3605,11 +3644,12 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     } else {
       console.log('phased', len);
     }
-    if (len < 15) {
+    if (len < 20) {
       $scope.end = true;
     }
     if (len>0) {
       //delete params.limit;
+      console.log($scope.data.profile);
       var ll = $scope.data.profile.length;
       params.start_author = $scope.data.profile[ll-1].author;
       params.start_permlink = $scope.data.profile[ll-1].permlink;
@@ -3627,51 +3667,14 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             delete params.tags;   
           }
           window.steem.api.getDiscussionsByBlog(params, function(err, response) {
-            //console.log(err, response, params);
+            console.log(err, response, params);
             if (response) {
               if (response.length <= 1) {
                 $scope.end = true;
               } else {
                 $scope.end = false;
               }
-              for (var j = 0; j < response.length; j++) {
-                var v = response[j];
-
-                v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
-
-                var found = false;
-                for (var i = $scope.data.profile.length-1; i >= 0; i--) {
-                  if ($scope.data.profile[i].id === v.id){
-                    found = true;
-                    //console.log($scope.data.profile[i].id, v.id);
-                  }
-                }
-                if (!found){
-                  //console.log(v.id);
-                  if ($rootScope.user){
-                    if ($rootScope.user.username !== v.author) {
-                      v.reblogged = true;
-                    }
-                    var len = v.active_votes.length;
-                    for (var j = len - 1; j >= 0; j--) {
-                      if (v.active_votes[j].voter === $rootScope.user.username) {
-                        if (v.active_votes[j].percent > 0) {
-                          v.upvoted = true;
-                        } else if (v.active_votes[j].percent < 0) {
-                          v.downvoted = true;
-                        } else {
-                          v.upvoted = false;
-                          v.downvoted = false;
-                        }
-                      }
-                    }
-                  }
-                  $scope.data.profile.push(v);  
-                }
-                if(!$scope.$$phase){
-                  $scope.$apply();
-                }
-              }
+              processData(response);
             }
             if(!$scope.$$phase){
               $scope.$apply();
