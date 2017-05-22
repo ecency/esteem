@@ -279,6 +279,21 @@ textarea.markdown-input {
   margin-right: 5px!important;
   margin-bottom: 5px!important;
 }
+.profilebtn_mute {
+  position: absolute!important;
+  right: 0!important;
+  margin-right: 5px!important;
+  margin-bottom: 5px!important;
+  top: 45px!important;
+}
+.platform-ios .profilebtn_mute {
+  position: absolute!important;
+  top: 45px!important;
+  margin-top: 15px!important;
+  right: 0!important;
+  margin-right: 5px!important;
+  margin-bottom: 5px!important;
+}
 .profilebtn_edit {
   position: absolute!important;
   left: 0!important;

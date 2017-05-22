@@ -189,7 +189,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $urlRouterProvider.otherwise('/app/posts//true');
   $ionicConfigProvider.navBar.alignTitle('left')
   $ionicConfigProvider.backButton.text('').icon('ion-chevron-left');
-  $ionicConfigProvider.views.swipeBackEnabled(false);
+  $ionicConfigProvider.views.swipeBackEnabled(true);
   $ionicConfigProvider.views.maxCache(3);
 
   $animateProvider.classNameFilter( /\banimated\b/ );
@@ -237,11 +237,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('hi-IN', require('./locales/ready/hi-IN')); //Hindi
   $translateProvider.translations('th-TH', require('./locales/ready/th-TH')); //Thai
 
-  
-
-
   $translateProvider.useSanitizeValueStrategy(null);
-
   $translateProvider.preferredLanguage('en-US');
   $translateProvider.fallbackLanguage('en-US');
 
@@ -937,6 +933,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           var json;
           if (mtype === "follow") {
             json = ['follow',{follower:$rootScope.user.username, following:xx, what: ["blog"]}];
+          } else if (mtype==="mute"){
+            json = ['follow',{follower:$rootScope.user.username, following:xx, what: ["ignore"]}];
           } else {
             json = ['follow',{follower:$rootScope.user.username, following:xx, what: []}];
           }

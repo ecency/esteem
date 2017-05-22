@@ -2595,7 +2595,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     //var url = "/"+$stateParams.category+"/@"+author+"/"+permlink;
     //console.log(url);
     $rootScope.$broadcast('hide:loading');
-    
+
     window.steem.api.getState('tag/@'+author+'/'+permlink, function(err, dd) {
       //console.log(dd);
       if (dd) {
@@ -3044,6 +3044,7 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
     return false;
   };
   $scope.isFollowing = function(x) {
+
     var len = $scope.followers.length;
     for (var i = 0; i < len; i++) {
       if ($scope.followers[i].follower == x) {
@@ -3077,6 +3078,12 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
   };
   $scope.followUser = function(xx){
     $rootScope.following(xx, "follow");
+  };
+  $scope.muteUser = function(xx){
+    $rootScope.following(xx, "mute");
+  };
+  $scope.unmuteUser = function(xx){
+    $rootScope.following(xx, "unfollow");
   };
   $scope.profileView = function(xx){
     $state.go('app.profile', {username: xx});
@@ -3131,7 +3138,9 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     $rootScope.log(xx);
     $rootScope.following(xx, "unfollow");
   };
-
+  $scope.muteUser = function(xx){
+    $rootScope.following(xx, "mute");
+  };
   $scope.$on('current:reload', function(){
     $state.go($state.current, {}, {reload: true});
   });
@@ -3514,7 +3523,16 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   };
 
   $scope.isAmFollowing = function(xx) {
+    //console.log($scope.following);
     if ($scope.following && $scope.following.indexOf(xx)!==-1) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  $scope.isAmMuting = function(xx) {
+    //console.log($scope.muting);
+    if ($scope.muting && $scope.muting.indexOf(xx)!==-1) {
       return true;
     } else {
       return false;
@@ -3739,6 +3757,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     $scope.user = {username: $stateParams.username};
     $scope.follower = [];
     $scope.following = [];
+    $scope.muting = [];
     $scope.limit = 15;
     $scope.tt = {duser: "", ruser: ""};
 
@@ -3811,6 +3830,26 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         }
       });
     };
+    $scope.mfetching = function(){
+      window.steem.api.getFollowing($rootScope.user.username, $scope.tt.duser, "ignore", $scope.limit, function(err, res) {
+        //console.log(err, res);
+        if (res && res.length===$scope.limit) {
+          $scope.tt.duser = res[res.length-1].muting;
+        }
+        var len = res.length;
+        for (var i = 0; i < len; i++) {
+          console.log(res)
+          $scope.muting.push(res[i].following);
+        }
+        if (res.length<$scope.limit) {
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        } else {
+          setTimeout($scope.mfetching, 20);
+        }
+      });
+    };
     $scope.rfetching = function(){
       window.steem.api.getFollowers($rootScope.user.username, $scope.tt.ruser, "blog", $scope.limit, function(err, res) {
         console.log(err, res);
@@ -3830,7 +3869,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         }
       });
     };
-    $scope.getFollows = function(r,d) {      
+    $scope.getFollows = function(r,d, m) {      
       if (r) {
         $rootScope.log("rfetching");
         $scope.rfetching();
@@ -3838,6 +3877,10 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       if (d) {
         $rootScope.log("dfetching");
         $scope.dfetching();
+      }
+      if (m) {
+        $rootScope.log("mfetching");
+        $scope.mfetching();
       }
     };
     $scope.getOtherUsersData = function() {
@@ -3866,7 +3909,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         //console.log(err, res);
         $scope.followdetails = res;
       });
-      $scope.getFollows(null, "d");
+      $scope.getFollows(null, "d", "m");
       if(!$scope.$$phase){
         $scope.$apply();
       }

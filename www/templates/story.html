@@ -24,7 +24,7 @@
         </div>
       </div>
       <p ng-if="spost.body">{{'PREVIEW'|translate}}</p>
-      <div ng-if="spost.body" class="padding bodytext" ng-bind-html="spost.body | parseUrl "></div>
+      <div ng-if="spost.body" class="padding bodytext" ng-bind-html="spost | parseUrl "></div>
       <br/>
   </ion-content>
   <ion-slides options="options" class="drawer" ng-if="showgallery" slider="gallery.slider">

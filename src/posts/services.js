@@ -617,8 +617,9 @@ module.exports = function (app) {
 			    smartLists: true,
 			    smartypants: false
 			  };
-        if (textu.body) {
-          var texts = marked(textu.body, options);
+        if (textu.body || textu.comment) {
+          var s = textu.body||textu.comment;
+          var texts = marked(s, options);
           //console.log(textu);
           if (!$rootScope.$storage.download) {
             texts = texts.replace(imgd, 'src="img/isimage.png" onclick="this.src=\'$1\'"');  
