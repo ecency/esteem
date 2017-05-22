@@ -623,7 +623,7 @@ module.exports = function (app) {
           if (!$rootScope.$storage.download) {
             texts = texts.replace(imgd, 'src="img/isimage.png" onclick="this.src=\'$1\'"');  
           }
-          if (textu.json_metadata.tags.indexOf('nsfw')>-1 && !$rootScope.$storage.nsfw) {
+          if (textu.json_metadata && textu.json_metadata.tags && textu.json_metadata.tags.indexOf('nsfw')>-1 && !$rootScope.$storage.nsfw) {
             texts = texts.replace(img, 'img/nsfwimage.png');  
           }
           //console.log('after '+texts);
