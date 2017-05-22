@@ -541,24 +541,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     $ionicPlatform.on('resume', function(){
       $rootScope.log("app resume");
-      //var steemRPC = require("steem-rpc");
-      /*if (localStorage.getItem("socketUrl") === null) {
-        localStorage.setItem("socketUrl", "wss://steemd.steemit.com");
-      }*/
-      //window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
-      //window.steemJS = require("steemjs-lib");
-      //window.golosJS = require("golosjs-lib");
-
-      //if (!angular.isDefined($rootScope.timeint)) {
-      /*window.Api.initPromise.then(function(response) {
-        $rootScope.log("Api ready state change: "+angular.toJson(response));
-        $rootScope.timeint = $interval(function(){
-          window.Api.database_api().exec("get_dynamic_global_properties", []).then(function(response){
-            $rootScope.log("get_dynamic_global_properties " + response.head_block_number);
-          });
-        }, 15000);
-      });*/
-      //}
 
       if ($rootScope.$storage.pincode) {
         $rootScope.pincheck = true;
@@ -595,10 +577,12 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.timeint = undefined;
         //window.Api.close();
       }
+      window.steem.api.stop();
     });
 
     $ionicPlatform.on('offline', function(){
       $rootScope.log("app offline");
+      window.steem.api.stop();
     });
 
     $rootScope.init = function() {

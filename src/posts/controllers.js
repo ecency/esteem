@@ -2393,7 +2393,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       }
       
       window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
-        console.log(err, result);
+        //console.log(err, result);
         $scope.replying = false;
         $rootScope.$broadcast('hide:loading');
         if (err) {
@@ -2547,7 +2547,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     $scope.getContent($scope.post.author, $scope.post.permlink);  
       
     //}, 1);
-    $rootScope.$broadcast('hide:loading');
+    
   });
   $ionicModal.fromTemplateUrl('templates/reply.html', {
     scope: $scope  }).then(function(modal) {
@@ -2594,7 +2594,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     
     //var url = "/"+$stateParams.category+"/@"+author+"/"+permlink;
     //console.log(url);
-
+    $rootScope.$broadcast('hide:loading');
+    
     window.steem.api.getState('tag/@'+author+'/'+permlink, function(err, dd) {
       //console.log(dd);
       if (dd) {
