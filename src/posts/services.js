@@ -596,12 +596,15 @@ module.exports = function (app) {
       return TimeAgo;
     });
 
-    app.filter('parseUrl', function($sce) {
-	    var urls = /(\b(https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;-]*[-A-Z0-9+&@#\/%=~_|])/gim;
-	    var emails = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/gim;
-  	 	var imgs = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/gim;
-  		var youtube = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
-  		var youtubeid = /(?:(?:youtube.com\/watch\?v=)|(?:youtu.be\/))([A-Za-z0-9\_\-]+)/i;
+    app.filter('parseUrl', function($sce, $rootScope) {
+	    //var urls = /(\b(https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;-]*[-A-Z0-9+&@#\/%=~_|])/gim;
+	    //var emails = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/gim;
+      var imgs = /(https?:\/\/.*\.(?:tiff?|jpe?g|gif|png|svg|ico))(.*)/gim;
+      var img = /(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gim;
+      var imgd = /src=\"([^\"]*)\"/gim;
+
+  		//var youtube = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+  		//var youtubeid = /(?:(?:youtube.com\/watch\?v=)|(?:youtu.be\/))([A-Za-z0-9\_\-]+)/i;
 
 	    return function(textu, subpart) {
         var options = {
@@ -614,14 +617,22 @@ module.exports = function (app) {
 			    smartLists: true,
 			    smartypants: false
 			  };
-        if (textu) {
-          var textu = marked(textu, options);
+        if (textu.body) {
+          var texts = marked(textu.body, options);
+          //console.log(textu);
+          if (!$rootScope.$storage.download) {
+            texts = texts.replace(imgd, 'src="img/isimage.png" onclick="this.src=\'$1\'"');  
+          }
+          if (textu.json_metadata.tags.indexOf('nsfw')>-1 && !$rootScope.$storage.nsfw) {
+            texts = texts.replace(img, 'img/nsfwimage.png');  
+          }
+          //console.log('after '+texts);
           if (subpart) {
-            var s = $sce.trustAsHtml(textu).toString();
+            var s = $sce.trustAsHtml(texts).toString();
             var text = s.substring(s.indexOf("<p>"), s.indexOf("</p>"));
             return text;
           } else {
-            return $sce.trustAsHtml(textu);
+            return $sce.trustAsHtml(texts);
           }
         }
 	    };
@@ -1009,7 +1020,7 @@ module.exports = function (app) {
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
                         <div class="ion-comment--author"><img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.paccounts[comment.author].user_image||$root.paccounts[comment.author].profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{comment.author}}">{{comment.author}}</a></b>&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
                         <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="comment.max_accepted_payout.split(\' \')[0] === \'0.000\'"><del>{{comment | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="comment.max_accepted_payout.split(\' \')[0] !== \'0.000\'">{{comment | sumPostTotal:$root.$storage.currencyRate | number}}</span> </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
-                        <div class="ion-comment--text bodytext selectable" ng-class="{\'mask\': comment.net_rshares<0}" ng-bind-html="comment.body | parseUrl "></div>\
+                        <div class="ion-comment--text bodytext selectable" ng-class="{\'mask\': comment.net_rshares<0}" ng-bind-html="comment | parseUrl "></div>\
                         <div class="ion-comment--replies"><ion-spinner ng-if="comment.invoting"></ion-spinner><span ng-click="upvotePost(comment)" on-hold="openSliderr($event, comment)"><span class="fa fa-md fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UPVOTE"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.user.username && compateDate(comment)" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.abs_rshares == 0" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{\'REMOVE\'|translate}}</span></div>\
                     </ion-item>',
             controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopover, $ionicPopup, $ionicActionSheet, $cordovaCamera, $filter, ImageUploadService) {

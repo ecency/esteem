@@ -406,6 +406,12 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     if (!$rootScope.$storage.dir) {
       $rootScope.$storage.dir = 'ltr';
     }
+    if (!$rootScope.$storage.nsfw) {
+      $rootScope.$storage.nsfw = false;
+    }
+    if (!$rootScope.$storage.download) {
+      $rootScope.$storage.download = true;
+    }
     $rootScope.$storage.chains = [{id:'steem', name: 'Steem'}, {id:'golos', name: 'Golos'}];
 
     if (!$rootScope.$storage.currencies) {
@@ -839,7 +845,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                   ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
                   : $rootScope.user.privatePostingKey;
 
-        console.log(wif+$rootScope.user.username+post.author+post.permlink);
+        //console.log(wif+$rootScope.user.username+post.author+post.permlink);
 
         window.steem.broadcast.vote(wif, $rootScope.user.username, post.author, post.permlink, $rootScope.$storage.voteWeight*tt || 10000*tt, function(err, result) {
           //console.log(err, result);

@@ -91,6 +91,34 @@
       {{'CONFIGURATIONS'|translate}}
     </div>
 
+    <div class="row">
+      <div class="col col-33">
+      <span class="slabel" ng-click='openTooltip($event,"{{"AUTO_DOWNLOAD_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'AUTO_DOWNLOAD'|translate}}</span>
+      </div>
+      <div class="col pull-right tright">
+        <label class="toggle toggle-positive">
+         <input type="checkbox" ng-model="$root.$storage.download">
+         <div class="track">
+           <div class="handle"></div>
+         </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col col-33">
+      <span class="slabel" ng-click='openTooltip($event,"{{"NSFW_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'NSFW'|translate}}</span>
+      </div>
+      <div class="col pull-right tright">
+        <label class="toggle toggle-positive">
+         <input type="checkbox" ng-model="$root.$storage.nsfw">
+         <div class="track">
+           <div class="handle"></div>
+         </div>
+        </label>
+      </div>
+    </div>
+
     <div class="row" ng-if="$root.user">
       <div class="col col-33">
       <span class="slabel" ng-click='openTooltip($event,"{{"VOTING_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'VOTING'|translate}} (%)</span>
