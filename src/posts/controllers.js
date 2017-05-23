@@ -343,20 +343,22 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $rootScope.log('refreshLocalUserData');
     if ($rootScope.user && $rootScope.user.username && $rootScope.user.chain == $rootScope.$storage.chain) {
       window.steem.api.getAccounts([$rootScope.user.username], function(err, dd){
-        dd = dd[0];
-        if (dd && dd.json_metadata) {
-          dd.json_metadata = angular.fromJson(dd.json_metadata);
-        }
-        angular.merge($rootScope.$storage.user, dd);
-        $rootScope.user = $rootScope.$storage.user;
+        if (dd) {
+          dd = dd[0];
+          if (dd && dd.json_metadata) {
+            dd.json_metadata = angular.fromJson(dd.json_metadata);
+          }
+          angular.merge($rootScope.$storage.user, dd);
+          $rootScope.user = $rootScope.$storage.user;
 
-        $scope.mcss = ($rootScope.user.json_metadata && $rootScope.user.json_metadata.profile && $rootScope.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed', 'color': 'white', 'box-shadow':'inset 0 0 0 2000px rgba(255,0,150,0.3)'} : {'background': 'rgba(31,83,152,1)', 'color': 'white'};
-        
-        if (!$scope.$$phase) {
-          $scope.$apply();
-        }
-        if (!$rootScope.$$phase) {
-          $rootScope.$apply();
+          $scope.mcss = ($rootScope.user.json_metadata && $rootScope.user.json_metadata.profile && $rootScope.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed', 'color': 'white', 'box-shadow':'inset 0 0 0 2000px rgba(255,0,150,0.3)'} : {'background': 'rgba(31,83,152,1)', 'color': 'white'};
+          
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+          if (!$rootScope.$$phase) {
+            $rootScope.$apply();
+          }
         }
       });
     }
@@ -376,7 +378,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $rootScope.$broadcast('changeLight');
   }
 
-  $scope.$on("$ionicView.enter", function(){
+  $scope.$on("$ionicView.loaded", function(){
     $rootScope.$broadcast('refreshLocalUserData');
     $scope.theme = $rootScope.$storage.theme;
   });
@@ -388,7 +390,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         $rootScope.$storage.appversion = version;
       });
     } else {
-      $rootScope.$storage.appversion = '1.4.4';
+      $rootScope.$storage.appversion = '1.4.5';
     }
   });
 
@@ -549,12 +551,130 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $rootScope.$broadcast('close:popover');
     $state.go("app.profile", {username: xy});
   };
+  
+  //check if permission is already enabled
+  function includesAccount(account) {
+    var hasPermission = false;
+    account.posting.account_auths.forEach(function(auth) {
+        if (auth[0] === "esteemapp") {
+            hasPermission = true;
+        }
+    });
+    return hasPermission;
+  }
   $scope.testfunction = function() {
-    window.steem.api.getAccountHistory($rootScope.user.username, -1, 25, function(err, result) {
+    /*window.steem.api.getAccountHistory($rootScope.user.username, -1, 25, function(err, result) {
       //console.log(err, result);
       $rootScope.log(angular.toJson(response));
-    });
-  }
+    });*/
+
+    if ($rootScope.user) {
+
+      window.steem.api.getAccounts([$rootScope.user.username], function(err, response){
+        console.log(err, response);
+        var account = response[0];
+        var postingAuth = account.posting;
+
+        //adding permission
+        postingAuth.account_auths.push(['esteemapp', postingAuth.weight_threshold]);
+        //--------
+        //removing permission
+        /*for (var i = 0; i < postingAuth.account_auths.length; i++) {
+            if (postingAuth.account_auths[i][0] === 'esteemapp') {
+                break;
+            }
+        }
+        postingAuth.account_auths.splice(i, 1);*/
+        //--------
+
+
+        const wif = $rootScope.user.password
+        ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'active')
+        : $rootScope.$storage.user.privateActiveKey;
+        //steem.broadcast.accountUpdate(wif, account, owner, active, posting, memoKey, jsonMetadata, function(err, result) {
+
+        window.steem.broadcast.accountUpdate(wif, $rootScope.user.username, undefined, undefined, postingAuth, $rootScope.user.memo_key, account.json_metadata, function(err, result) {
+          //$rootScope.$storage.user.memo_key
+          console.log(err, result);
+          //$scope.modalEdit.hide();
+          if (err) {
+            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+          } else {
+            console.log('set');
+            //$rootScope.$broadcast('refreshLocalUserData');
+          }
+        });
+      });
+        $rootScope.$broadcast('hide:loading');
+      } else {
+        $rootScope.$broadcast('hide:loading');
+        $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
+      }
+  };
+  
+  //$scope.testfunction();
+
+  $scope.testfunction2 = function() {
+    /*window.steem.api.getAccountHistory($rootScope.user.username, -1, 25, function(err, result) {
+      //console.log(err, result);
+      $rootScope.log(angular.toJson(response));
+    });*/
+
+    if ($rootScope.user) {
+
+      const wif = $rootScope.user.password
+      ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
+      : $rootScope.user.privatePostingKey;
+
+      var permlink = "tests";
+      var json = {};
+      angular.merge(json, {tags: 'test', app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' });
+
+      var operations_array = [];
+      
+      operations_array = [
+        ['comment', {
+          parent_author: "",
+          parent_permlink: 'test',
+          author: "demo",
+          permlink: permlink,
+          title: 'Test post',
+          body: "This is test post, please don't vote",
+          json_metadata: angular.toJson(json)
+        }],
+        ['comment_options', {
+          allow_curation_rewards: true,
+          allow_votes: true,
+          author: "demo",
+          permlink: permlink,
+          max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
+          percent_steem_dollars: 10000,
+          extensions: [[0, { "beneficiaries": [{ "account":"esteemapp", "weight":100 }] }]]
+        }]
+        ];
+      
+     
+      window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
+        console.log(err, result);
+        $scope.replying = false;
+        $rootScope.$broadcast('hide:loading');
+        if (err) {
+          $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+        } else {
+          $scope.closePostModal();
+          $rootScope.$emit('closePostModal');
+          $rootScope.$broadcast('close:popover');
+          //$scope.menupopover.hide();
+          $scope.spost = {};
+          $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_SUBMITTED'));
+          //$scope.closeMenuPopover();
+          $state.go("app.profile", {username: $rootScope.user.username});
+        }
+      });
+    }
+  };
+
+  //$scope.testfunction2();
 
 })
 
@@ -1483,7 +1603,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   }
 
   $scope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
-    console.log('stateChangeSuccess', $stateParams.renew);
+    //console.log('stateChangeSuccess', $stateParams.renew);
     if (from.name == 'app.posts' && to.name == 'app.post') {
 
     } else {
@@ -1630,6 +1750,13 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
     return false;
   }
+  const snakeCaseRe = /_([a-z])/g;
+
+  function camelCase(str) {
+    return str.replace(snakeCaseRe, function (_m, l) {
+      return l.toUpperCase();
+    });
+  }
 
   $scope.fetchPosts = function(type, limit, tag) {
     type = type || $rootScope.$storage.filter || "trending";
@@ -1661,13 +1788,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         params.select_authors = [$rootScope.user.username]; 
         delete params.tags; 
       }
-      const snakeCaseRe = /_([a-z])/g;
-
-      function camelCase(str) {
-        return str.replace(snakeCaseRe, function (_m, l) {
-          return l.toUpperCase();
-        });
-      }
+      
       var xyz = camelCase("get_discussions_by_"+type);
       //window.steem.api.getDiscussionsBy
       window.steem.api[xyz](params, function(err, response) {
@@ -1730,6 +1851,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   });
   
   $scope.$on('$ionicView.beforeEnter', function(){
+    console.log('beforeEnter PostsCtrl');
     $scope.theme = $rootScope.$storage.theme;
     if ($stateParams.tags) {
       $rootScope.$storage.tag = $stateParams.tags;
@@ -2685,14 +2807,14 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             }
           }
         });
+        if (!$scope.$$phase){
+          $scope.$apply();
+        }
+        if (!$rootScope.$$phase){
+          $rootScope.$apply();
+        }
       }
       
-      if (!$scope.$$phase){
-        $scope.$apply();
-      }
-      if (!$rootScope.$$phase){
-        $rootScope.$apply();
-      }
       //console.log(po);
     });
 
@@ -2754,54 +2876,54 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       //console.log(dd);
       var po = [];
       $rootScope.paccounts = {};
-
-      angular.forEach(dd.content, function(v,k){
-        if (v.parent_author==author && v.parent_permlink == permlink) {
-          var len = v.active_votes.length;
-          if ($rootScope.user) {
-            for (var j = len - 1; j >= 0; j--) {
-              if (v.active_votes[j].voter === $rootScope.user.username) {
-                if (v.active_votes[j].percent > 0) {
-                  v.upvoted = true;
-                } else if (v.active_votes[j].percent < 0) {
-                  v.downvoted = true;
-                } else {
-                  v.downvoted = false;
-                  v.upvoted = false;
+      if (dd) {
+        angular.forEach(dd.content, function(v,k){
+          if (v.parent_author==author && v.parent_permlink == permlink) {
+            var len = v.active_votes.length;
+            if ($rootScope.user) {
+              for (var j = len - 1; j >= 0; j--) {
+                if (v.active_votes[j].voter === $rootScope.user.username) {
+                  if (v.active_votes[j].percent > 0) {
+                    v.upvoted = true;
+                  } else if (v.active_votes[j].percent < 0) {
+                    v.downvoted = true;
+                  } else {
+                    v.downvoted = false;
+                    v.upvoted = false;
+                  }
                 }
               }
             }
+            po.push(v);
           }
-          po.push(v);
-        }
-      });
-      
-      angular.forEach(dd.accounts, function(v,k){
-        //console.log(k);
-        if ($rootScope.postAccounts && $rootScope.postAccounts.indexOf(k) == -1) {
-          $rootScope.postAccounts.push(k);
-        }
+        });
+        
+        angular.forEach(dd.accounts, function(v,k){
+          //console.log(k);
+          if ($rootScope.postAccounts && $rootScope.postAccounts.indexOf(k) == -1) {
+            $rootScope.postAccounts.push(k);
+          }
 
-        if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
-          if (v.json_metadata) {
-            if (v.json_metadata.indexOf("created_at")>-1) {
-              v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
-            } else {
-              v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):{};
+          if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
+            if (v.json_metadata) {
+              if (v.json_metadata.indexOf("created_at")>-1) {
+                v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
+              } else {
+                v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):{};
+              }
+              var key = v.name;
+              $rootScope.paccounts[key] = v.json_metadata;
             }
-            var key = v.name;
-            $rootScope.paccounts[key] = v.json_metadata;
           }
-        }
-      });
-      
+        });
+      }
       $scope.comments = po;
       $rootScope.fetching = false;
-      setTimeout(function() {
+      /*setTimeout(function() {
         var p2 = document.querySelector('.my-handle');
         $scope.quotePosition = $ionicPosition.position(angular.element(p2));
         $ionicScrollDelegate.$getByHandle('mainScroll').scrollTo(0,$scope.quotePosition.top, true); 
-      }, 1);
+      }, 1);*/
       
       if (!$scope.$$phase){
         $scope.$apply();
@@ -3649,7 +3771,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     }
     if (len>0) {
       //delete params.limit;
-      console.log($scope.data.profile);
+      //console.log($scope.data.profile);
       var ll = $scope.data.profile.length;
       params.start_author = $scope.data.profile[ll-1].author;
       params.start_permlink = $scope.data.profile[ll-1].permlink;
@@ -3667,7 +3789,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             delete params.tags;   
           }
           window.steem.api.getDiscussionsByBlog(params, function(err, response) {
-            console.log(err, response, params);
+            //console.log(err, response, params);
             if (response) {
               if (response.length <= 1) {
                 $scope.end = true;
@@ -3818,10 +3940,10 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
 
       window.steem.api.getState("/@"+$stateParams.username+$scope.rest, function(err, res) {
         //console.log(err, res);
-        if (res) {
+        if (res && res.content) {
           $scope.data = {profile: []};
           //console.log(res);
-          if (Object.keys(res.content).length>0) {
+          //if (Object.keys(res.content).length>0) {
             angular.forEach(res.content, function(v,k){
               v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
               if ($rootScope.user){
@@ -3851,7 +3973,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           } else {
             $scope.nonexist = true;
           }
-        }
+        //}
       });
     };
     $scope.dfetching = function(){
@@ -3869,7 +3991,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             $scope.$apply();
           }
         } else {
-          setTimeout($scope.dfetching, 20);
+          setTimeout($scope.dfetching, 2);
         }
       });
     };
@@ -3881,7 +4003,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         }
         var len = res.length;
         for (var i = 0; i < len; i++) {
-          console.log(res)
+          //console.log(res)
           $scope.muting.push(res[i].following);
         }
         if (res.length<$scope.limit) {
@@ -3889,7 +4011,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             $scope.$apply();
           }
         } else {
-          setTimeout($scope.mfetching, 20);
+          setTimeout($scope.mfetching, 2);
         }
       });
     };
@@ -3908,7 +4030,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             $scope.$apply();
           }
         } else {
-          setTimeout($scope.rfetching, 20);
+          setTimeout($scope.rfetching, 2);
         }
       });
     };
@@ -3930,27 +4052,31 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       console.log("getOtherUsersData");
       window.steem.api.getAccounts([$stateParams.username], function(err, dd){
         //console.log(err, dd);
-        dd = dd[0];
-        if (dd && dd.json_metadata) {
-          dd.json_metadata = angular.fromJson(dd.json_metadata);
-        }
-        angular.merge($scope.user, dd);
-        //console.log(angular.toJson($scope.user));
-        //console.log($scope.user.json_metadata.profile.cover_image);
+        if (dd) {
+          dd = dd[0];
+          if (dd && dd.json_metadata) {
+            dd.json_metadata = angular.fromJson(dd.json_metadata);
+          }
+          angular.merge($scope.user, dd);
+          //console.log(angular.toJson($scope.user));
+          //console.log($scope.user.json_metadata.profile.cover_image);
 
-        if ($rootScope.user) {
-          $scope.css = ($rootScope.user.username === $scope.user.username && $rootScope.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed', 'box-shadow':'inset 0 0 0 2000px rgba(255,0,150,0.3)' } : ($rootScope.user.username !== $scope.user.username && ($scope.user.json_metadata && $scope.user.json_metadata.profile && $scope.user.json_metadata.profile.cover_image)) ? {'background': 'url('+$scope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed', 'box-shadow':'inset 0 0 0 2000px rgba(0,0,0,0.5)'} : null;
-        } else {
-          $scope.css = null;
-        }
-        //console.log($scope.css);
-        if (!$scope.$$phase){
-          $scope.$apply();
+          if ($rootScope.user) {
+            $scope.css = ($rootScope.user.username === $scope.user.username && $rootScope.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed', 'box-shadow':'inset 0 0 0 2000px rgba(255,0,150,0.3)' } : ($rootScope.user.username !== $scope.user.username && ($scope.user.json_metadata && $scope.user.json_metadata.profile && $scope.user.json_metadata.profile.cover_image)) ? {'background': 'url('+$scope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed', 'box-shadow':'inset 0 0 0 2000px rgba(0,0,0,0.5)'} : null;
+          } else {
+            $scope.css = null;
+          }
+          //console.log($scope.css);
+          if (!$scope.$$phase){
+            $scope.$apply();
+          }
         }
       });
       window.steem.api.getFollowCount($stateParams.username, function(err, res) {
         //console.log(err, res);
-        $scope.followdetails = res;
+        if (res) {
+          $scope.followdetails = res;
+        }
       });
       $scope.getFollows(null, "d", "m");
       if(!$scope.$$phase){
@@ -4003,38 +4129,38 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     }
     window.steem.api.getState("/@"+$stateParams.username+$scope.rest, function(err, res) {
       //console.log(err, res);
-      if (res.content) {
-        if (Object.keys(res.content).length>0) {
-          angular.forEach(res.content, function(v,k){
-            v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
-            if ($rootScope.user){
-              if ($rootScope.user.username !== v.author) {
-                v.reblogged = true;
-              }
-              var len = v.active_votes.length;
-              for (var j = len - 1; j >= 0; j--) {
-                if (v.active_votes[j].voter === $rootScope.user.username) {
-                  if (v.active_votes[j].percent > 0) {
-                    v.upvoted = true;
-                  } else if (v.active_votes[j].percent < 0) {
-                    v.downvoted = true;
-                  } else {
-                    v.upvoted = false;
-                    v.downvoted = false;
-                  }
+      if (res && res.content) {
+        //if (Object.keys(res.content).length>0) {
+        angular.forEach(res.content, function(v,k){
+          v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
+          if ($rootScope.user){
+            if ($rootScope.user.username !== v.author) {
+              v.reblogged = true;
+            }
+            var len = v.active_votes.length;
+            for (var j = len - 1; j >= 0; j--) {
+              if (v.active_votes[j].voter === $rootScope.user.username) {
+                if (v.active_votes[j].percent > 0) {
+                  v.upvoted = true;
+                } else if (v.active_votes[j].percent < 0) {
+                  v.downvoted = true;
+                } else {
+                  v.upvoted = false;
+                  v.downvoted = false;
                 }
               }
             }
-            $scope.data.profile.push(v);
-          });
-          $scope.nonexist = false;
-        } else {
-          $scope.nonexist = true;
-        }
-        if(!$scope.$$phase){
-          $scope.$apply();
-        }
+          }
+          $scope.data.profile.push(v);
+        });
+        $scope.nonexist = false;
+      } else {
+        $scope.nonexist = true;
       }
+      if(!$scope.$$phase){
+        $scope.$apply();
+      }
+      
       if (type==="transfers" || type==="permissions") {
         for (var property in res.accounts) {
           if (res.accounts.hasOwnProperty(property)) {
@@ -4060,7 +4186,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       : $rootScope.user.privatePostingKey;
 
       window.steem.broadcast.claimRewardBalance(wif, $rootScope.user.username, $scope.accounts.reward_steem_balance, $scope.accounts.reward_sbd_balance, $scope.accounts.reward_vesting_balance, function(err, result) {
-        console.log(err, result);
+        //console.log(err, result);
         if (err) {
             $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err);
           } else {

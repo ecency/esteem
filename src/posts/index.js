@@ -1191,7 +1191,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
                   var alertPopup = $ionicPopup.confirm({
                     title: data.title,
-                    template: data.body + $filter('translate')('OPENING_POST')
+                    template: data.body +" "+ $filter('translate')('OPENING_POST') + " ?! "
                   });
 
                   alertPopup.then(function(res) {
