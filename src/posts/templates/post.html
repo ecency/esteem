@@ -31,7 +31,18 @@
       <p class="title h3" ng-if="$root.sitem.root_title && $root.sitem.title==''"><a href="#/app/post{{$root.sitem.url.split('#')[0]}}">{{"VIEW_CONTEXT"|translate}}</a></p>
     	<p class="title h3">{{$root.sitem.title}}</p>
     	<div class="stitle row gray"><div class="col">
-        <img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.paccounts[$root.sitem.author].user_image||$root.paccounts[$root.sitem.author].profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /> <b><a href="#/app/profile/{{$root.sitem.author}}">{{$root.sitem.author}}</a></b>&nbsp;<div class="reputation">{{$root.sitem.author_reputation|reputation|number:0}}</div>&middot;{{$root.sitem.created|timeago}} {{'IN'|translate}}&nbsp;{{$root.sitem.category|detransliterate:false}}</div><div class="pull-right"><span ng-if="$root.voiceOver"><i class="fa fa-flag" on-tap="downvotePost($root.sitem)" ng-if="!$root.sitem.downvoted">{{'DOWNVOTE'|translate}}</i><i class="fa fa-flag positive" on-tap="unvotePost($root.sitem)" ng-if="$root.sitem.downvoted">{{'UNVOTE_DOWNVOTED'|translate}}</i></span><span ng-if="!$root.voiceOver"><i class="fa fa-flag" on-tap="downvotePost($root.sitem)" ng-if="!$root.sitem.downvoted"></i><i class="fa fa-flag positive" on-tap="unvotePost($root.sitem)" ng-if="$root.sitem.downvoted"></i></span></div></div>
+        <img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.paccounts[$root.sitem.author].user_image||$root.paccounts[$root.sitem.author].profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /> <b><a href="#/app/profile/{{$root.sitem.author}}">{{$root.sitem.author}}</a></b>&nbsp;<div class="reputation">{{$root.sitem.author_reputation|reputation|number:0}}</div>&middot;{{$root.sitem.created|timeago}} {{'IN'|translate}}&nbsp;{{$root.sitem.category|detransliterate:false}}</div>
+         <div class="pull-right">
+          <span ng-if="$root.voiceOver">
+            <i class="fa fa-flag" on-tap="downvotePost($root.sitem)" ng-if="!$root.sitem.downvoted">{{'DOWNVOTE'|translate}}</i>
+            <i class="fa fa-flag positive" on-tap="unvotePost($root.sitem)" ng-if="$root.sitem.downvoted">{{'UNVOTE_DOWNVOTED'|translate}}</i>
+          </span>
+          <span ng-if="!$root.voiceOver">
+            <i class="fa fa-flag" on-tap="downvotePost($root.sitem)" ng-if="!$root.sitem.downvoted"></i>
+            <i class="fa fa-flag positive" on-tap="unvotePost($root.sitem)" ng-if="$root.sitem.downvoted"></i>
+          </span>
+         </div>
+        </div>
     	<br><!---->
       <div class="bodytext selectable" ng-bind-html="$root.sitem | parseUrl ">
       </div>

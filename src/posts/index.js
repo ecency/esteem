@@ -30,7 +30,7 @@ require('./services')(app);
 require('./controllers')(app);
 
 
-app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $sceDelegateProvider, $logProvider, $compileProvider, $animateProvider, $translateProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $sceDelegateProvider, $logProvider, $compileProvider, $animateProvider, $translateProvider, $httpProvider) {
   $stateProvider
 
   .state('app', {
@@ -199,6 +199,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
       $logProvider.debugEnabled(false);
       $compileProvider.debugInfoEnabled(false);
   }
+
+  $httpProvider.useApplyAsync(true);
 
   $translateProvider.translations('en-US', require('./locales/ready/en-US')); //English
   $translateProvider.translations('ru-RU', require('./locales/ready/ru-RU')); //Russian
@@ -725,10 +727,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           xx.active_votes = dd;
         });
       }
-      setTimeout(function() {
+      $rootScope.$evalAsync(function($rootScope) {
         $rootScope.voters = xx;
         $rootScope.infomodal.show();  
-      }, 5);
+      });
     };
 
     $rootScope.closeInfo = function() {
@@ -958,7 +960,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       }
     };
 
-    setTimeout(function() {
+    //setTimeout(function() {
+    $rootScope.$evalAsync(function( $rootScope ) {
       window.steem.api.getFeedHistory(function(err, r) {
         //console.log(err, r);
         $rootScope.$storage.base = r.current_median_history.base.split(" ")[0];
@@ -968,7 +971,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           $rootScope.$storage.steem_per_mvests = (Number(r.total_vesting_fund_steem.substring(0, r.total_vesting_fund_steem.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;
         });
       });
-    }, 10);
+    });
+    //}, 10);
     if (!angular.isDefined($rootScope.$storage.notifications)) {
       $rootScope.$storage.notifications = [];
     }
