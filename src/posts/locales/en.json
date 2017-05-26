@@ -276,5 +276,7 @@
 	"UNMUTE": "Unmute",
 	"SCHEDULE": "Schedule",
 	"SAVE": "SAVE",
-	"PERMISSION": "Permission"
+	"PERMISSION": "Permission",
+	"SCHEDULES": "Schedules",
+	"DELETED": "Deleted"
 }

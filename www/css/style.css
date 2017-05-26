@@ -408,7 +408,14 @@ img.round-avatar{
 select-input {
   width: 100%!important;
 }
-
+select-input .icon {
+  position: none;
+}
+select-input input {
+  width: 100%!important;
+  padding: 0!important;
+  margin: 0!important;
+}
 @media only screen and (min-device-width:320px) {
   img {
     max-width: 100%;

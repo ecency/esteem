@@ -81,6 +81,10 @@
           <i class="icon ion-compose"></i>
           {{'DRAFTS'|translate}}
         </ion-item>
+        <ion-item menu-close href="#/app/schedules" ng-if="$root.user" class="item-icon-left">
+          <i class="icon ion-clock"></i>
+          {{'SCHEDULES'|translate}}
+        </ion-item>
         <!--<ion-item menu-close href="#/app/notifications" class="item-icon-left" ng-if="$root.$storage.notifications && $root.$storage.notifications.length>0">
           <i class="icon ion-bookmark"></i>
           {{'NOTIFICATIONS'|translate}}

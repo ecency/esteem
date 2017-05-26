@@ -152,6 +152,17 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
     }
   })
 
+  .state('app.schedules', {
+    url: '/schedules',
+    views: {
+      'menuContent': {
+        //templateUrl: 'templates/post.html',
+        template: fs.readFileSync(__dirname + '/templates/schedules.html', 'utf8'),
+        controller: 'SchedulesCtrl'
+      }
+    }
+  })
+
 	.state('app.images', {
     url: '/images',
     views: {

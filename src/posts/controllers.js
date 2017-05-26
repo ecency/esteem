@@ -1419,6 +1419,14 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       APIs.schedulePost($rootScope.user.username, $scope.spost).then(function(res){
         console.log(res.data);
         $rootScope.$broadcast('hide:loading');
+        $scope.closePostModal();
+
+        $rootScope.$emit('closePostModal');
+        $rootScope.$broadcast('close:popover');
+        //$scope.menupopover.hide();
+        
+        $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_SUBMITTED'));
+        
         $scope.$applyAsync();
       });
       $rootScope.$broadcast('hide:loading');
@@ -3235,6 +3243,26 @@ app.controller('DraftsCtrl', function($scope, $stateParams, $rootScope, $state, 
     APIs.getDrafts($rootScope.user.username).then(function(res){
       //console.log(res);
       $scope.drafts = res.data;
+    });
+  });
+});
+
+app.controller('SchedulesCtrl', function($scope, $stateParams, $rootScope, $state, APIs, $interval, $ionicScrollDelegate, $filter) {
+  //JSON.stringify({
+  $scope.removeSchedule = function(_id) {
+    APIs.removeSchedule(_id, $rootScope.user.username).then(function(res){
+      APIs.getSchedules($rootScope.user.username).then(function(res){
+        //console.log(res);
+        $scope.schedules = res.data;
+      });
+      $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('DELETED'));
+    });
+  };
+
+  $scope.$on('$ionicView.beforeEnter', function(){
+    APIs.getSchedules($rootScope.user.username).then(function(res){
+      //console.log(res);
+      $scope.schedules = res.data;
     });
   });
 });

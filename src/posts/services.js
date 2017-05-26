@@ -51,6 +51,12 @@ module.exports = function (app) {
       },
       schedulePost: function(user, post) {
         return $http.post(API_END_POINT+"/api/schedules", {username: user, category: post.category[0], title: post.title, permlink: post.permlink, json: post.json, body: post.body, post_type: post.post_type, upvote_this: post.upvote_this, schedule: post.schedule, chain: $rootScope.$storage.chain});
+      },
+      getSchedules: function(user) {
+        return $http.get(API_END_POINT+"/api/schedules/"+user);
+      },
+      removeSchedule: function(id, user) {
+        return $http.delete(API_END_POINT+"/api/schedules/"+user+"/"+id);
       }
 		};
 	}])
