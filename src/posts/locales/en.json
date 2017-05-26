@@ -269,9 +269,12 @@
     "DOWNLOAD_COMPLETED": "Download completed",
     "DOWNLOADING_PICTURE": "Downloading picture",
     "NSFW": "Nsfw",
-    "NSFW_TEXT": "In order to view NSFW/Adult content you should be 18+ of an age! This settings enables automatic display of NSFW content images and text.",
-    "AUTO_DOWNLOAD": "Fetch images",
-    "AUTO_DOWNLOAD_TEXT": "Fetch images setting allows you to save bandwidth by allowing you to disable external images from loading, gives you complete control over your traffic usage.",
-    "MUTE": "Mute",
-    "UNMUTE": "Unmute"
+	"NSFW_TEXT": "In order to view NSFW/Adult content you should be 18+ of an age! This settings enables automatic display of NSFW content images and text.",
+	"AUTO_DOWNLOAD": "Fetch images",
+	"AUTO_DOWNLOAD_TEXT": "Fetch images setting allows you to save bandwidth by allowing you to disable external images from loading, gives you complete control over your traffic usage.",
+	"MUTE": "Mute",
+	"UNMUTE": "Unmute",
+	"SCHEDULE": "Schedule",
+	"SAVE": "SAVE",
+	"PERMISSION": "Permission"
 }

@@ -202,6 +202,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
 
   $httpProvider.useApplyAsync(true);
 
+  $compileProvider.debugInfoEnabled(false);
+
   $translateProvider.translations('en-US', require('./locales/ready/en-US')); //English
   $translateProvider.translations('ru-RU', require('./locales/ready/ru-RU')); //Russian
   $translateProvider.translations('de-DE', require('./locales/ready/de-DE')); //German
@@ -482,9 +484,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         navigator.splashscreen.hide();
       }, 1000);
     }
-    if (angular.isDefined($cordovaSplashscreen)) {
+    if ($cordovaSplashscreen) {
       setTimeout(function() {
-        console.log('-----hide splash------');
+        //console.log('-----hide splash------, ', $cordovaSplashscreen);
         $cordovaSplashscreen.hide();
       }, 1000);
     }
@@ -525,6 +527,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         }
       }
     };
+
     $rootScope.$on('show:loading', function(event, args){
       $rootScope.log('show:loading');
       $ionicLoading.show({

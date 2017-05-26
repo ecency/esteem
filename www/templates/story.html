@@ -2,25 +2,45 @@
   <ion-header-bar class="bar bar-header bar-positive">
     <button class="button button-clear button-icon ion-arrow-left-c"  on-tap="closePostModal()"></button>
     <h1 class="title">{{'SUBMIT_A_STORY'|translate}}</h1>
+    <div class="buttons">
     <button class="button button-positive button-primary" ng-disabled="disableBtn" ng-click="submitStory()">{{'POST'|translate}}</button>
+    <button class="button button-positive button-primary" ng-if="spost.advanced && $root.$storage.chain !== 'golos'" ng-disabled="!spost.permission" ng-click="scheduleStory()">{{'SCHEDULE'|translate}}</button>
+    </div>
   </ion-header-bar>
-  <ion-content class="padding posting" overflow-scroll="true">
+  <ion-content class="padding posting" overflow-scroll="false">
     <input type="text" name="title" placeholder="{{'TITLE'|translate}}" ng-model="spost.title" style="width:100%;" autocomplete="off">
 
     <textarea ng-model='spost.body' autofocus rows="15" placeholder="{{'POST_CONTENT'|translate}}" class="width100" ng-focus='cfocus()'></textarea>
       <input type="text" name="categories" placeholder="{{'TAGS'|translate}}" ng-model="spost.tags" ng-change="tagsChange()" style="width:100%;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-      <div class="row">
-        <div class="col">
-           <select ng-model='spost.operation_type' style="width: 100%;" ng-if='!edit'>
+      <div class="row" ng-if="spost.advanced">
+        <div class="col item item-input">
+          <ion-checkbox ng-model="spost.upvote_this" ng-if='!edit'>{{'UPVOTE'|translate}}</ion-checkbox> 
+        </div>
+        <div class="col item item-select">
+          <select ng-model='spost.operation_type' style="width: 100%;" ng-if='!edit'>
               <option selected value='default'>{{'DEFAULT'|translate}}</option>
               <option value='sp'>{{'POWERUP'|translate:'{ platformpower:"Steem Power" }' }}</option>
               <option value='dp'>{{'DECLINE_PAYOUT'|translate}}</option>
            </select>
-           <ion-checkbox ng-model="spost.upvote_this" ng-if='!edit'>{{'UPVOTE'|translate}}</ion-checkbox>
         </div>
-        <div class="col tcenter">
-          <button class="button button-calm button-small" ng-click="savePost()">{{'SAVE_FOR_LATER'|translate}}</button>
-          <button class="button button-light button-small" ng-click="clearPost()">{{'CLEAR'|translate}}</button>
+      </div>
+      <ion-toggle ng-model="spost.permission" ng-if="spost.advanced && $root.$storage.chain !== 'golos'" toggle-class="toggle-calm" ng-change="changePermission()">{{'PERMISSION'|translate}}</ion-toggle>
+      <div class="row" ng-if="spost.advanced && spost.permission">
+        <div class="col">
+          <div class="item" ion-datetime-picker ng-model="spost.schedule" only-valid="{'after': 'today', 'inclusive': true}" ng-if="spost.advanced && $root.$storage.chain !== 'golos'">{{'SCHEDULE'|translate}}: {{spost.schedule| date: "yyyy-MM-dd H:mm:ss"}}</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+           <ion-toggle ng-model="spost.advanced" ng-disabled="edit" toggle-class="toggle-calm">{{'ADVANCED'|translate}}</ion-toggle>
+        </div>
+        <div class="col tcenter button-bar-story">
+          <div class="button-bar">
+            <button class="button button-calm button-small" ng-click="savePost()">{{'SAVE'|translate}}</button>
+            <button class="button button-light button-small" ng-click="clearPost()">{{'CLEAR'|translate}}</button>
+          </div>
+          
+          
         </div>
       </div>
       <p ng-if="spost.body">{{'PREVIEW'|translate}}</p>

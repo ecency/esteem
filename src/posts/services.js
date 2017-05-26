@@ -49,6 +49,9 @@ module.exports = function (app) {
       searchEscrow: function(id) {
         return $http.get(API_END_POINT+"/api/escrow/"+$rootScope.$storage.chain+"/"+id);
       },
+      schedulePost: function(user, post) {
+        return $http.post(API_END_POINT+"/api/schedules", {username: user, category: post.category[0], title: post.title, permlink: post.permlink, json: post.json, body: post.body, post_type: post.post_type, upvote_this: post.upvote_this, schedule: post.schedule, chain: $rootScope.$storage.chain});
+      }
 		};
 	}])
   app.directive('backImg', function(){

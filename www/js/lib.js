@@ -64583,7 +64583,7 @@ function($rootScope, $state, $location, $window, $timeout, $ionicViewSwitcher, $
         if (clearStateIds.length) {
           $timeout(function() {
             self.clearCache(clearStateIds);
-          }, 300);
+          }, 100);
         }
       }
 
