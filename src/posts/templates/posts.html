@@ -16,16 +16,16 @@
 	    </ion-nav-buttons>
 	</ion-nav-bar>
   <ion-content class="has-header" scroll="true" delegate-handle="mainScroll" overflow-scroll="true" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
-		<ion-refresher pulling-text="{{::pull}}" on-refresh="refresh()">
-  	</ion-refresher>
+		<!--<ion-refresher pulling-text="{{::pull}}" on-refresh="refresh()">
+  		</ion-refresher>-->
   		<div ng-if="$root.$storage.view=='compact' && data.length>0" class="masonry-layout">
-	    	<div ng-repeat="d in data | regex:'category':'bm.*' track by $index" class="masonry-layout__panel">
+	    	<div ng-repeat="d in data | regex:'category':'bm.*' track by d.id" class="masonry-layout__panel">
 	    	   <div class="list masonry-layout__panel-content" >
 		    	<div class="item" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 				    <div on-tap="open(d)">
-				    <span ng-if="d.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{::translations.resteem}} {{d.reblogged_by}}</span>
-				    <p><h2 class="wrapword"><i class="fa fa-money positive" ng-if="d.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="d.percent_steem_dollars === 0"></i> {{d.title}}</h2></p>
-				    <div class="row postdetails wrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;{{::translations.by}}&nbsp;<b>{{d.author}}</b>&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div> {{::translations.in}} {{d.category|detransliterate:false}} &middot; {{d.body|readingtime}} {{::translations.min}}</div></div>
+				    <span ng-if="d.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{::translations.resteem}} {{::d.reblogged_by}}</span>
+				    <p><h2 class="wrapword"><i class="fa fa-money positive" ng-if="d.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="d.percent_steem_dollars === 0"></i> {{::d.title}}</h2></p>
+				    <div class="row postdetails wrap"><div class="col"><i class="icon ion-android-time"></i> {{::d.created|timeago}}&nbsp;{{::translations.by}}&nbsp;<b>{{::d.author}}</b>&nbsp;<div class="reputation">{{::d.author_reputation|reputation|number:0}}</div> {{::translations.in}} {{::d.category|detransliterate:false}} &middot; {{::d.body|readingtime}} {{::translations.min}}</div></div>
 				    </div>
 				    <div class="row">
 				    <div class="col">
@@ -37,10 +37,10 @@
 								<i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!d.invoting"></i>{{::translations.unvote}}</a>&nbsp;<span class="gray" on-tap="openTooltip($event,d)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="d.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{d | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="d.max_accepted_payout.split(' ')[0] !== '0.000'">{{d | sumPostTotal:$root.$storage.currencyRate | number}}</span></span></span>
 				      </div>
 				      <div class="col col-25 tright">
-				      <a href="#" class="subdued" on-tap="$root.openInfo(d)"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
+				      <a href="#" class="subdued" on-tap="$root.openInfo(d)"><i class="icon ion-person-stalker"></i>&nbsp;{{::d.net_votes}}</a>
 				      </div>
 				      <div class="col col-25 tright">
-				      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{d.children}}</a>
+				      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{::d.children}}</a>
 				      </div>
 				      <div class="col col-10 tright">
 				      <a href="#" class="subdued" on-tap="$root.reBlog(d.author, d.permlink)"><i class="icon ion-arrow-return-right"></i>&nbsp;</a>
@@ -50,18 +50,19 @@
 			  </div>
 			</div>
 		</div>
+		
 		<div ng-if="$root.$storage.view=='card' && data.length>0" class="masonry-layout">
-			<div ng-repeat="ds in data | regex:'category':'bm.*' track by $index" class="masonry-layout__panel">
+			<div ng-repeat="ds in data | regex:'category':'bm.*' track by ds.id" class="masonry-layout__panel">
 	    	   <div class="list card masonry-layout__panel-content" ng-if="ds" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 
 				<div class="item" on-tap="open(ds)" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
-					<span ng-if="ds.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{::translations.resteem}} {{ds.reblogged_by}}</span>
-				    <h2 class="wrapword"><i class="fa fa-money positive" ng-if="ds.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="ds.percent_steem_dollars === 0"></i> {{ds.title}}</h2>
-				    <div class="row postdetails wrap"><div class="col"><i class="icon ion-android-time"></i> {{ds.created|timeago}}&nbsp;{{::translations.by}}&nbsp;<b>{{ds.author}}</b>&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div> {{::translations.in}} {{ds.category|detransliterate:false}} &middot; {{ds.body|readingtime}} {{::translations.min}}</div></div>
+					<span ng-if="ds.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{::translations.resteem}} {{::ds.reblogged_by}}</span>
+				    <h2 class="wrapword"><i class="fa fa-money positive" ng-if="ds.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="ds.percent_steem_dollars === 0"></i> {{::ds.title}}</h2>
+				    <div class="row postdetails wrap"><div class="col"><i class="icon ion-android-time"></i> {{::ds.created|timeago}}&nbsp;{{::translations.by}}&nbsp;<b>{{::ds.author}}</b>&nbsp;<div class="reputation">{{::ds.author_reputation|reputation|number:0}}</div> {{::translations.in}} {{::ds.category|detransliterate:false}} &middot; {{::ds.body|readingtime}} {{::translations.min}}</div></div>
 				</div>
 				<div class="item-body">
-				    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" on-tap="open(ds)" ng-if="!$root.$storage.nsfw && ds.json_metadata.image[0] && ds.json_metadata.tags.indexOf('nsfw')==-1" onerror="this.src='img/noimage.png'" />
-				    <img class="full-image" ng-src="img/nsfwimage.png" on-tap="open(ds)" ng-if="!$root.$storage.nsfw && ds.json_metadata.tags.indexOf('nsfw')>-1" onerror="this.src='img/noimage.png'" />
+				    <center><img class="full-image" ng-src="{{::ds.json_metadata.image[0]||'img/noimage.png'}}" on-tap="open(ds)" ng-if="!$root.$storage.nsfw && ds.json_metadata.image[0] && ds.json_metadata.tags.indexOf('nsfw')==-1" onerror="this.src='img/noimage.png'" />
+				    <img class="full-image" ng-src="img/nsfwimage.png" on-tap="open(ds)" ng-if="!$root.$storage.nsfw && ds.json_metadata.tags.indexOf('nsfw')>-1" onerror="this.src='img/noimage.png'" /></center>
 				    <div class="row">
 					    <div class="col">
 					      <span ng-if="!$root.voiceOver">
@@ -75,10 +76,10 @@
 					      </span>
 					      </div>
 					      <div class="col col-25 tright">
-					      <a href="#" class="subdued" on-tap="$root.openInfo(ds)"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
+					      <a href="#" class="subdued" on-tap="$root.openInfo(ds)"><i class="icon ion-person-stalker"></i>&nbsp;{{::ds.net_votes}}</a>
 					      </div>
 					      <div class="col col-25 tright">
-					      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{ds.children}}</a>
+					      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{::ds.children}}</a>
 					      </div>
 					      <div class="col col-10 tright">
 					      <a href="#" class="subdued" on-tap="$root.reBlog(ds.author, ds.permlink)"><i class="icon ion-arrow-return-right"></i>&nbsp;</a>

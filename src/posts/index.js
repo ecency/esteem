@@ -1,6 +1,6 @@
 var fs = require('fs');
 
-var app = angular.module('steem', [
+var app = angular.module('esteem', [
 	'ionic',
 	'ngStorage',
 	'ngCordova',

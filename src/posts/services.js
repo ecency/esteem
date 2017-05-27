@@ -91,6 +91,50 @@ module.exports = function (app) {
       }
     };
   });
+
+  app.directive("smartScroll", function() {
+    return {
+      restrict: 'E',
+      scope: {
+        to: '=',
+        length: '@'
+      },
+      template: `
+                <div style="overflow:auto;width:15px">
+                  <div></div>
+                </div>
+            `,
+      link: function(scope, element, attrs) {
+        //set height of root div
+        var root = angular.element(element.find('div')[0]);
+        root.css('height', attrs.height);
+
+        scope.$watch('length', function() {
+          //when array.length is changed we will change height of inner div 
+          //to correct scrolling presentation of parent div accordingly
+          var height = (scope.length - attrs.limit) * attrs.sens + attrs.height * 1;
+          angular.element(element.find('div')[1]).css('height', height);
+
+          //if we won't need scrolling anymore, we can hide it 
+          //and shift scrolling to initial top position
+          if (scope.length <= attrs.limit) {
+            root[0].scrollTop = 0;
+            root.css('display', 'none');
+            scope.to = 0;
+          } else
+            root.css('display', 'block');
+        });
+
+        //when we perform scrolling, we should correct "to" argument accordingly
+        root.on('scroll', function(event) {
+          var scrolled = root[0].scrollTop;
+          scope.$apply(function() {
+            scope.to = scrolled / attrs.sens;
+          });
+        });
+      }
+    };
+  });
   app.directive('navigation', function () {
     var controller = ['$scope', '$rootScope', function ($scope, $rootScope) {
       $scope.addactiveclass = function (menuItem) {

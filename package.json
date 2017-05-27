@@ -4,6 +4,7 @@
   "description": "eSteem Mobile Application",
   "dependencies": {
     "acorn": "^3.3.0",
+    "angular-ui-scroll": "^1.6.1",
     "brfs": "^1.4.2",
     "bs58": "^4.0.0",
     "create-hash": "^1.1.2",

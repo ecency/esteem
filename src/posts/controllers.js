@@ -1901,7 +1901,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       return l.toUpperCase();
     });
   }
-
+  
   $scope.fetchPosts = function(type, limit, tag) {
     type = type || $rootScope.$storage.filter || "trending";
     tag = tag || $rootScope.$storage.tag || "";
@@ -1967,6 +1967,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
                   }
                 }
                 $scope.data.push(response[i]);
+                $scope.to = $scope.data.length;
               }
             }
           //});
@@ -1992,7 +1993,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     if (!$rootScope.$storage.filter) {
       $rootScope.$storage.filter = "trending";
     }
-    
   });
   
   $scope.$on('$ionicView.beforeEnter', function(){
