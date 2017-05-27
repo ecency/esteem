@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Ne prihvaćene nagrade",
   "CLAIM_REWARDS":"Prihvati nagradu",
   "DOWNLOAD_COMPLETED":"Preuzimanje završeno",
-  "DOWNLOADING_PICTURE":"Preuzimanje slike u tijeku"
+  "DOWNLOADING_PICTURE":"Preuzimanje slike u tijeku",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
