@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Ikke innkasserte belønninger",
   "CLAIM_REWARDS":"Innkasser belønninger",
   "DOWNLOAD_COMPLETED":"Nedlasting fullført",
-  "DOWNLOADING_PICTURE":"Laster ned bilde"
+  "DOWNLOADING_PICTURE":"Laster ned bilde",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
