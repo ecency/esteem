@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"引き取り手のない報酬",
   "CLAIM_REWARDS":"報酬を請求します。",
   "DOWNLOAD_COMPLETED":"ダウンロード完了",
-  "DOWNLOADING_PICTURE":"画像をダウンロード中"
+  "DOWNLOADING_PICTURE":"画像をダウンロード中",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
