@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"बिना दावें का ईनाम",
   "CLAIM_REWARDS":"ईनाम दावा करें",
   "DOWNLOAD_COMPLETED":"डाउनलोड समाप्त",
-  "DOWNLOADING_PICTURE":"चित्र डाउनलोड हो रहा है"
+  "DOWNLOADING_PICTURE":"चित्र डाउनलोड हो रहा है",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
