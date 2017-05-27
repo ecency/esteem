@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"미청구된 보상금",
   "CLAIM_REWARDS":"보상 청구",
   "DOWNLOAD_COMPLETED":"다운로드 완료",
-  "DOWNLOADING_PICTURE":"사진 내려받기"
+  "DOWNLOADING_PICTURE":"사진 내려받기",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
