@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Nepřijmuté odměny",
   "CLAIM_REWARDS":"Přijmout odměny",
   "DOWNLOAD_COMPLETED":"Stahování úspěšné",
-  "DOWNLOADING_PICTURE":"Stahování obrázku"
+  "DOWNLOADING_PICTURE":"Stahování obrázku",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
