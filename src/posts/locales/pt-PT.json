@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Recompensas não reclamadas",
   "CLAIM_REWARDS":"Reivindicar recompensas",
   "DOWNLOAD_COMPLETED":"Transferência concluída",
-  "DOWNLOADING_PICTURE":"Transferindo imagem"
+  "DOWNLOADING_PICTURE":"Transferindo imagem",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
