@@ -279,5 +279,6 @@
   "PERMISSION": "Permission",
   "SCHEDULES": "Schedules",
   "DELETED_SCHEDULE": "Deleted schedule",
-  "MOVED_SCHEDULE": "Moved schedule"
+  "MOVED_SCHEDULE": "Moved schedule",
+  "MOVE_TO_DRAFT": "Move to draft"
 }

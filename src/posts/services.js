@@ -57,6 +57,9 @@ module.exports = function (app) {
       },
       removeSchedule: function(id, user) {
         return $http.delete(API_END_POINT+"/api/schedules/"+user+"/"+id);
+      },
+      moveSchedule: function(id, user) {
+        return $http.put(API_END_POINT+"/api/schedules/"+user+"/"+id);
       }
 		};
 	}])

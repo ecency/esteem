@@ -3260,7 +3260,20 @@ app.controller('SchedulesCtrl', function($scope, $stateParams, $rootScope, $stat
         //console.log(res);
         $scope.schedules = res.data;
       });
-      $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('DELETED'));
+      $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('DELETED_SCHEDULE'));
+    });
+  };
+
+  $scope.moveSchedule = function(_id) {
+    APIs.moveSchedule(_id, $rootScope.user.username).then(function(res){
+      APIs.removeSchedule(_id, $rootScope.user.username).then(function(res){
+        APIs.getSchedules($rootScope.user.username).then(function(res){
+          //console.log(res);
+          $scope.schedules = res.data;
+
+        });
+        $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('MOVED_SCHEDULE'));
+      });
     });
   };
 
