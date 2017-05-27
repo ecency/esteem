@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"پاداش های دریافت نشده",
   "CLAIM_REWARDS":"اضافه نمودن پاداش به حساب",
   "DOWNLOAD_COMPLETED":"دانلود انجام شد",
-  "DOWNLOADING_PICTURE":"در حال دانلود تصویر"
+  "DOWNLOADING_PICTURE":"در حال دانلود تصویر",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
