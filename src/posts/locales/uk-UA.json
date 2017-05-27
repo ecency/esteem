@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Незатребувана винагорода",
   "CLAIM_REWARDS":"Затребувати винагороду",
   "DOWNLOAD_COMPLETED":"Завантаження завершено",
-  "DOWNLOADING_PICTURE":"Завантаження зображення"
+  "DOWNLOADING_PICTURE":"Завантаження зображення",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
