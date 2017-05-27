@@ -643,7 +643,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
           permlink: permlink,
           max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
           percent_steem_dollars: 10000,
-          extensions: [[0, { "beneficiaries": [{ "account":"esteemapp", "weight":100 }] }]]
+          extensions: [[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
         }]
         ];
       
@@ -1197,7 +1197,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   });
 
   $scope.closePostModal = function() {
+    //$rootScope.$broadcast('hide:loading');
+    //$scope.closePostModal();
+
     $rootScope.$emit('closePostModal');
+    $rootScope.$broadcast('close:popover');
+
     $scope.modalp.hide();
   };
 
@@ -1424,7 +1429,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         $rootScope.$emit('closePostModal');
         $rootScope.$broadcast('close:popover');
         //$scope.menupopover.hide();
-        
+
         $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_SUBMITTED'));
         
         $scope.$applyAsync();
@@ -1479,7 +1484,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             permlink: permlink,
             max_accepted_payout: $scope.spost.operation_type==='sp'?"1000000.000 "+$rootScope.$storage.platformdunit:"0.000 "+$rootScope.$storage.platformdunit,
             percent_steem_dollars: $scope.spost.operation_type==='sp'?0:10000,
-            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":100 }] }]]
+            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
           }]
           ];
           if ($scope.spost.upvote_this) {
@@ -1509,7 +1514,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             permlink: permlink,
             max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
             percent_steem_dollars: 10000,
-            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":100 }] }]]
+            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
           }]
           ];
           if ($scope.spost.upvote_this) {
@@ -2711,7 +2716,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           permlink: $scope.spost.permlink,
           max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
           percent_steem_dollars: 10000,
-          extensions: $scope.edit ? []:( $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":100 }] }]] )
+          extensions: $scope.edit ? []:( $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]] )
         }]
         ];
       }
@@ -2832,7 +2837,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             permlink: "re-"+$scope.post.author.replace(/\./g, "")+"-"+timeformat,  
             max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
             percent_steem_dollars: 10000,
-            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":100 }] }]]
+            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
           }]
           ];
         window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
