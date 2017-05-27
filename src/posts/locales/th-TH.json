@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"รางวัลที่ไม่ได้รับ",
   "CLAIM_REWARDS":"รับรางวัล",
   "DOWNLOAD_COMPLETED":"ดาวน์โหลดเสร็จแล้ว",
-  "DOWNLOADING_PICTURE":"กำลังดาวน์โหลดรูปภาพ"
+  "DOWNLOADING_PICTURE":"กำลังดาวน์โหลดรูปภาพ",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
