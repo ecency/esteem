@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Nicht abgeholte Belohnungen",
   "CLAIM_REWARDS":"Prämien",
   "DOWNLOAD_COMPLETED":"Download abgeschlossen",
-  "DOWNLOADING_PICTURE":"Download Bild"
+  "DOWNLOADING_PICTURE":"Download Bild",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
