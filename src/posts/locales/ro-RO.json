@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Plata nerevendicata",
   "CLAIM_REWARDS":"Cere plata",
   "DOWNLOAD_COMPLETED":"Descărcarea a fost terminată",
-  "DOWNLOADING_PICTURE":"Descărcarea imaginii"
+  "DOWNLOADING_PICTURE":"Descărcarea imaginii",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
