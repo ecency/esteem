@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Récompenses non réclamées",
   "CLAIM_REWARDS":"Récompenses réclamées",
   "DOWNLOAD_COMPLETED":"Téléchargement terminé",
-  "DOWNLOADING_PICTURE":"Téléchargement de l'image"
+  "DOWNLOADING_PICTURE":"Téléchargement de l'image",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
