@@ -278,5 +278,6 @@
 	"SAVE": "SAVE",
 	"PERMISSION": "Permission",
 	"SCHEDULES": "Schedules",
-	"DELETED": "Deleted"
+	"DELETED_SCHEDULE": "Deleted schedule",
+	"MOVED_SCHEDULE": "Moved schedule"
 }
