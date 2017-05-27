@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Непостъпили награди",
   "CLAIM_REWARDS":"Събиране на награди",
   "DOWNLOAD_COMPLETED":"Изтеглянето приключи",
-  "DOWNLOADING_PICTURE":"Снимката се изтегля"
+  "DOWNLOADING_PICTURE":"Снимката се изтегля",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
