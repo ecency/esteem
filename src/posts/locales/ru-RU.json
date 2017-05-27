@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Невостребованное вознаграждение",
   "CLAIM_REWARDS":"Востребовать вознаграждение",
   "DOWNLOAD_COMPLETED":"Загрузка завершена",
-  "DOWNLOADING_PICTURE":"Загрузка изображения"
+  "DOWNLOADING_PICTURE":"Загрузка изображения",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
