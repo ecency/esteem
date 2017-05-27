@@ -389,7 +389,6 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   }
 
   $scope.$on("$ionicView.loaded", function(){
-    $rootScope.$broadcast('refreshLocalUserData');
     $scope.theme = $rootScope.$storage.theme;
   });
 
@@ -1643,8 +1642,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
   $scope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
     //console.log('stateChangeSuccess', $stateParams.renew);
-    if (from.name == 'app.posts' && to.name == 'app.post') {
-
+    if (from.name === 'app.posts' && to.name === 'app.post') {
+      
     } else {
       if (from.name == 'app.post' && to.name == 'app.posts') {
         //console.log($scope.data, $rootScope.sitem);
@@ -1664,6 +1663,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           $scope.data = null;
           $scope.data = [];
         }
+        $rootScope.$broadcast('refreshLocalUserData');
         console.log('loadmore');
         $scope.loadMore();
       }
@@ -3131,8 +3131,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     });
   });
   
-  $scope.$on('$ionicView.beforeEnter', function(ev){
-    //console.log(ev);
+  $scope.$on('$ionicView.afterEnter', function(ev){
     //if(ev.targetScope !== $scope)
     //  return;
     $rootScope.log('enter postctrl');
