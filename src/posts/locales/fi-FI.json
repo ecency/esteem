@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Lunastamattomat palkkiot",
   "CLAIM_REWARDS":"Lunasta palkkiot",
   "DOWNLOAD_COMPLETED":"Lataus suoritettu",
-  "DOWNLOADING_PICTURE":"Ladataan kuvaa"
+  "DOWNLOADING_PICTURE":"Ladataan kuvaa",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
