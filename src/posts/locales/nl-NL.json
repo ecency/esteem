@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Niet opgeëiste beloningen",
   "CLAIM_REWARDS":"Opgeëiste beloningen",
   "DOWNLOAD_COMPLETED":"Download voltooid",
-  "DOWNLOADING_PICTURE":"Afbeelding downloaden"
+  "DOWNLOADING_PICTURE":"Afbeelding downloaden",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
