@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Premios no reclamados",
   "CLAIM_REWARDS":"Reclamar premios",
   "DOWNLOAD_COMPLETED":"Descarga completa",
-  "DOWNLOADING_PICTURE":"Descargar imagen"
+  "DOWNLOADING_PICTURE":"Descargar imagen",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
