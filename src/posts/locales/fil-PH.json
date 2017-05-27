@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Gantimpalang di nakuha",
   "CLAIM_REWARDS":"Kunin ang gantimpala",
   "DOWNLOAD_COMPLETED":"Ang pag-Download ay kumpleto na",
-  "DOWNLOADING_PICTURE":"Ang larawan ay dina-Download"
+  "DOWNLOADING_PICTURE":"Ang larawan ay dina-Download",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
