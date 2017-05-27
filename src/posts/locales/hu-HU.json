@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Nem várt jutalom",
   "CLAIM_REWARDS":"Azt állítják, jutalmak",
   "DOWNLOAD_COMPLETED":"A letöltés befejeződött",
-  "DOWNLOADING_PICTURE":"Kép letöltése"
+  "DOWNLOADING_PICTURE":"Kép letöltése",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
