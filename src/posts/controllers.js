@@ -3150,11 +3150,11 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       $rootScope.postAccounts.push($stateParams.author);
       $scope.$broadcast('postAccounts');
 
-      //$scope.$evalAsync(function($scope){
+      $scope.$evalAsync(function($scope){
         //setTimeout(function() {
-        //  $scope.getContent($stateParams.author, $stateParams.permlink);    
+        $scope.getContent($stateParams.author, $stateParams.permlink);    
         //}, 6000);
-      //});
+      });
     }
   });
   
