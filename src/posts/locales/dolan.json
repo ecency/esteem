@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Unclaimt rewurdz",
   "CLAIM_REWARDS":"Clem rewurdz",
   "DOWNLOAD_COMPLETED":"Dowland complet",
-  "DOWNLOADING_PICTURE":"Dolanding pictur"
+  "DOWNLOADING_PICTURE":"Dolanding pictur",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
