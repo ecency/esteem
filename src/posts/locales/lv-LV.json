@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Nepieprasīta atlīdzība",
   "CLAIM_REWARDS":"Pieprasīt atlīdzību",
   "DOWNLOAD_COMPLETED":"Lejupielāde pabeigta",
-  "DOWNLOADING_PICTURE":"Lejupielādē attēlu"
+  "DOWNLOADING_PICTURE":"Lejupielādē attēlu",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }
