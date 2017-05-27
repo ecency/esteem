@@ -3256,24 +3256,24 @@ app.controller('SchedulesCtrl', function($scope, $stateParams, $rootScope, $stat
   //JSON.stringify({
   $scope.removeSchedule = function(_id) {
     APIs.removeSchedule(_id, $rootScope.user.username).then(function(res){
-      APIs.getSchedules($rootScope.user.username).then(function(res){
+      //APIs.getSchedules($rootScope.user.username).then(function(res){
         //console.log(res);
-        $scope.schedules = res.data;
-      });
+        $scope.schedules = res.data.schedules;
+      //});
       $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('DELETED_SCHEDULE'));
     });
   };
 
   $scope.moveSchedule = function(_id) {
     APIs.moveSchedule(_id, $rootScope.user.username).then(function(res){
-      APIs.removeSchedule(_id, $rootScope.user.username).then(function(res){
-        APIs.getSchedules($rootScope.user.username).then(function(res){
-          //console.log(res);
-          $scope.schedules = res.data;
+      //APIs.removeSchedule(_id, $rootScope.user.username).then(function(res){
+        //APIs.getSchedules($rootScope.user.username).then(function(res){
+          console.log(res);
+          $scope.schedules = res.data.schedules;
 
-        });
+        //});
         $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('MOVED_SCHEDULE'));
-      });
+      //});
     });
   };
 
