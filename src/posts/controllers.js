@@ -591,7 +591,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
           console.log(err, result);
           //$scope.modalEdit.hide();
           if (err) {
-            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+            var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
           } else {
             console.log('set');
             //$rootScope.$broadcast('refreshLocalUserData');
@@ -652,7 +653,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         $scope.replying = false;
         $rootScope.$broadcast('hide:loading');
         if (err) {
-          $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+          var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+          $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
         } else {
           $scope.closePostModal();
           $rootScope.$emit('closePostModal');
@@ -825,7 +827,8 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
             window.steem.broadcast.escrowApprove(wif, $scope.escrow.from, $scope.escrow.to, $scope.escrow.agent, $rootScope.user.username, $scope.escrow.escrow_id, true, function(err, result) {
               console.log(err, result);
               if (err) {
-                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err);
+                var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message);
               } else {
                 $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
                   $scope.data.type=$rootScope.$storage.chain;
@@ -837,7 +840,8 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
             window.steem.broadcast.escrowDispute(wif, $scope.escrow.from, $scope.escrow.to, $scope.escrow.agent, $rootScope.user.username, $scope.escrow.escrow_id, function(err, result) {
               console.log(err, result);
               if (err) {
-                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err);
+                var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message);
               } else {
                 $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
                   $scope.data.type=$rootScope.$storage.chain;
@@ -850,7 +854,8 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
               $scope.escrow.steem_amount+" "+angular.uppercase($rootScope.$storage.platformlunit), function(err, result) {
               console.log(err, result);
               if (err) {
-                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err);
+                var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message);
               } else {
                 $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
                   $scope.data.type=$rootScope.$storage.chain;
@@ -920,7 +925,8 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
                   window.steem.broadcast.transfer(wif, $rootScope.user.username, $scope.data.username, tt, $scope.data.memo || "", function(err, result) {
                     console.log(err, result);
                     if (err) {
-                      $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+                      var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+                      $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
                     } else {
                       $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
                         $scope.data.type=$rootScope.$storage.chain;
@@ -934,7 +940,8 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
                   window.steem.broadcast.transferToVesting(wif, $rootScope.user.username, $scope.data.username, tt, function(err, result) {
                     console.log(err, result);
                     if (err) {
-                      $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+                      var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+                      $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
                     } else {
                       $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
                         $scope.data.type=$rootScope.$storage.chain;
@@ -964,7 +971,8 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
               window.steem.broadcast.escrowTransfer(wif, $rootScope.user.username, $scope.data.username, $scope.data.agent.name, escrow_id, sbd, stem, fe, rt, et, angular.toJson(jn), function(err, result) {
                 console.log(err, result);
                 if (err) {
-                  $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err);
+                  var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+                  $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message);
                 } else {
                   $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED') + " "+$filter('translate')('ESCROW')+" "+$filter('translate')('ID')+": "+escrow_id).then(function(){
                     $scope.data.type=$rootScope.$storage.chain;
@@ -1532,7 +1540,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         $scope.replying = false;
         $rootScope.$broadcast('hide:loading');
         if (err) {
-          $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+          var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+          $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
         } else {
           $scope.closePostModal();
           $rootScope.$emit('closePostModal');
@@ -1737,7 +1746,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
               //$scope.modalEdit.hide();
               if (err) {
                 console.log(err);
-                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err).then(function(){
+                var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message).then(function(){
                   $scope.spost.permission = true;  
                 });
               } else {
@@ -1783,8 +1793,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
               console.log(err, result);
               //$scope.modalEdit.hide();
               if (err) {
-                
-                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err).then(function(){
+                var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message).then(function(){
                   $scope.spost.permission = false;  
                 });
               } else {
@@ -2600,7 +2610,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               window.steem.broadcast.deleteComment(wif, xx.author, xx.permlink, function(err, result) {
                 console.log(err, result);
                 if (err) {
-                  $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+                  var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+                  $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
                 } else {
                   $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('DELETED_COMMENT'));
                   $state.go('app.posts');
@@ -2726,7 +2737,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $scope.replying = false;
         $rootScope.$broadcast('hide:loading');
         if (err) {
-          $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+          var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+          $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
         } else {
           //$scope.closePostModal();
           $rootScope.$emit('closePostModal');
@@ -2785,7 +2797,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           //console.log(err, result);
           $rootScope.$broadcast('hide:loading');
           if (err) {
-            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+            var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
           } else {
             $scope.closeModal();
             $scope.data.comment = "";
@@ -2844,7 +2857,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           //console.log(err, result);
           $rootScope.$broadcast('hide:loading');
           if (err) {
-            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+            var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
           } else {
             $scope.closeModal();
             $scope.data.comment = "";
@@ -3568,7 +3582,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               console.log(err, result);
               $scope.modalEdit.hide();
               if (err) {
-                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+                var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
               } else {
                 $rootScope.$broadcast('refreshLocalUserData');
               }
@@ -3630,7 +3645,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 console.log(err, result);
                 $scope.modalEdit.hide();
                 if (err) {
-                  $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+                  var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+                  $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
                 } else {
                   $rootScope.$broadcast('refreshLocalUserData');
                 }
@@ -3695,7 +3711,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   console.log(err, result);
                   $scope.modalEdit.hide();
                   if (err) {
-                    $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err);
+                    var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+                    $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message);
                   } else {
                     $rootScope.$broadcast('refreshLocalUserData');
                   }
@@ -3749,7 +3766,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                   console.log(err, result);
                   $scope.modalEdit.hide();
                   if (err) {
-                    $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+                    var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+                    $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
                   } else {
                     //$scope.refreshLocalUserData();
                     $rootScope.$broadcast('refreshLocalUserData');
@@ -3813,7 +3831,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 console.log(err, result);
                 $scope.modalEdit.hide();
                 if (err) {
-                  $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+                  var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+                  $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
                 } else {
                   //$scope.refreshLocalUserData();
                   $rootScope.$broadcast('refreshLocalUserData');
@@ -4351,7 +4370,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       window.steem.broadcast.claimRewardBalance(wif, $rootScope.user.username, $scope.accounts.reward_steem_balance, $scope.accounts.reward_sbd_balance, $scope.accounts.reward_vesting_balance, function(err, result) {
         //console.log(err, result);
         if (err) {
-            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err);
+          var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+            $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message);
           } else {
             $scope.change('transfers');
           }
