@@ -506,8 +506,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.search = function() {
     $rootScope.log('Doing search '+$scope.data.search);
     $scope.data.search = angular.lowercase($scope.data.search);
-    //setTimeout(function() {
-    $scope.$evalAsync(function( $scope ) {
+    setTimeout(function() {
+    //$scope.$evalAsync(function( $scope ) {
       if ($scope.data.search.length > 1) {
         if ($scope.data.type == "tag"){
           window.steem.api.getTrendingTags($scope.data.search, 15, function(err, result) {
@@ -527,8 +527,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
           });
         }
       }
-    });
-    //}, 5);
+    //});
+    }, 5);
 
   };
   $scope.typechange = function() {
