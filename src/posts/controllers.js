@@ -2749,7 +2749,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_SUBMITTED'));
           //$scope.closeMenuPopover();
           if ($scope.edit) {
-            $rootScope.$emit('update:content');
+            $rootScope.$broadcast('update:content');
           } else {
             $state.go("app.profile", {username: $rootScope.user.username});  
           }
@@ -2894,11 +2894,11 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $rootScope.$on("update:content", function(){
     $rootScope.log("update:content");
     $rootScope.$broadcast('hide:loading');
-    //setTimeout(function() {
-    $scope.$evalAsync(function($scope) {
+    setTimeout(function() {
+    //$scope.$evalAsync(function($scope) {
       $scope.getContent($scope.post.author, $scope.post.permlink);    
-    });
-    //}, 1);
+    //});
+    }, 1);
     
   });
   $ionicModal.fromTemplateUrl('templates/reply.html', {
@@ -3156,7 +3156,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     if ($stateParams.category === '111') {
       var ttemp = $rootScope.sitem;
       $scope.post = ttemp;
-      $rootScope.$emit('update:content');
+      $rootScope.$broadcast('update:content');
     } else {
       if ($stateParams.author.indexOf('@')>-1){
         $stateParams.author = $stateParams.author.substr(1);
@@ -3177,11 +3177,11 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
   };
   $rootScope.$on('getContent', function() {
-    //setTimeout(function() {
-    $scope.$evalAsync(function($scope) {
+    setTimeout(function() {
+    //$scope.$evalAsync(function($scope) {
       $scope.getContent($rootScope.sitem.author, $rootScope.sitem.permlink);  
-    });
-    //}, 1);
+    //});
+    }, 1);
   });
   $scope.downvotePost = function(post) {
     var confirmPopup = $ionicPopup.confirm({
@@ -4129,7 +4129,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           $scope.data = {profile: []};
           //console.log(res);
           //if (Object.keys(res.content).length>0) {
-          $scope.$evalAsync(function($scope){
+          //$scope.$evalAsync(function($scope){
             angular.forEach(res.content, function(v,k){
               v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):v.json_metadata;
               if ($rootScope.user){
@@ -4153,7 +4153,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               $scope.data.profile.push(v);
             });
             $scope.nonexist = false;
-          });
+            $scope.$applyAsync();
+          //});
           } else {
             $scope.nonexist = true;
           }

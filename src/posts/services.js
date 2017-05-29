@@ -1444,8 +1444,8 @@ module.exports = function (app) {
                               //setTimeout(function() {
                               $scope.$evalAsync(function( $scope ) {
                                 $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
-                                $rootScope.$broadcast('hide:loading');
-                                $rootScope.$emit("update:content");  
+                                //$rootScope.$broadcast('hide:loading');
+                                $rootScope.$broadcast("update:content");  
                                 $rootScope.$broadcast('hide:loading');
                               });
                               //}, 1);
@@ -1495,7 +1495,7 @@ module.exports = function (app) {
                                 $scope.$evalAsync(function( $scope ) {
                                   $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
                                   $rootScope.$broadcast('hide:loading');
-                                  $rootScope.$emit("update:content");  
+                                  $rootScope.$broadcast("update:content");  
                                 });
                                 //}, 1);
                               }
@@ -1541,7 +1541,7 @@ module.exports = function (app) {
                                   $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
                                 } else {
                                   $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('DELETED_COMMENT'));
-                                  $rootScope.$emit("update:content");                                
+                                  $rootScope.$broadcast("update:content");                                
                                 }
                                 $rootScope.$broadcast('hide:loading');
                               });
