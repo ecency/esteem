@@ -853,7 +853,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       if (!$rootScope.$$phase) {
         $rootScope.$apply();
       }
-      if ($rootScope.user) {
+      if ($rootScope.user && $rootScope.user.username) {
         var wif = $rootScope.user.password
                   ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
                   : $rootScope.user.privatePostingKey;
@@ -863,9 +863,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         window.steem.broadcast.vote(wif, $rootScope.user.username, post.author, post.permlink, $rootScope.$storage.voteWeight*tt || 10000*tt, function(err, result) {
           //console.log(err, result);
           post.invoting = false;
-          if (!$rootScope.$$phase) {
-            $rootScope.$apply();
-          }
+          
           if (err) {
             console.log(err);
             var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
