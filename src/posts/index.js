@@ -1,5 +1,7 @@
 var fs = require('fs');
 
+global.Buffer = require('buffer').Buffer;
+
 var app = angular.module('esteem', [
 	'ionic',
 	'ngStorage',
@@ -863,7 +865,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         window.steem.broadcast.vote(wif, $rootScope.user.username, post.author, post.permlink, $rootScope.$storage.voteWeight*tt || 10000*tt, function(err, result) {
           //console.log(err, result);
           post.invoting = false;
-          
+
           if (err) {
             console.log(err);
             var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;

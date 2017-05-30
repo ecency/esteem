@@ -10,7 +10,6 @@
     <content src="index.html" />
     <access origin="*" />
     <allow-navigation href="*" />
-    <allow-navigation href="http://192.168.1.128:8100" />
     <allow-intent href="itms-apps:*" />
     <allow-intent href="market:*" />
     <allow-intent href="mailto:*" />
@@ -18,6 +17,7 @@
     <preference name="UIWebViewBounce" value="false" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="16" />
+    <preference name="android-targetSdkVersion" value="23" />
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="ShowSplashScreenSpinner" value="false" />
     <preference name="FadeSplashScreenDuration" value="500" />

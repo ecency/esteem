@@ -252,7 +252,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                     $state.go('app.posts',{renew:true},{reload: true});
                     $rootScope.$broadcast('fetchPosts');
                   });
-                  $scope.$applyAsync();
+                  //$scope.$applyAsync();
                 }
               });  
             } else {
@@ -1026,6 +1026,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.translations.upvote = $translate.instant('UPVOTE');
   $scope.translations.unvote = $translate.instant('UNVOTE');
 
+
+  $rootScope.user = $rootScope.$storage.user || undefined;
 
   var formatToPercentage = function (value) {
     return value + '%';
