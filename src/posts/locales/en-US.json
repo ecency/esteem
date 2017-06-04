@@ -272,13 +272,13 @@
   "NSFW_TEXT":"In order to view NSFW/Adult content you should be 18+ years of age! This setting enables automatic display of NSFW images and text.",
   "AUTO_DOWNLOAD":"Fetch images",
   "AUTO_DOWNLOAD_TEXT":"The fetch images setting allows you to save bandwidth by allowing you to disable external images from loading, giving you complete control over your traffic usage.",
-  "MUTE":"",
-  "UNMUTE":"",
-  "SCHEDULE":"",
-  "SAVE":"",
-  "PERMISSION":"",
-  "SCHEDULES":"",
-  "DELETED_SCHEDULE":"",
-  "MOVED_SCHEDULE":"",
-  "MOVE_TO_DRAFT":""
+  "MUTE":"Mute",
+  "UNMUTE":"Unmute",
+  "SCHEDULE":"Schedule",
+  "SAVE":"SAVE",
+  "PERMISSION":"Permission",
+  "SCHEDULES":"Schedules",
+  "DELETED_SCHEDULE":"Deleted schedule",
+  "MOVED_SCHEDULE":"Moved schedule",
+  "MOVE_TO_DRAFT":"Move to draft"
 }
