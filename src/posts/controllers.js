@@ -74,7 +74,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $scope.$applyAsync();
   }
   $scope.open = function(item) {
-    //console.log(item);
+    console.log(item);
     
     item.json_metadata = item.json_metadata?angular.fromJson(item.json_metadata):{};
     $rootScope.sitem = item;  
@@ -247,12 +247,14 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                       $rootScope.$emit('changedChain');
                       $rootScope.$emit('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
                     }
-                    $scope.$applyAsync();
-                    //$window.location.reload(true);
+                    //$scope.$applyAsync();
+                    $window.location.reload(true);
                     $state.go('app.posts',{renew:true},{reload: true});
+
+                    //Buffer = require('buffer').Buffer;
                     $rootScope.$broadcast('fetchPosts');
                   });
-                  //$scope.$applyAsync();
+                  $scope.$applyAsync();
                 }
               });  
             } else {
@@ -390,6 +392,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
   $scope.$on("$ionicView.loaded", function(){
     $scope.theme = $rootScope.$storage.theme;
+    console.log('loaded');
   });
 
   // get app version
@@ -1026,8 +1029,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.translations.upvote = $translate.instant('UPVOTE');
   $scope.translations.unvote = $translate.instant('UNVOTE');
 
-
-  $rootScope.user = $rootScope.$storage.user || undefined;
 
   var formatToPercentage = function (value) {
     return value + '%';
@@ -1676,6 +1677,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         }
         $rootScope.$broadcast('refreshLocalUserData');
         console.log('loadmore');
+        
+        $rootScope.user = $rootScope.$storage.user || undefined;
+
         $scope.loadMore();
       }
     }
@@ -2671,8 +2675,13 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       $rootScope.showAlert('Missing', 'Tags');
       return;
     }
-    $scope.$applyAsync();
+    //$scope.$applyAsync();
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
     $rootScope.$broadcast('show:loading');
+    $scope.bexist = false;
+
     if ($scope.edit) {
       var patch = createPatch($scope.patchbody, $scope.spost.body)
       // Putting body into buffer will expand Unicode characters into their true length
@@ -2680,6 +2689,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $scope.spost.body2 = patch;
       }
       //$rootScope.log(patch);
+
+      angular.forEach($scope.spost.beneficiaries, function(v,k){
+        if (v && v.account === "esteemapp") {
+          $scope.bexist = true;
+        }
+      });
     } else {
       $scope.spost.body2 = undefined;
     }
@@ -2721,17 +2736,20 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           title: $scope.spost.title,
           body: $scope.spost.body2 || $scope.spost.body,
           json_metadata: angular.toJson(json)
-        }],
-        ['comment_options', {
+        }]
+        ];
+      }
+      if (!$scope.bexist) {
+        var xx = ['comment_options', {
           allow_curation_rewards: true,
           allow_votes: true,
           author: $rootScope.user.username,
           permlink: $scope.spost.permlink,
           max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
           percent_steem_dollars: 10000,
-          extensions: $scope.edit ? []:( $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]] )
-        }]
-        ];
+          extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
+        }];
+        operations_array.push(xx);
       }
       
       window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
@@ -2774,6 +2792,14 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         const wif = $rootScope.user.password
         ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
         : $rootScope.user.privatePostingKey;
+        
+        //check if beneficiary exist when editing
+        $scope.bexist = false;
+        angular.forEach($scope.post.beneficiaries, function(v,k){
+          if (v && v.account === "esteemapp") {
+            $scope.bexist = true;
+          }
+        });
 
         var ts = angular.fromJson($scope.post.json_metadata).tags;
         var json;
@@ -2795,6 +2821,18 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             json_metadata: angular.toJson(json)
           }]
           ];
+        if (!$scope.bexist) {
+          var xx = ['comment_options', {
+            allow_curation_rewards: true,
+            allow_votes: true,
+            author: $rootScope.user.username,
+            permlink: $scope.post.permlink,  
+            max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
+            percent_steem_dollars: 10000,
+            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
+          }];
+          operations_array.push(xx);
+        }
         window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
           //console.log(err, result);
           $rootScope.$broadcast('hide:loading');
@@ -2807,7 +2845,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
             $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
             
-            $scope.$evalAsync(function($scope){
+            //$scope.$evalAsync(function($scope){
+            setTimeout(function() {
               window.steem.api.getContentReplies($rootScope.sitem.author, $rootScope.sitem.permlink, function(err, result) {
                 //console.log(err, result);
                 if (result) {
@@ -2822,7 +2861,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
                 $rootScope.postAccounts.push($rootScope.user.username);
               }
               $scope.$broadcast('postAccounts');
-            });
+            }, 1);
+              
+            //});
           }
         });
       } else {
@@ -3956,7 +3997,10 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     var params = {tag: $stateParams.username, limit: 20, filter_tags:[]};
     var len = $scope.data.profile?$scope.data.profile.length:0;
 
-    $scope.$applyAsync();
+    //$scope.$applyAsync();
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
     if (len < 20) {
       $scope.end = true;
     }

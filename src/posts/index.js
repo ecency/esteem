@@ -1,6 +1,6 @@
 var fs = require('fs');
 
-global.Buffer = require('buffer').Buffer;
+//Buffer = require('buffer').Buffer;
 
 var app = angular.module('esteem', [
 	'ionic',
@@ -266,7 +266,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     $log.info(message);
   };
   window.steem.config.set('websocket',localStorage.socketUrl); 
-
+  
+  console.log('run ready');
   /*$ionicPlatform.registerBackButtonAction(function (event) {
   if ( ($state.$current.name=="app.posts") ){
           // H/W BACK button is disabled for these states (these views)
@@ -335,7 +336,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     if (!$rootScope.$storage.socketsteem) {
       $rootScope.$storage.socketsteem = "wss://steemd.steemit.com";
     }
-
     
     window.steem.config.set('chain_id',localStorage[$rootScope.$storage.chain+"Id"]);
     if ($rootScope.$storage.chain == 'golos') {
@@ -425,6 +425,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     if (!$rootScope.$storage.download) {
       $rootScope.$storage.download = true;
     }
+
+    if (!$rootScope.$storage.voteWeight) {
+      $rootScope.$storage.voteWeight = 10000;
+    }
+
     $rootScope.$storage.chains = [{id:'steem', name: 'Steem'}, {id:'golos', name: 'Golos'}];
 
     if (!$rootScope.$storage.currencies) {
@@ -565,6 +570,15 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       if ($rootScope.$storage.pincode) {
         $rootScope.pincheck = true;
         $rootScope.$broadcast("pin:check");
+      }
+
+      window.steem.config.set('websocket',localStorage.socketUrl);
+      window.steem.config.set('chain_id',localStorage[$rootScope.$storage.chain+"Id"]);
+      
+      if ($rootScope.$storage.chain == 'golos') {
+        window.steem.config.set('address_prefix','GLS');  
+      } else {
+        window.steem.config.set('address_prefix','STM');  
       }
 
       if (window.cordova) {

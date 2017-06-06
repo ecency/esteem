@@ -16,8 +16,8 @@
 	    </ion-nav-buttons>
 	</ion-nav-bar>
   <ion-content class="has-header" scroll="true" delegate-handle="mainScroll" overflow-scroll="true" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
-		<!--<ion-refresher pulling-text="{{::pull}}" on-refresh="refresh()">
-  		</ion-refresher>-->
+		<ion-refresher pulling-text="{{::pull}}" on-refresh="refresh()">
+  		</ion-refresher>
   		<div ng-if="$root.$storage.view=='compact' && data.length>0" class="masonry-layout">
 	    	<div ng-repeat="d in data | regex:'category':'bm.*' track by d.id" class="masonry-layout__panel">
 	    	   <div class="list masonry-layout__panel-content" >

@@ -576,7 +576,7 @@ module.exports = function (app) {
                 return string.replace(/%d/i, value);
             }
             var nowTime = (new Date()).getTime();
-            var date = (new Date(input)).getTime();
+            var date = (new Date(input+".000Z")).getTime();
             //refreshMillis= 6e4, //A minute
 
             // get difference between UTC and local time in milliseconds
