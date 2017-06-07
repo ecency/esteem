@@ -45,7 +45,7 @@
   "UPVOTE":"추천",
   "DOWNVOTE":"비추천",
   "UNVOTE_DOWNVOTED":"비추천 취소",
-  "UNVOTE_UPVOTED":"추천항목 추천안함",
+  "UNVOTE_UPVOTED":"추천 취소",
   "REPLY":"댓글",
   "EDIT":"편집",
   "POST_1":"댓글을 왼쪽으로 밀어 옵션보기",
