@@ -10,7 +10,8 @@ var app = angular.module('esteem', [
   'pascalprecht.translate',
   'ja.qr',
   'ion-datetime-picker',
-  'highcharts-ng'
+  'highcharts-ng',
+  'ionicImgCache'
 ]);
 
 if (localStorage.getItem("socketUrl") === null) {
@@ -32,7 +33,7 @@ require('./services')(app);
 require('./controllers')(app);
 
 
-app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $sceDelegateProvider, $logProvider, $compileProvider, $animateProvider, $translateProvider, $httpProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $sceDelegateProvider, $logProvider, $compileProvider, $animateProvider, $translateProvider, $httpProvider, ionicImgCacheProvider) {
   $stateProvider
 
   .state('app', {
@@ -205,8 +206,21 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $ionicConfigProvider.views.swipeBackEnabled(true);
   $ionicConfigProvider.views.maxCache(3);
 
-  $animateProvider.classNameFilter( /\banimated\b/ );
+  // Enable imgCache debugging.
+  ionicImgCacheProvider.debug(true);
+
+  // Set storage size quota to 100 MB.
+  ionicImgCacheProvider.quota(100);
+
+  // Set folder for cached files.
+  ionicImgCacheProvider.folder('esteem-cache');
+
+  // Set cache clear limit.
+  ionicImgCacheProvider.cacheClearSize(100);
+
+  //$animateProvider.classNameFilter( /\banimated\b/ );
   $ionicConfigProvider.scrolling.jsScrolling(false);
+  //$ionicConfigProvider.platform.android.scrolling.jsScrolling(false);
 
   if (window.cordova) {
       $logProvider.debugEnabled(false);
@@ -554,10 +568,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       });
     });
     $rootScope.$on('hide:loading', function(event, args){
-      $rootScope.log('hide:loading');
+      //$rootScope.log('hide:loading');
       setTimeout(function() {
         $ionicLoading.hide();
-      }, 1000);
+      }, 100);
     });
 
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
@@ -757,10 +771,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           xx.active_votes = dd;
         });
       }
-      $rootScope.$evalAsync(function($rootScope) {
+      //$rootScope.$evalAsync(function($rootScope) {
         $rootScope.voters = xx;
         $rootScope.infomodal.show();  
-      });
+      //});
     };
 
     $rootScope.closeInfo = function() {
@@ -893,11 +907,13 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
               post.upvoted = false;
               post.downvoted = false;
             }
-            if (afterward === 'fetchContent') {
-              $rootScope.$broadcast(afterward, { any: {author: post.author, permlink: post.permlink} });
-            } else {
-              $rootScope.$broadcast(afterward);
-            }
+            setTimeout(function() {
+              if (afterward === 'fetchContent') {
+                $rootScope.$broadcast(afterward, { any: {author: post.author, permlink: post.permlink} });
+              } else {
+                $rootScope.$broadcast(afterward);
+              }  
+            }, 1);
           }
           if (!$rootScope.$$phase) {
             $rootScope.$apply();
@@ -992,8 +1008,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       }
     };
 
-    //setTimeout(function() {
-    $rootScope.$evalAsync(function( $rootScope ) {
+    setTimeout(function() {
+    //$rootScope.$evalAsync(function( $rootScope ) {
       window.steem.api.getFeedHistory(function(err, r) {
         //console.log(err, r);
         $rootScope.$storage.base = r.current_median_history.base.split(" ")[0];
@@ -1003,8 +1019,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           $rootScope.$storage.steem_per_mvests = (Number(r.total_vesting_fund_steem.substring(0, r.total_vesting_fund_steem.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;
         });
       });
-    });
-    //}, 10);
+    //});
+    }, 1);
     if (!angular.isDefined($rootScope.$storage.notifications)) {
       $rootScope.$storage.notifications = [];
     }

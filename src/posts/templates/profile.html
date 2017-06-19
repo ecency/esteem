@@ -10,7 +10,7 @@
       <div class="center">
           <div class="item-myavatar" ng-if="$root.user && $root.user.username == user.username">
             <span class="item-myavatar" ng-if="!($root.$storage.user.json_metadata.profile.profile_image||$root.user.json_metadata.user_image)"><img src="img/user_profile.png" on-tap="showProfile()"></span>
-            <img ng-src="{{$root.user.json_metadata.profile.profile_image || $root.user.json_metadata.user_image}}" ng-if="$root.user.json_metadata.user_image || $root.user.json_metadata.profile.profile_image" on-tap="showProfile()" />
+            <img ion-img-cache ng-src="{{$root.user.json_metadata.profile.profile_image || $root.user.json_metadata.user_image}}" ng-if="$root.user.json_metadata.user_image || $root.user.json_metadata.profile.profile_image" on-tap="showProfile()" />
             <div class="footprofileinfo">
               <h4 class="center">
                 <span class="light">@{{$root.user.username}}</span>
@@ -19,16 +19,8 @@
                 </div>
               </h4>
               <div class="about">{{$root.user.json_metadata.profile.about}}</div>
-              <div class="padding">
-                <i class="icon ion-android-list"></i>&nbsp;
-                {{$root.user.post_count}}&nbsp;
-                |&nbsp;
-                <i class="icon ion-arrow-graph-up-right"></i>&nbsp;
-                {{$root.user.voting_power/100|number:2}}&nbsp;
-                |&nbsp;<i class="icon ion-ios-people"></i>&nbsp;
-                {{followdetails.follower_count}}&nbsp;
-                |&nbsp;<i class="ion-person-add"></i>&nbsp;
-                {{followdetails.following_count}}
+              <div class="padding profile_stats">
+                <i class="icon ion-android-list"></i>&nbsp;{{$root.user.post_count}}&nbsp;| <i class="icon ion-ios-people"></i>&nbsp;{{followdetails.follower_count}}&nbsp;| <i class="icon ion-person-add"></i>&nbsp;{{followdetails.following_count}}&nbsp;| <i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.user.voting_power/100|number:2}}&nbsp;| <i class="fa fa-chevron-circle-up"></i>&nbsp;{{votecount}}
               </div>
               <p><span ng-if="$root.user.json_metadata.profile && $root.user.json_metadata.profile.location">
                 <i class="icon ion-location"></i>&nbsp;
@@ -53,10 +45,8 @@
             <div class="footprofileinfo">
               <h4 class="center"><span class="light">@{{user.username}}</span>&nbsp;<div class="reputation">{{user.reputation|reputation}}</div></h4>
               <p>{{user.json_metadata.profile.about}}</p>
-              <div class="padding"><i class="icon ion-android-list"></i>&nbsp;{{user.post_count}}&nbsp;|&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{user.voting_power/100|number:2}}&nbsp;|&nbsp;<i class="icon ion-ios-people"></i>&nbsp;
-              {{followdetails.follower_count}}&nbsp;
-              |&nbsp;<i class="ion-person-add"></i>&nbsp;
-              {{followdetails.following_count}}</div>
+              <div class="padding profile_stats"><i class="icon ion-android-list"></i>&nbsp;{{user.post_count}}&nbsp;| <i class="icon ion-ios-people"></i>&nbsp;{{followdetails.follower_count}}&nbsp;| <i class="ion-person-add"></i>&nbsp;{{followdetails.following_count}}&nbsp;| <i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{user.voting_power/100|number:2}}&nbsp;| <i class="fa fa-chevron-circle-up"></i>&nbsp;{{votecount}}
+              </div>
               <p><span ng-if="user.json_metadata.profile && user.json_metadata.profile.location">
                 <i class="icon ion-location"></i>&nbsp;
                 {{user.json_metadata.profile.location}}

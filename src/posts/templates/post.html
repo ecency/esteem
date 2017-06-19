@@ -29,9 +29,9 @@
   <ion-content class="padding has-header" delegate-handle="mainScroll" overflow-scroll="true" ng-class="{'theme-dark':$root.$storage.theme == 'night'}"><!---->
     <div ng-if='$root.sitem'>
       <p class="title h3" ng-if="$root.sitem.root_title && $root.sitem.title==''"><a href="#/app/post{{$root.sitem.url.split('#')[0]}}">{{::translations.view}}</a></p>
-    	<p class="title h3">{{$root.sitem.title}}</p>
+    	<p class="title h3">{{::$root.sitem.title}}</p>
     	<div class="stitle row gray"><div class="col">
-        <img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.paccounts[$root.sitem.author].user_image||$root.paccounts[$root.sitem.author].profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /> <b><a href="#/app/profile/{{$root.sitem.author}}">{{$root.sitem.author}}</a></b>&nbsp;<div class="reputation">{{$root.sitem.author_reputation|reputation|number:0}}</div>&middot;{{$root.sitem.created|timeago}} {{::translations.in}}&nbsp;{{$root.sitem.category|detransliterate:false}}</div>
+        <img class="round-avatar" src="img/user_profile.png" ng-src="{{::$root.paccounts[$root.sitem.author].user_image||$root.paccounts[$root.sitem.author].profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /> <b><a href="#/app/profile/{{$root.sitem.author}}">{{::$root.sitem.author}}</a></b>&nbsp;<div class="reputation">{{::$root.sitem.author_reputation|reputation|number:0}}</div>&middot;{{$root.sitem.created|timeago}} {{::translations.in}}&nbsp;{{::$root.sitem.category|detransliterate:false}}</div>
          <div class="pull-right">
           <span ng-if="$root.voiceOver">
             <i class="fa fa-flag" on-tap="downvotePost($root.sitem)" ng-if="!$root.sitem.downvoted">{{::translations.downvote}}</i>
@@ -53,7 +53,7 @@
         </div>
       </div>
       <div ng-if='$root.sitem.parent_author != ""' class="tags">  
-        <span><div class="tag" on-tap="openTag($root.sitem.category, 5)">{{$root.sitem.category|detransliterate:false}}</div></span>
+        <span><div class="tag" on-tap="openTag($root.sitem.category, 5)">{{::$root.sitem.category|detransliterate:false}}</div></span>
       </div>
 
       <div class="row gray">
@@ -62,7 +62,7 @@
 
         <div class="col col-33" ng-if="$root.voiceOver"><ion-spinner ng-if="$root.sitem.invoting"></ion-spinner>
         <i class="icon ion-android-arrow-dropup-circle" on-tap="upvotePost($root.sitem)" ng-if="!$root.sitem.upvoted" on-hold="openSliderr($event, $root.sitem)">{{::translations.upvote}}</i><i class="icon ion-android-arrow-dropup-circle positive" on-tap="unvotePost($root.sitem)" ng-if="$root.sitem.upvoted">{{::translations.unupvote}}</i>&nbsp;&nbsp;&nbsp;<span on-tap="$root.openInfo($root.sitem)">{{$root.sitem.net_votes}}</span></div>
-        <div class="col col-33" on-tap="openTooltip($event,$root.sitem)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> {{$root.sitem | sumPostTotal:$root.$storage.currencyRate | number}}</div>
+        <div class="col col-33" on-tap="openTooltip($event,$root.sitem)"><b>{{::$root.$storage.currency|getCurrencySymbol}}</b> {{$root.sitem | sumPostTotal:$root.$storage.currencyRate | number}}</div>
         <div class="col" on-tap="isreplying($root.sitem, true)"><i class="fa fa-reply"></i> {{$root.sitem.children}}</div>
         <div class="col" on-tap="editPost($root.sitem)" ng-if="$root.sitem.author==$root.user.username && $root.sitem.cashout_time !== '1969-12-31T23:59:59'"><i class="fa fa-pencil-square-o"></i></div>
         <div class="col" on-tap="deletePost($root.sitem)" ng-if="$root.sitem.net_votes==0 && $root.sitem.author==$root.user.username"><i class="fa fa-trash-o"></i></div>

@@ -27,7 +27,7 @@
         <center>
           <a menu-close href="#/app/profile/{{$root.user.username}}" class="item-myavatar" ng-if="$root.user">
             <span class="item-myavatar" ng-if="!$root.user.json_metadata.user_image && !$root.user.json_metadata.profile.profile_image"><img ng-src="img/user_profile.png"></span>
-            <img ng-src="{{$root.user.json_metadata.profile.profile_image || $root.user.json_metadata.user_image}}" ng-if="$root.user.json_metadata.user_image || $root.user.json_metadata.profile.profile_image" />
+            <img ion-img-cache ng-src="{{$root.user.json_metadata.profile.profile_image || $root.user.json_metadata.user_image}}" ng-if="$root.user.json_metadata.user_image || $root.user.json_metadata.profile.profile_image" />
           </a>
           <div>
             <div class="h4">@{{$root.user.username}}&nbsp;<div class="reputation">{{$root.user.reputation|reputation:true|number:1}}</div></div>

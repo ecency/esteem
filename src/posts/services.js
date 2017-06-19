@@ -60,6 +60,9 @@ module.exports = function (app) {
       },
       moveSchedule: function(id, user) {
         return $http.put(API_END_POINT+"/api/schedules/"+user+"/"+id);
+      },
+      getVotes: function(user) {
+        return $http.get(API_END_POINT+"/api/votes/"+$rootScope.$storage.chain+"/"+user);
       }
 		};
 	}])
@@ -135,97 +138,6 @@ module.exports = function (app) {
       }
     };
   });
-  app.directive('navigation', function () {
-    var controller = ['$scope', '$rootScope', function ($scope, $rootScope) {
-      $scope.addactiveclass = function (menuItem) {
-          $scope.activeMenu = menuItem.name;
-          //$rootScope.log(menuItem);
-          $rootScope.$storage.filter = menuItem.href;
-          $rootScope.$broadcast('filter:change');
-          $scope.center(menuItem.name);
-          $scope.someCtrlFn({menulinks: menuItem});
-      };
-
-      $(window).resize(function(){
-        $scope.center();
-      });
-      $scope.center = function(menuItem) {
-        var nav = document.getElementById("nav1");
-        var navWidth = document.getElementById("nav2").offsetWidth;
-        var currentElement = document.querySelectorAll('[name="'+menuItem+'"]');
-        currentElement = menuItem ? currentElement[0] : document.getElementsByClassName('active')[0];
-        if(currentElement) {
-          var margin = 0;
-          var lenm = nav.children.length;
-          for(var i =0; i<lenm; i++){
-
-            if(currentElement == nav.children[i]){
-              break;
-            }else {
-              margin += nav.children[i].offsetWidth;
-            }
-          }
-          nav.style.marginLeft = (navWidth/2 - margin - currentElement.offsetWidth/2) + 'px';
-        }
-        else {
-          nav.style.marginLeft = (navWidth/2 - $scope.activeMenu.length) + 'px';
-        }
-      };
-      var _len = $scope.menulinks.length;
-      for (var i = 0; i < _len; i++) {
-        if ($rootScope.$storage.filter) {
-          if ($scope.menulinks[i].href == $rootScope.$storage.filter) {
-            $scope.activeMenu = $scope.menulinks[i].name;
-          }
-        } else {
-          $scope.activeMenu = "Trending";
-        }
-      }
-
-      //$scope.center();
-      setTimeout(function() {
-        $scope.center();
-      }, 50);
-    }];
-
-    return {
-      restrict: "E",
-      replace: true,
-      scope: {
-        menulinks: '=',
-        someCtrlFn: '&callbackFn'
-      },
-      controller: controller,
-      template: "<ul id='nav1'>"+
-              "<li ng-repeat='menulinks in menulinks' name='{{menulink.name}}' class='top {{menulink.role}}' ng-class='{active : activeMenu === menulink.name}'>"+
-                "<a on-tap='addactiveclass(menulink)'>"+
-                  "{{menulink.name}}"
-                +"</a>"+
-                "<div class='arrow'></div>"+
-                "</li>"
-            +"</ul>"
-    }
-  });
-  function SimplePubSub() {
-      var events = {};
-      return {
-          on: function(names, handler) {
-              names.split(' ').forEach(function(name) {
-                  if (!events[name]) {
-                      events[name] = [];
-                  }
-                  events[name].push(handler);
-              });
-              return this;
-          },
-          trigger: function(name, args) {
-              angular.forEach(events[name], function(handler) {
-                  handler.call(null, args);
-              });
-              return this;
-          }
-      };
-  };
 
   app.directive('onFinishRender', function ($timeout) {
       return {
@@ -252,320 +164,262 @@ module.exports = function (app) {
           }
       };
   })
-  app.directive('tabSlideBox', [ '$timeout', '$window', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$rootScope',
-    function($timeout, $window, $ionicSlideBoxDelegate, $ionicScrollDelegate, $rootScope) {
-      'use strict';
+  
+  app.directive('fastRepeat', ['$compile', '$parse', '$animate', function ($compile, $parse, $animate) {
+    'use strict';
+    var $ = angular.element;
 
-      return {
-        restrict : 'A, E, C',
-        link : function(scope, element, attrs, ngModel) {
+    var fastRepeatId = 0,
+        showProfilingInfo = false,
+        isGteAngular14 = /^(\d+\.\d+)\./.exec(angular.version.full)[1] > 1.3;
 
-          var ta = element[0], $ta = element;
-          $ta.addClass("tabbed-slidebox");
-          if(attrs.tabsPosition === "bottom"){
-            $ta.addClass("btm");
-          }
-
-          //Handle multiple slide/scroll boxes
-          var handle = ta.querySelector('.slider').getAttribute('delegate-handle');
-
-          var ionicSlideBoxDelegate = $ionicSlideBoxDelegate;
-          if(handle){
-            ionicSlideBoxDelegate = ionicSlideBoxDelegate.$getByHandle(handle);
-          }
-
-          var ionicScrollDelegate = $ionicScrollDelegate;
-          if(handle){
-            ionicScrollDelegate = ionicScrollDelegate.$getByHandle(handle);
-          }
-
-          function renderScrollableTabs(){
-            var iconsDiv = angular.element(ta.querySelector(".tsb-icons")), icons = iconsDiv.find("a"), wrap = iconsDiv[0].querySelector(".tsb-ic-wrp"), totalTabs = icons.length;
-            var scrollDiv = wrap.querySelector(".scroll");
-
-            angular.forEach(icons, function(value, key){
-                 var a = angular.element(value);
-                 a.on('click', function(){
-                   ionicSlideBoxDelegate.slide(key);
-                 });
-
-              if(a.attr('icon-off')) {
-                a.attr("class", a.attr('icon-off'));
-              }
-            });
-
-            var initialIndex = attrs.tab;
-            //Initializing the middle tab
-            if(typeof attrs.tab === 'undefined' || (totalTabs <= initialIndex) || initialIndex < 0){
-              initialIndex = Math.floor(icons.length/2);
-            }
-
-            //If initial element is 0, set position of the tab to 0th tab
-            if(initialIndex == 0){
-              setPosition(0);
-            }
-            //$rootScope.log('initialIndex '+initialIndex);
-            if ($rootScope.$storage.filter) {
-              if ($rootScope.user) {
-                if ($rootScope.$storage.filter === 'feed') {
-                  //$scope.events.trigger("slideChange", {"index" : 0});
-                  initialIndex = 0;
-                }
-                if ($rootScope.$storage.filter === 'trending') {
-                  //$scope.events.trigger("slideChange", {"index" : 0});
-                  initialIndex = 1;
-                }
-                if ($rootScope.$storage.filter === 'hot'){
-                  //$scope.events.trigger("slideChange", {"index" : 1});
-                  initialIndex = 2;
-                }
-                if ($rootScope.$storage.filter === 'created'){
-                  //$scope.events.trigger("slideChange", {"index" : 2});
-                  initialIndex = 3;
-                }
-                if ($rootScope.$storage.filter === 'active'){
-                  //$scope.events.trigger("slideChange", {"index" : 3});
-                  initialIndex = 4;
-                }
-                if ($rootScope.$storage.filter === 'promoted'){
-                  //$scope.events.trigger("slideChange", {"index" : 4});
-                  initialIndex = 5;
-                }
-                if ($rootScope.$storage.filter === 'trending30'){
-                  //$scope.events.trigger("slideChange", {"index" : 5});
-                  initialIndex = 6;
-                }
-                if ($rootScope.$storage.filter === 'votes'){
-                  //$scope.events.trigger("slideChange", {"index" : 6});
-                  initialIndex = 7;
-                }
-                if ($rootScope.$storage.filter === 'children'){
-                  //$scope.events.trigger("slideChange", {"index" : 7});
-                  initialIndex = 8;
-                }
-                if ($rootScope.$storage.filter === 'cashout'){
-                  //$scope.events.trigger("slideChange", {"index" : 8});
-                  initialIndex = 9;
-                }
-              } else {
-                if ($rootScope.$storage.filter === 'trending') {
-                  //$scope.events.trigger("slideChange", {"index" : 0});
-                  initialIndex = 0;
-                }
-                if ($rootScope.$storage.filter === 'hot'){
-                  //$scope.events.trigger("slideChange", {"index" : 1});
-                  initialIndex = 1;
-                }
-                if ($rootScope.$storage.filter === 'created'){
-                  //$scope.events.trigger("slideChange", {"index" : 2});
-                  initialIndex = 2;
-                }
-                if ($rootScope.$storage.filter === 'active'){
-                  //$scope.events.trigger("slideChange", {"index" : 3});
-                  initialIndex = 3;
-                }
-                if ($rootScope.$storage.filter === 'promoted'){
-                  //$scope.events.trigger("slideChange", {"index" : 4});
-                  initialIndex = 4;
-                }
-                if ($rootScope.$storage.filter === 'trending30'){
-                  //$scope.events.trigger("slideChange", {"index" : 5});
-                  initialIndex = 5;
-                }
-                if ($rootScope.$storage.filter === 'votes'){
-                  //$scope.events.trigger("slideChange", {"index" : 6});
-                  initialIndex = 6;
-                }
-                if ($rootScope.$storage.filter === 'children'){
-                  //$scope.events.trigger("slideChange", {"index" : 7});
-                  initialIndex = 7;
-                }
-                if ($rootScope.$storage.filter === 'cashout'){
-                  //$scope.events.trigger("slideChange", {"index" : 8});
-                  initialIndex = 8;
-                }
-              }
-            }
-            $timeout(function() {
-              ionicSlideBoxDelegate.slide(initialIndex);
-            }, 10);
-          }
-
-          function setPosition(index){
-            var iconsDiv = angular.element(ta.querySelector(".tsb-icons")), icons = iconsDiv.find("a"), wrap = iconsDiv[0].querySelector(".tsb-ic-wrp"), totalTabs = icons.length;
-            var scrollDiv = wrap.querySelector(".scroll");
-
-            var middle = iconsDiv[0].offsetWidth/2;
-            var curEl = angular.element(icons[index]);
-            var prvEl = angular.element(iconsDiv[0].querySelector(".active"));
-            if(curEl && curEl.length){
-              var curElWidth = curEl[0].offsetWidth, curElLeft = curEl[0].offsetLeft;
-
-              if(prvEl.attr('icon-off')) {
-                prvEl.attr("class", prvEl.attr('icon-off'));
-              } else{
-                prvEl.removeClass("active");
-              }
-              if(curEl.attr('icon-on')) {
-                curEl.attr("class", curEl.attr('icon-on'));
-              }
-              curEl.addClass("active");
-
-              var leftStr = (middle  - (curElLeft) -  curElWidth/2 + 5);
-              //If tabs are not scrollable
-              if(!scrollDiv){
-                var leftStr = (middle  - (curElLeft) -  curElWidth/2 + 5) + "px";
-                wrap.style.webkitTransform =  "translate3d("+leftStr+",0,0)" ;
-              } else {
-                //If scrollable tabs
-                var wrapWidth = wrap.offsetWidth;
-                var currentX = Math.abs(getX(scrollDiv.style.webkitTransform));
-                var leftOffset = 100;
-                var elementOffset = 54;
-                //If tabs are reaching right end or left end
-                if(((currentX + wrapWidth) < (curElLeft + curElWidth + elementOffset)) || (currentX > (curElLeft - leftOffset))){
-                  if(leftStr > 0){
-                    leftStr = 0;
-                  }
-                  //Use this scrollTo, so when scrolling tab manually will not flicker
-                  setTimeout(function() {
-                    ionicScrollDelegate.scrollTo(Math.abs(leftStr), 0, true);
-                  }, 1);
-
-                } else {
-                  if(leftStr > 0){
-                    leftStr = 0;
-                  }
-                  setTimeout(function() {
-                    ionicScrollDelegate.scrollTo(Math.abs(leftStr), 0, true);
-                  }, 1);
-                }
-              }
-            }
-          };
-          function getX(matrix) {
-
-            matrix = matrix.replace("translate3d(","");
-            matrix = matrix.replace("translate(","");
-            return (parseInt(matrix));
-          }
-          var events = scope.events;
-          events.on('slideChange', function(data){
-            setPosition(data.index);
-          });
-          events.on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
-            renderScrollableTabs();
-          });
-          setTimeout(function() {
-            renderScrollableTabs();
-          }, 10);
-
-        },
-        controller : function($scope, $attrs, $element, $rootScope) {
-          $scope.events = new SimplePubSub();
-          $scope.slideHasChanged = function(index){
-            $rootScope.log("SlideChanged "+index);
-            $scope.currentSlide = index;
-            $scope.events.trigger("slideChange", {"index" : index});
-            $timeout(function(){
-              if($scope.onSlideMove) {
-                $scope.onSlideMove({"index" : eval(index)});
-              }
-
-              if ($rootScope.user) {
-                if (index === 0) {
-                  $rootScope.$storage.filter = 'feed';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 1) {
-                  $rootScope.$storage.filter = 'trending';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 2) {
-                  $rootScope.$storage.filter = 'hot';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 3) {
-                  $rootScope.$storage.filter = 'created';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 4) {
-                  $rootScope.$storage.filter = 'active';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 5) {
-                  $rootScope.$storage.filter = 'promoted';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 6) {
-                  $rootScope.$storage.filter = 'trending30';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 7) {
-                  $rootScope.$storage.filter = 'votes';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 8) {
-                  $rootScope.$storage.filter = 'children';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 9) {
-                  $rootScope.$storage.filter = 'cashout';
-                  $rootScope.$broadcast('filter:change');
-                }
-              } else {
-                if (index === 0) {
-                  $rootScope.$storage.filter = 'trending';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 1) {
-                  $rootScope.$storage.filter = 'hot';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 2) {
-                  $rootScope.$storage.filter = 'created';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 3) {
-                  $rootScope.$storage.filter = 'active';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 4) {
-                  $rootScope.$storage.filter = 'promoted';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 5) {
-                  $rootScope.$storage.filter = 'trending30';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 6) {
-                  $rootScope.$storage.filter = 'votes';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 7) {
-                  $rootScope.$storage.filter = 'children';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 8) {
-                  $rootScope.$storage.filter = 'cashout';
-                  $rootScope.$broadcast('filter:change');
-                }
-              }
-              if (!$rootScope.$$phase){
-                $rootScope.$apply();
-              }
-            }, 10);
-          };
-
-          $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
-            $rootScope.log('ngRepeatFinished');
-            $scope.events.trigger("ngRepeatFinished", {"event" : ngRepeatFinishedEvent});
-          });
-        }
-      };
-
+    // JSON.stringify replacer function which removes any keys that start with $$.
+    // This prevents unnecessary updates when we watch a JSON stringified value.
+    function JSONStripper(key, value) {
+        if(key.slice && key.slice(0,2) == '$$') { return undefined; }
+        return value;
     }
-  ]);
+
+    function getTime() { // For profiling
+        if(window.performance && window.performance.now) { return window.performance.now(); }
+        else { return (new Date()).getTime(); }
+    }
+
+    return {
+        restrict: 'A',
+        transclude: 'element',
+        priority: 1000,
+        compile: function(tElement, tAttrs) {
+            return function link(listScope, element, attrs, ctrl, transclude) {
+                var repeatParts = attrs.fastRepeat.split(' in ');
+                var repeatListName = repeatParts[1], repeatVarName = repeatParts[0];
+                var getter = $parse(repeatListName); // getter(scope) should be the value of the list.
+                var disableOpts = $parse(attrs.fastRepeatDisableOpts)(listScope);
+                var currentRowEls = {};
+                var t;
+
+                // The rowTpl will be digested once -- want to make sure it has valid data for the first wasted digest.  Default to first row or {} if no rows
+                var scope = listScope.$new();
+                scope[repeatVarName] = getter(scope)[0] || {};
+                scope.fastRepeatStatic = true; scope.fastRepeatDynamic = false;
+
+
+                // Transclude the contents of the fast repeat.
+                // This function is called for every row. It reuses the rowTpl and scope for each row.
+                var rowTpl = transclude(scope, function(rowTpl, scope) {
+                    if (isGteAngular14) {
+                        $animate.enabled(rowTpl, false);
+                    } else {
+                        $animate.enabled(false, rowTpl);
+                    }
+                });
+
+                // Create an offscreen div for the template
+                var tplContainer = $("<div/>");
+                $('body').append(tplContainer);
+                scope.$on('$destroy', function() {
+                    tplContainer.remove();
+                    rowTpl.remove();
+                });
+                tplContainer.css({position: 'absolute', top: '-100%'});
+                var elParent = element.parents().filter(function() { return $(this).css('display') !== 'inline'; }).first();
+                tplContainer.width(elParent.width());
+                tplContainer.css({visibility: 'hidden'});
+
+                tplContainer.append(rowTpl);
+
+                var updateList = function(rowTpl, scope, forceUpdate) {
+                    function render(item) {
+                        scope[repeatVarName] = item;
+                        scope.$digest();
+                        rowTpl.attr('fast-repeat-id', item.$$fastRepeatId);
+                        return rowTpl.clone();
+                    }
+
+
+                    var list = getter(scope);
+                    // Generate ids if necessary and arrange in a hash map
+                    var listByIds = {};
+                    angular.forEach(list, function(item) {
+                        if(!item.$$fastRepeatId) {
+                            if(item.id) { item.$$fastRepeatId = item.id; }
+                            else if(item._id) { item.$$fastRepeatId = item._id; }
+                            else { item.$$fastRepeatId = ++fastRepeatId; }
+                        }
+                        listByIds[item.$$fastRepeatId] = item;
+                    });
+
+                    // Delete removed rows
+                    angular.forEach(currentRowEls, function(row, id) {
+                        if(!listByIds[id]) {
+                            row.el.detach();
+                        }
+                    });
+                    // Add/rearrange all rows
+                    var previousEl = element;
+                    angular.forEach(list, function(item) {
+                        var id = item.$$fastRepeatId;
+                        var row=currentRowEls[id];
+
+
+                        if(row) {
+                            // We've already seen this one
+                            if((!row.compiled && (forceUpdate || !angular.equals(row.copy, item))) || (row.compiled && row.item!==item)) {
+                                // This item has not been compiled and it apparently has changed -- need to rerender
+                                var newEl = render(item);
+                                row.el.replaceWith(newEl);
+                                row.el = newEl;
+                                row.copy = angular.copy(item);
+                                row.compiled = false;
+                                row.item = item;
+                            }
+                        } else {
+                            // This must be a new node
+
+                            if(!disableOpts) {
+                                row = {
+                                    copy: angular.copy(item),
+                                    item: item,
+                                    el: render(item)
+                                };
+                            } else {
+                                // Optimizations are disabled
+                                row = {
+                                    copy: angular.copy(item),
+                                    item: item,
+                                    el: $('<div/>'),
+                                    compiled: true
+                                };
+
+                                renderUnoptimized(item, function(newEl) {
+                                    row.el.replaceWith(newEl);
+                                    row.el=newEl;
+                                });
+                            }
+
+                            currentRowEls[id] =  row;
+                        }
+                        previousEl.after(row.el.last());
+                        previousEl = row.el.last();
+                    });
+
+                };
+
+
+                // Here is the main watch. Testing has shown that watching the stringified list can
+                // save roughly 500ms per digest in certain cases.
+                // JSONStripper is used to remove the $$fastRepeatId that we attach to the objects.
+                var busy=false;
+                listScope.$watch(function(scp){ return JSON.stringify(getter(scp), JSONStripper); }, function(list) {
+                    tplContainer.width(elParent.width());
+
+                    if(busy) { return; }
+                    busy=true;
+
+                    if (showProfilingInfo) {
+                        t = getTime();
+                    }
+
+                    // Rendering is done in a postDigest so that we are outside of the main digest cycle.
+                    // This allows us to digest the individual row scope repeatedly without major hackery.
+                    listScope.$$postDigest(function() {
+                        tplContainer.width(elParent.width());
+                        scope.$digest();
+
+                        updateList(rowTpl, scope);
+                        if (showProfilingInfo) {
+                            t = getTime() - t;
+                            console.log("Total time: ", t, "ms");
+                            console.log("time per row: ", t/list.length);
+                        }
+                        busy=false;
+                    });
+                }, false);
+
+                function renderRows() {
+                    listScope.$$postDigest(function() {
+                        tplContainer.width(elParent.width());
+                        scope.$digest();
+                        updateList(rowTpl, scope, true);
+                    });
+                }
+                if(attrs.fastRepeatWatch) {
+                    listScope.$watch(attrs.fastRepeatWatch, renderRows, true);
+                }
+                listScope.$on('fastRepeatForceRedraw', renderRows);
+
+                function renderUnoptimized(item, cb) {
+                    var newScope = scope.$new(false);
+
+                    newScope[repeatVarName] = item;
+                    newScope.fastRepeatStatic = false; newScope.fastRepeatDynamic = true;
+                    var clone = transclude(newScope, function(clone) {
+                        tplContainer.append(clone);
+                    });
+
+                    newScope.$$postDigest(function() {
+                        cb(clone);
+                    });
+
+                    newScope.$digest();
+
+                    return newScope;
+                }
+
+                var parentClickHandler = function parentClickHandler(evt) {
+                    var $target = $(this);
+                    if($target.parents().filter('[fast-repeat-id]').length) {
+                        return; // This event wasn't meant for us
+                    }
+                    evt.stopPropagation();
+
+                    var rowId = $target.attr('fast-repeat-id');
+                    var item = currentRowEls[rowId].item;
+
+
+                    // Find index of clicked dom element in list of all children element of the row.
+                    // -1 would indicate the row itself was clicked.
+                    var elIndex = $target.find('*').index(evt.target);
+                    var newScope = renderUnoptimized(item, function(clone) {
+                        $target.replaceWith(clone);
+
+                        currentRowEls[rowId] = {
+                            compiled: true,
+                            el: clone,
+                            item: item
+                        };
+
+                        setTimeout(function() {
+                            if(elIndex >= 0) {
+                                clone.find('*').eq(elIndex).trigger('click');
+                            } else {
+                                clone.trigger('click');
+                            }
+                        }, 0);
+                    });
+
+                    newScope.$digest();
+                };
+
+
+                element.parent().on('click', '[fast-repeat-id]',parentClickHandler);
+                
+                // Handle resizes
+                //
+                var onResize = function() {
+                    tplContainer.width(elParent.width());
+                };
+
+                var jqWindow = $(window);
+                jqWindow.on('resize', onResize);
+                scope.$on('$destroy', function() { 
+                    jqWindow.off('resize', onResize);
+                    element.parent().off('click', '[fast-repeat-id]', parentClickHandler);
+                });
+            };
+        },
+    };
+  }])
 
 	app.filter('timeago', function($filter, $translate, $rootScope) {
 
@@ -760,16 +614,20 @@ module.exports = function (app) {
         };
     });
 
-    app.filter('regex', function() {
+    app.filter('regex', function($rootScope) {
       return function(input, field, regex) {
-          var patt = new RegExp(regex);      
-          var out = [];
-          for (var i = 0; i < input.length; i++){
-            //console.log(patt.test(input[i][field]));
-            if(!patt.test(input[i][field]))
-              out.push(input[i]);
-          }      
-        return out;
+        if ($rootScope.$storage.chain == 'golos') {
+          return input;
+        } else {
+            var patt = new RegExp(regex);      
+            var out = [];
+            for (var i = 0; i < input.length; i++){
+              //console.log(patt.test(input[i][field]));
+              if(!patt.test(input[i][field]))
+                out.push(input[i]);
+            }      
+          return out;
+        }
       };
     });
     
@@ -998,6 +856,374 @@ module.exports = function (app) {
       };
     }]);
 
+  app.directive(
+      "bnLogDomCreation",
+      function() {
+          // I link the DOM element to the view model.
+          function link( $scope, element, attributes ) {
+              console.log(
+                  "Link Executed:",
+                  $scope.ds.permlink,
+                  $scope.ds
+              );
+          }
+          // Return directive configuration.
+          return({
+              link: link,
+              restrict: "A"
+          });
+      }
+  );
+  //virtual type of scrolling, only issue one way scrolling :/
+  app.directive('itemList', function() {
+    return {
+      restrict: 'A',
+      scope: {
+        itemList: '='
+      },
+      link: function(scope, element, attrs) {
+        var el = element[0];
+        var emptySpace = angular.element('<div class="empty-space"></div>');
+        element.append(emptySpace);
+
+        // Keep a selection of previous elements so we can remove them
+        // if the user scrolls far enough
+        var prevElems = null;
+        var prevHeight = 0;
+        var nextElems = 0;
+        var nextHeight = 0;
+
+        // Options are defined above the directive to keep things modular
+        var options = scope.itemList;
+
+        // Keep track of how many rows we've rendered so we know where we left off
+        var renderedRows = 0;
+
+        var pendingLoad = false;
+
+        // Add some API functions to let the calling scope interact
+        // with the directive more effectively
+        options.api = {
+          refresh: refresh
+        };
+
+        element.on('scroll', checkScroll);
+
+        // Perform the initial setup
+        refresh();
+
+        function refresh() {
+          addRows();
+          checkScroll();
+        }
+
+        // Adds any rows that haven't already been rendered. Note that the
+        // directive does not process any removed items, so if that functionality
+        // is needed you'll need to make changes to this directive
+        function addRows() {
+          nextElems = [];
+          for (var i = renderedRows; i < options.items.length; i++) {
+            var e = options.renderer(options.items[i]);
+            nextElems.push(e[0])
+            element.append(e);
+            renderedRows++;
+            pendingLoad = false;
+          }
+          nextElems = angular.element(nextElems);
+          nextHeight = el.scrollHeight;
+
+          // Do this for the first time to initialize
+          if (!prevElems && nextElems.length) {
+            prevElems = nextElems;
+            prevHeight = nextHeight;
+          }
+        }
+
+        function checkScroll() {
+          // Only check if we need to load if there isn't already an async load pending
+          if (!pendingLoad) {
+            if ((el.scrollHeight - el.scrollTop - el.clientHeight) < options.threshold) {
+              console.log('Loading new items!');
+              pendingLoad = options.loadFn();
+
+              // If we're not waiting for an async event, render the new rows
+              if (!pendingLoad) {
+                addRows();
+              }
+            }
+          }
+          // if we're past the remove threshld, remove all previous elements and replace 
+          // lengthen the empty space div to fill the space they occupied
+          if (options.removeThreshold && el.scrollTop > prevHeight + options.removeThreshold) {
+            console.log('Removing previous elements');
+            prevElems.remove();
+            emptySpace.css('height', prevHeight + 'px');
+
+            // Stage the next elements for removal
+            prevElems = nextElems;
+            prevHeight = nextHeight;
+          }
+        }
+      }
+    };
+  });
+  //works with same height items/ just like collection-repeat
+  app.value('quickRepeatList', {});
+  app.directive('quickNgRepeat',
+  ['$parse', '$animate', '$rootScope', 'quickRepeatList', function($parse, $animate, $rootScope, quick_repeat_list) {
+    var NG_REMOVED = '$$NG_REMOVED';
+    var ngRepeatMinErr = 'err';
+    var uid = ['0', '0', '0'];
+    var list_id = window.list_id = (function(){
+      var i = 0;
+      return function(){
+        return 'list_' + (++i);
+      };
+    }());
+
+    function hashKey(obj) {
+      var objType = typeof obj,
+          key;
+
+      if (objType == 'object' && obj !== null) {
+        if (typeof (key = obj.$$hashKey) == 'function') {
+          // must invoke on object to keep the right this
+          key = obj.$$hashKey();
+        } else if (key === undefined) {
+          key = obj.$$hashKey = nextUid();
+        }
+      } else {
+        key = obj;
+      }
+
+      return objType + ':' + key;
+    };
+
+    function isWindow(obj) {
+      return obj && obj.document && obj.location && obj.alert && obj.setInterval;
+    };
+
+    function nextUid() {
+      var index = uid.length;
+      var digit;
+
+      while(index) {
+        index--;
+        digit = uid[index].charCodeAt(0);
+        if (digit == 57 /*'9'*/) {
+          uid[index] = 'A';
+          return uid.join('');
+        }
+        if (digit == 90  /*'Z'*/) {
+          uid[index] = '0';
+        } else {
+          uid[index] = String.fromCharCode(digit + 1);
+          return uid.join('');
+        }
+      }
+      uid.unshift('0');
+      return uid.join('');
+    };
+
+    function isArrayLike(obj) {
+      if (obj == null || isWindow(obj)) {
+        return false;
+      }
+
+      var length = obj.length;
+
+      if (obj.nodeType === 1 && length) {
+        return true;
+      }
+
+      return angular.isArray(obj) || !angular.isFunction(obj) && (
+        length === 0 || typeof length === "number" && length > 0 && (length - 1) in obj
+      );
+    };
+
+
+    return {
+      transclude: 'element',
+      priority: 1000,
+      terminal: true,
+      compile: function(element, attr, linker) {
+        return function($scope, $element, $attr){
+          var expression = $attr.quickNgRepeat;
+          var match = expression.match(/^\s*(.+)\s+in\s+(.*?)\s*(\s+track\s+by\s+(.+)\s*)?$/),
+            trackByExp, trackByExpGetter, trackByIdFn, trackByIdArrayFn, trackByIdObjFn, lhs, rhs, valueIdentifier, keyIdentifier,
+            hashFnLocals = {$id: hashKey};
+
+          if (!match) {
+            throw ngRepeatMinErr('iexp', "Expected expression in form of '_item_ in _collection_[ track by _id_]' but got '{0}'.",
+              expression);
+          }
+
+          lhs = match[1];
+          rhs = match[2];
+          trackByExp = match[4];
+
+          if (trackByExp) {
+            trackByExpGetter = $parse(trackByExp);
+            trackByIdFn = function(key, value, index) {
+              // assign key, value, and $index to the locals so that they can be used in hash functions
+              if (keyIdentifier) hashFnLocals[keyIdentifier] = key;
+              hashFnLocals[valueIdentifier] = value;
+              hashFnLocals.$index = index;
+              return trackByExpGetter($scope, hashFnLocals);
+            };
+          } else {
+            trackByIdArrayFn = function(key, value) {
+              return hashKey(value);
+            }
+            trackByIdObjFn = function(key) {
+              return key;
+            }
+          }
+
+          match = lhs.match(/^(?:([\$\w]+)|\(([\$\w]+)\s*,\s*([\$\w]+)\))$/);
+          if (!match) {
+            throw ngRepeatMinErr('iidexp', "'_item_' in '_item_ in _collection_' should be an identifier or '(_key_, _value_)' expression, but got '{0}'.",
+                                                                      lhs);
+          }
+          valueIdentifier = match[3] || match[1];
+          keyIdentifier = match[2];
+
+          // Store a list of elements from previous run. This is a hash where key is the item from the
+          // iterator, and the value is objects with following properties.
+          //   - scope: bound scope
+          //   - element: previous element.
+          //   - index: position
+          var lastBlockMap = {};
+
+          var list_name = $attr.quickRepeatList || list_id();
+
+          //watch props
+          $scope.$watch(rhs, quick_repeat_list[list_name] = function(collection){
+            var index, length,
+                previousNode = $element[0],     // current position of the node
+                nextNode,
+                // Same as lastBlockMap but it has the current state. It will become the
+                // lastBlockMap on the next iteration.
+                nextBlockMap = {},
+                arrayLength,
+                childScope,
+                key, value, // key/value of iteration
+                trackById,
+                collectionKeys,
+                block,       // last object information {scope, element, id}
+                nextBlockOrder = [];
+
+
+            if (isArrayLike(collection)) {
+              collectionKeys = collection;
+              trackByIdFn = trackByIdFn || trackByIdArrayFn;
+            } else {
+              trackByIdFn = trackByIdFn || trackByIdObjFn;
+              // if object, extract keys, sort them and use to determine order of iteration over obj props
+              collectionKeys = [];
+              for (key in collection) {
+                if (collection.hasOwnProperty(key) && key.charAt(0) != '$') {
+                  collectionKeys.push(key);
+                }
+              }
+              collectionKeys.sort();
+            }
+
+            arrayLength = collectionKeys.length;
+
+            // locate existing items
+            length = nextBlockOrder.length = collectionKeys.length;
+            for(index = 0; index < length; index++) {
+             key = (collection === collectionKeys) ? index : collectionKeys[index];
+             value = collection[key];
+             trackById = trackByIdFn(key, value, index);
+             if(lastBlockMap.hasOwnProperty(trackById)) {
+               block = lastBlockMap[trackById]
+               delete lastBlockMap[trackById];
+               nextBlockMap[trackById] = block;
+               nextBlockOrder[index] = block;
+             } else if (nextBlockMap.hasOwnProperty(trackById)) {
+               // restore lastBlockMap
+               angular.forEach(nextBlockOrder, function(block) {
+                 if (block && block.startNode) lastBlockMap[block.id] = block;
+               });
+               // This is a duplicate and we need to throw an error
+               throw ngRepeatMinErr('dupes', "Duplicates in a repeater are not allowed. Use 'track by' expression to specify unique keys. Repeater: {0}, Duplicate key: {1}", expression,       trackById);
+             } else {
+               // new never before seen block
+               nextBlockOrder[index] = { id: trackById };
+               nextBlockMap[trackById] = false;
+             }
+           }
+
+            // remove existing items
+            for (key in lastBlockMap) {
+              if (lastBlockMap.hasOwnProperty(key)) {
+                block = lastBlockMap[key];
+                $animate.leave(block.elements);
+                angular.forEach(block.elements, function(element) { element[NG_REMOVED] = true});
+                block.scope.$destroy();
+              }
+            }
+
+            // we are not using forEach for perf reasons (trying to avoid #call)
+            for (index = 0, length = collectionKeys.length; index < length; index++) {
+              key = (collection === collectionKeys) ? index : collectionKeys[index];
+              value = collection[key];
+              block = nextBlockOrder[index];
+
+              if (block.startNode) {
+                // if we have already seen this object, then we need to reuse the
+                // associated scope/element
+                childScope = block.scope;
+
+                nextNode = previousNode;
+                do {
+                  nextNode = nextNode.nextSibling;
+                } while(nextNode && nextNode[NG_REMOVED]);
+
+                if (block.startNode == nextNode) {
+                  // do nothing
+                } else {
+                  // existing item which got moved
+                  $animate.move(block.elements, null, angular.element(previousNode));
+                }
+                previousNode = block.endNode;
+              } else {
+                // new item which we don't know about
+                childScope = $scope.$new();
+              }
+
+              childScope[valueIdentifier] = value;
+              if (keyIdentifier) childScope[keyIdentifier] = key;
+              childScope.$index = index;
+              childScope.$first = (index === 0);
+              childScope.$last = (index === (arrayLength - 1));
+              childScope.$middle = !(childScope.$first || childScope.$last);
+              childScope.$odd = !(childScope.$even = index%2==0);
+
+              if (!block.startNode) {
+                linker(childScope, function(clone) {
+                  $animate.enter(clone, null, angular.element(previousNode));
+                  previousNode = clone;
+                  block.scope = childScope;
+                  block.startNode = clone[0];
+                  block.elements = clone;
+                  block.endNode = clone[clone.length - 1];
+                  nextBlockMap[block.id] = block;
+                });
+
+                if ($rootScope.$$phase !== '$digest' && childScope.$$phase !== '$digest'){
+                  childScope.$digest();
+                }
+              }
+            }
+            lastBlockMap = nextBlockMap;
+          });
+        };
+      }
+    };
+  }]);
   app.directive('selectInput', ['$ionicPopup', '$rootScope', function($ionicPopup, $rootScope) {
     return {
       restric: 'E',
@@ -1441,14 +1667,14 @@ module.exports = function (app) {
                               $scope.replying = false;
                               $scope.cmodal.hide();
                               $scope.data.comment = "";
-                              //setTimeout(function() {
-                              $scope.$evalAsync(function( $scope ) {
+                              setTimeout(function() {
+                              //$scope.$evalAsync(function( $scope ) {
                                 $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
                                 //$rootScope.$broadcast('hide:loading');
                                 $rootScope.$broadcast("update:content");  
                                 $rootScope.$broadcast('hide:loading');
-                              });
-                              //}, 1);
+                              //});
+                              }, 1);
                             }
                             $rootScope.$broadcast('hide:loading');
                           });
@@ -1491,13 +1717,13 @@ module.exports = function (app) {
                                 $scope.replying = false;
                                 $scope.cmodal.hide();
                                 $scope.data.comment = "";
-                                //setTimeout(function() {
-                                $scope.$evalAsync(function( $scope ) {
+                                setTimeout(function() {
+                                //$scope.$evalAsync(function( $scope ) {
                                   $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
                                   $rootScope.$broadcast('hide:loading');
                                   $rootScope.$broadcast("update:content");  
-                                });
-                                //}, 1);
+                                //});
+                                }, 1);
                               }
                               $rootScope.$broadcast('hide:loading');
                           });
