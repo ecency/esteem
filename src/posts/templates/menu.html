@@ -35,18 +35,18 @@
           </div>
         </center>
       </div>
-      <div ng-if="showExtra">
+      <div ng-if="showExtra" class="extra-menu">
         <ion-list>
-          <ion-item menu-close class="item-icon-left" ng-if="$root.$storage.users" ng-repeat="user in $root.$storage.users" ng-click="selectAccount(user)" ng-class="{'active': (user.username==$root.user.username&&user.chain==$root.$storage.user.chain) }">
+          <ion-item menu-close class="item-icon-left" ng-if="$root.$storage.users" ng-repeat="user in $root.$storage.users" href ng-click="selectAccount(user)" ng-class="{'active': (user.username==$root.user.username&&user.chain==$root.$storage.user.chain) }">
             <img class="icon logos" ng-src="{{'img/'+user.chain+'_icon.png'}}" />
             {{user.username}}
             <!--<span class="badge badge-assertive">{{user.chain}}</span>-->
           </ion-item>
-          <ion-item menu-close ng-click="openLogin()" class="item-icon-left" ng-if="$root.user">
+          <ion-item menu-close href ng-click="openLogin()" class="item-icon-left" ng-if="$root.user">
             <i class="icon ion-plus-round"></i>
             {{'ADD_ACCOUNT'|translate}}
           </ion-item>
-          <ion-item menu-close ng-click="openPostModal()" class="item-icon-left" ng-if="$root.user">
+          <ion-item menu-close href ng-click="openPostModal()" class="item-icon-left" ng-if="$root.user">
             <i class="icon ion-android-create"></i>
             {{'SUBMIT_A_STORY'|translate}}
           </ion-item>
@@ -58,7 +58,19 @@
             <i class="icon ion-person-stalker"></i>
             {{'FOLLOW'|translate}}
           </ion-item>
-          <ion-item menu-close ng-click="logout()" class="item-icon-left" ng-if="$root.user">
+          <ion-item menu-close href="#/app/bookmark" class="item-icon-left" ng-if="$root.user">
+            <i class="icon ion-bookmark"></i>
+            {{'BOOKMARKS'|translate}}
+          </ion-item>
+          <ion-item menu-close href="#/app/drafts" ng-if="$root.user" class="item-icon-left">
+            <i class="icon ion-compose"></i>
+            {{'DRAFTS'|translate}}
+          </ion-item>
+          <ion-item menu-close href="#/app/schedules" ng-if="$root.user" class="item-icon-left">
+            <i class="icon ion-clock"></i>
+            {{'SCHEDULES'|translate}}
+          </ion-item>
+          <ion-item menu-close href ng-click="logout()" ng-if="$root.user" class="item-icon-left">
             <i class="icon ion-log-out"></i>
             {{'LOGOUT'|translate}}
           </ion-item>
@@ -72,18 +84,6 @@
         <ion-item menu-close href="#/app/posts/" class="item-icon-left">
           <i class="icon ion-home"></i>
           {{'HOME'|translate}}
-        </ion-item>
-        <ion-item menu-close href="#/app/bookmark" class="item-icon-left" ng-if="$root.user">
-          <i class="icon ion-bookmark"></i>
-          {{'BOOKMARKS'|translate}}
-        </ion-item>
-        <ion-item menu-close href="#/app/drafts" ng-if="$root.user" class="item-icon-left">
-          <i class="icon ion-compose"></i>
-          {{'DRAFTS'|translate}}
-        </ion-item>
-        <ion-item menu-close href="#/app/schedules" ng-if="$root.user" class="item-icon-left">
-          <i class="icon ion-clock"></i>
-          {{'SCHEDULES'|translate}}
         </ion-item>
         <!--<ion-item menu-close href="#/app/notifications" class="item-icon-left" ng-if="$root.$storage.notifications && $root.$storage.notifications.length>0">
           <i class="icon ion-bookmark"></i>

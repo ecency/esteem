@@ -1696,6 +1696,6 @@ highchart {
 .ibody {
   
 }
-.profile_stats {
-
+.extra-menu .item-icon-left.item {
+  padding-left: 15px!important;
 }
