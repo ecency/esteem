@@ -1,5 +1,5 @@
 <ion-view view-title="" hide-nav-bar="true"><!--ng-class="{'mpb':$root.$storage.user.json_metadata.profile.cover_image}"-->
-  <ion-content class="has-footer profilepage" overflow-scroll="true" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
+  <ion-content class="has-footer profilepage" overflow-scroll="true">
     <div class="bar bar-subheader mysubheader bar-positive" ng-style="$root.user.username != user.username?css:mcss">
       <button class="button button-icon button-clear ion-ios-arrow-back profilebtn" on-tap="goBack()"></button>
       <button class="button button-outline button-light profilebtn_follow" on-tap="followUser(user.username)" ng-if="$root.user && $root.user.username != user.username && !isAmFollowing(user.username)"><!--<i class="fa fa-user-plus fa-lg"></i>-->{{'FOLLOW'|translate}}</button>
@@ -66,7 +66,7 @@
           </div>
       </div>
     </div>
-    <div class="has-mysubheader">
+    <div class="has-mysubheader" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
         <div class="box blue" ng-if="active!='wallet'||active!='permissions'">
           <p class="padding" ng-if="nonexist">{{'NOTHING_HERE'|translate}}</p>
           <ion-list>
@@ -117,7 +117,7 @@
             <div class="col col-67">
             {{$root.$storage.platformname}} <br><span class="gray wrap">{{'PROFILE_1'|translate:translationData }}</span>
             </div>
-            <div class="col col-33">
+            <div class="col col-33" ng-if="accounts.balance">
             {{accounts.balance | st | number}} {{$root.$storage.platformlunit}}
             </div>
           </div>
@@ -125,7 +125,7 @@
             <div class="col col-67">
             {{$root.$storage.platformpower}} <br><span class="gray wrap">{{'PROFILE_2'|translate:translationData}}</span>
             </div>
-            <div class="col col-33">
+            <div class="col col-33" ng-if="accounts.delegated_vesting_shares">
             {{accounts.vesting_shares | sp | number}}&nbsp;{{$root.$storage.platformpunit}}
             <div ng-if="accounts.delegated_vesting_shares != '0.000000 VESTS'"><br>
             -{{accounts.delegated_vesting_shares | sp | number}}&nbsp;{{$root.$storage.platformpunit}}
@@ -140,7 +140,7 @@
             <div class="col col-67">
             {{$root.$storage.platformdollar}} <br><span class="gray wrap">{{'PROFILE_3'|translate:translationData}}</span>
             </div>
-            <div class="col col-33">
+            <div class="col col-33" ng-if="accounts.sbd_balance">
             {{accounts.sbd_balance | sbd | number}} {{$root.$storage.platformdunit}}
             </div>
           </div>
@@ -148,7 +148,7 @@
             <div class="col col-67">
             {{'ESTIMATED_VALUE'|translate}} <br><span class="gray wrap">{{'PROFILE_4'|translate:translationData}}</span>
             </div>
-            <div class="col col-33">
+            <div class="col col-33" ng-if="accounts.balance">
             {{$root.$storage.currency|getCurrencySymbol}} {{accounts.vesting_shares | sd:accounts.balance:accounts.sbd_balance | number}}
             </div>
           </div>

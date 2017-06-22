@@ -14,15 +14,15 @@
     <!--<ion-header-bar class="bar-positive" ng-if="!$root.$storage.user">
       <h1 class="title center">eSteem</h1>
     </ion-header-bar>-->
-    <ion-content>
-      <div ng-if="!$root.user">
+    <ion-content ng-if="$root.$storage.appversion">
+      <div ng-if="!$root.user" class="exceptmenu">
         <center>
           <p>
             <img ng-src="img/esteem.png" width="150" />
           </p>
         </center>
       </div>
-      <div ng-if="$root.user" ng-style="mcss">
+      <div ng-if="$root.user" class="exceptmenu" ng-style="mcss">
       <br>
         <center>
           <a menu-close href="#/app/profile/{{$root.user.username}}" class="item-myavatar" ng-if="$root.user">
@@ -35,7 +35,7 @@
           </div>
         </center>
       </div>
-      <div ng-if="showExtra" class="extra-menu">
+      <div ng-if="showExtra" class="extra-menu" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
         <ion-list>
           <ion-item menu-close class="item-icon-left" ng-if="$root.$storage.users" ng-repeat="user in $root.$storage.users" href ng-click="selectAccount(user)" ng-class="{'active': (user.username==$root.user.username&&user.chain==$root.$storage.user.chain) }">
             <img class="icon logos" ng-src="{{'img/'+user.chain+'_icon.png'}}" />
@@ -76,7 +76,7 @@
           </ion-item>
         </ion-list>
       </div>
-      <ion-list>
+      <ion-list ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
         <ion-item menu-close ng-click="openLogin()" class="item-icon-left" ng-if="!$root.user">
           <i class="icon ion-log-in"></i>
           {{'LOGIN'|translate}}
@@ -112,7 +112,7 @@
       </ion-list>
     </ion-content>
     <!-- align to the bottom of the page -->
-    <div style="position: absolute; bottom: 0px; width: 100%" ng-if="$root.$storage.appversion">
+    <div style="position: absolute; bottom: 0px; width: 100%">
         <div style="text-align: center; color:#ccc;">
           <p>{{$root.$storage.appversion}}</p>
         </div>

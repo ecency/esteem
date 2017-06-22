@@ -3,15 +3,15 @@
   color: #aaa;
 }
 
-.theme-dark h2, .theme-dark h1, .theme-dark h3, .theme-dark h4, .theme-dark h5 {
+.theme-dark h2, .theme-dark h1, .theme-dark h3, .theme-dark h4, .theme-dark h5, .theme-dark h6 {
   color: #ddca7e;
 }
 
-.theme-dark .h2, .theme-dark .h1, .theme-dark .h3, .theme-dark .h4, .theme-dark .h5 {
+.theme-dark .h2, .theme-dark .h1, .theme-dark .h3, .theme-dark .h4, .theme-dark .h5, .theme-dark .h6 {
   color: #ddca7e;
 }
 
-.theme-dark .item, .theme-dark p, .theme-dark div, .theme-dark .item-content, .theme-dark span {
+.theme-dark .item, .theme-dark p, .theme-dark div, .theme-dark .item-content, .theme-dark span, .theme-dark .reputation, .theme-dark input, .theme-dark textarea, .theme-dark select{
   color: #aaa;
   background: #444;
 }
@@ -21,7 +21,7 @@
 }
 
 .theme-dark .bar {
-  background: #444!important;
+  background-color: #444;
 }
 
 .scroll-content.theme-dark {
@@ -501,7 +501,7 @@ select-input input {
   background-color: #f8f8f8;
   border-radius: 50%;
   border: 1px solid #dadada;
-  color: #000!important;
+  color: #000;
 }
 .stitle.row, .stitle.row .col {
 	padding: 0px;

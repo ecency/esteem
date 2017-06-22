@@ -10,7 +10,7 @@
   <ion-content class="padding posting" overflow-scroll="false">
     <input type="text" name="title" placeholder="{{'TITLE'|translate}}" ng-model="spost.title" style="width:100%;" autocomplete="off">
 
-    <textarea ng-model='spost.body' autofocus rows="15" placeholder="{{'POST_CONTENT'|translate}}" class="width100" ng-focus='cfocus()'></textarea>
+    <textarea ng-model='spost.body' rows="15" placeholder="{{'POST_CONTENT'|translate}}" class="width100" ng-focus='cfocus()'></textarea>
       <input type="text" name="categories" placeholder="{{'TAGS'|translate}}" ng-model="spost.tags" ng-change="tagsChange()" style="width:100%;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       <div class="row" ng-if="spost.advanced">
         <div class="col item item-input">
@@ -72,6 +72,7 @@
       <a class="button button-small" ng-click="insertText('* item', 2)"><i class='fa fa-list-ol'></i></a>
       <a class="button button-small" ng-click="insertText('<hr>')"><i class="fa ion-minus"></i></a>
       <a class="button button-small" ng-click="showImg()"><i class="fa fa-picture-o"></i></a>
+      <a class="button button-small" ng-click="hideKeyboard()"><i class="fa fa-keyboard-o"></i></a>
     </div>
   </ion-footer-bar>
 </ion-modal-view>

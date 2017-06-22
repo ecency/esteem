@@ -757,7 +757,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     $rootScope.openInfo = function(xx) {
       //console.log(xx);
       if (xx.active_votes.length==0) {
-        window.steem.api.getActiveVotes(xx.author, xx.permlink, function(err, dd) {
+        window.steem.api.getActiveVotesAsync(xx.author, xx.permlink, function(err, dd) {
           //console.log(err, dd);
           xx.active_votes = dd;
         });
@@ -788,7 +788,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 			$rootScope.$broadcast('openPostModal');
 		}
     $rootScope.getContentAndOpen = function(item) {
-      window.steem.api.getContent(item.author, item.permlink, function(err, result) {
+      window.steem.api.getContentAsync(item.author, item.permlink, function(err, result) {
         console.log(err, result);
         var _len = result.active_votes.length;
           for (var j = _len - 1; j >= 0; j--) {
@@ -879,7 +879,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                   ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
                   : $rootScope.user.privatePostingKey;
 
-        console.log(wif+$rootScope.user.username+post.author+post.permlink);
+        //console.log(wif+$rootScope.user.username+post.author+post.permlink);
 
         window.steem.broadcast.voteAsync(wif, $rootScope.user.username, post.author, post.permlink, $rootScope.$storage.voteWeight*tt || 10000*tt, function(err, result) {
           //console.log(err, result);
@@ -1001,10 +1001,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     setTimeout(function() {
     //$rootScope.$evalAsync(function( $rootScope ) {
-      window.steem.api.getFeedHistory(function(err, r) {
+      window.steem.api.getFeedHistoryAsync(function(err, r) {
         //console.log(err, r);
         $rootScope.$storage.base = r.current_median_history.base.split(" ")[0];
-        window.steem.api.getDynamicGlobalProperties(function(err, r) {
+        window.steem.api.getDynamicGlobalPropertiesAsync(function(err, r) {
           //console.log(err, r);
           $rootScope.log(r);
           $rootScope.$storage.steem_per_mvests = (Number(r.total_vesting_fund_steem.substring(0, r.total_vesting_fund_steem.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;

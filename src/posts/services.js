@@ -1381,7 +1381,7 @@ module.exports = function (app) {
                           console.log('depth5');
                           $rootScope.$broadcast('openComments', { data: comment });
                         } else {
-                          window.steem.api.getState('tag/@'+comment.author+'/'+comment.permlink, function(err, dd) {
+                          window.steem.api.getStateAsync('tag/@'+comment.author+'/'+comment.permlink, function(err, dd) {
                             //console.log(dd);
                             var po = [];
 
@@ -1460,7 +1460,7 @@ module.exports = function (app) {
                     //$rootScope.$broadcast('hide:loading');
                   };
                   $scope.$on('postAccounts', function(){
-                    window.steem.api.getAccounts($rootScope.postAccounts, function(err, res){
+                    window.steem.api.getAccountsAsync($rootScope.postAccounts, function(err, res){
                         //console.log(err, res);
                         for (var i = 0, len = res.length; i < len; i++) {
                         var v = res[i];
