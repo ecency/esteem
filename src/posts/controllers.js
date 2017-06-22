@@ -1,7 +1,7 @@
 module.exports = function (app) {
 //angular.module('window.steem.controllers', [])
 
-app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform, $filter, APIs, $window, $ionicPopover, $cordovaBarcodeScanner) {
+app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform, $filter, APIs, $window, $ionicPopover, $cordovaBarcodeScanner, $cordovaSplashscreen) {
 
   $scope.loginData = {};
 
@@ -9,6 +9,20 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     scope: $scope  }).then(function(modal) {
     $scope.loginModal = modal;
   });
+
+
+  /*if (navigator.splashscreen) {
+    setTimeout(function() {
+      console.log('-----hiding splash------');
+      navigator.splashscreen.hide();
+    }, 1000);
+  }
+  if ($cordovaSplashscreen) {
+    setTimeout(function() {
+      console.log('-----hide splash------ $cordovaSplashscreen');
+      $cordovaSplashscreen.hide();
+    }, 1000);
+  }*/
 
   $ionicPopover.fromTemplateUrl('templates/popover.html', {
     scope: $scope,
@@ -75,10 +89,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   }
   $scope.open = function(item) {
     console.log(item);
-    if (typeof item.json_metadata === 'string' || item.json_metadata instanceof String) {
+    if ((typeof item.json_metadata === 'string' || item.json_metadata instanceof String) && item.json_metadata) {
       item.json_metadata = angular.fromJson(item.json_metadata);
-    } else {
-      item.json_metadata = {};
     }
 
     $rootScope.sitem = item;  
@@ -504,7 +516,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       $scope.data.type="tag";
       //console.log($scope.data.searchResult);
       $scope.smodal.show();
-      window.steem.api.getState("/tags", function(err, res) {
+      window.steem.api.getStateAsync("/tags", function(err, res) {
         if (res) {
           angular.forEach(res.tags, function(k,v){
             if (v) {
@@ -680,7 +692,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         ];
       
      
-      window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
+      window.steem.broadcast.sendAsync({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
         console.log(err, result);
         $scope.replying = false;
         $rootScope.$broadcast('hide:loading');
@@ -954,7 +966,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
 
                 if ($scope.data.type !== 'sp' && $scope.data.type !== 'golosp') {
                   var tt = $filter('number')($scope.data.amount, 3) +" "+angular.uppercase($scope.data.type);
-                  window.steem.broadcast.transfer(wif, $rootScope.user.username, $scope.data.username, tt, $scope.data.memo || "", function(err, result) {
+                  window.steem.broadcast.transferAsync(wif, $rootScope.user.username, $scope.data.username, tt, $scope.data.memo || "", function(err, result) {
                     console.log(err, result);
                     if (err) {
                       var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
@@ -1567,7 +1579,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           }
       }
      
-      window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
+      window.steem.broadcast.sendAsync({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
         console.log(err, result);
         $scope.replying = false;
         $rootScope.$broadcast('hide:loading');
@@ -1670,7 +1682,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.loadMore = function() {
     //$rootScope.$broadcast('show:loading');
     console.log('loadmore');
-    console.log($scope.data.length);
+    //console.log($scope.data.length);
     $scope.limit += 5;
     if (!$scope.error) {
       $scope.fetchPosts(null, $scope.limit, null);
@@ -1918,7 +1930,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   }
 
   $scope.fetchContent = function(author, permlink) {
-    window.steem.api.getContent(author, permlink, function(err, result) {
+    window.steem.api.getContentAsync(author, permlink, function(err, result) {
       console.log(err, result);
       var len = result.active_votes.length;
       //var user = $rootScope.$storage.user;
@@ -1998,7 +2010,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         delete params.tags; 
       }
       
-      var xyz = camelCase("get_discussions_by_"+type);
+      var xyz = camelCase("get_discussions_by_"+type) + "Async";
       //window.steem.api.getDiscussionsBy
       window.steem.api[xyz](params, function(err, response) {
         
@@ -2807,7 +2819,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         operations_array.push(xx);
       }
       
-      window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
+      window.steem.broadcast.sendAsync({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
         console.log(err, result);
         $scope.replying = false;
         $rootScope.$broadcast('hide:loading');
@@ -2888,7 +2900,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           }];
           operations_array.push(xx);
         }
-        window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
+        window.steem.broadcast.sendAsync({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
           //console.log(err, result);
           $rootScope.$broadcast('hide:loading');
           if (err) {
@@ -2951,7 +2963,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
           }]
           ];
-        window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
+        window.steem.broadcast.sendAsync({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
           //console.log(err, result);
           $rootScope.$broadcast('hide:loading');
           if (err) {
@@ -3101,7 +3113,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       //console.log(po);
     });*/
 
-     window.steem.api.getContent(author, permlink, function(err, result) {
+     window.steem.api.getContentAsync(author, permlink, function(err, result) {
       //console.log(err, result);
       if (result) {
         var len = result.active_votes.length;
@@ -3156,7 +3168,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.fetchComments = function(author, permlink){
     $rootScope.fetching = true;
     //console.log(author,permlink);
-    window.steem.api.getState('tag/@'+author+'/'+permlink, function(err, dd) {
+    window.steem.api.getStateAsync('tag/@'+author+'/'+permlink, function(err, dd) {
       //console.log(dd);
       var po = [];
       $rootScope.paccounts = {};
@@ -4329,26 +4341,23 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         $scope.getOtherUsersData();
       } else {
         $rootScope.log("get follows counts");
-        //$scope.$evalAsync(function($scope){
-          window.steem.api.getFollowCount($stateParams.username, function(err, res) {
+        $scope.$evalAsync(function($scope){
+          window.steem.api.getFollowCountAsync($stateParams.username, function(err, res) {
             //console.log(err, res);
             if (res)
               $scope.followdetails = res;
-
-            $scope.$applyAsync();
+            
             /*if (!$scope.$$phase){
               $scope.$apply();
             }*/
           });
-        //});
+        });
       }
     } else {
       if ($stateParams.username) {
         $scope.getOtherUsersData();
       }
     }
-
-
 
     $scope.refresh = function() {
       if (!$scope.active) {
@@ -4359,10 +4368,21 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       } else {
         $scope.rest = "";
       }
-
+      console.log('refresh profile');
       $scope.nonexist = false;
 
-      window.steem.api.getState("/@"+$stateParams.username+$scope.rest, function(err, res) {
+      //var today = new Date();
+      $scope.$evalAsync(function($scope){
+        APIs.getVotes($stateParams.username).then(function(res){
+          if (res) {
+            $rootScope.log(angular.toJson(res.data));
+            $scope.votecount = res.data.count;
+          }
+          //$scope.$applyAsync();
+        });
+      });
+
+      window.steem.api.getStateAsync("/@"+$stateParams.username+$scope.rest, function(err, res) {
         //console.log(err, res);
         if (res && res.content) {
           $scope.data = {profile: []};
@@ -4370,7 +4390,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           //if (Object.keys(res.content).length>0) {
           //$scope.$evalAsync(function($scope){
             angular.forEach(res.content, function(v,k){
-              if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
+              if ((typeof v.json_metadata === 'string' || v.json_metadata instanceof String) && (v.json_metadata)) {
                 v.json_metadata = angular.fromJson(v.json_metadata);
               }
               if ($rootScope.user){
@@ -4392,13 +4412,13 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
                 }
               }
               $scope.data.profile.push(v);
-              $scope.$applyAsync();
+              //$scope.$applyAsync();
             });
             $scope.nonexist = false;
-            $scope.$applyAsync();
-            /*if (!$scope.$$phase){
+            //$scope.$applyAsync();
+            if (!$scope.$$phase){
               $scope.$apply();
-            }*/
+            }
           //});
           } else {
             $scope.nonexist = true;
@@ -4407,16 +4427,6 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         /*if (!$scope.$$phase){
           $scope.$apply();
         }*/
-      });
-
-      //var today = new Date();
-      APIs.getVotes($stateParams.username).then(function(res){
-        if (res) {
-          $rootScope.log(angular.toJson(res.data));
-          $scope.votecount = res.data.count;
-        }
-        
-        $scope.$applyAsync();
       });
     };
     
@@ -4445,13 +4455,13 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     } else {
       $scope.rest = "";
     }
-    window.steem.api.getState("/@"+$stateParams.username+$scope.rest, function(err, res) {
+    window.steem.api.getStateAsync("/@"+$stateParams.username+$scope.rest, function(err, res) {
       //console.log(err, res);
       if (res && res.content) {
         //if (Object.keys(res.content).length>0) {
         //$scope.$evalAsync(function($scope){
         angular.forEach(res.content, function(v,k){
-          if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
+          if ((typeof v.json_metadata === 'string' || v.json_metadata instanceof String) && v.json_metadata) {
             v.json_metadata = angular.fromJson(v.json_metadata);
           }
           if ($rootScope.user){
@@ -4487,6 +4497,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       
       if (type==="transfers" || type==="permissions") {
         //$scope.$evalAsync(function($scope){
+          console.log(res);
           for (var property in res.accounts) {
             if (res.accounts.hasOwnProperty(property)) {
               $scope.accounts = res.accounts[property];
@@ -4513,7 +4524,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
       : $rootScope.user.privatePostingKey;
 
-      window.steem.broadcast.claimRewardBalance(wif, $rootScope.user.username, $scope.accounts.reward_steem_balance, $scope.accounts.reward_sbd_balance, $scope.accounts.reward_vesting_balance, function(err, result) {
+      window.steem.broadcast.claimRewardBalanceAsync(wif, $rootScope.user.username, $scope.accounts.reward_steem_balance, $scope.accounts.reward_sbd_balance, $scope.accounts.reward_vesting_balance, function(err, result) {
         //console.log(err, result);
         if (err) {
           var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;

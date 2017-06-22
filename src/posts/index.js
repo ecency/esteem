@@ -279,51 +279,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
   $rootScope.log = function(message) {
     $log.info(message);
   };
-  window.steem.config.set('websocket',localStorage.socketUrl); 
-  
-  console.log('run ready');
-  /*$ionicPlatform.registerBackButtonAction(function (event) {
-  if ( ($state.$current.name=="app.posts") ){
-          // H/W BACK button is disabled for these states (these views)
-          // Do not go to the previous state (or view) for these states. 
-          // Do nothing here to disable H/W back button.
-      } else {
-          // For all other states, the H/W BACK button is enabled
-          navigator.app.backHistory();
-      }
-  }, 100);
-  */
-  $ionicPlatform.registerBackButtonAction(function(e){
-    if ($rootScope.backButtonPressedOnceToExit) {
-      ionic.Platform.exitApp();
-    } else if ($ionicHistory.backView()) {
-      $ionicHistory.goBack();
-    }
-    else {
-      $rootScope.backButtonPressedOnceToExit = true;
-
-      $cordovaToast.showShortBottom("Press back button again to exit").then(function(success) {
-        // success
-        console.log('exit');
-      }, function (error) {
-        // error
-        console.log('err exit');
-      });
-      setTimeout(function(){
-        $rootScope.backButtonPressedOnceToExit = false;
-      }, 2000);
-    }
-    e.preventDefault();
-    return false;
-  }, 101);
-
-
-  $rootScope.user = $rootScope.$storage.user || undefined;
-  
-  if ($rootScope.user) {
-    console.log('Account set: '+$rootScope.user.username);
-  }
-
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -333,9 +288,56 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
-      //StatusBar.styleDefault();
-      StatusBar.styleLightContent();
+      StatusBar.styleDefault();
+      //StatusBar.styleLightContent();
     }
+
+    window.steem.config.set('websocket',localStorage.socketUrl); 
+  
+    console.log('run ready');
+    /*$ionicPlatform.registerBackButtonAction(function (event) {
+    if ( ($state.$current.name=="app.posts") ){
+            // H/W BACK button is disabled for these states (these views)
+            // Do not go to the previous state (or view) for these states. 
+            // Do nothing here to disable H/W back button.
+        } else {
+            // For all other states, the H/W BACK button is enabled
+            navigator.app.backHistory();
+        }
+    }, 100);
+    */
+    $ionicPlatform.registerBackButtonAction(function(e){
+      if ($rootScope.backButtonPressedOnceToExit) {
+        ionic.Platform.exitApp();
+      } else if ($ionicHistory.backView()) {
+        $ionicHistory.goBack();
+      }
+      else {
+        $rootScope.backButtonPressedOnceToExit = true;
+
+        $cordovaToast.showShortBottom("Press back button again to exit").then(function(success) {
+          // success
+          console.log('exit');
+        }, function (error) {
+          // error
+          console.log('err exit');
+        });
+        setTimeout(function(){
+          $rootScope.backButtonPressedOnceToExit = false;
+        }, 2000);
+      }
+      e.preventDefault();
+      return false;
+    }, 101);
+
+
+    $rootScope.user = $rootScope.$storage.user || undefined;
+    
+    if ($rootScope.user) {
+      console.log('Account set: '+$rootScope.user.username);
+    }
+
+
     if (!$rootScope.$storage.users) {
       $rootScope.$storage.users = [];
     }
@@ -510,18 +512,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     if (!$rootScope.$storage.filter) {
       $rootScope.$storage.filter = "trending";
     }
-    if (navigator.splashscreen) {
-      setTimeout(function() {
-        console.log('-----hiding splash------');
-        navigator.splashscreen.hide();
-      }, 1000);
-    }
-    if ($cordovaSplashscreen) {
-      setTimeout(function() {
-        //console.log('-----hide splash------, ', $cordovaSplashscreen);
-        $cordovaSplashscreen.hide();
-      }, 1000);
-    }
+    
     $rootScope.log("app start ready");
     setTimeout(function() {
       if ($rootScope.$storage.pincode) {
@@ -844,7 +835,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                   ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
                   : $rootScope.user.privatePostingKey;
 
-            window.steem.broadcast.customJson(wif, [], [$rootScope.user.username], "follow", angular.toJson(json), function(err, result) {
+            window.steem.broadcast.customJsonAsync(wif, [], [$rootScope.user.username], "follow", angular.toJson(json), function(err, result) {
               console.log(err, result);
               if (err) {
                 var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
@@ -890,7 +881,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
         console.log(wif+$rootScope.user.username+post.author+post.permlink);
 
-        window.steem.broadcast.vote(wif, $rootScope.user.username, post.author, post.permlink, $rootScope.$storage.voteWeight*tt || 10000*tt, function(err, result) {
+        window.steem.broadcast.voteAsync(wif, $rootScope.user.username, post.author, post.permlink, $rootScope.$storage.voteWeight*tt || 10000*tt, function(err, result) {
           //console.log(err, result);
           post.invoting = false;
 
@@ -991,7 +982,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
                 : $rootScope.user.privatePostingKey;
 
-          window.steem.broadcast.customJson(wif, [], [$rootScope.user.username], "follow", angular.toJson(json), function(err, result) {
+          window.steem.broadcast.customJsonAsync(wif, [], [$rootScope.user.username], "follow", angular.toJson(json), function(err, result) {
             //console.log(err, result);
             if (err) {
               var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;

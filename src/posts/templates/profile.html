@@ -73,9 +73,15 @@
             <!--<div ng-repeat="(key, playlist) in profile" class="item wrap" on-tap="open(playlist)">
             <h3 class="bold">{{playlist.root_title}}</h3>
             <span ng-bind-html="playlist.body.substring(0,100)|parseUrl"></span>
-            </div>-->
+            </div>
+            https://imgp.golos.io/0x0/https://steemitimages.com/0x0/0x0/
+
+            next_vesting_withdrawal:"2017-06-27T03:50:12"
+            next_vesting_withdrawal:"1969-12-31T23:59:59"
+
+            -->
             <div class="item" ng-repeat="playlist in data.profile | orderBy:'-created' track by $index" ng-class="{'item-thumbnail-left': playlist.json_metadata.image}">
-              <img ng-src="{{playlist.json_metadata.image[0]}}" on-tap="open(playlist)" ng-if="playlist.json_metadata.image" onerror="this.src='img/noimage.png'"/>
+              <img ng-src="{{playlist.json_metadata.image[0]||'https://steemitimages.com/0x0/0x0/'+playlist.json_metadata.image[0]}}" on-tap="open(playlist)" ng-if="playlist.json_metadata.image" onerror="this.src='img/noimage.png'"/>
                 <div on-tap="open(playlist)">
                 <div class="wrap">
                   <h2><i class="fa fa-money positive" ng-if="playlist.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="playlist.percent_steem_dollars === 0"></i>{{playlist.root_title}}</h2>
@@ -106,6 +112,7 @@
           <p class="bold uppercase">
             {{'BALANCES'|translate}}
           </p>
+          <div ng-if="accounts">
           <div class="row">
             <div class="col col-67">
             {{$root.$storage.platformname}} <br><span class="gray wrap">{{'PROFILE_1'|translate:translationData }}</span>
@@ -119,7 +126,14 @@
             {{$root.$storage.platformpower}} <br><span class="gray wrap">{{'PROFILE_2'|translate:translationData}}</span>
             </div>
             <div class="col col-33">
-            {{accounts.vesting_shares | sp | number}} {{$root.$storage.platformpunit}}
+            {{accounts.vesting_shares | sp | number}}&nbsp;{{$root.$storage.platformpunit}}
+            <div ng-if="accounts.delegated_vesting_shares != '0.000000 VESTS'"><br>
+            -{{accounts.delegated_vesting_shares | sp | number}}&nbsp;{{$root.$storage.platformpunit}}
+            </div>
+            <div ng-if="accounts.received_vesting_shares != '0.000000 VESTS'">
+            <br>
+            +{{accounts.received_vesting_shares | sp | number}}&nbsp;{{$root.$storage.platformpunit}}
+            </div>
             </div>
           </div>
           <div class="row">
@@ -137,6 +151,8 @@
             <div class="col col-33">
             {{$root.$storage.currency|getCurrencySymbol}} {{accounts.vesting_shares | sd:accounts.balance:accounts.sbd_balance | number}}
             </div>
+          </div>
+          <p ng-if="accounts.next_vesting_withdrawal!=='1969-12-31T23:59:59'">{{'POWER_DOWN_SCHEDULE'|translate}} {{accounts.next_vesting_withdrawal|timeago:true}}</p>
           </div>
           <p class="bold">{{'TRANSACTION_HISTORY'|translate}}</p>
           <div class="list list-inset">
