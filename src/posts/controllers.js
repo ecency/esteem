@@ -11,7 +11,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   });
 
 
-  /*if (navigator.splashscreen) {
+  if (navigator.splashscreen) {
     setTimeout(function() {
       console.log('-----hiding splash------');
       navigator.splashscreen.hide();
@@ -22,7 +22,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       console.log('-----hide splash------ $cordovaSplashscreen');
       $cordovaSplashscreen.hide();
     }, 1000);
-  }*/
+  }
 
   $ionicPopover.fromTemplateUrl('templates/popover.html', {
     scope: $scope,
