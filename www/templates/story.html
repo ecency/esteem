@@ -9,9 +9,8 @@
   </ion-header-bar>
   <ion-content class="padding posting" overflow-scroll="false">
     <input type="text" name="title" placeholder="{{'TITLE'|translate}}" ng-model="spost.title" style="width:100%;" autocomplete="off">
-
-    <textarea ng-model='spost.body' rows="15" placeholder="{{'POST_CONTENT'|translate}}" class="width100" ng-focus='cfocus()'></textarea>
-      <input type="text" name="categories" placeholder="{{'TAGS'|translate}}" ng-model="spost.tags" ng-change="tagsChange()" style="width:100%;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <textarea ng-model='spost.body' rows="15" placeholder="{{'POST_CONTENT'|translate}}" class="width100" ng-focus='cfocus()'></textarea><!---->
+      <input type="text" name="categories" placeholder="{{'TAGS'|translate}}" ng-model="spost.tags" ng-change="tagsChange()" style="width:100%;" autocomplete="off" autocorrect="off" autocapitalize="off">
       <div class="row" ng-if="spost.advanced">
         <div class="col item item-input">
           <ion-checkbox ng-model="spost.upvote_this" ng-if='!edit'>{{'UPVOTE'|translate}}</ion-checkbox> 
@@ -39,8 +38,6 @@
             <button class="button button-calm button-small" ng-click="savePost()">{{'SAVE'|translate}}</button>
             <button class="button button-light button-small" ng-click="clearPost()">{{'CLEAR'|translate}}</button>
           </div>
-          
-          
         </div>
       </div>
       <p ng-if="spost.body">{{'PREVIEW'|translate}}</p>

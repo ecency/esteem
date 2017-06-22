@@ -11,7 +11,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   });
 
 
-  if (navigator.splashscreen) {
+  /*if (navigator.splashscreen) {
     setTimeout(function() {
       console.log('-----hiding splash------');
       navigator.splashscreen.hide();
@@ -22,7 +22,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       console.log('-----hide splash------ $cordovaSplashscreen');
       $cordovaSplashscreen.hide();
     }, 1000);
-  }
+  }*/
 
   $ionicPopover.fromTemplateUrl('templates/popover.html', {
     scope: $scope,
@@ -1260,6 +1260,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
 
   $scope.cfocus = function(){
+    console.log('cfocus');
     $scope.lastFocused = document.activeElement;
   }
   //http://stackoverflow.com/questions/1064089/inserting-a-text-where-cursor-is-using-javascript-jquery
@@ -1424,25 +1425,27 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.spost = {};
   $scope.tagsChange = function() {
     $rootScope.log("tagsChange");
-    $scope.spost.tags = $scope.spost.tags.replace(/#/g,'');
-    $scope.spost.tags = $filter('lowercase')($scope.spost.tags);
-    $scope.spost.category = $scope.spost.tags?$scope.spost.tags.split(" "):[];
-    for (var i = 0, len = $scope.spost.category.length; i < len; i++) {
-      var v = $scope.spost.category[i];
-      if(/^[а-яё]/.test(v)) {
-        v = 'ru--' + $filter('detransliterate')(v, true);
-        $scope.spost.category[i] = v;
+    if ($scope.spost.tags) {
+      $scope.spost.tags = $scope.spost.tags.replace(/#/g,'');
+      $scope.spost.tags = $filter('lowercase')($scope.spost.tags);
+      $scope.spost.category = $scope.spost.tags?$scope.spost.tags.split(" "):[];
+      for (var i = 0, len = $scope.spost.category.length; i < len; i++) {
+        var v = $scope.spost.category[i];
+        if(/^[а-яё]/.test(v)) {
+          v = 'ru--' + $filter('detransliterate')(v, true);
+          $scope.spost.category[i] = v;
+        }
       }
-    }
 
-    //console.log($scope.spost.category);
-    if ($scope.spost.category.length > 5) {
-      $scope.disableBtn = true;
-    } else {
-      $scope.disableBtn = false;
-    }
-    if (!$scope.$$phase){
-      $scope.$apply();
+      //console.log($scope.spost.category);
+      if ($scope.spost.category.length > 5) {
+        $scope.disableBtn = true;
+      } else {
+        $scope.disableBtn = false;
+      }
+      if (!$scope.$$phase){
+        $scope.$apply();
+      }  
     }
   }
   $scope.contentChanged = function (editor, html, text) {
@@ -2461,6 +2464,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
   $scope.hideKeyboard = function(){
     if (window.cordova) {
+      document.activeElement.blur();
       cordova.plugins.Keyboard.close();
     }
   }
@@ -2924,8 +2928,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
             
             //$scope.$evalAsync(function($scope){
-            setTimeout(function() {
-              window.steem.api.getContentReplies($rootScope.sitem.author, $rootScope.sitem.permlink, function(err, result) {
+            /*setTimeout(function() {
+              window.steem.api.getContentRepliesAsync($rootScope.sitem.author, $rootScope.sitem.permlink, function(err, result) {
                 //console.log(err, result);
                 if (result) {
                   for (var i = 0; i < result.length; i++) {
@@ -2940,6 +2944,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               }
               $scope.$broadcast('postAccounts');
             }, 1);
+            */
               
             //});
           }
@@ -2987,7 +2992,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
             //$scope.$evalAsync(function($scope){
             
-              window.steem.api.getContentReplies($rootScope.sitem.author, $rootScope.sitem.permlink, function(err, result) {
+              /*window.steem.api.getContentReplies($rootScope.sitem.author, $rootScope.sitem.permlink, function(err, result) {
                 //console.log(err, result);
                 if (result) {
                   for (var i = 0; i < result.length; i++) {
@@ -3000,7 +3005,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
               if ($rootScope.postAccounts && $rootScope.postAccounts.indexOf($rootScope.user.username) == -1) {
                 $rootScope.postAccounts.push($rootScope.user.username);
               }
-              $scope.$broadcast('postAccounts');
+              $scope.$broadcast('postAccounts');*/
 
             //});
             

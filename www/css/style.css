@@ -1651,6 +1651,14 @@ body[dir=rtl] .bar .button.back-button, .bar button.back-button {
      right: 5%; 
      bottom: 5%;
   }
+  .mypinmodal {
+    width: 98%; 
+    height: 98%; 
+    top: 1%; 
+    left: 1%; 
+    right: 1%; 
+    bottom: 1%;
+  }
 }
 .smaller-text {
   font-size: 8pt;

@@ -1301,8 +1301,8 @@ module.exports = function (app) {
                 comment: '='
             },
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
-                        <div class="ion-comment--author"><img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.paccounts[comment.author].profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{comment.author}}">{{comment.author}}</a></b>&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
-                        <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="comment.max_accepted_payout.split(\' \')[0] === \'0.000\'"><del>{{comment | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="comment.max_accepted_payout.split(\' \')[0] !== \'0.000\'">{{comment | sumPostTotal:$root.$storage.currencyRate | number}}</span> </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
+                        <div class="ion-comment--author"><img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.paccounts[comment.author].profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{::comment.author}}">{{::comment.author}}</a></b>&nbsp;<div class="reputation">{{::comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
+                        <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="comment.max_accepted_payout.split(\' \')[0] === \'0.000\'"><del>{{comment | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="comment.max_accepted_payout.split(\' \')[0] !== \'0.000\'">{{comment | sumPostTotal:$root.$storage.currencyRate | number}}</span> </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
                         <div class="ion-comment--text bodytext selectable" ng-class="{\'mask\': comment.net_rshares<0}" ng-bind-html="comment | parseUrl "></div>\
                         <div class="ion-comment--replies"><ion-spinner ng-if="comment.invoting"></ion-spinner><span ng-click="upvotePost(comment)" ng-if="!comment.upvoted" on-hold="openSliderr($event, comment)"><span class="fa fa-md fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UPVOTE"|translate}}</span><span ng-click="unvotePost(comment)" ng-if="comment.upvoted" on-hold="openSliderr($event, comment)"><span class="fa fa-md fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UNVOTE_UPVOTED"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.cashout_time !== \'1969-12-31T23:59:59\'" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.abs_rshares == 0" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{\'REMOVE\'|translate}}</span></div>\
                     </ion-item>',
@@ -1797,7 +1797,7 @@ module.exports = function (app) {
                             </ion-comment>\
                             <div class="reddit-post--comment--container">\
                                  <ul ng-if="comment.showChildren" class="animate-if ion-comment--children">\
-                                    <li ng-repeat="comment in comment.comments | orderBy:\'-pending_payout_value\' track by $index ">\
+                                    <li ng-repeat="comment in comment.comments | orderBy:\'-pending_payout_value\' track by comment.id ">\
                                         <ng-include src="\'node.html\'"/>\
                                     </li>\
                                 </ul>\
@@ -1805,7 +1805,7 @@ module.exports = function (app) {
                         </script>\
                         <ion-list ng-if="comments && comments.length > 0">\
                           <ul>\
-                            <li ng-repeat="comment in comments | orderBy:\'-pending_payout_value\' track by $index">\
+                            <li ng-repeat="comment in comments | orderBy:\'-pending_payout_value\' track by comment.id">\
                                 <ng-include src="\'node.html\'"/>\
                             </li>\
                           </ul>\
