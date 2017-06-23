@@ -51,7 +51,7 @@
 		</div>
 		<!--track by ds.id-->
 		<div ng-if="$root.$storage.view=='card' && data.length>0" class="masonry-layout">
-			<div ng-repeat="ds in data | regex:'category':'bm.*' track by ds.id" class="masonry-layout__panel">
+			<div ng-repeat="ds in data | regex:'category':'bm.*' | limitTo : 10 : data.length-10 track by ds.id " class="masonry-layout__panel">
 	    	   <div class="list card masonry-layout__panel-content" ng-if="ds" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 
 				<div class="item" on-tap="open(ds)" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
@@ -89,7 +89,7 @@
 			</div>
 		</div>
 		<!--immediate-check="false"-->
-    <ion-infinite-scroll immediate-check="false" ng-if="moreDataCanBeLoaded()" on-infinite="loadMore()" distance="30%"></ion-infinite-scroll>
+    <ion-infinite-scroll immediate-check="false" ng-if="moreDataCanBeLoaded()" on-infinite="loadMore()" distance="1%"></ion-infinite-scroll>
     <!--<div class="item-list" item-list="listOptions"></div>-->
     <br>
     <script id = "popoverT.html" type="text/ng-template">

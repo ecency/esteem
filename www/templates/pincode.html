@@ -6,76 +6,76 @@
             <p style="text-align:center; color:red; text-transform: uppercase;">{{$root.pinerror}}</p>
             <br>
             <div class="row" style="text-align: center;" ng-if="!$root.pincheck">
-                <div class="col col-10 col-offset-15" style="border-bottom: 1px solid black">
+                <div class="col col-25" style="border-bottom: 1px solid black">
                     {{passcode.substring(0, 1)}}
                 </div>
-                <div class="col col-10 col-offset-10" style="border-bottom: 1px solid black">
+                <div class="col col-25" style="border-bottom: 1px solid black">
                     {{passcode.substring(1, 2)}}
                 </div>
-                <div class="col col-10 col-offset-10" style="border-bottom: 1px solid black">
+                <div class="col col-25" style="border-bottom: 1px solid black">
                     {{passcode.substring(2, 3)}}
                 </div>
-                <div class="col col-10 col-offset-10" style="border-bottom: 1px solid black">
+                <div class="col col-25" style="border-bottom: 1px solid black">
                     {{passcode.substring(3, 4)}}
                 </div>
             </div>
             <div class="row" style="text-align: center;" ng-if="$root.pincheck">
-                <div class="col col-10 col-offset-15" style="border-bottom: 1px solid black">
+                <div class="col col-25" style="border-bottom: 1px solid black">
                     <span ng-if="passcode.length>=1">*</span>
                 </div>
-                <div class="col col-10 col-offset-10" style="border-bottom: 1px solid black">
+                <div class="col col-25" style="border-bottom: 1px solid black">
                     <span ng-if="passcode.length>=2">*</span>
                 </div>
-                <div class="col col-10 col-offset-10" style="border-bottom: 1px solid black">
+                <div class="col col-25" style="border-bottom: 1px solid black">
                     <span ng-if="passcode.length>=3">*</span>
                 </div>
-                <div class="col col-10 col-offset-10" style="border-bottom: 1px solid black">
+                <div class="col col-25" style="border-bottom: 1px solid black">
                     <span ng-if="passcode.length>=4">*</span>
                 </div>
             </div>
         </div>
         <div style="margin-top: 50px">
             <div class="row">
-                <div class="col col-20 col-offset-20">
+                <div class="col col-30">
                     <button class="button button-light button-stretch" ng-click="add(1)">1</button>
                 </div>
-                <div class="col col-20">
+                <div class="col col-30">
                     <button class="button button-light button-stretch" ng-click="add(2)">2</button>
                 </div>
-                <div class="col col-20">
+                <div class="col col-30">
                     <button class="button button-light button-stretch" ng-click="add(3)">3</button>
                 </div>
             </div>
             <div class="row">
-                <div class="col col-20 col-offset-20">
+                <div class="col col-30">
                     <button class="button button-light button-stretch" ng-click="add(4)">4</button>
                 </div>
-                <div class="col col-20">
+                <div class="col col-30">
                     <button class="button button-light button-stretch" ng-click="add(5)">5</button>
                 </div>
-                <div class="col col-20">
+                <div class="col col-30">
                     <button class="button button-light button-stretch" ng-click="add(6)">6</button>
                 </div>
             </div>
             <div class="row">
-                <div class="col col-20 col-offset-20">
+                <div class="col col-30">
                     <button class="button button-light button-stretch" ng-click="add(7)">7</button>
                 </div>
-                <div class="col col-20">
+                <div class="col col-30">
                     <button class="button button-light button-stretch" ng-click="add(8)">8</button>
                 </div>
-                <div class="col col-20">
+                <div class="col col-30">
                     <button class="button button-light button-stretch" ng-click="add(9)">9</button>
                 </div>
             </div>
             <div class="row">
-                <div class="col col-20 col-offset-20">
+                <div class="col col-30">
                     <button class="button button-light button-stretch"></button>
                 </div>
-                <div class="col col-20">
+                <div class="col col-30">
                     <button class="button button-light button-stretch" ng-click="add(0)">0</button>
                 </div>
-                <div class="col col-20">
+                <div class="col col-30">
                     <button class="button icon ion-arrow-left-a button-light button-stretch" ng-click="delete()"></button>
                 </div>
             </div>
