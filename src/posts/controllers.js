@@ -1426,8 +1426,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.tagsChange = function() {
     $rootScope.log("tagsChange");
     if ($scope.spost.tags) {
-      $scope.spost.tags = $scope.spost.tags.replace(/#/g,'');
-      $scope.spost.tags = $filter('lowercase')($scope.spost.tags);
+      //$scope.spost.tags = $scope.spost.tags.replace(/#/g,'');
+      //$scope.spost.tags = $filter('lowercase')($scope.spost.tags);
+      $scope.spost.tags = $scope.spost.tags.toLowerCase().replace(/[^a-z0-9-]+/g, '');
       $scope.spost.category = $scope.spost.tags?$scope.spost.tags.split(" "):[];
       for (var i = 0, len = $scope.spost.category.length; i < len; i++) {
         var v = $scope.spost.category[i];
