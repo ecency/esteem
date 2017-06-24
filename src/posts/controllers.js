@@ -1428,7 +1428,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     if ($scope.spost.tags) {
       //$scope.spost.tags = $scope.spost.tags.replace(/#/g,'');
       //$scope.spost.tags = $filter('lowercase')($scope.spost.tags);
-      $scope.spost.tags = $scope.spost.tags.toLowerCase().replace(/[^a-z0-9-]+/g, '');
+      $scope.spost.tags = $scope.spost.tags.toLowerCase().replace(/[^a-z0-9- ]+/g, '');
       $scope.spost.category = $scope.spost.tags?$scope.spost.tags.split(" "):[];
       for (var i = 0, len = $scope.spost.category.length; i < len; i++) {
         var v = $scope.spost.category[i];
@@ -2852,7 +2852,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_SUBMITTED'));
           //$scope.closeMenuPopover();
           if ($scope.edit) {
-            $rootScope.$broadcast('update:content');
+            $rootScope.$emit('update:content');
           } else {
             $state.go("app.profile", {username: $rootScope.user.username});  
           }
@@ -3021,11 +3021,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $rootScope.$on("update:content", function(){
     $rootScope.log("update:content");
     $rootScope.$broadcast('hide:loading');
+    console.log($scope.post);
     setTimeout(function() {
     //$scope.$evalAsync(function($scope) {
       $scope.getContent($scope.post.author, $scope.post.permlink);    
     //});
-    }, 1);
+    }, 10);
     
   });
   $ionicModal.fromTemplateUrl('templates/reply.html', {
@@ -3157,9 +3158,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         //console.log(result);
         $rootScope.sitem = result;
 
-        //$scope.$evalAsync(function($scope){
+        $scope.$evalAsync(function($scope){
           $scope.$broadcast('postAccounts');
-        //});
+        });
         
       }
     });
@@ -3190,53 +3191,61 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       var po = [];
       $rootScope.paccounts = {};
       if (dd) {
-        angular.forEach(dd.content, function(v,k){
-          if (v.parent_author==author && v.parent_permlink == permlink) {
-            var len = v.active_votes.length;
-            if ($rootScope.user) {
-              for (var j = len - 1; j >= 0; j--) {
-                if (v.active_votes[j].voter === $rootScope.user.username) {
-                  if (v.active_votes[j].percent > 0) {
-                    v.upvoted = true;
-                  } else if (v.active_votes[j].percent < 0) {
-                    v.downvoted = true;
-                  } else {
-                    v.downvoted = false;
-                    v.upvoted = false;
+        $scope.$evalAsync(function(){
+          angular.forEach(dd.content, function(v,k){
+            if (v.parent_author==author && v.parent_permlink == permlink) {
+              var len = v.active_votes.length;
+              if ($rootScope.user) {
+                for (var j = len - 1; j >= 0; j--) {
+                  if (v.active_votes[j].voter === $rootScope.user.username) {
+                    if (v.active_votes[j].percent > 0) {
+                      v.upvoted = true;
+                    } else if (v.active_votes[j].percent < 0) {
+                      v.downvoted = true;
+                    } else {
+                      v.downvoted = false;
+                      v.upvoted = false;
+                    }
                   }
                 }
               }
+              po.push(v);
             }
-            po.push(v);
-          }
-          if (v.parent_author === "" && v.author === author) {
-            if ((typeof v.json_metadata === 'string' || v.json_metadata instanceof String)&&v.json_metadata) {
-              v.json_metadata = angular.fromJson(v.json_metadata);
+            if (v.parent_author === "" && v.author === author) {
+              if ((typeof v.json_metadata === 'string' || v.json_metadata instanceof String)&&v.json_metadata) {
+                v.json_metadata = angular.fromJson(v.json_metadata);
+              }
+              $rootScope.sitem = v;
             }
-            $rootScope.sitem = v;
-          }
+          });
+          $scope.comments = po;
         });
         
-        angular.forEach(dd.accounts, function(v,k){
-          //console.log(k);
-          if ($rootScope.postAccounts && $rootScope.postAccounts.indexOf(k) == -1) {
-            $rootScope.postAccounts.push(k);
-          }
-
-          if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
-            if (v.json_metadata) {
-              if (v.json_metadata.indexOf("created_at")>-1) {
-                v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
-              } else {
-                v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):{};
-              }
-              var key = v.name;
-              $rootScope.paccounts[key] = v.json_metadata;
+        $scope.$evalAsync(function(){
+          angular.forEach(dd.accounts, function(v,k){
+            //console.log(k);
+            if ($rootScope.postAccounts && $rootScope.postAccounts.indexOf(k) == -1) {
+              $rootScope.postAccounts.push(k);
             }
-          }
-        });
+            //console.log($rootScope.paccounts);
+            var key = v.name;
+            if (!$rootScope.paccounts.hasOwnProperty(key)) {
+              if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
+                if (v.json_metadata) {
+                  if (v.json_metadata.indexOf("created_at")>-1) {
+                    v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
+                  } else {
+                    v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):{};
+                  }
+                  $rootScope.paccounts[key] = v.json_metadata;
+                }
+              }
+            }
+            
+          });
+        }); 
       }
-      $scope.comments = po;
+      
       $rootScope.fetching = false;
       /*setTimeout(function() {
         var p2 = document.querySelector('.my-handle');
@@ -3244,7 +3253,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $ionicScrollDelegate.$getByHandle('mainScroll').scrollTo(0,$scope.quotePosition.top, true); 
       }, 1);*/
       
-      $scope.$applyAsync();
+      //$scope.$applyAsync();
       //console.log(po);
     });
   }
@@ -3255,18 +3264,19 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     window.steem.api.getAccountsAsync($rootScope.postAccounts, function(err, res){
       //console.log(err, res);
       if (res) {
-        
           for (var i = 0, len = res.length; i < len; i++) {
             var v = res[i];
-            if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
-              if (v.json_metadata) {
-                if (v.json_metadata.indexOf("created_at")>-1) {
-                  v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
-                } else {
-                  v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):{};
+            var key = v.name;
+            if (!$rootScope.paccounts.hasOwnProperty(key)) {
+              if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
+                if (v.json_metadata) {
+                  if (v.json_metadata.indexOf("created_at")>-1) {
+                    v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
+                  } else {
+                    v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):{};
+                  }
+                  $rootScope.paccounts[key] = v.json_metadata;
                 }
-                var key = v.name;
-                $rootScope.paccounts[key] = v.json_metadata;
               }
             }
           }  
@@ -3286,7 +3296,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     if ($stateParams.category === '111') {
       var ttemp = $rootScope.sitem;
       $scope.post = ttemp;
-      $rootScope.$broadcast('update:content');
+      $rootScope.$emit('update:content');
     } else {
       if ($stateParams.author.indexOf('@')>-1){
         $stateParams.author = $stateParams.author.substr(1);
