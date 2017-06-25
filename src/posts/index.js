@@ -260,13 +260,24 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('lt-LT', require('./locales/ready/lt-LT')); //Lithuanian
   $translateProvider.translations('lv-LV', require('./locales/ready/lv-LV')); //Latvian
   $translateProvider.translations('ja-JP', require('./locales/ready/ja-JP')); //Japanese
-
   $translateProvider.translations('bs-BA', require('./locales/ready/bs-BA')); //Bosnian
   $translateProvider.translations('ko-KR', require('./locales/ready/ko-KR')); //Korean
   $translateProvider.translations('fi-FI', require('./locales/ready/fi-FI')); //Finnish
   $translateProvider.translations('ur-PK', require('./locales/ready/ur-PK')); //Urdu Pakistani
   $translateProvider.translations('hi-IN', require('./locales/ready/hi-IN')); //Hindi
   $translateProvider.translations('th-TH', require('./locales/ready/th-TH')); //Thai
+
+  $translateProvider.translations('en-GB', require('./locales/ready/en-GB')); //en-GB
+  $translateProvider.translations('en-CA', require('./locales/ready/en-CA')); //en-CA
+  $translateProvider.translations('sq-AL', require('./locales/ready/sq-AL')); //Albanian
+  $translateProvider.translations('bn-BD', require('./locales/ready/bn-BD')); //Bengali
+  $translateProvider.translations('ca-ES', require('./locales/ready/ca-ES')); //Catalan
+  $translateProvider.translations('ne-NP', require('./locales/ready/ne-NP')); //Nepali
+  $translateProvider.translations('no-NO', require('./locales/ready/no-NO')); //Norwegian
+  $translateProvider.translations('sk-SK', require('./locales/ready/sk-SK')); //Slovak
+  $translateProvider.translations('ta-IN', require('./locales/ready/ta-IN')); //Tamil
+  
+
 
   $translateProvider.useSanitizeValueStrategy(null);
   $translateProvider.preferredLanguage('en-US');
@@ -396,7 +407,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$storage.currencyRate = 1;
     }
     $rootScope.$storage.languages = [
-      {id:'en-US', name: 'English'}, 
+      {id:'en-US', name: 'English'},
+      {id:'en-GB', name: 'English GB'},
+      {id:'en-CA', name: 'English CA'},
       {id:'es-ES', name: 'Español'}, 
       {id:'el-GR', name: 'Ελληνικά'}, 
       {id:'fr-FR', name: 'Français'}, 
@@ -430,7 +443,16 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       {id:'fi-FI', name: 'Suomen kieli'},
       {id:'ur-PK', name: 'اُردُو'},
       {id:'hi-IN', name: 'हिन्दी'},
-      {id:'th-TH', name: 'ภาษาไทย'}
+      {id:'th-TH', name: 'ภาษาไทย'},
+
+      {id:'ta-IN', name: 'தமிழ்'},
+      {id:'sk-SK', name: 'Slovenčina'},
+      {id:'no-NO', name: 'Norsk'},
+      {id:'ne-NP', name: 'नेपाली भाषा'},
+      {id:'ca-ES', name: 'Català'},
+      {id:'bn-BD', name: 'বাংলা'},
+      {id:'sq-AL', name: 'Shqip'}
+
     ];
     if (!$rootScope.$storage.dir) {
       $rootScope.$storage.dir = 'ltr';
