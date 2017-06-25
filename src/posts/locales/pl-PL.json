@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Nieodebrane wynagrodzenia",
   "CLAIM_REWARDS":"Odbierz wynagrodzenia",
   "DOWNLOAD_COMPLETED":"Zakończono pobieranie",
-  "DOWNLOADING_PICTURE":"Pobieranie obrazu"
+  "DOWNLOADING_PICTURE":"Pobieranie obrazu",
+  "NSFW":"NSFW",
+  "NSFW_TEXT":"W celu wyświetlenia treści NSFW/Dla dorosłych powinien być w wieku 18+! To ustawienie umożliwia automatyczne wyświetlanie treści NSFW.",
+  "AUTO_DOWNLOAD":"Pobieranie obrazów",
+  "AUTO_DOWNLOAD_TEXT":"Pobieranie obrazów pozwala zaoszczędzić przepustowość poprzez wyłączenie ładowania zewnętrznych obrazów, ",
+  "MUTE":"Wycisz",
+  "UNMUTE":"Wyłącz wyciszenie",
+  "SCHEDULE":"Harmonogram",
+  "SAVE":"ZAPISZ",
+  "PERMISSION":"Uprawnienie",
+  "SCHEDULES":"Harmonogramy",
+  "DELETED_SCHEDULE":"Usunięty harmonogram",
+  "MOVED_SCHEDULE":"Przeniesiony harmonogram",
+  "MOVE_TO_DRAFT":"Przenieś do wersji roboczych"
 }

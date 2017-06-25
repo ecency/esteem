@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Nepřijmuté odměny",
   "CLAIM_REWARDS":"Přijmout odměny",
   "DOWNLOAD_COMPLETED":"Stahování úspěšné",
-  "DOWNLOADING_PICTURE":"Stahování obrázku"
+  "DOWNLOADING_PICTURE":"Stahování obrázku",
+  "NSFW":"Nsfw",
+  "NSFW_TEXT":"Chcete-li zobrazovat NSFW/Obsah pro dospělé, mělo by vám být minimálně 18 let! Toto nastavení umožňuje automatické zobrazení NSFW obrázků a textů.",
+  "AUTO_DOWNLOAD":"Načíst obrázky",
+  "AUTO_DOWNLOAD_TEXT":"Nastavení načíst obrázky Vám umožňuje ušetření dat tím, že Vám dovolí zakázat načítání externích obrázků a tím vám dá naprostou kontrolu nad využíváním mobilních/internetových dat.",
+  "MUTE":"Umlčet",
+  "UNMUTE":"Odmlčet",
+  "SCHEDULE":"Naplánovat",
+  "SAVE":"ULOŽIT",
+  "PERMISSION":"Oprávnění",
+  "SCHEDULES":"Plány",
+  "DELETED_SCHEDULE":"Plánovaní odstraněné",
+  "MOVED_SCHEDULE":"Plánování přesunuté",
+  "MOVE_TO_DRAFT":"Přesunout do konceptů"
 }

@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Unclaimt rewurdz",
   "CLAIM_REWARDS":"Clem rewurdz",
   "DOWNLOAD_COMPLETED":"Dowland complet",
-  "DOWNLOADING_PICTURE":"Dolanding pictur"
+  "DOWNLOADING_PICTURE":"Dolanding pictur",
+  "NSFW":"Nsfw",
+  "NSFW_TEXT":"2 view NSFW/adult content u shud be 18+ of an aeg! Thiz seting enaebls atumatic displey of NSFW contnet imaegs nd text.",
+  "AUTO_DOWNLOAD":"Fetz imegus",
+  "AUTO_DOWNLOAD_TEXT":"Fetz imegus seting alows u 2 saev bandwif bi alowing u 2 disaebl exturnal imegus frm loding, givs u complet control ovr ur trafik usaeg.",
+  "MUTE":"Muet",
+  "UNMUTE":"Unmuet",
+  "SCHEDULE":"Schedul",
+  "SAVE":"SAEV",
+  "PERMISSION":"Permisziun",
+  "SCHEDULES":"Scheduels",
+  "DELETED_SCHEDULE":"Deletid schedul",
+  "MOVED_SCHEDULE":"Muvd schedul",
+  "MOVE_TO_DRAFT":"Muv 2 darft"
 }

@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Récompenses non réclamées",
   "CLAIM_REWARDS":"Récompenses réclamées",
   "DOWNLOAD_COMPLETED":"Téléchargement terminé",
-  "DOWNLOADING_PICTURE":"Téléchargement de l'image"
+  "DOWNLOADING_PICTURE":"Téléchargement de l'image",
+  "NSFW":"Pas sûr pour le travail",
+  "NSFW_TEXT":"Afin de visualiser le contenu NSFW/Adulte, vous devez être âgé de 18 ans ou plus. Ce paramètre permet un affichage automatique du contenu NSFW (images ou textes).",
+  "AUTO_DOWNLOAD":"Chercher des images",
+  "AUTO_DOWNLOAD_TEXT":"Le paramètre Rechercher des images vous permets d'épargner de la bande passante en vous permettant de désactiver le chargement d'images externes, en vous donnant un contrôle complet sur l'usage de votre trafic.",
+  "MUTE":"Muet",
+  "UNMUTE":"Désactiver",
+  "SCHEDULE":"Planification",
+  "SAVE":"SAUVEGARDER",
+  "PERMISSION":"Autorisation",
+  "SCHEDULES":"Planifications",
+  "DELETED_SCHEDULE":"Supprimer planification",
+  "MOVED_SCHEDULE":"Déplacer planification",
+  "MOVE_TO_DRAFT":"Déplacer vers brouillon"
 }

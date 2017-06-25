@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Ikke innkasserte belønninger",
   "CLAIM_REWARDS":"Innkasser belønninger",
   "DOWNLOAD_COMPLETED":"Nedlasting fullført",
-  "DOWNLOADING_PICTURE":"Laster ned bilde"
+  "DOWNLOADING_PICTURE":"Laster ned bilde",
+  "NSFW":"Nsfw",
+  "NSFW_TEXT":"For å vise \"Not safe for work\" innhold, bør du være over 18 år! Denne innstillingen aktiverer automatisk visning av NSFW innhold, bilder og tekst.",
+  "AUTO_DOWNLOAD":"Hent bilder",
+  "AUTO_DOWNLOAD_TEXT":"Hent bilder innstilling tillater deg å spare båndbredde ved at du kan deaktivere at eksterne bilder lastes, å gir deg full kontroll over din trafikkbruk.",
+  "MUTE":"Slå av lyd",
+  "UNMUTE":"Slå på lyd",
+  "SCHEDULE":"Tidsplan",
+  "SAVE":"LAGRE",
+  "PERMISSION":"Tillatelse",
+  "SCHEDULES":"Tidsplaner",
+  "DELETED_SCHEDULE":"Slettet tidsplan",
+  "MOVED_SCHEDULE":"Flyttet tidsplan",
+  "MOVE_TO_DRAFT":"Flytt til utkast"
 }

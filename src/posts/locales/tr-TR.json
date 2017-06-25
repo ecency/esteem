@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Talep edilmemiş ödüller",
   "CLAIM_REWARDS":"Ödülleri talep et",
   "DOWNLOAD_COMPLETED":"İndirme tamamlandı",
-  "DOWNLOADING_PICTURE":"Fotoğraf indiriliyor"
+  "DOWNLOADING_PICTURE":"Fotoğraf indiriliyor",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }

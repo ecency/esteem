@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"引き取り手のない報酬",
   "CLAIM_REWARDS":"報酬を請求します。",
   "DOWNLOAD_COMPLETED":"ダウンロード完了",
-  "DOWNLOADING_PICTURE":"画像をダウンロード中"
+  "DOWNLOADING_PICTURE":"画像をダウンロード中",
+  "NSFW":"不適切な内容",
+  "NSFW_TEXT":"不適切な内容を表示するためには、18歳以上である必要があります！この設定は、不適切な内容の画像と文章の自動表示を有効にします。",
+  "AUTO_DOWNLOAD":"画像を取得",
+  "AUTO_DOWNLOAD_TEXT":"取得画像の設定では、外部の画像の読み込みを無効にすることで、通信量を節約できます。通信量の使用状況を完全に制御可能です。",
+  "MUTE":"ミュート",
+  "UNMUTE":"ミュート解除",
+  "SCHEDULE":"時間指定",
+  "SAVE":"保存",
+  "PERMISSION":"アクセス許可",
+  "SCHEDULES":"時間指定",
+  "DELETED_SCHEDULE":"削除済み時間指定",
+  "MOVED_SCHEDULE":"変更済み時間指定",
+  "MOVE_TO_DRAFT":"ゴミ箱へ移動"
 }
