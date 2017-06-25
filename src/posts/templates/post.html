@@ -31,7 +31,7 @@
       <p class="title h3" ng-if="$root.sitem.root_title && $root.sitem.title==''"><a href="#/app/post{{$root.sitem.url.split('#')[0]}}">{{::translations.view}}</a></p>
     	<p class="title h3">{{::$root.sitem.title}}</p>
     	<div class="stitle row gray"><div class="col">
-        <img class="round-avatar" src="img/user_profile.png" ng-src="{{::$root.paccounts[$root.sitem.author].user_image||$root.paccounts[$root.sitem.author].profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /> <b><a href="#/app/profile/{{$root.sitem.author}}">{{::$root.sitem.author}}</a></b>&nbsp;<div class="reputation">{{::$root.sitem.author_reputation|reputation|number:0}}</div>&middot;{{$root.sitem.created|timeago}} {{::translations.in}}&nbsp;{{::$root.sitem.category|detransliterate:false}}</div>
+        <img class="round-avatar" check-image ng-src="{{::$root.paccounts[$root.sitem.author].user_image||$root.paccounts[$root.sitem.author].profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /> <b><a href="#/app/profile/{{$root.sitem.author}}">{{::$root.sitem.author}}</a></b>&nbsp;<div class="reputation">{{::$root.sitem.author_reputation|reputation|number:0}}</div>&middot;{{$root.sitem.created|timeago}} {{::translations.in}}&nbsp;{{::$root.sitem.category|detransliterate:false}}</div>
          <div class="pull-right">
           <span ng-if="$root.voiceOver">
             <i class="fa fa-flag" on-tap="downvotePost($root.sitem)" ng-if="!$root.sitem.downvoted">{{::translations.downvote}}</i>

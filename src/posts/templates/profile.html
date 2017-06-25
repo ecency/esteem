@@ -10,7 +10,7 @@
       <div class="center">
           <div class="item-myavatar" ng-if="$root.user && $root.user.username == user.username">
             <span class="item-myavatar" ng-if="!($root.$storage.user.json_metadata.profile.profile_image||$root.user.json_metadata.user_image)"><img src="img/user_profile.png" on-tap="showProfile()"></span>
-            <img ion-img-cache ng-src="{{$root.user.json_metadata.profile.profile_image || $root.user.json_metadata.user_image}}" ng-if="$root.user.json_metadata.user_image || $root.user.json_metadata.profile.profile_image" on-tap="showProfile()" />
+            <img ion-img-cache check-image ng-src="{{$root.user.json_metadata.profile.profile_image || $root.user.json_metadata.user_image}}" ng-if="$root.user.json_metadata.user_image || $root.user.json_metadata.profile.profile_image" on-tap="showProfile()" />
             <div class="footprofileinfo">
               <h4 class="center">
                 <span class="light">@{{::$root.user.username}}</span>
@@ -20,7 +20,7 @@
               </h4>
               <div class="about">{{::$root.user.json_metadata.profile.about}}</div>
               <div class="padding profile_stats">
-                <i class="icon ion-android-list"></i>&nbsp;{{::$root.user.post_count}}&nbsp;| <i class="icon ion-ios-people"></i>&nbsp;{{::followdetails.follower_count}}&nbsp;| <i class="icon ion-person-add"></i>&nbsp;{{::followdetails.following_count}}&nbsp;| <i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{::$root.user.voting_power/100|number:2}}&nbsp;| <i class="fa fa-chevron-circle-up"></i>&nbsp;{{votecount}}
+                <i class="icon ion-android-list"></i>&nbsp;{{::$root.user.post_count}}&nbsp;| <i class="icon ion-ios-people"></i>&nbsp;{{::followdetails.follower_count}}&nbsp;| <i class="icon ion-person-add"></i>&nbsp;{{::followdetails.following_count}}&nbsp;| <i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.user.voting_power/100|number:2}}&nbsp;| <i class="fa fa-chevron-circle-up"></i>&nbsp;{{votecount}}
               </div>
               <p><span ng-if="$root.user.json_metadata.profile && $root.user.json_metadata.profile.location">
                 <i class="icon ion-location"></i>&nbsp;
@@ -41,11 +41,11 @@
           </div>
           <div class="item-myavatar" ng-if="$root.user.username !== user.username">
             <span class="item-myavatar" ng-if="!(user.json_metadata.profile.profile_image||user.json_metadata.user_image)"><img src="img/user_profile.png" /></span>
-            <img ng-src="{{user.json_metadata.profile.profile_image || user.json_metadata.user_image}}" ng-if="user.json_metadata.profile.profile_image || user.json_metadata.user_image" />
+            <img check-image ng-src="{{user.json_metadata.profile.profile_image || user.json_metadata.user_image}}" ng-if="user.json_metadata.profile.profile_image || user.json_metadata.user_image" />
             <div class="footprofileinfo">
-              <h4 class="center"><span class="light">@{{::user.username}}</span>&nbsp;<div class="reputation">{{::user.reputation|reputation}}</div></h4>
+              <h4 class="center"><span class="light">@{{::user.username}}</span>&nbsp;<div class="reputation">{{user.reputation|reputation}}</div></h4>
               <p>{{::user.json_metadata.profile.about}}</p>
-              <div class="padding profile_stats"><i class="icon ion-android-list"></i>&nbsp;{{::user.post_count}}&nbsp;| <i class="icon ion-ios-people"></i>&nbsp;{{::followdetails.follower_count}}&nbsp;| <i class="ion-person-add"></i>&nbsp;{{::followdetails.following_count}}&nbsp;| <i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{::user.voting_power/100|number:2}}&nbsp;| <i class="fa fa-chevron-circle-up"></i>&nbsp;{{votecount}}
+              <div class="padding profile_stats"><i class="icon ion-android-list"></i>&nbsp;{{::user.post_count}}&nbsp;| <i class="icon ion-ios-people"></i>&nbsp;{{::followdetails.follower_count}}&nbsp;| <i class="ion-person-add"></i>&nbsp;{{::followdetails.following_count}}&nbsp;| <i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{user.voting_power/100|number:2}}&nbsp;| <i class="fa fa-chevron-circle-up"></i>&nbsp;{{votecount}}
               </div>
               <p><span ng-if="user.json_metadata.profile && user.json_metadata.profile.location">
                 <i class="icon ion-location"></i>&nbsp;
@@ -81,20 +81,20 @@
 
             -->
             <div class="item" ng-repeat="playlist in data.profile | orderBy:'-created' track by $index" ng-class="{'item-thumbnail-left': playlist.json_metadata.image}">
-              <img ng-src="{{playlist.json_metadata.image[0]||'https://steemitimages.com/0x0/0x0/'+playlist.json_metadata.image[0]}}" on-tap="open(playlist)" ng-if="playlist.json_metadata.image" onerror="this.src='img/noimage.png'"/>
+              <img check-image ng-src="{{playlist.json_metadata.image[0]}}" on-tap="open(playlist)" ng-if="playlist.json_metadata.image" onerror="this.src='img/noimage.png'"/>
                 <div on-tap="open(playlist)">
                 <div class="wrap">
-                  <h2><i class="fa fa-money positive" ng-if="playlist.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="playlist.percent_steem_dollars === 0"></i>{{::playlist.root_title}}</h2>
+                  <h2><i class="fa fa-money positive" ng-if="playlist.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="playlist.percent_steem_dollars === 0"></i>{{playlist.root_title}}</h2>
                 </div>
                 <p ng-bind-html="playlist|parseUrl|limitTo:50|ldots" ng-if="active!='blog'"></p>
-                <div class="postdetails"><i class="icon ion-android-time"></i>&nbsp;{{::playlist.created|timeago}}&nbsp;{{::'BY'|translate}}&nbsp;<i class="icon ion-android-person"></i>&nbsp;{{::playlist.author}}&nbsp;<div class="reputation">{{::playlist.author_reputation|reputation|number:0}}</div></div>
+                <div class="postdetails"><i class="icon ion-android-time"></i>&nbsp;{{playlist.created|timeago}}&nbsp;{{::'BY'|translate}}&nbsp;<i class="icon ion-android-person"></i>&nbsp;{{playlist.author}}&nbsp;<div class="reputation">{{playlist.author_reputation|reputation|number:0}}</div></div>
                 </div>
                 <div class="row gray profile">
                   <div class="col"><ion-spinner ng-if="playlist.invoting"></ion-spinner>
-                  <i class="fa fa-chevron-circle-up fa-lg" on-tap="upvotePost(playlist)" ng-if="!playlist.upvoted" on-hold="openSlider($event, playlist)"></i><i class="fa fa-chevron-circle-up fa-lg positive" on-tap="unvotePost(playlist)" ng-if="playlist.upvoted"></i>&nbsp;&nbsp;<span on-tap="$root.openInfo(playlist)">{{::playlist.net_votes}}</span>&nbsp;&nbsp;
+                  <i class="fa fa-chevron-circle-up fa-lg" on-tap="upvotePost(playlist)" ng-if="!playlist.upvoted" on-hold="openSlider($event, playlist)"></i><i class="fa fa-chevron-circle-up fa-lg positive" on-tap="unvotePost(playlist)" ng-if="playlist.upvoted"></i>&nbsp;&nbsp;<span on-tap="$root.openInfo(playlist)">{{playlist.net_votes}}</span>&nbsp;&nbsp;
                    <!--<i class="fa fa-chevron-circle-down fa-lg" on-tap="downvotePost(playlist)" ng-if="!playlist.downvoted"></i><i class="fa fa-chevron-circle-down fa-lg positive" on-tap="unvotePost(playlist)" ng-if="playlist.downvoted"></i>--></div>
                   <div class="col" on-tap="openTooltip($event,playlist)">&nbsp; <b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="playlist.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{::playlist | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="playlist.max_accepted_payout.split(' ')[0] !== '0.000'">{{::playlist | sumPostTotal:$root.$storage.currencyRate | number}}</span></div>
-                  <div class="col">&nbsp; <i class="icon ion-chatbubbles"></i>&nbsp;{{::playlist.children}}</div>
+                  <div class="col">&nbsp; <i class="icon ion-chatbubbles"></i>&nbsp;{{playlist.children}}</div>
                   <div class="col" ng-if="playlist.author!==user.username && active!=='recent-replies'">&nbsp; <i class="icon ion-arrow-return-right"></i></div>
                 </div>
             </div>

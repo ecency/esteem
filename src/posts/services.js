@@ -1263,7 +1263,30 @@ module.exports = function (app) {
       }
     }
   }])
-
+  app.directive('checkImage', function($http, $rootScope) {
+      return {
+          restrict: 'A',
+          link: function(scope, element, attrs) {
+              attrs.$observe('ngSrc', function(ngSrc) {
+                if (ngSrc) {
+                  $http.get(ngSrc).success(function(){
+                      //alert('image exist');
+                      //console.log(image exist)
+                  }).error(function(){
+                      //alert('image not exist');
+                      if ($rootScope.$storage.chain == 'steem') {
+                        element.attr('src', 'https://steemitimages.com/0x0/'+ngSrc); // set default image  
+                      } else if ($rootScope.$storage.chain == 'golos') {
+                        element.attr('src', 'https://imgp.golos.io/0x0/'+ngSrc); // set default image  
+                      } else {
+                        element.attr('src', 'img/noimage.png'); // set default image 
+                      }
+                  });
+                }
+              });
+          }
+      };
+  });
 	app.directive('qrcode', function($interpolate) {
 		return {
 		    restrict: 'E',

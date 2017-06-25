@@ -60,9 +60,9 @@
 				    <div class="row postdetails"><div class="col"><i class="icon ion-ios-time-outline"></i> {{ds.created|timeago}}&nbsp;{{::translations.by}}&nbsp;<b>{{::ds.author}}</b>&nbsp;<div class="reputation">{{::ds.author_reputation|reputation|number:0}}</div><p><i class="icon ion-ios-book-outline"></i> {{::ds.body|readingtime}} {{::translations.min}} <i class="icon ion-ios-grid-view-outline"></i> {{::ds.category|detransliterate:false}}</p></div></div>
 				</div>
 				<div class="item-body ibody">
-				    <center><img class="full-image" ng-src="{{::ds.json_metadata.image[0]}}" on-tap="open(ds)" ng-if="!$root.$storage.nsfw && ds.json_metadata.image[0] && ds.json_metadata.tags.indexOf('nsfw')==-1" onerror="this.src='img/noimage.png'" />
+				    <center><img class="full-image" check-image ng-src="{{::ds.json_metadata.image[0]}}" on-tap="open(ds)" ng-if="!$root.$storage.nsfw && ds.json_metadata.image[0] && ds.json_metadata.tags.indexOf('nsfw')==-1" />
 				    <!--<img class="full-image" src="img/logo.png" ng-if="!$root.$storage.nsfw && !ds.json_metadata.image[0]">-->
-				    <img class="full-image" ng-src="img/nsfwimage.png" on-tap="open(ds)" ng-if="!$root.$storage.nsfw && ds.json_metadata.tags.indexOf('nsfw')>-1" onerror="this.src='img/noimage.png'" /></center>
+				    <img class="full-image" ng-src="img/nsfwimage.png" on-tap="open(ds)" ng-if="!$root.$storage.nsfw && ds.json_metadata.tags.indexOf('nsfw')>-1" /></center>
 				    <div class="row">
 					    <div class="col">
 					      <span ng-if="!$root.voiceOver">
@@ -106,7 +106,7 @@
           		<div class="col col-10"><button class="button button-icon fa fa-chevron-circle-up fa-lg" on-tap="votePostS()"></button></div>
           		<div class="col">
           			<div class = "item range range-positive">
-					   {{rangeValue}} <input type="range" name="range1" min="1" max="100" ng-model="rangeValue" ng-change="drag(rangeValue)">
+					   {{rangeValue}} <input type="range" name="range1" min="0.01" step="0.01" max="100" ng-model="rangeValue" ng-change="drag(rangeValue)">
 					</div>
           		</div>
           		<div class="col col-10"><button class="button button-icon ion-close-round" ng-click="closeSlider()"></button></div>
