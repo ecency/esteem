@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Ne prihvaćene nagrade",
   "CLAIM_REWARDS":"Prihvati nagradu",
   "DOWNLOAD_COMPLETED":"Preuzimanje završeno",
-  "DOWNLOADING_PICTURE":"Preuzimanje slike"
+  "DOWNLOADING_PICTURE":"Preuzimanje slike",
+  "NSFW":"Nsfw",
+  "NSFW_TEXT":"Da biste vidjeli NSFW/sadržaj za odrasle, trebate imati 18+ godina! Ova postavka omogućava automatsko prikazivanje NSFW sadržaja.",
+  "AUTO_DOWNLOAD":"Fetch slike",
+  "AUTO_DOWNLOAD_TEXT":"Fetch slike omogućava vam da sačuvate bandwidth, omogućujići vam da onemogućite prikazivanje vanjskih slika te vam daje kompletnu kontrolu nad internet prometom.",
+  "MUTE":"Blokiraj",
+  "UNMUTE":"Odblokiraj",
+  "SCHEDULE":"Raspored",
+  "SAVE":"SPREMI",
+  "PERMISSION":"Dozvola",
+  "SCHEDULES":"Raspored",
+  "DELETED_SCHEDULE":"Obrisani raspored",
+  "MOVED_SCHEDULE":"Premješteni raspored",
+  "MOVE_TO_DRAFT":"Premjestiti u skice"
 }

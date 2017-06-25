@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Gantimpalang di nakuha",
   "CLAIM_REWARDS":"Kunin ang gantimpala",
   "DOWNLOAD_COMPLETED":"Ang pag-Download ay kumpleto na",
-  "DOWNLOADING_PICTURE":"Ang larawan ay dina-Download"
+  "DOWNLOADING_PICTURE":"Ang larawan ay dina-Download",
+  "NSFW":"Hindi Mabuti sa Trabaho",
+  "NSFW_TEXT":"Para makita ang hindi mabuting konteksto kailangan nasa edad 18 pataas. Automatic na naka-enable ang mga imahe at texto para sa mga hindi mabuting konteksto.",
+  "AUTO_DOWNLOAD":"Nakuhang mga imahe",
+  "AUTO_DOWNLOAD_TEXT":"Ang setting sa mga nakuhang imahe ay nakakasulit sa bandwidth sa pag-disable ng mga panlabas na imahe, nagbibigay ng kompletong kontrol sa paggamit ng iyong trapik.",
+  "MUTE":"Alisin ang tunog",
+  "UNMUTE":"Ipagpaliban ang pagalis ng tunog",
+  "SCHEDULE":"Iskedyul",
+  "SAVE":"Itago",
+  "PERMISSION":"Pahintulot",
+  "SCHEDULES":"Mga Iskedyul",
+  "DELETED_SCHEDULE":"Natanggal na Iskedyul",
+  "MOVED_SCHEDULE":"Nailipat na Iskedyul",
+  "MOVE_TO_DRAFT":"Ilipat sa burador"
 }

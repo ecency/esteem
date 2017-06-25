@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Neatsiimti atlygiai",
   "CLAIM_REWARDS":"Pasiimti atlygį",
   "DOWNLOAD_COMPLETED":"Parsisiųsti baigtas",
-  "DOWNLOADING_PICTURE":"Atsisiuntimas nuotrauka"
+  "DOWNLOADING_PICTURE":"Atsisiuntimas nuotrauka",
+  "NSFW":"",
+  "NSFW_TEXT":"",
+  "AUTO_DOWNLOAD":"",
+  "AUTO_DOWNLOAD_TEXT":"",
+  "MUTE":"",
+  "UNMUTE":"",
+  "SCHEDULE":"",
+  "SAVE":"",
+  "PERMISSION":"",
+  "SCHEDULES":"",
+  "DELETED_SCHEDULE":"",
+  "MOVED_SCHEDULE":"",
+  "MOVE_TO_DRAFT":""
 }

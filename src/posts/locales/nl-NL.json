@@ -22,7 +22,7 @@
   "REMOVE":"Verwijderen",
   "MARKET_VIEW":"Markt Weergave",
   "PRICE":"Prijs",
-  "AMOUNT":"Bedrag",
+  "AMOUNT":"Hoeveelheid",
   "TOTAL":"Totaal",
   "NOORDERS":"Geen uitstaande bestellingen voor",
   "DATE":"Datum",
@@ -267,5 +267,18 @@
   "UNCLAIMED_REWARDS":"Niet opgeëiste beloningen",
   "CLAIM_REWARDS":"Opgeëiste beloningen",
   "DOWNLOAD_COMPLETED":"Download voltooid",
-  "DOWNLOADING_PICTURE":"Afbeelding downloaden"
+  "DOWNLOADING_PICTURE":"Afbeelding downloaden",
+  "NSFW":"Nsfw",
+  "NSFW_TEXT":"Om de NSFW / Adult inhoud te bekijken moet u ouder zijn dan 18 jaar! Met deze instellingen kunt u automatisch afbeeldingen en tekst van NSFW-inhoud weergeven.",
+  "AUTO_DOWNLOAD":"Beelden ophalen",
+  "AUTO_DOWNLOAD_TEXT":"De instelling van beelden laat u toe om bandbreedte op te slaan door u de mogelijkheid te geven om externe beelden uit te laden, zodat u volledige controle over uw verkeersverbruik kunt krijgen.",
+  "MUTE":"Dempen",
+  "UNMUTE":"Dempen opheffen",
+  "SCHEDULE":"Agenda",
+  "SAVE":"OPSLAAN",
+  "PERMISSION":"Toestemming",
+  "SCHEDULES":"Agenda's",
+  "DELETED_SCHEDULE":"Agenda verwijderen",
+  "MOVED_SCHEDULE":"Agenda verplaatst",
+  "MOVE_TO_DRAFT":"Verplaatsen naar ontwerp"
 }
