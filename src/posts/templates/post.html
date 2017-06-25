@@ -1,57 +1,77 @@
-<ion-view view-title="">
+<ion-view view-title="" view-cache="false">
 	<ion-nav-bar class="bar-positive">
-		<ion-nav-back-button>
+		  <ion-nav-back-button>
     	</ion-nav-back-button>
-	    <ion-nav-buttons side="left">
+	    <ion-nav-buttons side='left'>
 	      <button class="button button-icon button-clear ion-navicon" ng-if="!$root.voiceOver" menu-toggle="left"></button>
-        <a href class="button button-icon ion-more" ng-if="$root.voiceOver" menu-toggle="left">{{'MENU'|translate}}</a>
+        <a href class="button button-icon ion-more" ng-if="$root.voiceOver" menu-toggle="left">{{::translations.menu}}</a>
 	    </ion-nav-buttons>
-	    <ion-nav-buttons side="right">
+      <ion-nav-title>
+      </ion-nav-title>
+	    <ion-nav-buttons side='right'>
       <span ng-if="!$root.voiceOver">
         <button class="button button-icon button-clear" on-tap="bookmark()"><i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i></button> &nbsp; 
 	      <button class="button button-icon button-clear ion-android-share-alt" on-tap="share()"></button>
       </span>
       <span ng-if="$root.voiceOver">
-        <a href class="button button-icon button-clear" on-tap="bookmark()"><i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i>{{'BOOKMARK'|translate}}</a> &nbsp; 
-        <a href class="button button-icon button-clear ion-android-share-alt" on-tap="share()">{{'SHARE'|translate}}</a>
+        <a href class="button button-icon button-clear" on-tap="bookmark()"><i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i>{{::translations.bookmark}}</a> &nbsp; 
+        <a href class="button button-icon button-clear ion-android-share-alt" on-tap="share()">{{::translations.share}}</a>
       </span>
 	    </ion-nav-buttons>
 	</ion-nav-bar>
   <ion-floating-menu menu-color="#387ef5" menu-open-color="#387ef5" has-footer="true">
-    <ion-floating-item icon="ion-chatbubbles" click="isreplying($root.$storage.sitem, true)" ng-if="$root.$storage.user.username" button-color="#387ef5" icon-color="#fff" text="{{'REPLY'|translate}}" text-class="text-class"></ion-floating-item>
-    <ion-floating-item icon="ion-android-arrow-dropup-circle" click="upvotePost($root.$storage.sitem)" button-color="#387ef5" icon-color="#fff" text="{{'UPVOTE'|translate}}" text-class="text-class"></ion-floating-item>
-    <ion-floating-item icon="ion-edit" click="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode!=='archived' && $root.$storage.sitem.author==$root.$storage.user.username" button-color="#387ef5" icon-color="#fff" text="{{'EDIT'|translate}}" text-class="text-class"></ion-floating-item>
-    <ion-floating-item icon="ion-image" click="showImages(0)" ng-if="isImages()" button-color="#387ef5" icon-color="#fff" text="{{'GALLERY'|translate}}" text-class="text-class"></ion-floating-item>
-    <ion-floating-item icon="ion-arrow-return-right" ng-if="$root.$storage.user.username !== $root.$storage.sitem.author" click="$root.reBlog($root.$storage.sitem.author, $root.$storage.sitem.permlink)" button-color="#387ef5" icon-color="#fff" text="{{'REBLOG'|translate}}" text-class="text-class"></ion-floating-item>
+    <ion-floating-item icon="ion-chatbubbles" click="isreplying($root.sitem, true)" ng-if="$root.user.username" button-color="#387ef5" icon-color="#fff" text="{{::translations.reply}}" text-class="text-class"></ion-floating-item>
+    <ion-floating-item icon="ion-android-arrow-dropup-circle" click="upvotePost($root.sitem)" button-color="#387ef5" icon-color="#fff" text="{{::translations.upvote}}" text-class="text-class"></ion-floating-item>
+    <ion-floating-item icon="ion-edit" click="editPost($root.sitem)" ng-if="$root.sitem.author==$root.user.username && $root.sitem.cashout_time !== '1969-12-31T23:59:59'" button-color="#387ef5" icon-color="#fff" text="{{::translations.edit}}" text-class="text-class"></ion-floating-item>
+    <ion-floating-item icon="ion-image" click="showImages(0)" ng-if="isImages()" button-color="#387ef5" icon-color="#fff" text="{{::translations.gallery}}" text-class="text-class"></ion-floating-item>
+    <ion-floating-item icon="ion-arrow-return-right" ng-if="$root.user.username !== $root.sitem.author" click="$root.reBlog($root.sitem.author, $root.sitem.permlink)" button-color="#387ef5" icon-color="#fff" text="{{::translations.reblog}}" text-class="text-class"></ion-floating-item>
   </ion-floating-menu>
   <ion-content class="padding has-header" delegate-handle="mainScroll" overflow-scroll="true" ng-class="{'theme-dark':$root.$storage.theme == 'night'}"><!---->
-    <div ng-if='$root.$storage.sitem'>
-      <p class="title h3" ng-if="$root.$storage.sitem.root_title && $root.$storage.sitem.title==''"><a href="#/app/post{{$root.$storage.sitem.url.split('#')[0]}}">{{"VIEW_CONTEXT"|translate}}</a></p>
-    	<p class="title h3">{{$root.$storage.sitem.title}}</p>
+    <div ng-if='$root.sitem'>
+      <p class="title h3" ng-if="$root.sitem.root_title && $root.sitem.title==''"><a href="#/app/post{{$root.sitem.url.split('#')[0]}}">{{::translations.view}}</a></p>
+    	<p class="title h3">{{$root.sitem.title}}</p>
     	<div class="stitle row gray"><div class="col">
-        <img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.$storage.paccounts[$root.$storage.sitem.author].json_metadata.user_image||$root.$storage.paccounts[$root.$storage.sitem.author].json_metadata.profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /> <b><a href="#/app/profile/{{$root.$storage.sitem.author}}">{{$root.$storage.sitem.author}}</a></b>&nbsp;<div class="reputation">{{$root.$storage.sitem.author_reputation|reputation|number:0}}</div>&middot;{{$root.$storage.sitem.created|timeago}} {{'IN'|translate}}&nbsp;{{$root.$storage.sitem.category|detransliterate:false}}</div><div class="pull-right"><span ng-if="$root.voiceOver"><i class="fa fa-flag" on-tap="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted">{{'DOWNVOTE'|translate}}</i><i class="fa fa-flag positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted">{{'UNVOTE_DOWNVOTED'|translate}}</i></span><span ng-if="!$root.voiceOver"><i class="fa fa-flag" on-tap="downvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.downvoted"></i><i class="fa fa-flag positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.downvoted"></i></span></div></div>
+        <img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.paccounts[$root.sitem.author].user_image||$root.paccounts[$root.sitem.author].profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /> <b><a href="#/app/profile/{{$root.sitem.author}}">{{$root.sitem.author}}</a></b>&nbsp;<div class="reputation">{{$root.sitem.author_reputation|reputation|number:0}}</div>&middot;{{$root.sitem.created|timeago}} {{::translations.in}}&nbsp;{{$root.sitem.category|detransliterate:false}}</div>
+         <div class="pull-right">
+          <span ng-if="$root.voiceOver">
+            <i class="fa fa-flag" on-tap="downvotePost($root.sitem)" ng-if="!$root.sitem.downvoted">{{::translations.downvote}}</i>
+            <i class="fa fa-flag positive" on-tap="unvotePost($root.sitem)" ng-if="$root.sitem.downvoted">{{::translations.undownvote}}</i>
+          </span>
+          <span ng-if="!$root.voiceOver">
+            <i class="fa fa-flag" on-tap="downvotePost($root.sitem)" ng-if="!$root.sitem.downvoted"></i>
+            <i class="fa fa-flag positive" on-tap="unvotePost($root.sitem)" ng-if="$root.sitem.downvoted"></i>
+          </span>
+         </div>
+        </div>
     	<br><!---->
-      <div class="bodytext selectable" ng-bind-html="$root.$storage.sitem.body | parseUrl ">
+      <div class="bodytext selectable" ng-bind-html="$root.sitem | parseUrl ">
       </div>
 
-      <div ng-if='$root.$storage.sitem.json_metadata.tags' class="tags">
-        <div ng-repeat='tag in $root.$storage.sitem.json_metadata.tags'>
-          <span><div class="tag" on-tap="openTag(tag, 5)">{{tag|detransliterate:false}}</div></li>
+      <div ng-if='$root.sitem.parent_author == ""' class="tags">
+        <div ng-repeat='tag in $root.sitem.json_metadata.tags'>
+          <span><div class="tag" on-tap="openTag(tag, 5)">{{tag|detransliterate:false}}</div></span>
         </div>
+      </div>
+      <div ng-if='$root.sitem.parent_author != ""' class="tags">  
+        <span><div class="tag" on-tap="openTag($root.sitem.category, 5)">{{$root.sitem.category|detransliterate:false}}</div></span>
       </div>
 
       <div class="row gray">
-        <div class="col col-33" ng-if="!$root.voiceOver"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
-        <i class="fa fa-chevron-circle-up fa-lg" on-tap="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted && !$root.$storage.sitem.invoting" on-hold="openSliderr($event, $root.$storage.sitem)"></i><i class="fa fa-chevron-circle-up fa-lg positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted && !$root.$storage.sitem.invoting"></i>&nbsp;&nbsp;&nbsp;<span on-tap="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
+        <div class="col col-33" ng-if="!$root.voiceOver"><ion-spinner ng-if="$root.sitem.invoting"></ion-spinner>
+        <i class="fa fa-chevron-circle-up fa-lg" on-tap="upvotePost($root.sitem)" ng-if="!$root.sitem.upvoted && !$root.sitem.invoting" on-hold="openSliderr($event, $root.sitem)"></i><i class="fa fa-chevron-circle-up fa-lg positive" on-tap="unvotePost($root.sitem)" ng-if="$root.sitem.upvoted && !$root.sitem.invoting"></i>&nbsp;&nbsp;&nbsp;<span on-tap="$root.openInfo($root.sitem)">{{$root.sitem.net_votes}}</span></div>
 
-        <div class="col col-33" ng-if="$root.voiceOver"><ion-spinner ng-if="$root.$storage.sitem.invoting"></ion-spinner>
-        <i class="icon ion-android-arrow-dropup-circle" on-tap="upvotePost($root.$storage.sitem)" ng-if="!$root.$storage.sitem.upvoted" on-hold="openSliderr($event, $root.$storage.sitem)">{{'UPVOTE'|translate}}</i><i class="icon ion-android-arrow-dropup-circle positive" on-tap="unvotePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.upvoted">{{'UNVOTE_UPVOTED'|translate}}</i>&nbsp;&nbsp;&nbsp;<span on-tap="$root.openInfo($root.$storage.sitem)">{{$root.$storage.sitem.net_votes}}</span></div>
-        <div class="col col-33" on-tap="openTooltip($event,$root.$storage.sitem)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> {{$root.$storage.sitem | sumPostTotal:$root.$storage.currencyRate | number}}</div>
-        <div class="col" on-tap="isreplying($root.$storage.sitem, true)"><i class="fa fa-reply"></i> {{$root.$storage.sitem.children}}</div>
-        <div class="col" on-tap="editPost($root.$storage.sitem)" ng-if="$root.$storage.sitem.mode=='first_payout' && $root.$storage.sitem.author==$root.$storage.user.username"><i class="fa  fa-pencil-square-o"></i></div>
-        <div class="col" on-tap="deletePost($root.$storage.sitem)" ng-if="$root.$storage.sitem.net_votes==0 && $root.$storage.sitem.author==$root.$storage.user.username"><i class="fa fa-trash-o"></i></div>
+        <div class="col col-33" ng-if="$root.voiceOver"><ion-spinner ng-if="$root.sitem.invoting"></ion-spinner>
+        <i class="icon ion-android-arrow-dropup-circle" on-tap="upvotePost($root.sitem)" ng-if="!$root.sitem.upvoted" on-hold="openSliderr($event, $root.sitem)">{{::translations.upvote}}</i><i class="icon ion-android-arrow-dropup-circle positive" on-tap="unvotePost($root.sitem)" ng-if="$root.sitem.upvoted">{{::translations.unupvote}}</i>&nbsp;&nbsp;&nbsp;<span on-tap="$root.openInfo($root.sitem)">{{$root.sitem.net_votes}}</span></div>
+        <div class="col col-33" on-tap="openTooltip($event,$root.sitem)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> {{$root.sitem | sumPostTotal:$root.$storage.currencyRate | number}}</div>
+        <div class="col" on-tap="isreplying($root.sitem, true)"><i class="fa fa-reply"></i> {{$root.sitem.children}}</div>
+        <div class="col" on-tap="editPost($root.sitem)" ng-if="$root.sitem.author==$root.user.username && $root.sitem.cashout_time !== '1969-12-31T23:59:59'"><i class="fa fa-pencil-square-o"></i></div>
+        <div class="col" on-tap="deletePost($root.sitem)" ng-if="$root.sitem.net_votes==0 && $root.sitem.author==$root.user.username"><i class="fa fa-trash-o"></i></div>
       </div>
-      <ion-thread comments="post.comments"></ion-thread>
+      <center><button class="button button-positive button-outline button-icon ion-refresh icon-right" on-tap="fetchComments($root.sitem.author, $root.sitem.permlink)"><ion-spinner class="spinner-positive" ng-if="$root.fetching"></ion-spinner> {{::translations.comments}}</button></center>
+      <br>
+      <div class="my-handle"></div>
+      
+      <ion-thread comments="comments"></ion-thread>
     </div>
     <script id = "popoverTr.html" type="text/ng-template">
       <ion-popover-view class="detailedPost">

@@ -1,5 +1,5 @@
 <ion-view view-cache="false" view-title="{{'MARKETPLACE' | translate}}">
-  <ion-content class="padding">
+  <ion-content class="padding" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
     <h4>{{'EXTERNAL_APPS'|translate}}</h4>
     <div class="row">
       <div class="col" ng-click="requestApp('SteemMonitor')">
@@ -36,6 +36,6 @@
       </div>
       <div class="col">
       </div>
-    </div>
+    </div><br/>
   </ion-content>
 </ion-view>

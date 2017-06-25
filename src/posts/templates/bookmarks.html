@@ -1,7 +1,7 @@
 <ion-view view-title="{{'BOOKMARKS' | translate}}">
-  <ion-content class="has-header">
+  <ion-content class="has-header" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 	<ion-list ng-if="$root.$storage.bookmark" can-swipe="true">
-  		<ion-item ng-repeat="item in $root.$storage.bookmark" ng-click="$root.getContentAndOpen(item)">
+  		<ion-item ng-repeat="item in $root.$storage.bookmark" ng-click="$root.getContentAndOpen(item)" ng-if="item">
 		    <p><h2>{{item.author}}</h2></p>
         <p>{{item.permlink}}</p>
 		    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{item.created|timeago}}</div></div>

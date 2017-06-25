@@ -4,12 +4,15 @@
     <button class="button button-positive button-primary" ng-click="closeInfo()">{{'CLOSE'|translate}}</button>
   </ion-header-bar>
   <ion-content class="padding" delegate-handle="modalContent">
-    <div class="row" ng-repeat="v in $root.voters.active_votes">
-      <div class="col">
-      {{v.voter}}<div class="reputation">{{v.reputation|reputation}}</div>
+    <div class="row" ng-repeat="v in $root.voters.active_votes | orderBy:'-time'">
+      <div class="col col-50" ng-click="$root.openAccount(v.voter)">
+      <a href>{{v.voter}}<div class="reputation">{{v.reputation|reputation}}</div></a>
       </div>
       <div class="col">
       {{v.percent/100}}%
+      </div>
+      <div class="col">
+      {{v.time|timeago}}
       </div>
     </div>
       

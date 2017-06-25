@@ -1,0 +1,17 @@
+<ion-view view-title="{{'SCHEDULES' | translate}}">
+  <ion-content class="has-header" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
+	<ion-list ng-if="schedules" can-swipe="true"><!--ng-click="$root.openDraft(item)"-->
+  		<ion-item ng-repeat="item in schedules" ng-if="item">
+		    <p><h2>{{item.title}}</h2></p>
+			    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{item.created|timeago}}&nbsp;{{'SCHEDULE' | translate}}:&nbsp;<b>{{item.schedule|timeago:true}}</b><span class="assertive" ng-if="item.published"><i class="icon ion-checkmark-circled"></i></span></div></div>
+		    <ion-option-button class="button-assertive" ng-click="removeSchedule(item._id)">{{'CANCEL' | translate}}
+		    </ion-option-button>
+        <ion-option-button class="button-calm" ng-click="moveSchedule(item._id)">{{'MOVE_TO_DRAFT' | translate}}
+        </ion-option-button>
+    	</ion-item>
+    </ion-list>
+    <p class="tcenter gray" ng-if="schedules.length>0">{{'SWIPE_LEFT'|translate}}</p>
+    <p class="tcenter gray" ng-if="schedules.length==0">{{'NOTHING_HERE'|translate}}</p>
+
+  </ion-content>
+</ion-view>

@@ -1,5 +1,11 @@
 <ion-view view-cache="false" view-title="{{'MARKET_VIEW' | translate}}">
-  <ion-content class="padding has-footer exchange">
+  <ion-content class="padding has-footer exchange" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
+    <div class="padding" ng-if="active=='buy'||active=='sell'">
+      <highchart id="chart1" config="depth_chart_config"></highchart>  
+    </div>
+    <div class="padding" ng-if="active=='history'">
+      <highchart id="chart2" config="history_chart_config"></highchart>  
+    </div>
     <div class="" ng-if="active=='buy'">
       <div class="row header">
         <div class="col">{{'PRICE' | translate}}</div>
@@ -36,10 +42,10 @@
         </div>
         <div class="row" ng-repeat="(key, f) in openorders">
           <div class="col">{{f.real_price|number:4}}</div>
-          <div class="col" ng-if="f.seller==$root.$storage.user.username">{{f.sell_price.quote}}</div>
-          <div class="col" ng-if="f.seller==$root.$storage.user.username">{{f.sell_price.base}}</div>
-          <div class="col" ng-if="f.buyer==$root.$storage.user.username">{{f.buy_price.quote}}</div>
-          <div class="col" ng-if="f.buyer==$root.$storage.user.username">{{f.buy_price.base}}</div>
+          <div class="col" ng-if="f.seller==$root.user.username">{{f.sell_price.quote}}</div>
+          <div class="col" ng-if="f.seller==$root.user.username">{{f.sell_price.base}}</div>
+          <div class="col" ng-if="f.buyer==$root.user.username">{{f.buy_price.quote}}</div>
+          <div class="col" ng-if="f.buyer==$root.user.username">{{f.buy_price.base}}</div>
         </div>
       </div>
     </div>

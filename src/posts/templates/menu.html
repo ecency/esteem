@@ -15,57 +15,57 @@
       <h1 class="title center">eSteem</h1>
     </ion-header-bar>-->
     <ion-content>
-      <div ng-if="!$root.$storage.user">
+      <div ng-if="!$root.user">
         <center>
           <p>
             <img ng-src="img/esteem.png" width="150" />
           </p>
         </center>
       </div>
-      <div ng-if="$root.$storage.user" ng-style="$root.$storage.user.json_metadata.profile.cover_image ? mcss : null">
+      <div ng-if="$root.user" ng-style="mcss">
       <br>
         <center>
-          <a menu-close href="#/app/profile/{{$root.$storage.user.username}}" class="item-myavatar" ng-if="$root.$storage.user">
-            <span class="item-myavatar" ng-if="!$root.$storage.user.json_metadata.user_image && !$root.$storage.user.json_metadata.profile.profile_image"><img src="img/user_profile.png"></span>
-            <img ng-src="{{$root.$storage.user.json_metadata.profile.profile_image || $root.$storage.user.json_metadata.user_image}}" ng-if="$root.$storage.user.json_metadata.user_image || $root.$storage.user.json_metadata.profile.profile_image" />
+          <a menu-close href="#/app/profile/{{$root.user.username}}" class="item-myavatar" ng-if="$root.user">
+            <span class="item-myavatar" ng-if="!$root.user.json_metadata.user_image && !$root.user.json_metadata.profile.profile_image"><img ng-src="img/user_profile.png"></span>
+            <img ng-src="{{$root.user.json_metadata.profile.profile_image || $root.user.json_metadata.user_image}}" ng-if="$root.user.json_metadata.user_image || $root.user.json_metadata.profile.profile_image" />
           </a>
           <div>
-            <div class="h4">@{{$root.$storage.user.username}}&nbsp;<div class="reputation">{{$root.$storage.user.reputation|reputation:true|number:1}}</div></div>
-            <div ng-click="showMeExtra()" class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.$storage.user.post_count}}&nbsp;&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.$storage.user.voting_power/100|number:2}} <i class="icon pull-right" ng-class="{'ion-arrow-down-b':!showExtra, 'ion-arrow-up-b':showExtra}"></i></div>
+            <div class="h4">@{{$root.user.username}}&nbsp;<div class="reputation">{{$root.user.reputation|reputation:true|number:1}}</div></div>
+            <div ng-click="showMeExtra()" class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.user.post_count}}&nbsp;&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.user.voting_power/100|number:2}} <i class="icon pull-right" ng-class="{'ion-arrow-down-b':!showExtra, 'ion-arrow-up-b':showExtra}"></i></div>
           </div>
         </center>
       </div>
       <div ng-if="showExtra">
         <ion-list>
-          <ion-item menu-close class="item-icon-left" ng-if="$root.$storage.users" ng-repeat="user in $root.$storage.users" ng-click="selectAccount(user)" ng-class="{'active': (user.username==$root.$storage.user.username&&user.chain==$root.$storage.user.chain) }">
+          <ion-item menu-close class="item-icon-left" ng-if="$root.$storage.users" ng-repeat="user in $root.$storage.users" ng-click="selectAccount(user)" ng-class="{'active': (user.username==$root.user.username&&user.chain==$root.$storage.user.chain) }">
             <img class="icon logos" ng-src="{{'img/'+user.chain+'_icon.png'}}" />
             {{user.username}}
             <!--<span class="badge badge-assertive">{{user.chain}}</span>-->
           </ion-item>
-          <ion-item menu-close ng-click="openLogin()" class="item-icon-left" ng-if="$root.$storage.user">
+          <ion-item menu-close ng-click="openLogin()" class="item-icon-left" ng-if="$root.user">
             <i class="icon ion-plus-round"></i>
             {{'ADD_ACCOUNT'|translate}}
           </ion-item>
-          <ion-item menu-close ng-click="openPostModal()" class="item-icon-left" ng-if="$root.$storage.user">
+          <ion-item menu-close ng-click="openPostModal()" class="item-icon-left" ng-if="$root.user">
             <i class="icon ion-android-create"></i>
             {{'SUBMIT_A_STORY'|translate}}
           </ion-item>
-          <ion-item menu-close href="#/app/profile/{{$root.$storage.user.username}}" class="item-icon-left" ng-if="$root.$storage.user">
+          <ion-item menu-close href="#/app/profile/{{$root.user.username}}" class="item-icon-left" ng-if="$root.user">
             <i class="icon ion-person"></i>
             {{'PROFILE'|translate}}
           </ion-item>
-          <ion-item menu-close href="#/app/follow" class="item-icon-left" ng-if="$root.$storage.user">
+          <ion-item menu-close href="#/app/follow" class="item-icon-left" ng-if="$root.user">
             <i class="icon ion-person-stalker"></i>
             {{'FOLLOW'|translate}}
           </ion-item>
-          <ion-item menu-close ng-click="logout()" class="item-icon-left" ng-if="$root.$storage.user">
+          <ion-item menu-close ng-click="logout()" class="item-icon-left" ng-if="$root.user">
             <i class="icon ion-log-out"></i>
             {{'LOGOUT'|translate}}
           </ion-item>
         </ion-list>
       </div>
       <ion-list>
-        <ion-item menu-close ng-click="openLogin()" class="item-icon-left" ng-if="!$root.$storage.user">
+        <ion-item menu-close ng-click="openLogin()" class="item-icon-left" ng-if="!$root.user">
           <i class="icon ion-log-in"></i>
           {{'LOGIN'|translate}}
         </ion-item>
@@ -73,23 +73,27 @@
           <i class="icon ion-home"></i>
           {{'HOME'|translate}}
         </ion-item>
-        <ion-item menu-close href="#/app/bookmark" class="item-icon-left" ng-if="$root.$storage.user">
+        <ion-item menu-close href="#/app/bookmark" class="item-icon-left" ng-if="$root.user">
           <i class="icon ion-bookmark"></i>
           {{'BOOKMARKS'|translate}}
         </ion-item>
-        <ion-item menu-close href="#/app/drafts" ng-if="$root.$storage.user" class="item-icon-left">
+        <ion-item menu-close href="#/app/drafts" ng-if="$root.user" class="item-icon-left">
           <i class="icon ion-compose"></i>
           {{'DRAFTS'|translate}}
+        </ion-item>
+        <ion-item menu-close href="#/app/schedules" ng-if="$root.user" class="item-icon-left">
+          <i class="icon ion-clock"></i>
+          {{'SCHEDULES'|translate}}
         </ion-item>
         <!--<ion-item menu-close href="#/app/notifications" class="item-icon-left" ng-if="$root.$storage.notifications && $root.$storage.notifications.length>0">
           <i class="icon ion-bookmark"></i>
           {{'NOTIFICATIONS'|translate}}
         </ion-item>-->
-        <ion-item menu-close href="#/app/send" class="item-icon-left" ng-if="$root.$storage.user">
+        <ion-item menu-close href="#/app/send" class="item-icon-left" ng-if="$root.user">
           <i class="icon ion-android-send"></i>
           {{'TRANSFER'|translate}}
         </ion-item>
-        <ion-item menu-close href="#/app/exchange/{{$root.$storage.user.username}}" class="item-icon-left" ng-if="$root.$storage.user">
+        <ion-item menu-close href="#/app/exchange/{{$root.user.username}}" class="item-icon-left" ng-if="$root.user">
           <i class="icon ion-arrow-swap"></i>
           {{'EXCHANGE'|translate}}
         </ion-item>

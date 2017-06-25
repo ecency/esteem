@@ -10,21 +10,21 @@
     </div>
   </div>
 
-  <ion-content class="padding has-tabs-top">
+  <ion-content class="padding has-tabs-top" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 
     <div class="list">
       <div class="item item-input item-icon-right" ng-if="!data.advanced">
         <span class="input-label">{{'TO'|translate}}</span>
-        <input type="text" ng-model="data.username" placeholder="{{'TO_DESC'|translate}}" ng-change="changeUsername()">
-        <i class="icon ion-ios-camera-outline" ng-click="qrScan()" ng-if="ttype=='transfer'"></i>
+        <input type="text" ng-model="data.username" placeholder="{{'TO_DESC'|translate}}" ng-change="changeUsername()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <i class="icon fa fa-qrcode" ng-click="qrScan()" ng-if="ttype=='transfer'"></i>
       </div>
       <label class="item item-input" ng-if="ttype=='escrow'&&!data.advanced">
           <span class="input-label">{{"ESCROW_AGENT"|translate}}</span>
-          <input type="text" readonly="readonly" placeholder="{{'USERNAME'|translate}}" ng-model="data.agent.name" ng-click="openUModal(data.agent)"/>
+          <input type="text" readonly="readonly" placeholder="{{'USERNAME'|translate}}" ng-model="data.agent.name" ng-click="openUModal(data.agent)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       </label>
       <div class="item item-input item-icon-right" ng-if="ttype=='escrow'&&data.advanced">
         <span class="input-label">{{'ESCROW'|translate}} {{'ID'|translate}}</span>
-        <input type="text" ng-model="data.escrow_id" placeholder="{{'SEARCH'|translate}}" ng-change="searchEscrowID(data.escrow_id)">
+        <input type="text" ng-model="data.escrow_id" placeholder="{{'SEARCH'|translate}}" ng-change="searchEscrowID(data.escrow_id)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       </div>
       <label class="item item-input item-select" ng-if="data.advanced">
         <span class="input-label">{{'OPTIONS'|translate}}</span>
@@ -33,8 +33,8 @@
       <label class="item item-input item-select" ng-if="data.advanced&&data.etype=='release'">
         <span class="input-label">{{'RECEIVER'|translate}}</span>
         <select ng-model="escrow.receiver">
-          <option value="{{escrow.to}}" ng-if="escrow.to!=$root.$storage.user.username">{{escrow.to}}</option>
-          <option value="{{escrow.from}}" ng-if="escrow.from!=$root.$storage.user.username">{{escrow.from}}</option>
+          <option value="{{escrow.to}}" ng-if="escrow.to!=$root.user.username">{{escrow.to}}</option>
+          <option value="{{escrow.from}}" ng-if="escrow.from!=$root.user.username">{{escrow.from}}</option>
         </select>
       </label>
       <label class="item item-input item-select" ng-if="!data.advanced">
@@ -44,11 +44,11 @@
       </label>
       <label class="item item-input" ng-if="!data.advanced">
         <span class="input-label">{{'AMOUNT'|translate}}</span>
-        <input type="number" placeholder="{{'AMOUNT'|translate}}" step="0.001" ng-model="data.amount">
+        <input type="number" placeholder="{{'AMOUNT'|translate}}" step="0.001" ng-model="data.amount" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       </label>
       <label class="item item-input" ng-if="data.type != 'sp'&&data.type != 'golosp' && !data.advanced">
         <span class="input-label">{{'MEMO'|translate}}</span>
-        <textarea ng-model="data.memo" rows="3" placeholder="{{'PUBLIC_MEMO'|translate}}"></textarea>
+        <textarea ng-model="data.memo" rows="3" placeholder="{{'PUBLIC_MEMO'|translate}}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
       </label>
       <div class="item" ion-datetime-picker ng-model="data.ratification" only-valid="{'after': 'today', 'inclusive': true}" ng-if="ttype=='escrow'&&!data.advanced">{{'RATIFICATION_DEADLINE'|translate}}: {{data.ratification| date: "yyyy-MM-dd H:mm:ss"}}</div>
       <div class="item" ion-datetime-picker ng-model="data.expiration" only-valid="{'after': 'today', 'inclusive': false}" ng-if="ttype=='escrow'&&!data.advanced">{{'ESCROW_EXPIRATION'|translate}}: {{data.expiration| date: "yyyy-MM-dd H:mm:ss"}}</div>
@@ -75,8 +75,8 @@
         {{'SUBMIT'|translate}}
       </button></center>
       <br>
-      <center ng-if="ttype=='transfer'"><qr text="$root.$storage.user.username"></qr></center>
-      <center ng-if="ttype=='transfer'"><i class="italic">{{$root.$storage.user.username}}</i></center>
+      <center ng-if="ttype=='transfer'"><qr text="$root.user.username"></qr></center>
+      <center ng-if="ttype=='transfer'"><i class="italic">{{$root.user.username}}</i></center>
     </div>
   </ion-content>
   <script id="my-modal.html" type="text/ng-template">
@@ -84,7 +84,7 @@
       <div class="bar bar-header bar-positive item-input-inset">
         <label class="item-input-wrapper">
           <i class="icon ion-ios-search placeholder-icon"></i>
-          <input type="search" placeholder="{{'SEARCH'|translate}}" ng-change="getUserAgent(data.query)" ng-model="data.query">
+          <input type="search" placeholder="{{'SEARCH'|translate}}" ng-change="getUserAgent(data.query)" ng-model="data.query" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         </label>
         <button class="button button-clear button-outline" ng-click="closeUModal()">
           {{"CANCEL"|translate}}

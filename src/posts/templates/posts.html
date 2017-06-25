@@ -1,10 +1,10 @@
-<ion-view view-cache="false">
+<ion-view>
 	<ion-nav-bar class="bar-positive">
 		<ion-nav-back-button>
   		</ion-nav-back-button>
 	    <ion-nav-buttons side="left">
 	      <button class="button button-icon button-clear ion-navicon" ng-if="!$root.voiceOver" menu-toggle="left"></button>
-	      <a href class="button button-icon button-clear ion-navicon" ng-if="$root.voiceOver" menu-toggle="left">{{'MENU'|translate}}</a>
+	      <a href class="button button-icon button-clear ion-navicon" ng-if="$root.voiceOver" menu-toggle="left">{{::translations.menu}}</a>
 	    </ion-nav-buttons>
 	    <ion-nav-title on-tap="showFilter()">
           <div class="page-title">{{$root.$storage.filterName}} {{$root.$storage.tag}} &emsp; <i class="icon ion-arrow-down-b"></i></div>
@@ -12,21 +12,20 @@
 	    <ion-nav-buttons side="right">
 	      <!--<button class="button" on-tap="testfunction()">Test</button>-->
 	      <button class="button button-icon ion-more" ng-if="!$root.voiceOver" on-tap="openMenuPopover($event)"></button>
-	      <a href class="button button-icon ion-more" on-tap="openMenuPopover($event)" ng-if="$root.voiceOver">{{'OPTIONS'|translate}}</a>
+	      <a href class="button button-icon ion-more" on-tap="openMenuPopover($event)" ng-if="$root.voiceOver">{{::translations.options}}</a>
 	    </ion-nav-buttons>
 	</ion-nav-bar>
   <ion-content class="has-header" scroll="true" delegate-handle="mainScroll" overflow-scroll="true" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
-		<ion-refresher pulling-text="{{'PULL_DOWN_TO_REFRESH'|translate}}" on-refresh="refresh()">
-  	</ion-refresher>
+		<!--<ion-refresher pulling-text="{{::pull}}" on-refresh="refresh()">
+  		</ion-refresher>-->
   		<div ng-if="$root.$storage.view=='compact' && data.length>0" class="masonry-layout">
-	    	<div ng-repeat="d in data | regex:'category':'bm.*' track by $index" class="masonry-layout__panel">
-	    	   <div class="list masonry-layout__panel-content" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
-		    	<div class="item">
+	    	<div ng-repeat="d in data | regex:'category':'bm.*' track by d.id" class="masonry-layout__panel">
+	    	   <div class="list masonry-layout__panel-content" >
+		    	<div class="item" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 				    <div on-tap="open(d)">
-				    <span ng-if="d.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{'RESTEEMED_BY'|translate}} {{d.reblogged_by}}</span>
-				    <p><h2 class="wrapword"><i class="fa fa-money positive" ng-if="d.promoted.split(' ')[0] !== '0.000'"></i>
-							<i class="fa fa-fire positive" ng-if="d.percent_steem_dollars === 0"></i> {{d.title}}</h2></p>
-				    <div class="row postdetails wrap"><div class="col"><i class="icon ion-android-time"></i> {{d.created|timeago}}&nbsp;{{'BY'|translate}}&nbsp;<b>{{d.author}}</b>&nbsp;<div class="reputation">{{d.author_reputation|reputation|number:0}}</div> {{'IN'|translate}} {{d.category|detransliterate:false}} &middot; {{d.body|readingtime}} {{'MIN_READ'|translate}}</div></div>
+				    <span ng-if="d.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{::translations.resteem}} {{::d.reblogged_by}}</span>
+				    <p><h2 class="wrapword"><i class="fa fa-money positive" ng-if="d.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="d.percent_steem_dollars === 0"></i> {{::d.title}}</h2></p>
+				    <div class="row postdetails wrap"><div class="col"><i class="icon ion-android-time"></i> {{::d.created|timeago}}&nbsp;{{::translations.by}}&nbsp;<b>{{::d.author}}</b>&nbsp;<div class="reputation">{{::d.author_reputation|reputation|number:0}}</div> {{::translations.in}} {{::d.category|detransliterate:false}} &middot; {{::d.body|readingtime}} {{::translations.min}}</div></div>
 				    </div>
 				    <div class="row">
 				    <div class="col">
@@ -34,51 +33,53 @@
 				      <a href="#" class="subdued" ng-if="!d.upvoted" on-tap="votePost(d)" on-hold="openSlider($event, d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!d.invoting"></i></a><a href="#" class="subdued" ng-if="d.upvoted" on-tap="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner>
 								<i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!d.invoting"></i></a>&nbsp;<span class="gray" on-tap="openTooltip($event,d)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="d.max_accepted_payout.split(' ')[0] === '0.000'"><del>0.000</del></span><span ng-if="d.max_accepted_payout.split(' ')[0] !== '0.000'">{{d | sumPostTotal:$root.$storage.currencyRate | number}}</span></span></span>
 				      <span ng-if="$root.voiceOver">
-				      <a href="#" class="subdued" ng-if="!d.upvoted" on-tap="votePost(d)" on-hold="openSlider($event, d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!d.invoting"></i>{{'UPVOTE'|translate}}</a><a href="#" class="subdued" ng-if="d.upvoted" on-tap="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner>
-								<i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!d.invoting"></i>{{'UNVOTE'|translate}}</a>&nbsp;<span class="gray" on-tap="openTooltip($event,d)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="d.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{d | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="d.max_accepted_payout.split(' ')[0] !== '0.000'">{{d | sumPostTotal:$root.$storage.currencyRate | number}}</span></span></span>
+				      <a href="#" class="subdued" ng-if="!d.upvoted" ng-click="votePost(d)" on-hold="openSlider($event, d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!d.invoting"></i>{{::translations.upvote}}</a><a href="#" class="subdued" ng-if="d.upvoted" on-tap="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner>
+								<i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!d.invoting"></i>{{::translations.unvote}}</a>&nbsp;<span class="gray" on-tap="openTooltip($event,d)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="d.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{d | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="d.max_accepted_payout.split(' ')[0] !== '0.000'">{{d | sumPostTotal:$root.$storage.currencyRate | number}}</span></span></span>
 				      </div>
 				      <div class="col col-25 tright">
-				      <a href="#" class="subdued" on-tap="$root.openInfo(d)"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
+				      <a href="#" class="subdued" on-tap="$root.openInfo(d)"><i class="icon ion-person-stalker"></i>&nbsp;{{::d.net_votes}}</a>
 				      </div>
 				      <div class="col col-25 tright">
-				      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{d.children}}</a>
+				      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{::d.children}}</a>
 				      </div>
 				      <div class="col col-10 tright">
-				      <a href="#" class="subdued" on-tap="$root.reBlog(s.author, s.permlink)"><i class="icon ion-arrow-return-right"></i>&nbsp;</a>
+				      <a href="#" class="subdued" on-tap="$root.reBlog(d.author, d.permlink)"><i class="icon ion-arrow-return-right"></i>&nbsp;</a>
 				      </div>
 				    </div>
 			  	</div>
 			  </div>
 			</div>
 		</div>
+		
 		<div ng-if="$root.$storage.view=='card' && data.length>0" class="masonry-layout">
-			<div ng-repeat="ds in data | regex:'category':'bm.*' track by $index" class="masonry-layout__panel">
+			<div ng-repeat="ds in data | regex:'category':'bm.*' track by ds.id" class="masonry-layout__panel">
 	    	   <div class="list card masonry-layout__panel-content" ng-if="ds" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 
 				<div class="item" on-tap="open(ds)" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
-					<span ng-if="ds.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{'RESTEEMED_BY'|translate}} {{ds.reblogged_by}}</span>
-				    <h2 class="wrapword"><i class="fa fa-money positive" ng-if="ds.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="ds.percent_steem_dollars === 0"></i>{{ds.title}}</h2>
-				    <div class="row postdetails wrap"><div class="col"><i class="icon ion-android-time"></i> {{ds.created|timeago}}&nbsp;{{'BY'|translate}}&nbsp;<b>{{ds.author}}</b>&nbsp;<div class="reputation">{{ds.author_reputation|reputation|number:0}}</div> {{'IN'|translate}} {{ds.category|detransliterate:false}} &middot; {{ds.body|readingtime}} {{'MIN_READ'|translate}}</div></div>
+					<span ng-if="ds.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{::translations.resteem}} {{::ds.reblogged_by}}</span>
+				    <h2 class="wrapword"><i class="fa fa-money positive" ng-if="ds.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="ds.percent_steem_dollars === 0"></i> {{::ds.title}}</h2>
+				    <div class="row postdetails wrap"><div class="col"><i class="icon ion-android-time"></i> {{::ds.created|timeago}}&nbsp;{{::translations.by}}&nbsp;<b>{{::ds.author}}</b>&nbsp;<div class="reputation">{{::ds.author_reputation|reputation|number:0}}</div> {{::translations.in}} {{::ds.category|detransliterate:false}} &middot; {{::ds.body|readingtime}} {{::translations.min}}</div></div>
 				</div>
 				<div class="item-body">
-				    <img class="full-image" ng-src="{{ds.json_metadata.image[0]}}" on-tap="open(ds)" ng-if="ds.json_metadata.image[0]" onerror="this.src='img/noimage.png'"/>
+				    <center><img class="full-image" ng-src="{{::ds.json_metadata.image[0]||'img/noimage.png'}}" on-tap="open(ds)" ng-if="!$root.$storage.nsfw && ds.json_metadata.image[0] && ds.json_metadata.tags.indexOf('nsfw')==-1" onerror="this.src='img/noimage.png'" />
+				    <img class="full-image" ng-src="img/nsfwimage.png" on-tap="open(ds)" ng-if="!$root.$storage.nsfw && ds.json_metadata.tags.indexOf('nsfw')>-1" onerror="this.src='img/noimage.png'" /></center>
 				    <div class="row">
 					    <div class="col">
 					      <span ng-if="!$root.voiceOver">
-					      <a href="#" class="subdued" ng-if="!ds.upvoted" on-tap="votePost(ds)" on-hold="openSlider($event, ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!ds.invoting"></i></a><a href="#" class="subdued" ng-if="ds.upvoted" on-tap="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner>
+					      <a href="#" class="subdued" ng-if="!ds.upvoted" ng-click="votePost(ds)" on-hold="openSlider($event, ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!ds.invoting"></i></a><a href="#" class="subdued" ng-if="ds.upvoted" on-tap="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner>
 									<i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!ds.invoting"></i></a>&nbsp;<span class="gray" on-tap="openTooltip($event,ds)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="ds.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{ds | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="ds.max_accepted_payout.split(' ')[0] !== '0.000'">{{ds | sumPostTotal:$root.$storage.currencyRate | number}}</span></span>
 					      </span>
 					      <span ng-if="$root.voiceOver">
-					      <a href="#" class="subdued" ng-if="!ds.upvoted" on-tap="votePost(ds)" on-hold="openSlider($event, ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!ds.invoting"></i>{{'UPVOTE'|translate}}</a>
-					      <a href="#" class="subdued" ng-if="ds.upvoted" on-tap="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!ds.invoting"></i>{{'UNVOTE'|translate}}</a>&nbsp;<span class="gray" on-tap="openTooltip($event,ds)">
+					      <a href="#" class="subdued" ng-if="!ds.upvoted" on-tap="votePost(ds)" on-hold="openSlider($event, ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!ds.invoting"></i>{{::translations.upvote}}</a>
+					      <a href="#" class="subdued" ng-if="ds.upvoted" on-tap="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!ds.invoting"></i>{{::translations.unvote}}</a>&nbsp;<span class="gray" on-tap="openTooltip($event,ds)">
 									<b>{{$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="ds.max_accepted_payout.split(' ')[0] === '0.000'"><del>0.000</del></span><span ng-if="ds.max_accepted_payout.split(' ')[0] !== '0.000'">{{ds | sumPostTotal:$root.$storage.currencyRate | number}}</span></span>
 					      </span>
 					      </div>
 					      <div class="col col-25 tright">
-					      <a href="#" class="subdued" on-tap="$root.openInfo(ds)"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
+					      <a href="#" class="subdued" on-tap="$root.openInfo(ds)"><i class="icon ion-person-stalker"></i>&nbsp;{{::ds.net_votes}}</a>
 					      </div>
 					      <div class="col col-25 tright">
-					      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{ds.children}}</a>
+					      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{::ds.children}}</a>
 					      </div>
 					      <div class="col col-10 tright">
 					      <a href="#" class="subdued" on-tap="$root.reBlog(ds.author, ds.permlink)"><i class="icon ion-arrow-return-right"></i>&nbsp;</a>
@@ -88,7 +89,8 @@
 				</div>
 			</div>
 		</div>
-    <ion-infinite-scroll ng-if="moreDataCanBeLoaded()" on-infinite="loadMore()" distance="15%"></ion-infinite-scroll>
+		<!--immediate-check="false"-->
+    <ion-infinite-scroll ng-if="moreDataCanBeLoaded()" on-infinite="loadMore()" distance="30%"></ion-infinite-scroll>
     <br>
     <script id = "popoverT.html" type="text/ng-template">
       <ion-popover-view class="detailedPost">

@@ -14,6 +14,8 @@
     -->
 
     <script src="lib/marked.js"></script>
+    <script src="lib/highstock.src.js"></script>
+
     <script src="js/lib.js"></script>
     <script src="lib/blockies.js"></script>
     <script src="lib/speakingurl.min.js"></script>
@@ -26,7 +28,7 @@
     <script src="cordova.js"></script>
   </head>
 
-  <body ng-app="steem">
+  <body ng-app="esteem" dir="{{$root.$storage.dir}}">
     <ion-nav-view></ion-nav-view>
   </body>
 </html>

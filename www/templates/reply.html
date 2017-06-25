@@ -1,14 +1,14 @@
-<ion-modal-view>
+<ion-modal-view class='mymodal'>
   <ion-header-bar class="bar bar-header bar-positive">
     <button class="button button-clear button-icon ion-arrow-left-c" ng-click="closeModal()"></button>
     <h1 class="title">{{'REPLYTO'|translate}} @{{post.author}}</h1>
     <button class="button button-positive button-primary" ng-click="reply()">{{'POST'|translate}}</button>
   </ion-header-bar>
   <ion-content class="padding posting" overflow-scroll="false">
-    <div ng-if="post.body&&post.parent_author!=''" class="padding bodytext selectable" ng-bind-html="post.body | parseUrl"></div>
-    <textarea autofocus ng-model='data.comment' rows="10" placeholder="{{'COMMENT_CONTENT'|translate}}" class="width100" ng-focus='cfocus()'></textarea>
+    <div ng-if="post.body&&post.parent_author!=''" class="padding bodytext selectable" ng-bind-html="post | parseUrl"></div>
+    <textarea autofocus ng-model='data.comment' rows="10" placeholder="{{'COMMENT_CONTENT'|translate}}" class="width100" ng-focus='cfocus()' autocomplete="off""></textarea>
       <p ng-if="data.comment">{{'PREVIEW'|translate}}</p>
-      <div ng-if="data.comment" class="padding bodytext" ng-bind-html="data.comment | parseUrl "></div>
+      <div ng-if="data.comment" class="padding bodytext" ng-bind-html="data | parseUrl "></div>
   </ion-content>
   <ion-slides options="options" class="drawer" ng-if="showgallery" slider="gallery.slider">
     <ion-slide-page ng-repeat="image in gallery.images" ng-if="image.url" ng-click="addImage(image.url)">
