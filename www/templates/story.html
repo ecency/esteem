@@ -9,7 +9,7 @@
   </ion-header-bar>
   <ion-content class="padding posting" overflow-scroll="false">
     <input type="text" name="title" placeholder="{{'TITLE'|translate}}" ng-model="spost.title" style="width:100%;" autocomplete="off">
-    <textarea ng-model='spost.body' rows="15" placeholder="{{'POST_CONTENT'|translate}}" class="width100" ng-focus='cfocus()'></textarea><!---->
+    <textarea ng-model='spost.body' rows="15" placeholder="{{'POST_CONTENT'|translate}}" class="width100" ng-focus='cfocus()' ng-model-options="{debounce: 1000}"></textarea><!---->
       <input type="text" name="categories" placeholder="{{'TAGS'|translate}}" ng-model="spost.tags" ng-change="tagsChange()" style="width:100%;" autocomplete="off" autocorrect="off" autocapitalize="off">
       <div class="row" ng-if="spost.advanced">
         <div class="col item item-input">

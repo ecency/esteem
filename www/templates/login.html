@@ -16,7 +16,7 @@
     <form ng-submit="doLogin()" name="login" novalidate class="card">
       <div class="list list-inset">
         <label class="item item-input">
-          <input type="text" ng-model="loginData.username" placeholder="{{'USERNAME'|translate}}" ng-change="changeUsername()" required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <input type="text" ng-model="loginData.username" placeholder="{{'USERNAME'|translate}}" ng-change="changeUsername()" required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" ng-model-options="{debounce: 500}">
         </label>
 
         <label class="item item-input" ng-hide="loginData.advanced">

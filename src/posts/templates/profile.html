@@ -86,20 +86,20 @@
                 <div class="wrap">
                   <h2><i class="fa fa-money positive" ng-if="playlist.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="playlist.percent_steem_dollars === 0"></i>{{playlist.root_title}}</h2>
                 </div>
-                <p ng-bind-html="playlist|parseUrl|limitTo:50|ldots" ng-if="active!='blog'"></p>
+                <p ng-bind-html="playlist|parseUrl|limitTo:20|ldots" ng-if="active!='blog'"></p>
                 <div class="postdetails"><i class="icon ion-android-time"></i>&nbsp;{{playlist.created|timeago}}&nbsp;{{::'BY'|translate}}&nbsp;<i class="icon ion-android-person"></i>&nbsp;{{playlist.author}}&nbsp;<div class="reputation">{{playlist.author_reputation|reputation|number:0}}</div></div>
                 </div>
                 <div class="row gray profile">
                   <div class="col"><ion-spinner ng-if="playlist.invoting"></ion-spinner>
                   <i class="fa fa-chevron-circle-up fa-lg" on-tap="upvotePost(playlist)" ng-if="!playlist.upvoted" on-hold="openSlider($event, playlist)"></i><i class="fa fa-chevron-circle-up fa-lg positive" on-tap="unvotePost(playlist)" ng-if="playlist.upvoted"></i>&nbsp;&nbsp;<span on-tap="$root.openInfo(playlist)">{{playlist.net_votes}}</span>&nbsp;&nbsp;
                    <!--<i class="fa fa-chevron-circle-down fa-lg" on-tap="downvotePost(playlist)" ng-if="!playlist.downvoted"></i><i class="fa fa-chevron-circle-down fa-lg positive" on-tap="unvotePost(playlist)" ng-if="playlist.downvoted"></i>--></div>
-                  <div class="col" on-tap="openTooltip($event,playlist)">&nbsp; <b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="playlist.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{::playlist | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="playlist.max_accepted_payout.split(' ')[0] !== '0.000'">{{::playlist | sumPostTotal:$root.$storage.currencyRate | number}}</span></div>
+                  <div class="col" on-tap="openTooltip($event,playlist)">&nbsp; <b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="playlist.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{playlist | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="playlist.max_accepted_payout.split(' ')[0] !== '0.000'">{{playlist | sumPostTotal:$root.$storage.currencyRate | number}}</span></div>
                   <div class="col">&nbsp; <i class="icon ion-chatbubbles"></i>&nbsp;{{playlist.children}}</div>
                   <div class="col" ng-if="playlist.author!==user.username && active!=='recent-replies'">&nbsp; <i class="icon ion-arrow-return-right"></i></div>
                 </div>
             </div>
           </ion-list>
-          <ion-infinite-scroll on-infinite="loadmore()" ng-if="moreDataCanBeLoaded()" distance="50%"></ion-infinite-scroll>
+          <ion-infinite-scroll on-infinite="loadmore()" ng-if="moreDataCanBeLoaded()" distance="1%"></ion-infinite-scroll>
         </div>
         <div class="padding" ng-if="active=='transfers'">
           <p class="tcenter" ng-if="accounts.reward_steem_balance.split(' ')[0]>0 || accounts.reward_sbd_balance.split(' ')[0]>0 || accounts.reward_vesting_steem.split(' ')[0]>0"> {{::'UNCLAIMED_REWARDS'|translate}}: 
@@ -152,7 +152,7 @@
             {{::$root.$storage.currency|getCurrencySymbol}} {{::accounts.vesting_shares | sd:accounts.balance:accounts.sbd_balance | number}}
             </div>
           </div>
-          <p ng-if="accounts.next_vesting_withdrawal!=='1969-12-31T23:59:59'">{{::'POWER_DOWN_SCHEDULE'|translate}} {{::accounts.next_vesting_withdrawal|timeago:true}}</p>
+          <p ng-if="accounts.next_vesting_withdrawal !== '1969-12-31T23:59:59'">{{::'POWER_DOWN_SCHEDULE'|translate}} {{accounts.next_vesting_withdrawal|timeago:true}}</p>
           </div>
           <p class="bold">{{::'TRANSACTION_HISTORY'|translate}}</p>
           <div class="list list-inset">

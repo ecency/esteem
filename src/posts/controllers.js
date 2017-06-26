@@ -2030,7 +2030,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
               $scope.error = true;
             }
             for (var i = 0; i < response.length; i++) {
-              response[i].json_metadata = response[i].json_metadata?angular.fromJson(response[i].json_metadata):response[i].json_metadata;
+              if ($rootScope.$storage.view !== 'compact') {
+                response[i].json_metadata = response[i].json_metadata?angular.fromJson(response[i].json_metadata):response[i].json_metadata;
+              }
               var permlink = response[i].permlink;
               if (!$scope.ifExists(permlink)) {
                 //var user = $rootScope.$storage.user || undefined;
@@ -3018,7 +3020,10 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
     }
   }
-  $rootScope.$on("update:content", function(){
+  $rootScope.$on("update:content", function(event, data){
+    console.log(event);
+    //event.stopPropagation();
+    event.preventDefault();
     $rootScope.log("update:content");
     $rootScope.$broadcast('hide:loading');
     console.log($scope.post);
@@ -3157,11 +3162,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $scope.post = result;
         //console.log(result);
         $rootScope.sitem = result;
-
         $scope.$evalAsync(function($scope){
           $scope.$broadcast('postAccounts');
         });
-        
       }
     });
   };
@@ -3257,8 +3260,13 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       //console.log(po);
     });
   }
-  $scope.$on('postAccounts', function(){
+  $scope.$on('postAccounts', function(event, data){
+    console.log(event);
+    
     $rootScope.paccounts = {};
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
     //console.log(window.Api);
     //window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
     window.steem.api.getAccountsAsync($rootScope.postAccounts, function(err, res){
@@ -3283,6 +3291,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $scope.$applyAsync();
       }
     });
+    event.preventDefault();
   });
   
   $scope.$on('$ionicView.afterEnter', function(ev){
@@ -3302,7 +3311,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $stateParams.author = $stateParams.author.substr(1);
       }
       $rootScope.postAccounts.push($stateParams.author);
-      $scope.$broadcast('postAccounts');
+      //$scope.$broadcast('postAccounts');
 
       //$scope.$evalAsync(function($scope){
         //setTimeout(function() {
@@ -4398,7 +4407,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       } else {
         $scope.rest = "";
       }
-      console.log('refresh profile');
+      console.log('refresh profile '+$scope.active);
       $scope.nonexist = false;
 
       //var today = new Date();
@@ -4420,8 +4429,10 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           //if (Object.keys(res.content).length>0) {
           //$scope.$evalAsync(function($scope){
             angular.forEach(res.content, function(v,k){
-              if ((typeof v.json_metadata === 'string' || v.json_metadata instanceof String) && (v.json_metadata)) {
-                v.json_metadata = angular.fromJson(v.json_metadata);
+              if ($scope.active != 'posts' || $scope.active != 'recent-replies') {
+                if ((typeof v.json_metadata === 'string' || v.json_metadata instanceof String) && (v.json_metadata && v.parent_author == "")) {
+                  v.json_metadata = angular.fromJson(v.json_metadata);
+                }
               }
               if ($rootScope.user){
                 if ($rootScope.user.username !== v.author) {
@@ -4491,8 +4502,10 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         //if (Object.keys(res.content).length>0) {
         //$scope.$evalAsync(function($scope){
         angular.forEach(res.content, function(v,k){
-          if ((typeof v.json_metadata === 'string' || v.json_metadata instanceof String) && v.json_metadata) {
-            v.json_metadata = angular.fromJson(v.json_metadata);
+          if (type != 'posts' || type != 'recent-replies') {
+            if ((typeof v.json_metadata === 'string' || v.json_metadata instanceof String) && (v.json_metadata && v.parent_author == "")) {
+              v.json_metadata = angular.fromJson(v.json_metadata);
+            }
           }
           if ($rootScope.user){
             if ($rootScope.user.username !== v.author) {
