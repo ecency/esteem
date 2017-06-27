@@ -331,7 +331,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         if (url) {
           $rootScope.$sstorage.url = url;
           var parts = url.split('/');
-          $state.go('app.post', {category: parts[2], author: parts[3], permlink: [4]});  
+          $state.go('app.post', {category: parts[2], author: parts[3].substr(1), permlink: [4]});  
         }
       }, 500);
     };

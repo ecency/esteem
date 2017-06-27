@@ -4,11 +4,12 @@
 }
 
 .theme-dark h2, .theme-dark h1, .theme-dark h3, .theme-dark h4, .theme-dark h5, .theme-dark h6 {
-  color: #ddca7e;
+  /*color: #ddca7e;*/
+  color: #ddc;
 }
 
 .theme-dark .h2, .theme-dark .h1, .theme-dark .h3, .theme-dark .h4, .theme-dark .h5, .theme-dark .h6 {
-  color: #ddca7e;
+  color: #ddc;
 }
 
 .theme-dark .item, .theme-dark p, .theme-dark div, .theme-dark .item-content, .theme-dark span, .theme-dark .reputation, .theme-dark input, .theme-dark textarea, .theme-dark select{
@@ -28,7 +29,10 @@
   background: #444;
   color: #aaa; 
 }
-
+.theme-dark .tag {
+  background: #aaa;
+  color: #000;
+}
 .theme-dark .tag::before {
   background: #444;
   border-radius: 10px;
@@ -44,7 +48,7 @@
 .theme-dark .tag::after {
   background: #444;
   border-bottom: 13px solid transparent;
-  border-left: 10px solid #eee;
+  border-left: 10px solid #aaa;
   border-top: 13px solid transparent;
   content: '';
   position: absolute;

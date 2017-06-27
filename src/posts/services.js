@@ -1655,7 +1655,7 @@ module.exports = function (app) {
 
                           var t = new Date();
                           var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
-                          var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };                              
+                          var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ["esteem"], app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };                              
                           var operations_array = [];
 
                           operations_array = [
@@ -1716,7 +1716,7 @@ module.exports = function (app) {
                         $rootScope.$broadcast('show:loading');
                         if ($rootScope.user) {
                           var operations_array = [];
-                          var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };
+                          var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ["esteem"], app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };
                           operations_array = [
                             ['comment', {
                               parent_author: $scope.post.parent_author,
