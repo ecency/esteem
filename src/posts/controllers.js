@@ -263,7 +263,11 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                 $rootScope.$storage.mylogin = $scope.login;
                 $rootScope.$broadcast('hide:loading');
                 $scope.loginModal.hide();
-
+                
+                if (!$scope.$$phase) {
+                  $scope.$apply();
+                }
+                
                 APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date(), 'medium'), appversion: $rootScope.$storage.appversion}).then(function(res){
                   
                   $rootScope.$broadcast('refreshLocalUserData');
@@ -275,12 +279,12 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                   }
                   //$scope.$applyAsync();
                   $window.location.reload(true);
-                  $state.go('app.posts',{renew:true},{reload: true});
-
                   //Buffer = require('buffer').Buffer;
+                  //$state.go('app.posts',{renew:true},{reload: true});
+                  
                   $rootScope.$broadcast('fetchPosts');
                 });
-                $scope.$applyAsync();
+                
               }
             } else {
 
@@ -328,6 +332,10 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                 } else {
                   $rootScope.$storage.users.push($rootScope.user);  
                 }
+                if (!$scope.$$phase) {
+                  $scope.$apply();
+                }
+                
                 $rootScope.$storage.mylogin = $scope.login;
                 APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date(), 'medium'), appversion: $rootScope.$storage.appversion}).then(function(res){
                   $rootScope.$broadcast('hide:loading');
@@ -353,7 +361,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
             }
           //});
         }
-        $scope.$applyAsync();
+        if (!$scope.$$phase) {
+          $scope.$apply();
+        }
       });      
     } else {
       $scope.loginModal.hide();
@@ -2746,6 +2756,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       } else {
         $scope.spost.tags = ts;
       }
+      $scope.tagsChange();
     //});
     }, 1);
     //console.log($scope.spost.operation_type);

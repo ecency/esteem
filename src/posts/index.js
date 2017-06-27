@@ -1,6 +1,6 @@
 var fs = require('fs');
 
-//Buffer = require('buffer').Buffer;
+Buffer = require('buffer').Buffer;
 
 var app = angular.module('esteem', [
 	'ionic',

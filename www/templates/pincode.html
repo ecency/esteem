@@ -7,30 +7,30 @@
             <br>
             <div class="row" style="text-align: center;" ng-if="!$root.pincheck">
                 <div class="col col-25" style="border-bottom: 1px solid black">
-                    {{passcode.substring(0, 1)}}
+                    &nbsp;{{passcode.substring(0, 1)}}
                 </div>
                 <div class="col col-25" style="border-bottom: 1px solid black">
-                    {{passcode.substring(1, 2)}}
+                    &nbsp;{{passcode.substring(1, 2)}}
                 </div>
                 <div class="col col-25" style="border-bottom: 1px solid black">
-                    {{passcode.substring(2, 3)}}
+                    &nbsp;{{passcode.substring(2, 3)}}
                 </div>
                 <div class="col col-25" style="border-bottom: 1px solid black">
-                    {{passcode.substring(3, 4)}}
+                    &nbsp;{{passcode.substring(3, 4)}}
                 </div>
             </div>
             <div class="row" style="text-align: center;" ng-if="$root.pincheck">
                 <div class="col col-25" style="border-bottom: 1px solid black">
-                    <span ng-if="passcode.length>=1">*</span>
+                    &nbsp;<span ng-if="passcode.length>=1">*</span>
                 </div>
                 <div class="col col-25" style="border-bottom: 1px solid black">
-                    <span ng-if="passcode.length>=2">*</span>
+                    &nbsp;<span ng-if="passcode.length>=2">*</span>
                 </div>
                 <div class="col col-25" style="border-bottom: 1px solid black">
-                    <span ng-if="passcode.length>=3">*</span>
+                    &nbsp;<span ng-if="passcode.length>=3">*</span>
                 </div>
                 <div class="col col-25" style="border-bottom: 1px solid black">
-                    <span ng-if="passcode.length>=4">*</span>
+                    &nbsp;<span ng-if="passcode.length>=4">*</span>
                 </div>
             </div>
         </div>

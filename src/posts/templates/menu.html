@@ -58,17 +58,9 @@
             <i class="icon ion-person-stalker"></i>
             {{'FOLLOW'|translate}}
           </ion-item>
-          <ion-item menu-close href="#/app/bookmark" class="item-icon-left" ng-if="$root.user">
-            <i class="icon ion-bookmark"></i>
-            {{'BOOKMARKS'|translate}}
-          </ion-item>
-          <ion-item menu-close href="#/app/drafts" ng-if="$root.user" class="item-icon-left">
-            <i class="icon ion-compose"></i>
-            {{'DRAFTS'|translate}}
-          </ion-item>
-          <ion-item menu-close href="#/app/schedules" ng-if="$root.user" class="item-icon-left">
-            <i class="icon ion-clock"></i>
-            {{'SCHEDULES'|translate}}
+          <ion-item menu-close href ng-click="logout()" ng-if="$root.user" class="item-icon-left">
+            <i class="icon ion-log-out"></i>
+            {{'LOGOUT'|translate}}
           </ion-item>
         </ion-list>
       </div>
@@ -85,6 +77,18 @@
           <i class="icon ion-bookmark"></i>
           {{'NOTIFICATIONS'|translate}}
         </ion-item>-->
+        <ion-item menu-close href="#/app/bookmark" class="item-icon-left" ng-if="$root.user">
+          <i class="icon ion-bookmark"></i>
+          {{'BOOKMARKS'|translate}}
+        </ion-item>
+        <ion-item menu-close href="#/app/drafts" ng-if="$root.user" class="item-icon-left">
+          <i class="icon ion-compose"></i>
+          {{'DRAFTS'|translate}}
+        </ion-item>
+        <ion-item menu-close href="#/app/schedules" ng-if="$root.user" class="item-icon-left">
+          <i class="icon ion-clock"></i>
+          {{'SCHEDULES'|translate}}
+        </ion-item>
         <ion-item menu-close href="#/app/send" class="item-icon-left" ng-if="$root.user">
           <i class="icon ion-android-send"></i>
           {{'TRANSFER'|translate}}
@@ -101,10 +105,6 @@
           <i class="icon ion-android-settings"></i>
           {{'SETTINGS'|translate}}
         </ion-item>
-        <ion-item menu-close href ng-click="logout()" ng-if="$root.user" class="item-icon-left">
-            <i class="icon ion-log-out"></i>
-            {{'LOGOUT'|translate}}
-          </ion-item>
         <ion-item menu-close href="#/app/about" class="item-icon-left">
           <i class="icon ion-information"></i>
           {{'ABOUT'|translate}}
