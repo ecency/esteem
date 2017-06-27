@@ -36,7 +36,7 @@
 								<i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!d.invoting"></i>{{::translations.unvote}}</a>&nbsp;<span class="gray" on-tap="openTooltip($event,d)"><b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="d.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{::d | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="d.max_accepted_payout.split(' ')[0] !== '0.000'">{{::d | sumPostTotal:$root.$storage.currencyRate | number}}</span></span></span>
 				      </div>
 				      <div class="col col-25 tright" on-tap="$root.openInfo(d)">
-				      <a href="#" class="subdued" on-tap="$root.openInfo(d)"><i class="icon ion-person-stalker"></i>&nbsp;{{::d.net_votes}}</a>
+				      <a href="#" class="subdued" on-tap="$root.openInfo(d)"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
 				      </div>
 				      <div class="col col-25 tright">
 				      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{::d.children}}</a>
@@ -75,7 +75,7 @@
 					      </span>
 					      </div>
 					      <div class="col col-25 tright" on-tap="$root.openInfo(d)">
-					      <a href="#" class="subdued" on-tap="$root.openInfo(ds)"><i class="icon ion-person-stalker"></i>&nbsp;{{::ds.net_votes}}</a>
+					      <a href="#" class="subdued" on-tap="$root.openInfo(ds)"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
 					      </div>
 					      <div class="col col-25 tright">
 					      <a href="#" class="subdued"><i class="icon ion-chatbubbles"></i>&nbsp;{{::ds.children}}</a>

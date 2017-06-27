@@ -145,12 +145,12 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.share = function() {
     var host = "";
     if ($rootScope.$storage.chain == 'steem') {
-      host = "https://steemit.com/";
+      host = "esteem://";
     } else {
-      host = "https://golos.io/";
+      host = "esteem://";
     }
     var link = host+$rootScope.sitem.category+"/@"+$rootScope.sitem.author+"/"+$rootScope.sitem.permlink;
-    var message = "Hey! Checkout blog post on Steem "+link;
+    var message = "Hey! Checkout blog post on eSteem "+link;
     var subject = "Via eSteem Mobile";
     var file = null;
     //$scope.$evalAsync(function( $scope ) {
@@ -2856,6 +2856,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           if ($scope.edit) {
             $rootScope.$emit('update:content');
           } else {
+            $scope.spost = {};
             $state.go("app.profile", {username: $rootScope.user.username});  
           }
         }

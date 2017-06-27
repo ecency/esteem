@@ -286,8 +286,10 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
 
 });
 
-app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state, $log, $ionicScrollDelegate, $filter, $translate, $ionicHistory) {
+app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state, $log, $ionicScrollDelegate, $filter, $translate, $ionicHistory, $sessionStorage) {
   $rootScope.$storage = $localStorage;
+  $rootScope.$sstorage = $sessionStorage;
+
   $rootScope.log = function(message) {
     $log.info(message);
   };
@@ -318,6 +320,22 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         }
     }, 100);
     */
+
+    window.handleOpenURL = function(url) {
+      console.log(">>>>>>>>>>>>>>>>>>>");
+      // do stuff, for example
+      // document.getElementById("url").value = url;
+      setTimeout(function() {
+         // TODO: call some Cordova API here
+        console.log(url);
+        if (url) {
+          $rootScope.$sstorage.url = url;
+          var parts = url.split('/');
+          $state.go('app.post', {category: parts[2], author: parts[3], permlink: [4]});  
+        }
+      }, 500);
+    };
+
     $ionicPlatform.registerBackButtonAction(function(e){
       if ($rootScope.backButtonPressedOnceToExit) {
         ionic.Platform.exitApp();
@@ -460,7 +478,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     if (!$rootScope.$storage.nsfw) {
       $rootScope.$storage.nsfw = false;
     }
-    if (!$rootScope.$storage.download) {
+    if (!angular.isDefined($rootScope.$storage.download)) {
       $rootScope.$storage.download = true;
     }
 
@@ -536,6 +554,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     }
     
     $rootScope.log("app start ready");
+
+    setTimeout(function() {
+      $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});  
+    }, 1);
+
     setTimeout(function() {
       if ($rootScope.$storage.pincode) {
         $rootScope.pincheck = true;
