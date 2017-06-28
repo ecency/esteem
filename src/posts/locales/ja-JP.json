@@ -280,5 +280,7 @@
   "SCHEDULES":"時間指定",
   "DELETED_SCHEDULE":"削除済み時間指定",
   "MOVED_SCHEDULE":"変更済み時間指定",
-  "MOVE_TO_DRAFT":"ゴミ箱へ移動"
+  "MOVE_TO_DRAFT":"ゴミ箱へ移動",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":""
 }
