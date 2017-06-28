@@ -321,21 +321,23 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     }, 100);
     */
 
-    window.handleOpenURL = function(url) {
-      console.log(">>>>>>>>>>>>>>>>>>>");
-      // do stuff, for example
-      // document.getElementById("url").value = url;
-      setTimeout(function() {
-         // TODO: call some Cordova API here
-        console.log(url);
-        if (url) {
-          $rootScope.$sstorage.url = url;
-          var parts = url.split('/');
-          $state.go('app.post', {category: parts[2], author: parts[3].substr(1), permlink: [4]});  
-        }
-      }, 500);
-    };
+    window.setTimeout(function () {
+      navigator.splashscreen.hide();
+    }, 1000);
 
+    /*if (navigator.splashscreen) {
+      setTimeout(function() {
+        console.log('-----hiding splash------');
+        navigator.splashscreen.hide();
+      }, 1000);
+    }*/
+    /*if ($cordovaSplashscreen) {
+      setTimeout(function() {
+        console.log('-----hide splash------ $cordovaSplashscreen');
+        $cordovaSplashscreen.hide();
+      }, 1000);
+    }*/
+    
     $ionicPlatform.registerBackButtonAction(function(e){
       if ($rootScope.backButtonPressedOnceToExit) {
         ionic.Platform.exitApp();
@@ -554,10 +556,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     }
     
     $rootScope.log("app start ready");
-
-    setTimeout(function() {
-      $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});  
-    }, 1);
 
     setTimeout(function() {
       if ($rootScope.$storage.pincode) {
@@ -833,34 +831,38 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 			$rootScope.$broadcast('openPostModal');
 		}
     $rootScope.getContentAndOpen = function(item) {
-      window.steem.api.getContentAsync(item.author, item.permlink, function(err, result) {
-        console.log(err, result);
-        var _len = result.active_votes.length;
-          for (var j = _len - 1; j >= 0; j--) {
-            if (result.active_votes[j].voter === $rootScope.user.username) {
-              if (result.active_votes[j].percent > 0) {
-                result.upvoted = true;
-              } else if (result.active_votes[j].percent < 0) {
-                result.downvoted = true;
-              } else {
-                result.downvoted = false;
-                result.upvoted = false;
+      if (item) {
+        window.steem.api.getContentAsync(item.author, item.permlink, function(err, result) {
+          console.log(err, result);
+          var _len = result.active_votes.length;
+          if ($rootScope.user) {
+            for (var j = _len - 1; j >= 0; j--) {
+              if (result.active_votes[j].voter === $rootScope.user.username) {
+                if (result.active_votes[j].percent > 0) {
+                  result.upvoted = true;
+                } else if (result.active_votes[j].percent < 0) {
+                  result.downvoted = true;
+                } else {
+                  result.downvoted = false;
+                  result.upvoted = false;
+                }
               }
             }
           }
-          result.json_metadata = angular.fromJson(result.json_metadata);
-          var item = result;
-          $rootScope.sitem = item;
-          setTimeout(function() {
-            //$state.go('app.post');
-            $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});
+            result.json_metadata = angular.fromJson(result.json_metadata);
+            var item = result;
+            $rootScope.sitem = item;
+            setTimeout(function() {
+              //$state.go('app.post');
+              $state.go('app.post', {category: item.category, author: item.author, permlink: item.permlink});
 
-          }, 5);
+            }, 5);
 
-          if (!$rootScope.$$phase) {
-            $rootScope.$apply();
-          }
-      });
+            if (!$rootScope.$$phase) {
+              $rootScope.$apply();
+            }
+        });
+      }
       $rootScope.$broadcast('hide:loading');
     };
 
@@ -1152,13 +1154,41 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.$apply();
       }
     });
-
     if (window.cordova) {
       if (!ionic.Platform.isWindowsPhone()) {
         if (ionic.Platform.isIOS() || ionic.Platform.isIPad()) {
           //window.FirebasePlugin.grantPermission();
         }
 
+        window.cordova.plugins.firebase.dynamiclinks.onDynamicLink(function(data) {
+
+          console.log("Dynamic link click with data: "+ angular.toJson(data));
+          
+          if (data){
+            var parts = data.deepLink.split('/');
+            //$state.go('app.post', {category: parts[3], author: parts[4].substr(1), permlink: [5]});
+            var author = parts[4].substr(1);
+            var permlink = parts[5];
+
+            var alertPopup = $ionicPopup.confirm({
+              title: $filter('translate')('SHARE'),
+              template: parts[4]+"/"+parts[5]+" "+ $filter('translate')('OPENING_POST') + " ?! "
+            });
+
+            alertPopup.then(function(res) {
+              $rootScope.log('Thank you for seeing alert from tray');
+              if (res) {
+                setTimeout(function() {
+                  $rootScope.getContentAndOpen({author:author, permlink:permlink});
+                }, 10);
+              } else {
+                $rootScope.log("not sure to open alert");
+              }
+            });
+          }
+          //$rootScope.showMessage("title", angular.toJson(data));
+        });  
+     
         /*window.FirebasePlugin.getToken(function(token) {
             // save this server-side and use it to push notifications to this device
             $rootScope.log("device "+token);

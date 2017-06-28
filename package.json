@@ -30,7 +30,7 @@
     "path": "^0.12.7",
     "plist": "^1.2.0",
     "require-main-filename": "^1.0.1",
-    "steem": "^0.5.18",
+    "steem": "^0.5.19",
     "steem-rpc": "^0.6.6",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"

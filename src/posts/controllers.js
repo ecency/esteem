@@ -145,25 +145,37 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.share = function() {
     var host = "";
     if ($rootScope.$storage.chain == 'steem') {
-      host = "esteem://";
+      //host = "esteem://";
+      host = "https://esteem.ws/";
     } else {
       host = "esteem://";
     }
     var link = host+$rootScope.sitem.category+"/@"+$rootScope.sitem.author+"/"+$rootScope.sitem.permlink;
-    var message = "Hey! Checkout blog post on eSteem "+link;
-    var subject = "Via eSteem Mobile";
+    var message = "Hey! Checkout blog post on eSteem!";
+    var subject = "Sharing via eSteem Mobile";
     var file = null;
     //$scope.$evalAsync(function( $scope ) {
-    setTimeout(function() {
-      $cordovaSocialSharing.share(message, subject, file) // Share via native share sheet
+    //setTimeout(function() {
+      /*$cordovaSocialSharing.share(message, subject, file, link) // Share via native share sheet
       .then(function(result) {
         // Success!
         $rootScope.log("shared");
       }, function(err) {
         // An error occured. Show a message to the user
         $rootScope.log("not shared");
+      });*/
+    $ionicPlatform.ready(function() {
+      window.cordova.plugins.firebase.dynamiclinks.sendInvitation({
+          deepLink: link,
+          title: subject,
+          message: message,
+          callToActionText: 'Join'
+      }, function(res){
+        console.log(res);
+      }, function(err){
+        console.log(err);
       });
-    }, 1);
+    });
     //});
   }
 
