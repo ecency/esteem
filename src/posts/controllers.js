@@ -290,7 +290,11 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                     $rootScope.$emit('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
                   }
                   //$scope.$applyAsync();
-                  $window.location.reload(true);
+
+                  $scope.$evalAsync( function() {
+                    $window.location.reload(true);  
+                  });
+                  
                   //Buffer = require('buffer').Buffer;
                   //$state.go('app.posts',{renew:true},{reload: true});
                   
@@ -4979,7 +4983,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       $rootScope.$storage.socketgolos = "wss://ws.golos.io/";
       $scope.socket = "wss://ws.golos.io/";
     }
-
+    $rootScope.chain = $rootScope.$storage.chain;
     window.steem.config.set('chain_id',localStorage[$rootScope.$storage.chain+"Id"]);
     if ($rootScope.$storage.chain == 'golos') {
       window.steem.config.set('address_prefix','GLS');  

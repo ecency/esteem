@@ -1274,9 +1274,9 @@ module.exports = function (app) {
                       //console.log(image exist)
                   }).error(function(){
                       //alert('image not exist');
-                      if ($rootScope.$storage.chain == 'steem') {
+                      if ($rootScope.chain && $rootScope.chain == 'steem') {
                         element.attr('src', 'https://steemitimages.com/0x0/'+ngSrc); // set default image  
-                      } else if ($rootScope.$storage.chain == 'golos') {
+                      } else if ($rootScope.chain && $rootScope.chain == 'golos') {
                         element.attr('src', 'https://imgp.golos.io/0x0/'+ngSrc); // set default image  
                       } else {
                         element.attr('src', 'img/noimage.png'); // set default image 

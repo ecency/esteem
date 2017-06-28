@@ -320,6 +320,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         }
     }, 100);
     */
+    
+    $rootScope.chain = $rootScope.$storage.chain;
 
     window.setTimeout(function () {
       navigator.splashscreen.hide();
@@ -1076,7 +1078,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         window.steem.config.set('address_prefix','STM');  
       }
       window.steem.api.stop();
-
+      
       angular.forEach($rootScope.$storage.users, function(v,k){
         if (v.chain == $rootScope.$storage.chain){
           $rootScope.$storage.user = v;
@@ -1103,7 +1105,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.$storage.platformlunit = "GOLOS";
         $rootScope.$storage.socketgolos = "wss://ws.golos.io/";
       }
-      
+      $rootScope.chain = $rootScope.$storage.chain;
       if (!$rootScope.$$phase) {
         $rootScope.$apply();
       }
