@@ -280,5 +280,7 @@
   "SCHEDULES":"Plány",
   "DELETED_SCHEDULE":"Plánovaní odstraněné",
   "MOVED_SCHEDULE":"Plánování přesunuté",
-  "MOVE_TO_DRAFT":"Přesunout do konceptů"
+  "MOVE_TO_DRAFT":"Přesunout do konceptů",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":""
 }
