@@ -280,5 +280,7 @@
   "SCHEDULES":"Agenda's",
   "DELETED_SCHEDULE":"Agenda verwijderen",
   "MOVED_SCHEDULE":"Agenda verplaatst",
-  "MOVE_TO_DRAFT":"Verplaatsen naar ontwerp"
+  "MOVE_TO_DRAFT":"Verplaatsen naar ontwerp",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":""
 }
