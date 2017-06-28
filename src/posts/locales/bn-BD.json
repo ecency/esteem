@@ -280,5 +280,7 @@
   "SCHEDULES":"সময়সূচী",
   "DELETED_SCHEDULE":"মুছে ফেলা সময়সূচী",
   "MOVED_SCHEDULE":"সরিয়ে ফেলা সময়সূচী",
-  "MOVE_TO_DRAFT":"ড্রাফট এ পাঠান"
+  "MOVE_TO_DRAFT":"ড্রাফট এ পাঠান",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":""
 }
