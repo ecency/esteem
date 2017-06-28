@@ -280,5 +280,7 @@
   "SCHEDULES":"Графици",
   "DELETED_SCHEDULE":"Изтрит график",
   "MOVED_SCHEDULE":"Преместен график",
-  "MOVE_TO_DRAFT":"Премести в чернови"
+  "MOVE_TO_DRAFT":"Премести в чернови",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":""
 }
