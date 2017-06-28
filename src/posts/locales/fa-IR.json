@@ -280,5 +280,7 @@
   "SCHEDULES":"زمان بندی ها",
   "DELETED_SCHEDULE":"زمان بندی حذف شده",
   "MOVED_SCHEDULE":"زمان بندی جابجا شده",
-  "MOVE_TO_DRAFT":"انتقال به پیش نویس"
+  "MOVE_TO_DRAFT":"انتقال به پیش نویس",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":""
 }
