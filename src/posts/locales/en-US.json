@@ -280,5 +280,7 @@
   "SCHEDULES":"Schedules",
   "DELETED_SCHEDULE":"Deleted schedule",
   "MOVED_SCHEDULE":"Moved schedule",
-  "MOVE_TO_DRAFT":"Move to draft"
+  "MOVE_TO_DRAFT":"Move to draft",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":""
 }
