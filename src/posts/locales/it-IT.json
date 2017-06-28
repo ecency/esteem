@@ -280,5 +280,7 @@
   "SCHEDULES":"Pianificazioni",
   "DELETED_SCHEDULE":"Pianificazione eliminata",
   "MOVED_SCHEDULE":"Pianificazione spostata",
-  "MOVE_TO_DRAFT":"Sposta in bozze"
+  "MOVE_TO_DRAFT":"Sposta in bozze",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":""
 }
