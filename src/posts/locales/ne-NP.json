@@ -280,5 +280,7 @@
   "SCHEDULES":"तालिका",
   "DELETED_SCHEDULE":"मेटिएको तालिका",
   "MOVED_SCHEDULE":"सारियो तालिका",
-  "MOVE_TO_DRAFT":"मस्यौदा गर्न उत्प्रेरित"
+  "MOVE_TO_DRAFT":"मस्यौदा गर्न उत्प्रेरित",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":""
 }
