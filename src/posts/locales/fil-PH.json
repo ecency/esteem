@@ -280,5 +280,7 @@
   "SCHEDULES":"Mga Iskedyul",
   "DELETED_SCHEDULE":"Natanggal na Iskedyul",
   "MOVED_SCHEDULE":"Nailipat na Iskedyul",
-  "MOVE_TO_DRAFT":"Ilipat sa burador"
+  "MOVE_TO_DRAFT":"Ilipat sa burador",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":""
 }
