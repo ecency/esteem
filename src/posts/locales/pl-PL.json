@@ -280,5 +280,7 @@
   "SCHEDULES":"Harmonogramy",
   "DELETED_SCHEDULE":"Usunięty harmonogram",
   "MOVED_SCHEDULE":"Przeniesiony harmonogram",
-  "MOVE_TO_DRAFT":"Przenieś do wersji roboczych"
+  "MOVE_TO_DRAFT":"Przenieś do wersji roboczych",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":""
 }
