@@ -280,5 +280,7 @@
   "SCHEDULES":"शेड्यूल करना",
   "DELETED_SCHEDULE":"हटाए गए शेड्यूल",
   "MOVED_SCHEDULE":"स्थानांतरित किए गए शेड्यूल",
-  "MOVE_TO_DRAFT":"ड्राफ़्ट में ले जाएं"
+  "MOVE_TO_DRAFT":"ड्राफ़्ट में ले जाएं",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":""
 }
