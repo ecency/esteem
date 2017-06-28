@@ -280,5 +280,7 @@
   "SCHEDULES":"排程",
   "DELETED_SCHEDULE":"已刪除的排程",
   "MOVED_SCHEDULE":"已移動的排程",
-  "MOVE_TO_DRAFT":"儲存為草稿"
+  "MOVE_TO_DRAFT":"儲存為草稿",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":""
 }
