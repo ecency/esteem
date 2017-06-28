@@ -280,5 +280,7 @@
   "SCHEDULES":"Horaris",
   "DELETED_SCHEDULE":"Horari suprimit",
   "MOVED_SCHEDULE":"Horari modificat",
-  "MOVE_TO_DRAFT":"Moure a la paperera"
+  "MOVE_TO_DRAFT":"Moure a la paperera",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":""
 }
