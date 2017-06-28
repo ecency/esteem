@@ -1449,6 +1449,11 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   };
   //$scope.operation_type = 'default';
   $scope.spost = {};
+  $scope.changePostLanguage = function(x) {
+    //console.log(x);
+    $scope.spost.tags += " "+x;
+    $scope.tagsChange();
+  }
   $scope.tagsChange = function() {
     $rootScope.log("tagsChange");
     if ($scope.spost.tags) {

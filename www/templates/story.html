@@ -23,6 +23,15 @@
            </select>
         </div>
       </div>
+      <label class = "item item-input item-select">
+         <div class = "input-label">
+            {{'LANGUAGE'|translate}}
+         </div>  
+         <select ng-model="spost.language" ng-change='changePostLanguage(spost.language)'>
+            <option ng-repeat="option in $root.$storage.languages" value="{{option.id}}">{{option.name}}</option>
+          </select>
+      </label>
+      
       <ion-toggle ng-model="spost.permission" ng-if="spost.advanced && $root.$storage.chain !== 'golos'" toggle-class="toggle-calm" ng-change="changePermission()">{{'PERMISSION'|translate}}</ion-toggle>
       <div class="row" ng-if="spost.advanced && spost.permission">
         <div class="col">
