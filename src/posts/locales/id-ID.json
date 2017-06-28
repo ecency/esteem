@@ -280,5 +280,7 @@
   "SCHEDULES":"Daftar Jadwal",
   "DELETED_SCHEDULE":"Jadwal Terhapus",
   "MOVED_SCHEDULE":"Jadwal yang dipindah",
-  "MOVE_TO_DRAFT":"Pindahkan ke konsep"
+  "MOVE_TO_DRAFT":"Pindahkan ke konsep",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":""
 }
