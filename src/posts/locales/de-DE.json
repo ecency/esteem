@@ -280,5 +280,7 @@
   "SCHEDULES":"Zeitpläne",
   "DELETED_SCHEDULE":"Gelöschter Zeitplan",
   "MOVED_SCHEDULE":"Verschobener Zeitplan",
-  "MOVE_TO_DRAFT":"In Entwürfe verschieben"
+  "MOVE_TO_DRAFT":"In Entwürfe verschieben",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":""
 }
