@@ -171,9 +171,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
           message: message,
           callToActionText: 'Join'
       }, function(res){
-        console.log(res);
+        //console.log(res);
       }, function(err){
-        console.log(err);
+        //console.log(err);
       });
     });
     //});
@@ -223,158 +223,164 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
             //$scope.$evalAsync(function( $scope ) {
             dd = dd[0];
             //console.log(dd);
-            $scope.loginData.id = dd.id;
-            $scope.loginData.owner = dd.owner;
-            $scope.loginData.active = dd.active;
-            $scope.loginData.reputation = dd.reputation;
-            $scope.loginData.posting = dd.posting;
-            $scope.loginData.memo_key = dd.memo_key;
-            $scope.loginData.post_count = dd.post_count;
-            $scope.loginData.voting_power = dd.voting_power;
-            $scope.loginData.witness_votes = dd.witness_votes;
-            var roles = ['posting', 'active', 'owner'];
+            if (dd) {
+              $scope.loginData.id = dd.id;
+              $scope.loginData.owner = dd.owner;
+              $scope.loginData.active = dd.active;
+              $scope.loginData.reputation = dd.reputation;
+              $scope.loginData.posting = dd.posting;
+              $scope.loginData.memo_key = dd.memo_key;
+              $scope.loginData.post_count = dd.post_count;
+              $scope.loginData.voting_power = dd.voting_power;
+              $scope.loginData.witness_votes = dd.witness_votes;
+              var roles = ['posting', 'active', 'owner'];
 
-            if ($scope.loginData.password) {
+              if ($scope.loginData.password) {
 
-              const wif = steem.auth.toWif($scope.loginData.username, $scope.loginData.password, roles[0]);
+                const wif = steem.auth.toWif($scope.loginData.username, $scope.loginData.password, roles[0]);
 
-              let wifIsValid = false;
-              const publicWif = steem.auth.wifToPublic(wif);
+                let wifIsValid = false;
+                const publicWif = steem.auth.wifToPublic(wif);
 
-              roles.map(role => {
-                if (dd[role].key_auths[0][0] === publicWif) {
-                  wifIsValid = true;
-                }
-              }); 
-
-              console.log(wifIsValid); 
-
-              if (!wifIsValid) {
-                $rootScope.$broadcast('hide:loading');
-                $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('PASSWORD_INCORRECT'));
-              } else {
-                $rootScope.$storage.user = $scope.loginData;
-                $rootScope.user = $scope.loginData;
-
-                $scope.loginData = {};
-                var found = false;
-
-                if ($rootScope.$storage.users.length>0){
-                  for (var i = 0, len = $rootScope.$storage.users.length; i < len; i++) {
-                    var v = $rootScope.$storage.users[i];
-                    if (v.username == $rootScope.user.username && v.chain == $rootScope.user.chain){
-                      found = true;
-                    }
+                roles.map(role => {
+                  if (dd[role].key_auths[0][0] === publicWif) {
+                    wifIsValid = true;
                   }
-                }
-                if (found) {
+                }); 
 
-                } else {
-                  $rootScope.$storage.users.push($rootScope.user);  
-                }
-                $rootScope.$storage.mylogin = $scope.login;
-                $rootScope.$broadcast('hide:loading');
-                $scope.loginModal.hide();
-                
-                if (!$scope.$$phase) {
-                  $scope.$apply();
-                }
-                
-                APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date(), 'medium'), appversion: $rootScope.$storage.appversion}).then(function(res){
-                  
-                  $rootScope.$broadcast('refreshLocalUserData');
-                    
-                  if ($rootScope.$storage.chain !== $rootScope.user.chain) {
-                    $rootScope.$storage.chain = $rootScope.user.chain;  
-                    $rootScope.$emit('changedChain');
-                    $rootScope.$emit('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
-                  }
-                  //$scope.$applyAsync();
+                console.log(wifIsValid); 
 
-                  $scope.$evalAsync( function() {
-                    $window.location.reload(true);  
-                  });
-                  
-                  //Buffer = require('buffer').Buffer;
-                  //$state.go('app.posts',{renew:true},{reload: true});
-                  
-                  $rootScope.$broadcast('fetchPosts');
-                });
-                
-              }
-            } else {
-
-              const wif = window.steem.auth.isWif($scope.loginData.privatePostingKey)
-                ? $scope.loginData.privatePostingKey
-                : '';
-
-              let wifIsValid = false;
-              const publicWif = steem.auth.wifToPublic(wif);
-
-              roles.map(role => {
-                if (dd[role].key_auths[0][0] === publicWif) {
-                  wifIsValid = true;
-                }
-              }); 
-
-              console.log(wifIsValid);
-
-
-              if (wifIsValid) {
-                loginSuccess=true;
-              } else {
-                loginSuccesss=false;
-              }
-              if (!loginSuccess) {
+                if (!wifIsValid) {
                   $rootScope.$broadcast('hide:loading');
                   $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('PASSWORD_INCORRECT'));
-              } else {
-                $rootScope.$storage.user = $scope.loginData;
-                $rootScope.user = $scope.loginData;
+                } else {
+                  $rootScope.$storage.user = $scope.loginData;
+                  $rootScope.user = $scope.loginData;
 
-                $scope.loginData = {};
-                var found = false;
+                  $scope.loginData = {};
+                  var found = false;
 
-                if ($rootScope.$storage.users.length>0){
-                  for (var i = 0, len = $rootScope.$storage.users.length; i < len; i++) {
-                    var v = $rootScope.$storage.users[i];
-                    if (v.username == $rootScope.user.username && v.chain == $rootScope.user.chain){
-                      found = true;
+                  if ($rootScope.$storage.users.length>0){
+                    for (var i = 0, len = $rootScope.$storage.users.length; i < len; i++) {
+                      var v = $rootScope.$storage.users[i];
+                      if (v.username == $rootScope.user.username && v.chain == $rootScope.user.chain){
+                        found = true;
+                      }
                     }
                   }
-                }
-                if (found) {
+                  if (found) {
 
-                } else {
-                  $rootScope.$storage.users.push($rootScope.user);  
-                }
-                if (!$scope.$$phase) {
-                  $scope.$apply();
-                }
-                
-                $rootScope.$storage.mylogin = $scope.login;
-                APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date(), 'medium'), appversion: $rootScope.$storage.appversion}).then(function(res){
-                  $rootScope.$broadcast('hide:loading');
-                  $scope.$applyAsync();
-                  $scope.loginModal.hide();
-                  $rootScope.$broadcast('refreshLocalUserData');
-                    
-                  if ($rootScope.$storage.chain !== $rootScope.user.chain) {
-                    $rootScope.$storage.chain = $rootScope.user.chain;  
-                    $rootScope.$emit('changedChain');
-                    $rootScope.$emit('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
+                  } else {
+                    $rootScope.$storage.users.push($rootScope.user);  
                   }
+                  $rootScope.$storage.mylogin = $scope.login;
+                  $rootScope.$broadcast('hide:loading');
+                  $scope.loginModal.hide();
+                  
+                  if (!$scope.$$phase) {
+                    $scope.$apply();
+                  }
+                  
+                  APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date(), 'medium'), appversion: $rootScope.$storage.appversion}).then(function(res){
+                    
+                    $rootScope.$broadcast('refreshLocalUserData');
+                      
+                    if ($rootScope.$storage.chain !== $rootScope.user.chain) {
+                      $rootScope.$storage.chain = $rootScope.user.chain;  
+                      $rootScope.$emit('changedChain');
+                      $rootScope.$emit('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
+                    }
+                    //$scope.$applyAsync();
 
-                  //setTimeout(function() {
-                    //$window.location.reload(true);
-                    $state.go('app.posts',{renew:true},{reload: true});
+                    $scope.$evalAsync( function() {
+                      $window.location.reload(true);  
+                    });
+                    
+                    //Buffer = require('buffer').Buffer;
+                    //$state.go('app.posts',{renew:true},{reload: true});
+                    
                     $rootScope.$broadcast('fetchPosts');
-                  //}, 100);
+                  });
+                  
+                }
+              } else {
 
-                });
-                $scope.$applyAsync();
+                const wif = window.steem.auth.isWif($scope.loginData.privatePostingKey)
+                  ? $scope.loginData.privatePostingKey
+                  : '';
+
+                let wifIsValid = false;
+                const publicWif = steem.auth.wifToPublic(wif);
+
+                roles.map(role => {
+                  if (dd[role].key_auths[0][0] === publicWif) {
+                    wifIsValid = true;
+                  }
+                }); 
+
+                console.log(wifIsValid);
+
+
+                if (wifIsValid) {
+                  loginSuccess=true;
+                } else {
+                  loginSuccesss=false;
+                }
+                if (!loginSuccess) {
+                    $rootScope.$broadcast('hide:loading');
+                    $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('PASSWORD_INCORRECT'));
+                } else {
+                  $rootScope.$storage.user = $scope.loginData;
+                  $rootScope.user = $scope.loginData;
+
+                  $scope.loginData = {};
+                  var found = false;
+
+                  if ($rootScope.$storage.users.length>0){
+                    for (var i = 0, len = $rootScope.$storage.users.length; i < len; i++) {
+                      var v = $rootScope.$storage.users[i];
+                      if (v.username == $rootScope.user.username && v.chain == $rootScope.user.chain){
+                        found = true;
+                      }
+                    }
+                  }
+                  if (found) {
+
+                  } else {
+                    $rootScope.$storage.users.push($rootScope.user);  
+                  }
+                  if (!$scope.$$phase) {
+                    $scope.$apply();
+                  }
+                  
+                  $rootScope.$storage.mylogin = $scope.login;
+                  APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date(), 'medium'), appversion: $rootScope.$storage.appversion}).then(function(res){
+                    $rootScope.$broadcast('hide:loading');
+                    $scope.$applyAsync();
+                    $scope.loginModal.hide();
+                    $rootScope.$broadcast('refreshLocalUserData');
+                      
+                    if ($rootScope.$storage.chain !== $rootScope.user.chain) {
+                      $rootScope.$storage.chain = $rootScope.user.chain;  
+                      $rootScope.$emit('changedChain');
+                      $rootScope.$emit('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
+                    }
+
+                    //setTimeout(function() {
+                      //$window.location.reload(true);
+                      $state.go('app.posts',{renew:true},{reload: true});
+                      $rootScope.$broadcast('fetchPosts');
+                    //}, 100);
+
+                  });
+                  $scope.$applyAsync();
+                }
               }
+            } else {
+              $rootScope.$broadcast('hide:loading');
+              $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('PASSWORD_INCORRECT'));
             }
+            
           //});
         }
         if (!$scope.$$phase) {
@@ -1323,6 +1329,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       input.selectionEnd = pos;
       input.focus();
     }
+    input.focus();
     input.scrollTop = scrollPos;
     angular.element(input).trigger('input');
   }

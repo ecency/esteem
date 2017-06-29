@@ -538,6 +538,12 @@ module.exports = function (app) {
             texts = texts.replace(img, 'img/nsfwimage.png');  
           }
           //console.log('after '+texts);
+
+          var regex = /<a href="((?!#\/app\/)[\S]+)"/g;
+          texts = texts.replace(regex, "<a href onClick=\"window.open('$1', '_system', 'location=yes');return false;\"");
+          //return $sce.trustAsHtml(newString);
+
+
           if (subpart) {
             var s = $sce.trustAsHtml(texts).toString();
             var text = s.substring(s.indexOf("<p>"), s.indexOf("</p>"));
@@ -838,8 +844,8 @@ module.exports = function (app) {
 
   app.filter('hrefToJS', function ($sce, $sanitize) {
       return function (text) {
-          var regex = /href="([\S]+)"/g;
-          var newString = $sanitize(text).replace(regex, "href onClick=\"window.open('$1', '_system', 'location=yes');return false;\"");
+          var regex = /<a href="((?!#\/app\/)[\S]+)"/g;
+          var newString = $sanitize(text).replace(regex, "<a href onClick=\"window.open('$1', '_system', 'location=yes');return false;\"");
           return $sce.trustAsHtml(newString);
       }
   });

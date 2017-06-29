@@ -933,7 +933,7 @@ Renderer.prototype.link = function(href, title, text) {
         out = href.replace(youtube, '<iframe width="100%" height="280" src="http://www.youtube.com/embed/' + YouTube1 + '?enablejsapi=1" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');  
       }
       
-    } else if (href.indexOf('https://steemit.com') === 0) {
+    } else if (href.indexOf('https://steemit.com') === 0 || href.indexOf('https://golos.io') === 0) {
         var parts = href.split('/');
         //console.log(parts);
           if (parts.length===6) {
@@ -941,7 +941,7 @@ Renderer.prototype.link = function(href, title, text) {
             //out = '<a href ng-click=\"$root.getContentAndOpen(\'' + parts[4].substr(1) + '\', \''+parts[5]+'\')\" >'+text+'</a>';
             out = '<a href="#/app/post/'+parts[3]+'/'+parts[4].substr(1)+'/'+parts[5]+'">'+text+'</a>';
           } else {
-            if (parts.length===4) {
+            if (parts.length===4 && parts[3] !== "~witnesses") {
               out = '<a href="#/app/profile/'+parts[3].substr(1)+'">'+text+'</a>';
             } else {
               out = '<a href onClick=\'window.open("' + href + '", \"_system\", \"location=yes\");return false;\'';
