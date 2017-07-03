@@ -310,22 +310,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     }
 
     window.steem.config.set('websocket',localStorage.socketUrl); 
-  
-
-    window.handleOpenURL = function(url) {
-      console.log(">>>>>>>>>>>>>>>>>>>");
-      // do stuff, for example
-      // document.getElementById("url").value = url;
-      setTimeout(function() {
-          // TODO: call some Cordova API here
-         console.log(url);
-         if (url) {
-           //$rootScope.$sstorage.url = url;
-           var parts = url.split('/');
-           $state.go('app.post', {category: parts[2], author: parts[3].substr(1), permlink: [4]});  
-         }
-      }, 500);
-    };
 
     console.log('run ready');
     /*$ionicPlatform.registerBackButtonAction(function (event) {
@@ -618,13 +602,33 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       }, 100);
     });
 
+    /*$rootScope.$on('openurl', function(event, args){
+      
+      console.log(localStorage.openurl);
+
+      if (localStorage.openurl) {
+        var parts = localStorage.openurl.split('/');
+        $state.go('app.post', {category: parts[2], author: parts[3].substr(1), permlink: [4]});
+      }
+    });*/
+
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
       $rootScope.log("from "+fromState.name+" to "+toState.name);
     });
 
+    /*if (localStorage.openurl) {
+      $rootScope.$broadcast('openurl');
+    }*/
+
     $ionicPlatform.on('resume', function(){
       $rootScope.log("app resume");
-
+      
+      /*setTimeout(function() {
+        if (localStorage.openurl) {
+          $rootScope.$broadcast('openurl');
+        }  
+      }, 1000);
+      */
       if ($rootScope.$storage.pincode) {
         $rootScope.pincheck = true;
         $rootScope.$broadcast("pin:check");
@@ -663,6 +667,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     });
     $ionicPlatform.on('pause', function(){
       $rootScope.log("app pause");
+      
       if (angular.isDefined($rootScope.timeint)) {
         $rootScope.log("cancel interval");
         $interval.cancel($rootScope.timeint);
@@ -844,7 +849,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     $rootScope.getContentAndOpen = function(item) {
       if (item) {
         window.steem.api.getContentAsync(item.author, item.permlink, function(err, result) {
-          console.log(err, result);
+          //console.log(err, result);
           var _len = result.active_votes.length;
           if ($rootScope.user) {
             for (var j = _len - 1; j >= 0; j--) {
@@ -894,7 +899,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                   : $rootScope.user.privatePostingKey;
 
             window.steem.broadcast.customJsonAsync(wif, [], [$rootScope.user.username], "follow", angular.toJson(json), function(err, result) {
-              console.log(err, result);
+              //console.log(err, result);
               if (err) {
                 var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
                 $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('REBLOG_TEXT')+" "+message)
@@ -944,7 +949,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           post.invoting = false;
 
           if (err) {
-            console.log(angular.toJson(err));
+            //console.log(angular.toJson(err));
             var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
             $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message);
           } else {
@@ -1000,7 +1005,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                   : $rootScope.user.privateActiveKey;
 
                 window.steem.broadcast.accountWitnessVote(wif, $rootScope.user.username, "good-karma", true, function(err, result) {
-                  console.log(err, result);
+                  //console.log(err, result);
                   if (err) {
                     var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
                     $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
@@ -1128,7 +1133,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     $rootScope.$on('changedCurrency', function(event, args){
       var xx = args.currency;
       var ignore = args.enforce;
-      console.log(xx);
+      //console.log(xx);
       var resultObject = $rootScope.$storage.currencies.filter(function ( obj ) {
           return obj.id === xx;
       })[0];

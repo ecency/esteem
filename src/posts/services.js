@@ -1736,7 +1736,7 @@ module.exports = function (app) {
                             ];
                           
                           window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
-                            console.log(err, result);
+                            //console.log(err, result);
                             $scope.replying = false;
                             if (err) {
                               var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
@@ -1786,7 +1786,7 @@ module.exports = function (app) {
                             ];
                           
                           window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
-                            console.log(err, result);
+                            //console.log(err, result);
                             $scope.replying = false;
                             if (err) {
                               var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
@@ -1840,7 +1840,7 @@ module.exports = function (app) {
                               : $rootScope.user.privatePostingKey;
 
                               window.steem.broadcast.deleteComment(wif, comment.author, comment.permlink, function(err, result) {
-                                console.log(err, result);
+                                //console.log(err, result);
                                 if (err) {
                                   var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
                                   $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
