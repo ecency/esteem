@@ -10,7 +10,7 @@
   "SETTINGS":"Pengaturan",
   "ABOUT":"Tentang",
   "ABOUT_1":"siapapun bisa mendapatkan keuntungan dari konten mereka!",
-  "ABOUT_2":"Applikasi dibuat oleh",
+  "ABOUT_2":"Aplikasi Sosial dimana kamu mendapatakan penghasilan untuk ngeblog, berkementar dan kurasi.",
   "ABOUT_3":"dan ini adalah open source, proyek mobile berbasis masyarakat. Ini menawarkan akses konten untuk membaca, berkomentar, voting, posting, mentransfer pendapatan, dll fitur yang ditawarkan oleh {{platformname}} blockchain dan {{sitename}}.",
   "ABOUT_4":"1. Aplikasi tidak pernah mengakses atau memegang dana pengguna.",
   "ABOUT_5":"2. Aplikasi menawarkan model keamanan client-side, dengan kunci pribadi host secara lokal dan tidak pernah dikirim ke server.",
@@ -282,5 +282,6 @@
   "MOVED_SCHEDULE":"Jadwal yang dipindah",
   "MOVE_TO_DRAFT":"Pindahkan ke konsep",
   "POWER_DOWN_SCHEDULE":"",
-  "LANGUAGE":""
+  "LANGUAGE":"",
+  "INVITES":""
 }
