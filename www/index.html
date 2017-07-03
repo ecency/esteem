@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
 
+    <!--<meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; style-src 'self' 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">-->
+    
     <title></title>
 
     <link href="css/font-awesome.css" rel="stylesheet">
@@ -13,6 +15,13 @@
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
+
+    <!-- Find Debugging errors -->
+    <script type="text/javascript">
+        window.onerror = function (errorMsg, url, lineNumber) {
+          alert('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber);
+        }
+    </script>
 
     <script src="lib/marked.js"></script>
     <script src="lib/highstock.src.js"></script>
@@ -29,6 +38,7 @@
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
+
   </head>
 
   <body ng-app="esteem" dir="{{$root.$storage.dir}}">

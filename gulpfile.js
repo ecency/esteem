@@ -6,7 +6,8 @@ var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
-var browserify = require('browserify');
+//var browserify = require('browserify');
+var browserify = require('gulp-browserify');
 var clean_json = require("gulp-clean-json");
 
 var uglify = require("gulp-uglify");
@@ -36,7 +37,7 @@ gulp.task('sass', function(done) {
     .pipe(gulp.dest('./www/css/'))
     .on('end', done);
 });
-
+/*
 gulp.task('scripts', function(){
   browserify({
     entries: './src/app.js',
@@ -67,9 +68,9 @@ gulp.task('scripts', function(){
   ])
   .pipe(concat('lib.js'))
   .pipe(gulp.dest('./www/js'));
-});
+});*/
 
-/*gulp.task('scripts', function() {
+gulp.task('scripts', function() {
   gulp.src('./src/app.js')
     .pipe(browserify({
       insertGlobals : true,
@@ -98,7 +99,7 @@ gulp.task('scripts', function(){
   .pipe(concat('lib.js'))
   .pipe(gulp.dest('./www/js'));
 });
-*/
+
 
 gulp.task('clean_translations', function(done) {
   gulp.src("./src/posts/locales/*.json")

@@ -1,6 +1,8 @@
-var fs = require('fs');
+console.log('index.js');
 
+var fs = require('fs');
 Buffer = require('buffer').Buffer;
+
 
 var app = angular.module('esteem', [
 	'ionic',
@@ -22,7 +24,7 @@ if (localStorage.getItem("socketUrl") === null) {
 
 localStorage.golosId = "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12";
 localStorage.steemId = "0000000000000000000000000000000000000000000000000000000000000000";
-//process.env.DEBUG = "steem.ws*";
+process.env.DEBUG = "steem.ws*";
 
 window.steem = require('steem');
 
@@ -224,13 +226,13 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   //$ionicConfigProvider.platform.android.scrolling.jsScrolling(false);
 
   if (window.cordova) {
-      $logProvider.debugEnabled(false);
-      $compileProvider.debugInfoEnabled(false);
+      $logProvider.debugEnabled(true);
+      $compileProvider.debugInfoEnabled(true);
   }
 
   $httpProvider.useApplyAsync(true);
 
-  $compileProvider.debugInfoEnabled(false);
+  //$compileProvider.debugInfoEnabled(false);
 
   $translateProvider.translations('en-US', require('./locales/ready/en-US')); //English
   $translateProvider.translations('ru-RU', require('./locales/ready/ru-RU')); //Russian
@@ -277,8 +279,6 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('no-NO', require('./locales/ready/no-NO')); //Norwegian
   $translateProvider.translations('sk-SK', require('./locales/ready/sk-SK')); //Slovak
   $translateProvider.translations('ta-IN', require('./locales/ready/ta-IN')); //Tamil
-  
-
 
   $translateProvider.useSanitizeValueStrategy(null);
   $translateProvider.preferredLanguage('en-US');
@@ -287,13 +287,16 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
 });
 
 app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state, $log, $ionicScrollDelegate, $filter, $translate, $ionicHistory, $sessionStorage) {
+  
   $rootScope.$storage = $localStorage;
   $rootScope.$sstorage = $sessionStorage;
-
   $rootScope.log = function(message) {
     $log.info(message);
   };
-  $ionicPlatform.ready(function() {
+  console.log('starting ready');
+
+  $ionicPlatform.ready(function() {  
+
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -320,25 +323,14 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         }
     }, 100);
     */
+
+    if (ionic.Platform.isIOS()){
+      setTimeout(function () {
+        navigator.splashscreen.hide();
+      }, 3000 - 1000);
+    }
     
     $rootScope.chain = $rootScope.$storage.chain;
-
-    window.setTimeout(function () {
-      navigator.splashscreen.hide();
-    }, 1000);
-
-    /*if (navigator.splashscreen) {
-      setTimeout(function() {
-        console.log('-----hiding splash------');
-        navigator.splashscreen.hide();
-      }, 1000);
-    }*/
-    /*if ($cordovaSplashscreen) {
-      setTimeout(function() {
-        console.log('-----hide splash------ $cordovaSplashscreen');
-        $cordovaSplashscreen.hide();
-      }, 1000);
-    }*/
     
     $ionicPlatform.registerBackButtonAction(function(e){
       if ($rootScope.backButtonPressedOnceToExit) {
@@ -369,6 +361,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     
     if ($rootScope.user) {
       console.log('Account set: '+$rootScope.user.username);
+    } else {
+      console.log('<===No Account is selected===>');
     }
 
 
@@ -394,8 +388,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       window.steem.config.set('address_prefix','STM');  
     }
     
-
-
     //window.ejs.ChainConfig.setChainId(localStorage[$rootScope.$storage.chain+"Id"]);
 
     if (!angular.isDefined($rootScope.$storage.language)) {
@@ -801,15 +793,16 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     $rootScope.openInfo = function(xx) {
       //console.log(xx);
-      if (xx.active_votes.length==0) {
+      if (xx && xx.active_votes.length==0) {
         window.steem.api.getActiveVotesAsync(xx.author, xx.permlink, function(err, dd) {
           //console.log(err, dd);
-          xx.active_votes = dd;
-        });
+          xx.active_votes = dd;    
+        }); 
       }
+      $rootScope.voters = xx;
+      $rootScope.infomodal.show(); 
       //$rootScope.$evalAsync(function($rootScope) {
-        $rootScope.voters = xx;
-        $rootScope.infomodal.show();  
+        
       //});
     };
 
@@ -1078,7 +1071,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         window.steem.config.set('address_prefix','STM');  
       }
       window.steem.api.stop();
-      
+
       angular.forEach($rootScope.$storage.users, function(v,k){
         if (v.chain == $rootScope.$storage.chain){
           $rootScope.$storage.user = v;
@@ -1236,7 +1229,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         }, function(error) {
           console.error(error);
         });*/
+
         FCMPlugin.onTokenRefresh(function(token){
+          console.log('token refreshing....')
           APIs.updateToken($rootScope.$storage.deviceid, token).then(function(res){
             console.log(angular.toJson(res));
             if (res.status) {

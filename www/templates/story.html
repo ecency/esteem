@@ -1,6 +1,6 @@
 <ion-modal-view class='mymodal'>
   <ion-header-bar class="bar bar-header bar-positive">
-    <button class="button button-clear button-icon ion-arrow-left-c"  on-tap="closePostModal()"></button>
+    <button class="button button-clear button-icon ion-arrow-left-c" on-tap="closePostModal()"></button>
     <h1 class="title">{{'SUBMIT_A_STORY'|translate}}</h1>
     <div class="buttons">
     <button class="button button-positive button-primary" ng-disabled="disableBtn" ng-click="submitStory()">{{'POST'|translate}}</button>
@@ -8,9 +8,9 @@
     </div>
   </ion-header-bar>
   <ion-content class="padding posting" overflow-scroll="false">
-    <input type="text" name="title" placeholder="{{'TITLE'|translate}}" ng-model="spost.title" style="width:100%;" autocomplete="off">
+    <input type="text" name="title" placeholder="{{'TITLE'|translate}}" ng-model="spost.title" style="width:100%;">
     <textarea ng-model='spost.body' rows="15" placeholder="{{'POST_CONTENT'|translate}}" class="width100" ng-focus='cfocus()' ng-model-options="{debounce: 1000}"></textarea><!---->
-      <input type="text" name="categories" placeholder="{{'TAGS'|translate}}" ng-model="spost.tags" ng-change="tagsChange()" style="width:100%;" autocomplete="off" autocorrect="off" autocapitalize="off">
+      <input type="text" name="categories" placeholder="{{'TAGS'|translate}}" ng-model="spost.tags" ng-change="tagsChange()" style="width:100%;" autocapitalize="off">
       <div class="row" ng-if="spost.advanced">
         <div class="col item item-input">
           <ion-checkbox ng-model="spost.upvote_this" ng-if='!edit'>{{'UPVOTE'|translate}}</ion-checkbox> 

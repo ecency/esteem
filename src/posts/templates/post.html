@@ -11,11 +11,11 @@
 	    <ion-nav-buttons side='right'>
       <span ng-if="!$root.voiceOver">
         <button class="button button-icon button-clear" on-tap="bookmark()"><i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i></button> &nbsp; 
-	      <button class="button button-icon button-clear ion-android-share-alt" on-tap="share()"></button>
+	      <button class="button button-icon button-clear ion-android-share-alt" on-tap="sharing()"></button>
       </span>
       <span ng-if="$root.voiceOver">
         <a href class="button button-icon button-clear" on-tap="bookmark()"><i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i>{{::translations.bookmark}}</a> &nbsp; 
-        <a href class="button button-icon button-clear ion-android-share-alt" on-tap="share()">{{::translations.share}}</a>
+        <a href class="button button-icon button-clear ion-android-share-alt" on-tap="sharing()">{{::translations.share}}</a>
       </span>
 	    </ion-nav-buttons>
 	</ion-nav-bar>

@@ -1,7 +1,9 @@
 module.exports = function (app) {
 //angular.module('window.steem.controllers', [])
+console.log('controllers.js');
+app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform, $filter, APIs, $window, $ionicPopover, $cordovaBarcodeScanner, $cordovaSplashscreen, $ionicActionSheet) {
 
-app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform, $filter, APIs, $window, $ionicPopover, $cordovaBarcodeScanner, $cordovaSplashscreen) {
+  console.log('AppCtrl ready');
 
   $scope.loginData = {};
 
@@ -9,7 +11,6 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     scope: $scope  }).then(function(modal) {
     $scope.loginModal = modal;
   });
-
 
   /*if (navigator.splashscreen) {
     setTimeout(function() {
@@ -23,7 +24,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       $cordovaSplashscreen.hide();
     }, 1000);
   }*/
-
+  
   $ionicPopover.fromTemplateUrl('templates/popover.html', {
     scope: $scope,
   }).then(function(popover) {
@@ -89,7 +90,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $scope.$applyAsync();
   }
   $scope.open = function(item) {
-    console.log(item);
+    //console.log(item);
     if ((typeof item.json_metadata === 'string' || item.json_metadata instanceof String) && item.json_metadata) {
       item.json_metadata = angular.fromJson(item.json_metadata);
     }
@@ -142,11 +143,32 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $state.go("app.profile", {username:$rootScope.user.username});
     //$ionicSideMenuDelegate.toggleLeft();
   }
-  $scope.share = function() {
+  $scope.sharing = function(){
+    var shareSheet = $ionicActionSheet.show({
+     buttons: [
+       { text: $filter('translate')('INVITES') },
+       { text: $filter('translate')('SHARE') }
+     ],
+     titleText: 'eSteem',
+     cancelText: $filter('translate')('CANCEL'),
+     cancel: function() {
+        // add cancel code..
+      },
+     buttonClicked: function(index) {
+        if (index === 0) {
+          $scope.share('invites');
+        } else {
+          $scope.share('share');
+        }
+        return true;
+     }
+   });
+  }
+  $scope.share = function(type) {
     var host = "";
     if ($rootScope.$storage.chain == 'steem') {
       //host = "esteem://";
-      host = "https://esteem.ws/";
+      host = "esteem://";
     } else {
       host = "esteem://";
     }
@@ -165,16 +187,28 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         $rootScope.log("not shared");
       });*/
     $ionicPlatform.ready(function() {
-      window.cordova.plugins.firebase.dynamiclinks.sendInvitation({
-          deepLink: link,
-          title: subject,
-          message: message,
-          callToActionText: 'Join'
-      }, function(res){
-        //console.log(res);
-      }, function(err){
-        //console.log(err);
-      });
+
+      if (type === 'invites' && window.cordova) {
+        window.cordova.plugins.firebase.dynamiclinks.sendInvitation({
+            deepLink: link,
+            title: subject,
+            message: message,
+            callToActionText: 'Join'
+        }, function(res){
+          //console.log(res);
+        }, function(err){
+          //console.log(err);
+        });
+      } else {
+        $cordovaSocialSharing.share(message, subject, file, link) // Share via native share sheet
+        .then(function(result) {
+          // Success!
+          $rootScope.log("shared");
+        }, function(err) {
+          // An error occured. Show a message to the user
+          $rootScope.log("not shared");
+        });
+      }
     });
     //});
   }
@@ -239,10 +273,10 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
                 const wif = steem.auth.toWif($scope.loginData.username, $scope.loginData.password, roles[0]);
 
-                let wifIsValid = false;
+                var wifIsValid = false;
                 const publicWif = steem.auth.wifToPublic(wif);
 
-                roles.map(role => {
+                roles.map(function(role) {
                   if (dd[role].key_auths[0][0] === publicWif) {
                     wifIsValid = true;
                   }
@@ -309,10 +343,10 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                   ? $scope.loginData.privatePostingKey
                   : '';
 
-                let wifIsValid = false;
+                var wifIsValid = false;
                 const publicWif = steem.auth.wifToPublic(wif);
 
-                roles.map(role => {
+                roles.map(function(role) {
                   if (dd[role].key_auths[0][0] === publicWif) {
                     wifIsValid = true;
                   }
@@ -465,7 +499,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   }
 
   $scope.$on("$ionicView.loaded", function(){
-    $scope.theme = $rootScope.$storage.theme;
+    $scope.theme = $rootScope.$storage.theme||'day';
     console.log('loaded');
   });
 
@@ -1091,6 +1125,8 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
 });
 app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $ionicScrollDelegate, $ionicModal, $filter, $stateParams, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPlatform, $cordovaCamera, ImageUploadService, $filter, $ionicHistory, APIs, $translate, $compile) {
 
+  console.log('PostsCtrl ready');
+
   $scope.translations = {};
 
   $scope.translations.menu = $translate.instant('MENU');
@@ -1277,7 +1313,10 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   });
 
   $rootScope.$on('closePostModal', function() {
-    $scope.modalp.hide();
+    if ($scope.pmodal)
+      $scope.pmodal.hide();
+    if ($scope.modalp)
+      $scope.modalp.hide();
   });
 
   $scope.closePostModal = function() {
@@ -1287,7 +1326,10 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     $rootScope.$emit('closePostModal');
     $rootScope.$broadcast('close:popover');
 
-    $scope.modalp.hide();
+    if ($scope.pmodal)
+      $scope.pmodal.hide();
+    if ($scope.modalp)
+      $scope.modalp.hide();
   };
 
 
@@ -1295,10 +1337,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     console.log('cfocus');
     $scope.lastFocused = document.activeElement;
   }
+
   //http://stackoverflow.com/questions/1064089/inserting-a-text-where-cursor-is-using-javascript-jquery
   $scope.insertText = function(text, position) {
     var input = $scope.lastFocused;
     //console.log(input);
+    input.focus();
     if (input == undefined) { return; }
     var scrollPos = input.scrollTop;
     var pos = 0;
@@ -1329,7 +1373,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       input.selectionEnd = pos;
       input.focus();
     }
-    input.focus();
+    //input.focus();
     input.scrollTop = scrollPos;
     angular.element(input).trigger('input');
   }
@@ -2323,9 +2367,10 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
   //http://stackoverflow.com/questions/1064089/inserting-a-text-where-cursor-is-using-javascript-jquery
   $scope.insertText = function(text) {
-    console.log(text);
+    //console.log(text);
     var input = $scope.lastFocused;
     //console.log(input);
+    input.focus();
     if (input == undefined) { return; }
     var scrollPos = input.scrollTop;
     var pos = 0;
@@ -2356,6 +2401,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       input.selectionEnd = pos;
       input.focus();
     }
+    //input.focus();
     input.scrollTop = scrollPos;
     //console.log(angular.element(input).val());
     angular.element(input).trigger('input');
@@ -2509,10 +2555,15 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
 
   $scope.hideKeyboard = function(){
-    if (window.cordova) {
-      document.activeElement.blur();
-      cordova.plugins.Keyboard.close();
-    }
+    setTimeout(function () {
+      if (window.cordova && window.cordova.plugins.Keyboard) {
+        if(cordova.plugins.Keyboard.isVisible){
+            window.cordova.plugins.Keyboard.close();
+        } else {
+            window.cordova.plugins.Keyboard.show();
+        }
+      }
+    }, 100);
   }
 
   $scope.showImg = function() {
@@ -2705,7 +2756,10 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   };
 
   $rootScope.$on('closePostModal', function(){
-    $scope.pmodal.hide();
+    if ($scope.pmodal)
+      $scope.pmodal.hide();
+    if ($scope.modalp)
+      $scope.modalp.hide();
   });
 
   $scope.closeGallery = function(){
@@ -2763,7 +2817,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
   $scope.edit = false;
   $scope.editPost = function(xx) {
-    console.log(xx);
+    //console.log(xx);
     $scope.edit = true;
     $scope.spost.advanced = false;
     if (xx.parent_author !== "") {
@@ -4648,11 +4702,11 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope, $filte
         if(typeof orders == 'undefined') {
           return [];
         }
-        let ttl = 0
-        return orders.map( o => {
+        var ttl = 0
+        return orders.map( function(o) {
             ttl += o.sbd;
             return [parseFloat(o.real_price) * power, ttl]
-        }).sort((a, b) => { // Sort here to make sure arrays are in the right direction for HighCharts
+        }).sort(function(a, b) { // Sort here to make sure arrays are in the right direction for HighCharts
             return a[0] - b[0];
         });
     }
@@ -4681,7 +4735,7 @@ app.controller('ExchangeCtrl', function($scope, $stateParams, $rootScope, $filte
 
   function generateDepthChart(bidsArray, asksArray) {
     var dd = generateBidAsk(bidsArray, asksArray);
-    let series = [];
+    var series = [];
     //console.log(dd);
 
     var mm = getMinMax(dd.bids, dd.asks);

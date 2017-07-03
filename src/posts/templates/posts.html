@@ -74,7 +74,7 @@
 									<b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="ds.max_accepted_payout.split(' ')[0] === '0.000'"><del>0.000</del></span><span ng-if="ds.max_accepted_payout.split(' ')[0] !== '0.000'">{{::ds | sumPostTotal:$root.$storage.currencyRate | number}}</span></span>
 					      </span>
 					      </div>
-					      <div class="col col-25 tright" on-tap="$root.openInfo(d)">
+					      <div class="col col-25 tright" on-tap="$root.openInfo(ds)">
 					      <a href="#" class="subdued" on-tap="$root.openInfo(ds)"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
 					      </div>
 					      <div class="col col-25 tright">

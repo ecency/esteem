@@ -1,5 +1,6 @@
 //angular.module('window.steem.services', [])
 module.exports = function (app) {
+  console.log('services.js');
 	app.service('APIs', ['$http', '$rootScope', 'API_END_POINT', function ($http, $rootScope, API_END_POINT) {
 		'use strict';
 		return {
@@ -1561,7 +1562,17 @@ module.exports = function (app) {
                         $scope.openModal();
                     }
                   };
-
+                  $scope.hideKeyboard = function(){
+                    setTimeout(function () {
+                        if (window.cordova && window.cordova.plugins.Keyboard) {
+                          if(cordova.plugins.Keyboard.isVisible){
+                              window.cordova.plugins.Keyboard.close();
+                          } else {
+                              window.cordova.plugins.Keyboard.show();
+                          }
+                        }
+                    }, 100);
+                  }
                   $scope.showImg = function() {
                    var hideSheet = $ionicActionSheet.show({
                      buttons: [
@@ -1580,7 +1591,46 @@ module.exports = function (app) {
                      }
                    });
                   };
+                  $scope.insertText = function(text) {
+                    //console.log(text);
+                    var input = $scope.lastFocused;
+                    //console.log(input);
+                    input.focus();
+                    if (input == undefined) { return; }
+                    var scrollPos = input.scrollTop;
+                    var pos = 0;
+                    var browser = ((input.selectionStart || input.selectionStart == "0") ?
+                                   "ff" : (document.selection ? "ie" : false ) );
+                    if (browser == "ie") {
+                      input.focus();
+                      var range = document.selection.createRange();
+                      range.moveStart ("character", -input.value.length);
+                      pos = range.text.length;
+                    }
+                    else if (browser == "ff") { pos = input.selectionStart };
 
+                    var front = (input.value).substring(0, pos);
+                    var back = (input.value).substring(pos, input.value.length);
+                    input.value = front+text+back;
+                    pos = pos + text.length;
+                    if (browser == "ie") {
+                      input.focus();
+                      var range = document.selection.createRange();
+                      range.moveStart ("character", -input.value.length);
+                      range.moveStart ("character", pos);
+                      range.moveEnd ("character", 0);
+                      range.select();
+                    }
+                    else if (browser == "ff") {
+                      input.selectionStart = pos;
+                      input.selectionEnd = pos;
+                      input.focus();
+                    }
+                    //input.focus();
+                    input.scrollTop = scrollPos;
+                    //console.log(angular.element(input).val());
+                    angular.element(input).trigger('input');
+                  }
                   $scope.insertImageC = function(type) {
                     var options = {};
                     if (type == 0 || type == 1) {
