@@ -281,6 +281,7 @@
   "DELETED_SCHEDULE":"已刪除的排程",
   "MOVED_SCHEDULE":"已移動的排程",
   "MOVE_TO_DRAFT":"儲存為草稿",
-  "POWER_DOWN_SCHEDULE":"",
-  "LANGUAGE":""
+  "POWER_DOWN_SCHEDULE":"下一次降力是",
+  "LANGUAGE":"語言",
+  "INVITES":""
 }
