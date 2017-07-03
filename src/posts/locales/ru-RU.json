@@ -281,6 +281,7 @@
   "DELETED_SCHEDULE":"Удаленное расписание",
   "MOVED_SCHEDULE":"Перемещенное расписание",
   "MOVE_TO_DRAFT":"Переместить в черновики",
-  "POWER_DOWN_SCHEDULE":"",
-  "LANGUAGE":""
+  "POWER_DOWN_SCHEDULE":"Следующее понижение силы голоса",
+  "LANGUAGE":"Язык",
+  "INVITES":""
 }
