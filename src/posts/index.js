@@ -24,7 +24,7 @@ if (localStorage.getItem("socketUrl") === null) {
 
 localStorage.golosId = "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12";
 localStorage.steemId = "0000000000000000000000000000000000000000000000000000000000000000";
-process.env.DEBUG = "steem.ws*";
+//process.env.DEBUG = "steem.ws*";
 
 window.steem = require('steem');
 

@@ -1793,7 +1793,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   }
 
   $scope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
-    //console.log('stateChangeSuccess', $stateParams.renew);
+    console.log('stateChangeSuccess '+from.name);
+
     if (from.name === 'app.posts' && to.name === 'app.post') {
       
     } else {
@@ -1815,7 +1816,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           $scope.data = null;
           $scope.data = [];
         }
-        $rootScope.$broadcast('refreshLocalUserData');
+        //$rootScope.$broadcast('refreshLocalUserData');
         console.log('loadmore');
         
         $rootScope.user = $rootScope.$storage.user || undefined;
@@ -1823,6 +1824,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         $scope.loadMore();
       }
     }
+    $rootScope.$broadcast('refreshLocalUserData');
   });
 
   $scope.moreDataCanBeLoaded = function(){
