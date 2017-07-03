@@ -311,6 +311,22 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     window.steem.config.set('websocket',localStorage.socketUrl); 
   
+
+    window.handleOpenURL = function(url) {
+      console.log(">>>>>>>>>>>>>>>>>>>");
+      // do stuff, for example
+      // document.getElementById("url").value = url;
+      setTimeout(function() {
+          // TODO: call some Cordova API here
+         console.log(url);
+         if (url) {
+           //$rootScope.$sstorage.url = url;
+           var parts = url.split('/');
+           $state.go('app.post', {category: parts[2], author: parts[3].substr(1), permlink: [4]});  
+         }
+      }, 500);
+    };
+
     console.log('run ready');
     /*$ionicPlatform.registerBackButtonAction(function (event) {
     if ( ($state.$current.name=="app.posts") ){

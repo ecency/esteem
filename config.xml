@@ -133,4 +133,10 @@
         <variable name="CAMERA_USAGE_DESCRIPTION" value="Scan QR code for Username" />
     </plugin>
     <plugin name="phonegap-plugin-mobile-accessibility" spec="git+https://github.com/phonegap/phonegap-mobile-accessibility.git" />
+    <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">
+        <variable name="URL_SCHEME" value="esteem" />
+        <variable name="ANDROID_SCHEME" value=" " />
+        <variable name="ANDROID_HOST" value=" " />
+        <variable name="ANDROID_PATHPREFIX" value="/" />
+    </plugin>
 </widget>

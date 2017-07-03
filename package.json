@@ -20,6 +20,7 @@
         "cordova-plugin-compat": "^1.1.0",
         "cordova-plugin-console": "^1.0.7",
         "cordova-plugin-crosswalk-webview": "^2.3.0",
+        "cordova-plugin-customurlscheme": "^4.3.0",
         "cordova-plugin-device": "^1.1.6",
         "cordova-plugin-fcm": "^2.1.2",
         "cordova-plugin-file": "^4.3.1",
@@ -142,7 +143,13 @@
             "cordova-plugin-x-socialsharing": {},
             "cordova-plugin-console": {},
             "cordova-plugin-file": {},
-            "cordova-plugin-file-transfer": {}
+            "cordova-plugin-file-transfer": {},
+            "cordova-plugin-customurlscheme": {
+                "URL_SCHEME": "esteem",
+                "ANDROID_SCHEME": " ",
+                "ANDROID_HOST": " ",
+                "ANDROID_PATHPREFIX": "/"
+            }
         },
         "platforms": [
             "ios"
