@@ -281,6 +281,7 @@
   "DELETED_SCHEDULE":"Видалений розклад",
   "MOVED_SCHEDULE":"Переміщений розклад",
   "MOVE_TO_DRAFT":"Перемістити до чорновиків",
-  "POWER_DOWN_SCHEDULE":"",
-  "LANGUAGE":""
+  "POWER_DOWN_SCHEDULE":"Наступне зниження сили голосу",
+  "LANGUAGE":"Мова",
+  "INVITES":""
 }
