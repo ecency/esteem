@@ -251,7 +251,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
       }
       var loginSuccess = false;
-      window.steem.api.getAccountsAsync([$scope.loginData.username], function(err, dd){
+      window.steem.api.getAccounts([$scope.loginData.username], function(err, dd){
           //console.log(err, dd);
           if (dd) {
             //$scope.$evalAsync(function( $scope ) {
@@ -271,10 +271,10 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
               if ($scope.loginData.password) {
 
-                const wif = steem.auth.toWif($scope.loginData.username, $scope.loginData.password, roles[0]);
+                var wif = window.steem.auth.toWif($scope.loginData.username, $scope.loginData.password, roles[0]);
 
                 var wifIsValid = false;
-                const publicWif = steem.auth.wifToPublic(wif);
+                var publicWif = window.steem.auth.wifToPublic(wif);
 
                 roles.map(function(role) {
                   if (dd[role].key_auths[0][0] === publicWif) {
@@ -339,12 +339,12 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                 }
               } else {
 
-                const wif = window.steem.auth.isWif($scope.loginData.privatePostingKey)
+                var wif = window.steem.auth.isWif($scope.loginData.privatePostingKey)
                   ? $scope.loginData.privatePostingKey
                   : '';
 
                 var wifIsValid = false;
-                const publicWif = steem.auth.wifToPublic(wif);
+                var publicWif = window.steem.auth.wifToPublic(wif);
 
                 roles.map(function(role) {
                   if (dd[role].key_auths[0][0] === publicWif) {
@@ -692,7 +692,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         //--------
 
 
-        const wif = $rootScope.user.password
+        var wif = $rootScope.user.password
         ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'active')
         : $rootScope.$storage.user.privateActiveKey;
         //steem.broadcast.accountUpdate(wif, account, owner, active, posting, memoKey, jsonMetadata, function(err, result) {
@@ -727,7 +727,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
 
     if ($rootScope.user) {
 
-      const wif = $rootScope.user.password
+      var wif = $rootScope.user.password
       ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
       : $rootScope.user.privatePostingKey;
 
@@ -929,7 +929,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
           $rootScope.log('You are sure');
           $rootScope.$broadcast('show:loading');
 
-          const wif = $rootScope.user.password
+          var wif = $rootScope.user.password
           ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'active')
           : $rootScope.user.privateActiveKey;
 
@@ -1027,7 +1027,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
               $rootScope.$broadcast('show:loading');
               
               if (type == 'transfer') {
-                const wif = $rootScope.user.password
+                var wif = $rootScope.user.password
                 ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'active')
                 : $rootScope.user.privateActiveKey;
 
@@ -1063,7 +1063,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
               }
             }
             if (type == 'escrow') {
-              const wif = $rootScope.user.password
+              var wif = $rootScope.user.password
               ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'active')
               : $rootScope.user.privateActiveKey;
                
@@ -1170,6 +1170,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.drag = function(v) {
     //console.log(v);
     $rootScope.$storage.voteWeight = v*100;
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
+    if (!$rootScope.$$phase) {
+      $rootScope.$apply();
+    }
   }
   $scope.votePostS = function() {
     $scope.tooltipSlider.hide();
@@ -1600,7 +1606,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
     $rootScope.$broadcast('show:loading');
     if ($rootScope.user) {
-      const wif = $rootScope.user.password
+      var wif = $rootScope.user.password
       ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
       : $rootScope.user.privatePostingKey;
 
@@ -1888,7 +1894,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           //--------
 
 
-          const wif = $rootScope.user.password
+          var wif = $rootScope.user.password
           ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'active')
           : $rootScope.$storage.user.privateActiveKey;
           //steem.broadcast.accountUpdate(wif, account, owner, active, posting, memoKey, jsonMetadata, function(err, result) {
@@ -1936,7 +1942,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           //--------
 
 
-          const wif = $rootScope.user.password
+          var wif = $rootScope.user.password
           ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'active')
           : $rootScope.$storage.user.privateActiveKey;
           //steem.broadcast.accountUpdate(wif, account, owner, active, posting, memoKey, jsonMetadata, function(err, result) {
@@ -2069,7 +2075,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     }
     return false;
   }
-  const snakeCaseRe = /_([a-z])/g;
+  var snakeCaseRe = /_([a-z])/g;
 
   function camelCase(str) {
     return str.replace(snakeCaseRe, function (_m, l) {
@@ -2143,6 +2149,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
                     }
                   }
                 }
+                response[i].body = "";
                 $scope.data.push(response[i]);
                 $scope.to = $scope.data.length;
                 
@@ -2283,6 +2290,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.drag = function(v) {
     //console.log(v);
     $rootScope.$storage.voteWeight = v*100;
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
+    if (!$rootScope.$$phase) {
+      $rootScope.$apply();
+    }
   };
 
   $scope.closeSliderr = function() {
@@ -2793,7 +2806,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             $rootScope.log('You are sure');
             $rootScope.$broadcast('show:loading');
             if ($rootScope.user) {
-              const wif = $rootScope.user.password
+              var wif = $rootScope.user.password
               ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
               : $rootScope.user.privatePostingKey;
 
@@ -2886,7 +2899,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
     if ($rootScope.user) {
 
-      const wif = $rootScope.user.password
+      var wif = $rootScope.user.password
       ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
       : $rootScope.user.privatePostingKey;
 
@@ -2975,7 +2988,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     $rootScope.$broadcast('show:loading');
     if ($rootScope.user) {
       if ($scope.editreply) {
-        const wif = $rootScope.user.password
+        var wif = $rootScope.user.password
         ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
         : $rootScope.user.privatePostingKey;
         
@@ -3054,7 +3067,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           }
         });
       } else {
-        const wif = $rootScope.user.password
+        var wif = $rootScope.user.password
         ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
         : $rootScope.user.privatePostingKey;
 
@@ -3720,6 +3733,12 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   $scope.drag = function(v) {
     //console.log(v);
     $rootScope.$storage.voteWeight = v*100;
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
+    if (!$rootScope.$$phase) {
+      $rootScope.$apply();
+    }
   }
   $scope.votePostS = function() {
     $scope.tooltipSlider.hide();
@@ -3831,7 +3850,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           $rootScope.log('You are sure');
           if ($rootScope.user) {
 
-            const wif = $rootScope.user.password
+            var wif = $rootScope.user.password
             ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'active')
             : $rootScope.$storage.user.privateActiveKey;
 
@@ -3895,7 +3914,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             $rootScope.log('You are sure');
             if ($rootScope.user) {
               
-              const wif = $rootScope.user.password
+              var wif = $rootScope.user.password
               ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'active')
               : $rootScope.user.privateActiveKey;
 
@@ -3961,7 +3980,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
               $rootScope.$broadcast('show:loading');
               if ($rootScope.user) {
 
-                const wif = $rootScope.user.password
+                var wif = $rootScope.user.password
                 ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'active')
                 : $rootScope.user.privateActiveKey;
 
@@ -4016,7 +4035,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             setTimeout(function() {
               if ($rootScope.user) {
 
-                const wif = $rootScope.user.password
+                var wif = $rootScope.user.password
                 ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'active')
                 : $rootScope.user.privateActiveKey;
                 //console.log($rootScope.user.memo_key);
@@ -4081,7 +4100,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             $rootScope.log('You are sure');
             if ($rootScope.user) {
 
-              const wif = $rootScope.user.password
+              var wif = $rootScope.user.password
               ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'owner')
               : $rootScope.user.privateOwnerKey;
 
@@ -4670,7 +4689,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   $scope.claim_rewards = function(){
     if ($rootScope.user) {
 
-      const wif = $rootScope.user.password
+      var wif = $rootScope.user.password
       ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
       : $rootScope.user.privatePostingKey;
 
@@ -5097,6 +5116,12 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
   }
   $scope.drag = function(v) {
     $rootScope.$storage.voteWeight = v*100;
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
+    if (!$rootScope.$$phase) {
+      $rootScope.$apply();
+    }
   }
   $scope.$on('$ionicView.beforeEnter', function(){
     $rootScope.$storage["socket"+$rootScope.$storage.chain] = localStorage.socketUrl;

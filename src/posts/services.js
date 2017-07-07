@@ -1361,6 +1361,12 @@ module.exports = function (app) {
                   $scope.drag = function(v) {
                     //console.log(v);
                     $rootScope.$storage.voteWeight = v*100;
+                    if (!$scope.$$phase) {
+                      $scope.$apply();
+                    }
+                    if (!$rootScope.$$phase) {
+                      $rootScope.$apply();
+                    }
                   };
 
                   $scope.closeSliderr = function() {
@@ -1701,7 +1707,7 @@ module.exports = function (app) {
                   }
                   $scope.reply = function (xx) {
                     
-                    const wif = $rootScope.user.password
+                    var wif = $rootScope.user.password
                     ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
                     : $rootScope.user.privatePostingKey;
 
@@ -1835,7 +1841,7 @@ module.exports = function (app) {
                             $rootScope.$broadcast('show:loading');
                             if ($rootScope.user) {
 
-                              const wif = $rootScope.user.password
+                              var wif = $rootScope.user.password
                               ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
                               : $rootScope.user.privatePostingKey;
 

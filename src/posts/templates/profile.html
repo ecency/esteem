@@ -15,7 +15,7 @@
               <h4 class="center">
                 <span class="light">@{{::$root.user.username}}</span>
                 &nbsp;
-                <div class="reputation">{{::$root.user.reputation|reputation}}
+                <div class="reputation">{{$root.user.reputation|reputation}}
                 </div>
               </h4>
               <div class="about">{{::$root.user.json_metadata.profile.about}}</div>

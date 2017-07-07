@@ -894,7 +894,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           if ($rootScope.user) {
             var json = ["reblog",{account:$rootScope.user.username, author:author, permlink:permlink}];
 
-            const wif = $rootScope.user.password
+            var wif = $rootScope.user.password
                   ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
                   : $rootScope.user.privatePostingKey;
 
@@ -1000,7 +1000,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             if ($rootScope.user) {
               if ($rootScope.user.password || $rootScope.user.privateActiveKey) {
                 
-                const wif = $rootScope.user.password
+                var wif = $rootScope.user.password
                   ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'active')
                   : $rootScope.user.privateActiveKey;
 
@@ -1041,7 +1041,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           } else {
             json = ['follow',{follower:$rootScope.user.username, following:xx, what: []}];
           }
-          const wif = $rootScope.user.password
+          var wif = $rootScope.user.password
                 ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
                 : $rootScope.user.privatePostingKey;
 
@@ -1064,13 +1064,18 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     setTimeout(function() {
     //$rootScope.$evalAsync(function( $rootScope ) {
-      window.steem.api.getFeedHistoryAsync(function(err, r) {
-        //console.log(err, r);
-        $rootScope.$storage.base = r.current_median_history.base.split(" ")[0];
+      window.steem.api.getFeedHistoryAsync(function(err, rr) {
+        //console.log(err, rr);
+        if (rr) {
+          $rootScope.$storage.base = rr.current_median_history.base.split(" ")[0];  
+        }
+        
         window.steem.api.getDynamicGlobalPropertiesAsync(function(err, r) {
           //console.log(err, r);
           $rootScope.log(r);
-          $rootScope.$storage.steem_per_mvests = (Number(r.total_vesting_fund_steem.substring(0, r.total_vesting_fund_steem.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;
+          if (r) {
+            $rootScope.$storage.steem_per_mvests = (Number(r.total_vesting_fund_steem.substring(0, r.total_vesting_fund_steem.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;  
+          }
         });
       });
     //});

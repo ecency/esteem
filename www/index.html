@@ -19,7 +19,7 @@
     <!-- Find Debugging errors -->
     <script type="text/javascript">
         window.onerror = function (errorMsg, url, lineNumber) {
-          alert('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber);
+          console.log('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber);
         }
         window.handleOpenURL = function(url) {
           console.log(">>>>>>>>>>>>>>>>>>>");

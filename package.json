@@ -12,7 +12,7 @@
         "com.guinatal.refreshgallery": "~1.0.9",
         "com.verso.cordova.clipboard": "https://github.com/VersoSolutions/CordovaClipboard",
         "cordova-browser": "^4.1.0",
-        "cordova-ios": "^4.3.0",
+        "cordova-ios": "^4.4.0",
         "cordova-plugin-android-permissions": "^0.11.0",
         "cordova-plugin-app-version": "^0.1.9",
         "cordova-plugin-camera": "^2.4.1",
