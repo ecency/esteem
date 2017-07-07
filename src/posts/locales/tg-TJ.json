@@ -2,7 +2,7 @@
   "HOME":"",
   "LOGIN":"",
   "LOGOUT":"",
-  "PROFILE":"",
+  "PROFILE":"Дар Анкета",
   "FOLLOW":"",
   "BOOKMARKS":"",
   "TRANSFER":"",
@@ -280,5 +280,8 @@
   "SCHEDULES":"",
   "DELETED_SCHEDULE":"",
   "MOVED_SCHEDULE":"",
-  "MOVE_TO_DRAFT":""
+  "MOVE_TO_DRAFT":"",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":"",
+  "INVITES":""
 }

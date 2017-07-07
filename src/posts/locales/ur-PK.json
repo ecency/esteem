@@ -280,5 +280,8 @@
   "SCHEDULES":"شیڈولز",
   "DELETED_SCHEDULE":"مٹایا ھوا شیڈول",
   "MOVED_SCHEDULE":"موڈ شیڈول",
-  "MOVE_TO_DRAFT":"ڈرافٹس میں بھیج دیں"
+  "MOVE_TO_DRAFT":"ڈرافٹس میں بھیج دیں",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":"",
+  "INVITES":""
 }

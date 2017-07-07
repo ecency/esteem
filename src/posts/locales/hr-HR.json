@@ -280,5 +280,8 @@
   "SCHEDULES":"Raspored",
   "DELETED_SCHEDULE":"Izbrisati raspored",
   "MOVED_SCHEDULE":"Preseljen raspored",
-  "MOVE_TO_DRAFT":"Premjesti u skice"
+  "MOVE_TO_DRAFT":"Premjesti u skice",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":"",
+  "INVITES":""
 }

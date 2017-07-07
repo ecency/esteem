@@ -280,5 +280,8 @@
   "SCHEDULES":"Grafiki",
   "DELETED_SCHEDULE":"Dzēsts plāns",
   "MOVED_SCHEDULE":"Pārvietots grafiks",
-  "MOVE_TO_DRAFT":"Pārvietot uz melnrakstiem"
+  "MOVE_TO_DRAFT":"Pārvietot uz melnrakstiem",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":"",
+  "INVITES":""
 }

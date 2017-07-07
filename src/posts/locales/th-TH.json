@@ -280,5 +280,8 @@
   "SCHEDULES":"กำหนดการ",
   "DELETED_SCHEDULE":"กำหนดการที่ถูกลบออก",
   "MOVED_SCHEDULE":"กำหนดการที่ถูกย้าย",
-  "MOVE_TO_DRAFT":"ย้ายไปยังแบบร่าง"
+  "MOVE_TO_DRAFT":"ย้ายไปยังแบบร่าง",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":"",
+  "INVITES":""
 }

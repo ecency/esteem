@@ -280,5 +280,8 @@
   "SCHEDULES":"Agendamentos",
   "DELETED_SCHEDULE":"Agendamento removido",
   "MOVED_SCHEDULE":"Adicionado alterado",
-  "MOVE_TO_DRAFT":"Transferir para os rascunhos"
+  "MOVE_TO_DRAFT":"Transferir para os rascunhos",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":"",
+  "INVITES":""
 }

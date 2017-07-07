@@ -280,5 +280,8 @@
   "SCHEDULES":"일정",
   "DELETED_SCHEDULE":"삭제된 일정",
   "MOVED_SCHEDULE":"이동된 일정",
-  "MOVE_TO_DRAFT":"임시보관함으로 이동"
+  "MOVE_TO_DRAFT":"임시보관함으로 이동",
+  "POWER_DOWN_SCHEDULE":"",
+  "LANGUAGE":"",
+  "INVITES":""
 }
