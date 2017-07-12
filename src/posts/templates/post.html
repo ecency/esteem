@@ -62,7 +62,7 @@
 
         <div class="col col-33" ng-if="$root.voiceOver"><ion-spinner ng-if="$root.sitem.invoting"></ion-spinner>
         <i class="icon ion-android-arrow-dropup-circle" on-tap="upvotePost($root.sitem)" ng-if="!$root.sitem.upvoted" on-hold="openSliderr($event, $root.sitem)">{{::translations.upvote}}</i><i class="icon ion-android-arrow-dropup-circle positive" on-tap="unvotePost($root.sitem)" ng-if="$root.sitem.upvoted">{{::translations.unupvote}}</i>&nbsp;&nbsp;&nbsp;<span on-tap="$root.openInfo($root.sitem)">{{$root.sitem.net_votes}}</span></div>
-        <div class="col col-33" on-tap="openTooltip($event,$root.sitem)"><b>{{::$root.$storage.currency|getCurrencySymbol}}</b> {{$root.sitem | sumPostTotal:$root.$storage.currencyRate | number}}</div>
+        <div class="col col-33" on-tap="openTooltip($event,$root.sitem)"><b>{{::$root.$storage.currency|getCurrencySymbol}}</b>&nbsp;<span ng-if="$root.sitem.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{$root.sitem | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="$root.sitem.max_accepted_payout.split(' ')[0] !== '0.000'">{{$root.sitem | sumPostTotal:$root.$storage.currencyRate | number}}</span></div>
         <div class="col" on-tap="isreplying($root.sitem, true)"><i class="fa fa-reply"></i> {{$root.sitem.children}}</div>
         <div class="col" on-tap="editPost($root.sitem)" ng-if="$root.sitem.author==$root.user.username && $root.sitem.cashout_time !== '1969-12-31T23:59:59'"><i class="fa fa-pencil-square-o"></i></div>
         <div class="col" on-tap="deletePost($root.sitem)" ng-if="$root.sitem.net_votes==0 && $root.sitem.author==$root.user.username"><i class="fa fa-trash-o"></i></div>

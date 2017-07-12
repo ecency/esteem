@@ -147,7 +147,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     var shareSheet = $ionicActionSheet.show({
      buttons: [
        { text: $filter('translate')('INVITES') },
-       { text: $filter('translate')('SHARE') }
+       { text: $filter('translate')('SHARE') },
+       { text: $filter('translate')('OTHER') }
      ],
      titleText: 'eSteem',
      cancelText: $filter('translate')('CANCEL'),
@@ -157,9 +158,41 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
      buttonClicked: function(index) {
         if (index === 0) {
           $scope.share('invites');
-        } else {
+        } else if (index===1){
           $scope.share('share');
+        } else {
+          $scope.share('other');
         }
+        return true;
+     }
+   });
+  }
+  $scope.otherlinks = function(link){
+    var shareSheet = $ionicActionSheet.show({
+     buttons: [
+       { text: 'steemit.com' },
+       { text: 'busy.org' },
+       { text: 'steemd.com' },
+       { text: 'steemdb.com' },
+       { text: 'phist.steemdata.com' }
+     ],
+     titleText: 'Open',
+     cancelText: $filter('translate')('CANCEL'),
+     cancel: function() {
+        // add cancel code..
+      },
+     buttonClicked: function(index) {
+        if (index === 0) {
+          window.open('https://steemit.com/'+link,'_system');
+        } else if (index===1){
+          window.open('https://busy.org/'+link,'_system');
+        } else if (index===2){
+          window.open('https://steemd.com/'+link,'_system');
+        } else if (index===3){
+          window.open('https://steemdb.com/'+link,'_system');
+        } else if (index===4){
+          window.open('https://phist.steemdata.com/history?identifier=steemit.com/'+link,'_system');
+        } 
         return true;
      }
    });
@@ -199,7 +232,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         }, function(err){
           //console.log(err);
         });
-      } else {
+      } else if (type === 'share' && window.cordova) {
         $cordovaSocialSharing.share(message, subject, file, link) // Share via native share sheet
         .then(function(result) {
           // Success!
@@ -208,6 +241,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
           // An error occured. Show a message to the user
           $rootScope.log("not shared");
         });
+      } else {
+        $scope.otherlinks($rootScope.sitem.category+"/@"+$rootScope.sitem.author+"/"+$rootScope.sitem.permlink);
       }
     });
     //});
@@ -1488,10 +1523,14 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   function slug(text) {
     return getSlug(text, {truncate: 128});
   };
+  function makernd() {
+    return (Math.random()+1).toString(36).substring(7);
+  }
   function createPermlink(title) {
     var permlink;
     var t = new Date();
-    var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
+    var timeformat = makernd();//t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
+
     if (title && title.trim() !== '') {
       var s = slug(title);
       permlink = s.toString()+"-"+timeformat;
@@ -3315,7 +3354,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       if (dd) {
         $scope.$evalAsync(function(){
           angular.forEach(dd.content, function(v,k){
-            if (v.parent_author==author && v.parent_permlink == permlink) {
+            if (v.parent_author===author && v.parent_permlink===permlink) {
               var len = v.active_votes.length;
               if ($rootScope.user) {
                 for (var j = len - 1; j >= 0; j--) {
@@ -4388,6 +4427,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   }
 
   $scope.dfetching = function(){
+    if ($rootScope.user) {
       window.steem.api.getFollowing($rootScope.user.username, $scope.tt.duser, "blog", $scope.limit, function(err, res) {
         //console.log(err, res);
         if (res && res.length===$scope.limit) {
@@ -4404,26 +4444,30 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           $scope.$evalAsync($scope.dfetching);
         }
       });
+    }
+      
     };
     $scope.mfetching = function(){
-      window.steem.api.getFollowing($rootScope.user.username, $scope.tt.duser, "ignore", $scope.limit, function(err, res) {
-        //console.log(err, res);
-        if (res && res.length===$scope.limit) {
-          $scope.tt.duser = res[res.length-1].muting;
-        }
-        var len = res.length;
-        for (var i = 0; i < len; i++) {
-          //console.log(res)
-          $scope.muting.push(res[i].following);
-        }
-        if (res.length<$scope.limit) {
-          
-          $scope.$applyAsync();
-        } else {
-          $scope.$evalAsync($scope.mfetching);
-          //setTimeout($scope.mfetching, 2);
-        }
-      });
+      if ($rootScope.user) {
+        window.steem.api.getFollowing($rootScope.user.username, $scope.tt.duser, "ignore", $scope.limit, function(err, res) {
+          //console.log(err, res);
+          if (res && res.length===$scope.limit) {
+            $scope.tt.duser = res[res.length-1].muting;
+          }
+          var len = res.length;
+          for (var i = 0; i < len; i++) {
+            //console.log(res)
+            $scope.muting.push(res[i].following);
+          }
+          if (res.length<$scope.limit) {
+            
+            $scope.$applyAsync();
+          } else {
+            $scope.$evalAsync($scope.mfetching);
+            //setTimeout($scope.mfetching, 2);
+          }
+        });
+      }
     };
     $scope.rfetching = function(){
       window.steem.api.getFollowers($rootScope.user.username, $scope.tt.ruser, "blog", $scope.limit, function(err, res) {

@@ -1705,6 +1705,9 @@ module.exports = function (app) {
                       var patch = dmp.patch_toText(patches);
                       return patch;
                   }
+                  function makernd() {
+                    return (Math.random()+1).toString(36).substring(7);
+                  }
                   $scope.reply = function (xx) {
                     
                     var wif = $rootScope.user.password
@@ -1716,7 +1719,7 @@ module.exports = function (app) {
                         if ($rootScope.user) {
 
                           var t = new Date();
-                          var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
+                          var timeformat = makernd();//t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
                           var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ["esteem"], app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };                              
                           var operations_array = [];
 
