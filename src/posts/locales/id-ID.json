@@ -271,7 +271,7 @@
   "NSFW":"Tidak Aman",
   "NSFW_TEXT":"Untuk melihat konten Tidak Aman / Dewasa Anda harus berumur 18+ tahun! Pengaturan ini memungkinkan tampilan otomatis gambar dan teks konten Tidak Aman.",
   "AUTO_DOWNLOAD":"Sisipkan Gambar",
-  "AUTO_DOWNLOAD_TEXT":"Menyisipkan pengaturan gambar memungkinkan Anda untuk menghemat bandwidth dengan mengizinkan Anda untuk menonaktifkan gambar eksternal dari pemuatan, memberikan Anda kendali penuh atas penggunaan trafik Anda.",
+  "AUTO_DOWNLOAD_TEXT":"Pengaturan menyisipkan gambar memungkinkan Anda untuk menghemat bandwidth dengan mengizinkan Anda untuk menonaktifkan gambar eksternal dari pemuatan, memberikan Anda kendali penuh atas penggunaan trafik Anda.",
   "MUTE":"Diam",
   "UNMUTE":"Berbunyi",
   "SCHEDULE":"Jadwal",
