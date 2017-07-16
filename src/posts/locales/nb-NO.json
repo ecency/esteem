@@ -281,7 +281,7 @@
   "DELETED_SCHEDULE":"Slettet tidsplan",
   "MOVED_SCHEDULE":"Flyttet tidsplan",
   "MOVE_TO_DRAFT":"Flytt til utkast",
-  "POWER_DOWN_SCHEDULE":"",
-  "LANGUAGE":"",
-  "INVITES":""
+  "POWER_DOWN_SCHEDULE":"Den neste nedtrappingen er",
+  "LANGUAGE":"Språk",
+  "INVITES":"Invitasjoner"
 }
