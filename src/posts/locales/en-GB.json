@@ -281,7 +281,7 @@
   "DELETED_SCHEDULE":"Deleted schedule",
   "MOVED_SCHEDULE":"Moved schedule",
   "MOVE_TO_DRAFT":"Move to draft",
-  "POWER_DOWN_SCHEDULE":"",
-  "LANGUAGE":"",
-  "INVITES":""
+  "POWER_DOWN_SCHEDULE":"The next power down is",
+  "LANGUAGE":"Language",
+  "INVITES":"Invites"
 }
