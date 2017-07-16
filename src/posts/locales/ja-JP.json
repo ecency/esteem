@@ -281,7 +281,7 @@
   "DELETED_SCHEDULE":"削除済み時間指定",
   "MOVED_SCHEDULE":"変更済み時間指定",
   "MOVE_TO_DRAFT":"ゴミ箱へ移動",
-  "POWER_DOWN_SCHEDULE":"",
-  "LANGUAGE":"",
-  "INVITES":""
+  "POWER_DOWN_SCHEDULE":"次のパワーダウンは、",
+  "LANGUAGE":"言語",
+  "INVITES":"招待"
 }
