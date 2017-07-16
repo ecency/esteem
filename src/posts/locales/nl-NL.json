@@ -281,7 +281,7 @@
   "DELETED_SCHEDULE":"Agenda verwijderen",
   "MOVED_SCHEDULE":"Agenda verplaatst",
   "MOVE_TO_DRAFT":"Verplaatsen naar ontwerp",
-  "POWER_DOWN_SCHEDULE":"",
-  "LANGUAGE":"",
-  "INVITES":""
+  "POWER_DOWN_SCHEDULE":"De volgende power down is",
+  "LANGUAGE":"Taal",
+  "INVITES":"Uitgenodigden"
 }
