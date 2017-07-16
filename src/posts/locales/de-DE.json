@@ -281,7 +281,7 @@
   "DELETED_SCHEDULE":"Gelöschter Zeitplan",
   "MOVED_SCHEDULE":"Verschobener Zeitplan",
   "MOVE_TO_DRAFT":"In Entwürfe verschieben",
-  "POWER_DOWN_SCHEDULE":"",
-  "LANGUAGE":"",
-  "INVITES":""
+  "POWER_DOWN_SCHEDULE":"Der nächste Power Down ist",
+  "LANGUAGE":"Sprache",
+  "INVITES":"Einladungen"
 }
