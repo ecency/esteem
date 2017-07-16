@@ -281,7 +281,7 @@
   "DELETED_SCHEDULE":"已删除日程安排",
   "MOVED_SCHEDULE":"已移动日程安排",
   "MOVE_TO_DRAFT":"移动到草案",
-  "POWER_DOWN_SCHEDULE":"",
-  "LANGUAGE":"",
-  "INVITES":""
+  "POWER_DOWN_SCHEDULE":"下一个断电是",
+  "LANGUAGE":"语言",
+  "INVITES":"邀请"
 }
