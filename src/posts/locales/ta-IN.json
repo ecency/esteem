@@ -281,7 +281,7 @@
   "DELETED_SCHEDULE":"நீக்கப்பட்ட அட்டவணை",
   "MOVED_SCHEDULE":"நகர்த்தப்பட்ட அட்டவணை",
   "MOVE_TO_DRAFT":"வரைவு நகர்த்து",
-  "POWER_DOWN_SCHEDULE":"",
-  "LANGUAGE":"",
-  "INVITES":""
+  "POWER_DOWN_SCHEDULE":"அடுத்த சக்தி கீழே உள்ளது",
+  "LANGUAGE":"மொழி",
+  "INVITES":"அழைப்பிதழ்கள்"
 }
