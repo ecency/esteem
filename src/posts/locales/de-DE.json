@@ -95,7 +95,7 @@
   "RESTEEM":"rebloggen",
   "RESTEEM_TEXT":"Du wirst benachrichtigt sobald jemand deinen Beitrag rebloggt!",
   "CONFIGURATIONS":"Einstellungen",
-  "VOTING":"Abstimmung",
+  "VOTING":"Voting",
   "VOTING_TEXT":"Das Gewicht / der prozentuale Anteil der Stimme beeinflusst die Menge der Vergütung für den Autor. <br/><br/><b>Hinweis:</b> Diese Einstellung ändert auch die Gewichtung/ den prozentualen Anteil für negative Stimmen. Diese Einstellung wird in der gesamten Anwendung verwendet.",
   "SERVER":"Server",
   "SERVER_TEXT":"Empfohlen",
