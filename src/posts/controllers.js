@@ -90,7 +90,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     $scope.$applyAsync();
   }
   $scope.open = function(item) {
-    //console.log(item);
+    console.log(item);
     if ((typeof item.json_metadata === 'string' || item.json_metadata instanceof String) && item.json_metadata) {
       item.json_metadata = angular.fromJson(item.json_metadata);
     }
@@ -1524,7 +1524,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     return getSlug(text, {truncate: 128});
   };
   function makernd() {
-    return (Math.random()+1).toString(36).substring(7);
+    return (Math.random()+1).toString(36).substring(2);
   }
   function createPermlink(title) {
     var permlink;
@@ -1745,6 +1745,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   }
   $scope.savePost = function() {
     //console.log($scope.modalp);
+    console.log('save post');
     $rootScope.$storage.spost = $scope.spost;
     //adddraft
     var dr = {title:$scope.spost.title, body: $scope.spost.body, tags: $scope.spost.tags, post_type: $scope.spost.operation_type};
@@ -2188,7 +2189,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
                     }
                   }
                 }
-                response[i].body = "";
+                //response[i].body = "";
                 $scope.data.push(response[i]);
                 $scope.to = $scope.data.length;
                 
@@ -2869,6 +2870,32 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         }
     });
   }
+  $scope.tagsChange = function() {
+    $rootScope.log("tagsChange");
+    if ($scope.spost.tags) {
+      //$scope.spost.tags = $scope.spost.tags.replace(/#/g,'');
+      //$scope.spost.tags = $filter('lowercase')($scope.spost.tags);
+      $scope.spost.tags = $scope.spost.tags.toLowerCase().replace(/[^a-z0-9- ]+/g, '');
+      $scope.spost.category = $scope.spost.tags?$scope.spost.tags.split(" "):[];
+      for (var i = 0, len = $scope.spost.category.length; i < len; i++) {
+        var v = $scope.spost.category[i];
+        if(/^[а-яё]/.test(v)) {
+          v = 'ru--' + $filter('detransliterate')(v, true);
+          $scope.spost.category[i] = v;
+        }
+      }
+
+      //console.log($scope.spost.category);
+      if ($scope.spost.category.length > 5) {
+        $scope.disableBtn = true;
+      } else {
+        $scope.disableBtn = false;
+      }
+      if (!$scope.$$phase){
+        $scope.$apply();
+      }  
+    }
+  }
   $scope.edit = false;
   $scope.editPost = function(xx) {
     //console.log(xx);
@@ -3039,11 +3066,11 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           }
         });
 
-        var ts = angular.fromJson($scope.post.json_metadata).tags;
+        //var ts = angular.fromJson($scope.post.json_metadata).tags;
         var json;
-        if (Array.isArray(ts)) {
-          json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ["esteem"] , app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };
-        } else {
+        /*if (Array.isArray(ts)) {
+          json = {tags: angular.fromJson($scope.post.json_metadata).tags || ["esteem"] , app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };
+        } else*/ {
           json = {tags: angular.fromJson($scope.post.json_metadata).tags || ["esteem"] , app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };
         }
 
@@ -3112,7 +3139,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
         var t = new Date();
         var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
-        var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ["esteem"] , app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };
+
+        var json = {tags: angular.fromJson($scope.post.json_metadata).tags || ["esteem"] , app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };
 
         var operations_array = [];
         operations_array = [
@@ -3184,7 +3212,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     //$scope.$evalAsync(function($scope) {
       $scope.getContent($scope.post.author, $scope.post.permlink);    
     //});
-    }, 1);
+    });
     
   });
   $ionicModal.fromTemplateUrl('templates/reply.html', {
@@ -3463,19 +3491,34 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     if ($stateParams.category === '111') {
       var ttemp = $rootScope.sitem;
       $scope.post = ttemp;
-      $rootScope.$emit('update:content');
+      if ($rootScope.sitem && $rootScope.sitem.body) {
+        if ($rootScope.postAccounts && $rootScope.postAccounts.indexOf($rootScope.sitem.author) == -1) {
+          $rootScope.postAccounts.push($rootScope.sitem.author);
+        }
+        $scope.$evalAsync(function($scope){
+          $scope.$broadcast('postAccounts');
+        });
+      } else {
+        $rootScope.$emit('update:content');
+      }
     } else {
       if ($stateParams.author.indexOf('@')>-1){
         $stateParams.author = $stateParams.author.substr(1);
       }
       $rootScope.postAccounts.push($stateParams.author);
       //$scope.$broadcast('postAccounts');
-
-      //$scope.$evalAsync(function($scope){
-      setTimeout(function() {
-        $scope.getContent($stateParams.author, $stateParams.permlink);    
-      }, 1000);
-      //});
+      if ($rootScope.sitem && $rootScope.sitem.body && $stateParams.author == $rootScope.sitem.author && $stateParams.permlink == $rootScope.sitem.permlink) {
+        if ($rootScope.postAccounts && $rootScope.postAccounts.indexOf($rootScope.sitem.author) == -1) {
+          $rootScope.postAccounts.push($rootScope.sitem.author);
+        }
+        $scope.$evalAsync(function($scope){
+          $scope.$broadcast('postAccounts');
+        });
+      } else {
+        setTimeout(function() {
+          $scope.getContent($stateParams.author, $stateParams.permlink);    
+        });
+      }
     }
   });
   
@@ -3575,33 +3618,39 @@ app.controller('DraftsCtrl', function($scope, $stateParams, $rootScope, $state, 
 app.controller('SchedulesCtrl', function($scope, $stateParams, $rootScope, $state, APIs, $interval, $ionicScrollDelegate, $filter) {
   //JSON.stringify({
   $scope.removeSchedule = function(_id) {
-    APIs.removeSchedule(_id, $rootScope.user.username).then(function(res){
-      //APIs.getSchedules($rootScope.user.username).then(function(res){
-        //console.log(res);
-        $scope.schedules = res.data.schedules;
-      //});
-      $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('DELETED_SCHEDULE'));
-    });
-  };
-
-  $scope.moveSchedule = function(_id) {
-    APIs.moveSchedule(_id, $rootScope.user.username).then(function(res){
-      //APIs.removeSchedule(_id, $rootScope.user.username).then(function(res){
+    if ($rootScope.user) {
+      APIs.removeSchedule(_id, $rootScope.user.username).then(function(res){
         //APIs.getSchedules($rootScope.user.username).then(function(res){
           //console.log(res);
           $scope.schedules = res.data.schedules;
-
         //});
-        $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('MOVED_SCHEDULE'));
-      //});
-    });
+        $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('DELETED_SCHEDULE'));
+      });
+    }
+  };
+
+  $scope.moveSchedule = function(_id) {
+    if ($rootScope.user) {
+      APIs.moveSchedule(_id, $rootScope.user.username).then(function(res){
+        //APIs.removeSchedule(_id, $rootScope.user.username).then(function(res){
+          //APIs.getSchedules($rootScope.user.username).then(function(res){
+            //console.log(res);
+            $scope.schedules = res.data.schedules;
+
+          //});
+          $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('MOVED_SCHEDULE'));
+        //});
+      });
+    }
   };
 
   $scope.$on('$ionicView.beforeEnter', function(){
-    APIs.getSchedules($rootScope.user.username).then(function(res){
-      //console.log(res);
-      $scope.schedules = res.data;
-    });
+    if ($rootScope.user) {
+      APIs.getSchedules($rootScope.user.username).then(function(res){
+        console.log(res);
+        $scope.schedules = res.data;
+      });
+    }
   });
 });
 
@@ -3860,11 +3909,58 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   // Cleanup the modal when we're done with it!
   $scope.$on('$destroy', function() {
     $scope.modalEdit.remove();
+    $scope.modalStats.remove();
   });
-  // Execute action on hide modal
-  $scope.$on('modal.hidden', function() {
-    // Execute action
+  
+  $ionicModal.fromTemplateUrl('my-stats.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modalStats = modal;
   });
+  $scope.closeStats = function() {
+    $scope.modalStats.hide();
+  };
+  $scope.showVotes = function() {
+    APIs.getMyVotes($stateParams.username).then(function(res){
+      if (res) {
+        $rootScope.log(angular.toJson(res.data));
+        if (res.data.code == 'ECONNCLOSED') {
+          $scope.showVotes();
+        } else {
+          $scope.myvotes = res.data.data;  
+        }
+        if (!$scope.$$phase) {
+          $scope.$apply();
+        }
+      }
+    });
+  }
+  $scope.showMentions = function() {
+    APIs.getMyMentions($stateParams.username).then(function(res){
+      if (res) {
+        $rootScope.log(angular.toJson(res.data));
+        if (res.data.code == 'ECONNCLOSED') {
+          $scope.showMentions();
+        } else {
+          $scope.mymentions = res.data.data;  
+        }
+        if (!$scope.$$phase) {
+          $scope.$apply();
+        }
+      }
+    });
+  }
+  $scope.navPost = function(xy) {
+    $scope.closeStats();
+    var at = xy.author?xy.author:$scope.user.username;
+    $state.go('app.post',{category:'tag',author:at, permlink:xy.permlink});
+  }
+  $scope.showStats = function(user) {
+    console.log(user);
+    $scope.modalStats.show();
+    $scope.showVotes();
+  }
   $scope.edit = {};
   $scope.showEdits = function() {
     //showedits
@@ -3872,6 +3968,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     $scope.edit = $rootScope.user.json_metadata || {};
     $scope.modalEdit.show();
   }
+  
   $scope.saveEdit = function(){
     //console.log($scope.edit);
     var confirmPopup = $ionicPopup.confirm({
@@ -4527,7 +4624,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       });
 
       $scope.$evalAsync(function($scope){
-        window.steem.api.getFollowCount($stateParams.username, function(err, res) {
+        window.steem.api.getFollowCountAsync($stateParams.username, function(err, res) {
           //console.log(err, res);
           if (res) {
             $scope.followdetails = res;

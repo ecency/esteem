@@ -312,6 +312,13 @@ textarea.markdown-input {
   margin-bottom: 5px!important;
   bottom: 0!important;
 }
+.profilebtn_stats {
+  position: absolute!important;
+  right: 0!important;
+  margin-left: 5px!important;
+  margin-bottom: 5px!important;
+  bottom: 0!important;
+}
 /***************************************/
 /*Comments                             */
 /***************************************/
@@ -1643,6 +1650,12 @@ body[dir=rtl] .bar .button.back-button, .bar button.back-button {
 }
 .bar.bar-positive {
   background-color: rgba(31,83,152,1);
+}
+.tabs-icon-top.tabs-positive .tabs {
+  background-color: rgba(31,83,152,1);
+}
+.pane.tab-content {
+  margin-top: 88px;
 }
 .tabs-striped.tabs-background-positive .tabs {
   background-color: rgba(31,83,152,1);

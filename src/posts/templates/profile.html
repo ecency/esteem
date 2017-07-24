@@ -4,6 +4,7 @@
       <button class="button button-icon button-clear ion-ios-arrow-back profilebtn" on-tap="goBack()"></button>
       <button class="button button-outline button-light profilebtn_follow" on-tap="followUser(user.username)" ng-if="$root.user && $root.user.username != user.username && !isAmFollowing(user.username)"><!--<i class="fa fa-user-plus fa-lg"></i>-->{{::'FOLLOW'|translate}}</button>
       <button class="button button-outline button-light profilebtn_mute" on-tap="muteUser(user.username)" ng-if="$root.user && $root.user.username != user.username && !isAmMuting(user.username)"><!--<i class="fa fa-user-plus fa-lg"></i>-->{{::'MUTE'|translate}}</button>
+      <button class="button button-clear profilebtn_stats button-icon ion-stats-bars" on-tap="showStats(user.username)"></button>
       <button class="button button-clear profilebtn_edit button-icon ion-ios-compose-outline" on-tap="showEdits()" ng-if="$root.user && $root.user.username === user.username"></button>
       <button class="button button-clear profilebtn_follow button-icon ion-camera" on-tap="showCover()" ng-if="$root.user && $root.user.username === user.username"></button>
       <button class="button button-outline button-light profilebtn_follow" on-tap="unfollowUser(user.username)" ng-if="$root.user && $root.user.username != user.username && isAmFollowing(user.username)"><!--button-icon button-clear<i class="fa fa-user-times fa-lg"></i>-->{{::'UNFOLLOW'|translate}}</button><button class="button button-outline button-light profilebtn_mute" on-tap="unmuteUser(user.username)" ng-if="$root.user && $root.user.username != user.username && isAmMuting(user.username)"><!--button-icon button-clear<i class="fa fa-user-times fa-lg"></i>-->{{::'UNMUTE'|translate}}</button>&nbsp;
@@ -306,6 +307,42 @@
           </center>
       </div>
       </ion-content>
+    </ion-modal-view>
+
+  </script>
+
+  <script id="my-stats.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar class='bar-positive'>
+         <h1 class="title">{{::"ACTIVITY"|translate}}</h1>
+         <button class="button button-clear button-outline" ng-click="closeStats()">
+          {{::"CANCEL"|translate}}
+        </button>
+      </ion-header-bar>
+      
+          <ion-tabs class="tabs-striped tabs-icon-top tabs-top tabs-positive">
+            <ion-tab title="{{'VOTES'|translate}}" icon-on="fa fa-chevron-circle-up light" icon-off="fa fa-chevron-circle-up" on-select="showVotes()" >
+              <ion-scroll overflow-scroll="true" class='has-header has-tabs-top'>
+              <div class="list">
+                <div class="item" ng-repeat="xx in myvotes" ng-click="navPost(xx)">
+                  {{xx.timestamp|timeago}}&nbsp;<b>{{xx.voter}}</b>&nbsp;({{xx.weight/100}}%)&nbsp;{{xx.permlink}}
+                </div>
+              </div>
+              </ion-scroll>
+            </ion-tab>
+            <ion-tab title="{{'MENTIONS'|translate}}" icon-on="fa fa-bullhorn light" icon-off="fa fa-bullhorn" on-select="showMentions()">
+              <ion-scroll overflow-scroll="true" class='has-header has-tabs-top'>
+              <div class="list">
+                <div class="item" ng-repeat="xx in mymentions" ng-click="navPost(xx)">
+                  {{xx.created|timeago}}&nbsp;<b>{{xx.author}}</b>&nbsp;{{xx.permlink}}
+                </div>
+              </div>
+              </ion-scroll>
+            </ion-tab>
+            <ion-tab title="{{'ACHIEVEMENTS'|translate}}" icon-on="fa fa-trophy light" icon-off="fa fa-trophy" on-select="showAchievements()">
+              
+            </ion-tab>
+        </ion-tabs>
     </ion-modal-view>
 
   </script>

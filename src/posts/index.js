@@ -27,7 +27,7 @@ localStorage.steemId = "00000000000000000000000000000000000000000000000000000000
 //process.env.DEBUG = "steem.ws*";
 
 window.steem = require('steem');
-
+window.remarkable = require('remarkable');
 window.diff_match_patch = require('diff-match-patch');
 window.getSymbol = require('currency-symbol-map');
 
@@ -233,6 +233,9 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $httpProvider.useApplyAsync(true);
 
   //$compileProvider.debugInfoEnabled(false);
+
+  $ionicConfigProvider.tabs.style("standard"); //Makes them all look the same across all OS
+
 
   $translateProvider.translations('en-US', require('./locales/ready/en-US')); //English
   $translateProvider.translations('ru-RU', require('./locales/ready/ru-RU')); //Russian

@@ -60,6 +60,7 @@
         "phonegap-plugin-barcodescanner": "git+https://github.com/phonegap/phonegap-plugin-barcodescanner.git",
         "phonegap-plugin-mobile-accessibility": "git+https://github.com/phonegap/phonegap-mobile-accessibility.git",
         "plist": "^1.2.0",
+        "remarkable": "^1.7.1",
         "require-main-filename": "^1.0.1",
         "steem": "^0.5.19",
         "steem-rpc": "^0.6.6",

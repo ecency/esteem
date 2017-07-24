@@ -297,5 +297,6 @@
 	"PARTICIPATION_BADGES": "Participation badges",
 	"FOLLOWER_BADGES": "Follower badges",
 	"AUTHOR_REWARD_BADGES": "Author reward badges",
-	"OTHER": "Other"
+	"OTHER": "Other",
+	"ACTIVITY": "Activity"
 }

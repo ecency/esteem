@@ -64,6 +64,15 @@ module.exports = function (app) {
       },
       getVotes: function(user) {
         return $http.get(API_END_POINT+"/api/votes/"+$rootScope.$storage.chain+"/"+user);
+      },
+      getMyVotes: function(user) {
+        return $http.get(API_END_POINT+"/api/rvotes/"+$rootScope.$storage.chain+"/"+user);
+      },
+      getMyMentions: function(user) {
+        return $http.get(API_END_POINT+"/api/mentions/"+$rootScope.$storage.chain+"/"+user);
+      },
+      getMyAchievements: function(user) {
+        return $http.get(API_END_POINT+"/api/achievements/"+$rootScope.$storage.chain+"/"+user);
       }
 		};
 	}])
@@ -431,7 +440,7 @@ module.exports = function (app) {
                 return string.replace(/%d/i, value);
             }
             var nowTime = (new Date()).getTime();
-            var date = (new Date(input+".000Z")).getTime();
+            var date = (input && input.indexOf('Z')===-1)?(new Date(input+".000Z")).getTime():(new Date(input)).getTime();
             //refreshMillis= 6e4, //A minute
 
             // get difference between UTC and local time in milliseconds
@@ -530,7 +539,11 @@ module.exports = function (app) {
 			  };
         if (textu.body || textu.comment) {
           var s = textu.body||textu.comment;
-          var texts = marked(s, options);
+          var md = new window.remarkable({ html: true, linkify: false, breaks: true });
+
+          //var texts = marked(s, options);
+          var texts = md.render(s);
+          texts = marked(texts, options);
           //console.log(textu);
           if (!$rootScope.$storage.download) {
             texts = texts.replace(imgd, 'src="img/isimage.png" onclick="this.src=\'$1\'"');  
@@ -1706,7 +1719,7 @@ module.exports = function (app) {
                       return patch;
                   }
                   function makernd() {
-                    return (Math.random()+1).toString(36).substring(7);
+                    return (Math.random()+1).toString(36).substring(2);
                   }
                   $scope.reply = function (xx) {
                     
@@ -1720,6 +1733,7 @@ module.exports = function (app) {
 
                           var t = new Date();
                           var timeformat = makernd();//t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
+                          console.log($scope.post.json_metadata);
                           var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ["esteem"], app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };                              
                           var operations_array = [];
 
