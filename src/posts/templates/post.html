@@ -22,7 +22,7 @@
   <ion-floating-menu menu-color="#387ef5" menu-open-color="#387ef5" has-footer="true">
     <ion-floating-item icon="ion-chatbubbles" click="isreplying($root.sitem, true)" ng-if="$root.user.username" button-color="#387ef5" icon-color="#fff" text="{{::translations.reply}}" text-class="text-class"></ion-floating-item>
     <ion-floating-item icon="ion-android-arrow-dropup-circle" click="upvotePost($root.sitem)" button-color="#387ef5" icon-color="#fff" text="{{::translations.upvote}}" text-class="text-class"></ion-floating-item>
-    <ion-floating-item icon="ion-edit" click="editPost($root.sitem)" button-color="#387ef5" icon-color="#fff" text="{{::translations.edit}}" text-class="text-class"></ion-floating-item>
+    <ion-floating-item icon="ion-edit" click="editPost($root.sitem)" ng-if="$root.sitem.author==$root.user.username && $root.sitem.cashout_time !== '1969-12-31T23:59:59'" button-color="#387ef5" icon-color="#fff" text="{{::translations.edit}}" text-class="text-class"></ion-floating-item>
     <ion-floating-item icon="ion-image" click="showImages(0)" ng-if="isImages()" button-color="#387ef5" icon-color="#fff" text="{{::translations.gallery}}" text-class="text-class"></ion-floating-item>
     <ion-floating-item icon="ion-arrow-return-right" ng-if="$root.user.username !== $root.sitem.author" click="$root.reBlog($root.sitem.author, $root.sitem.permlink)" button-color="#387ef5" icon-color="#fff" text="{{::translations.reblog}}" text-class="text-class"></ion-floating-item>
   </ion-floating-menu>
