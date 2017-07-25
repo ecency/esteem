@@ -1668,7 +1668,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             author: $rootScope.user.username,
             permlink: permlink,
             title: $scope.spost.title,
-            body: $scope.spost.body,
+            body: $scope.spost.body.trim(),
             json_metadata: angular.toJson(json)
           }],
           ['comment_options', {
@@ -1698,7 +1698,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             author: $rootScope.user.username,
             permlink: permlink,
             title: $scope.spost.title,
-            body: $scope.spost.body,
+            body: $scope.spost.body.trim(),
             json_metadata: angular.toJson(json)
           }],
           ['comment_options', {
@@ -1734,7 +1734,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           $rootScope.$emit('closePostModal');
           $rootScope.$broadcast('close:popover');
           //$scope.menupopover.hide();
-          $scope.spost = {};
+          $scope.spost = {body:"", body2:"", title:"", tags:""};
           $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_SUBMITTED'));
           //$scope.closeMenuPopover();
           $state.go("app.profile", {username: $rootScope.user.username});
@@ -2989,7 +2989,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           author: $rootScope.user.username,
           permlink: $scope.spost.permlink,
           title: $scope.spost.title,
-          body: $scope.spost.body2 || $scope.spost.body,
+          body: $scope.spost.body2.trim() || $scope.spost.body.trim(),
           json_metadata: angular.toJson(json)
         }]
         ];
@@ -3001,12 +3001,12 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           author: $rootScope.user.username,
           permlink: $scope.spost.permlink,
           title: $scope.spost.title,
-          body: $scope.spost.body2 || $scope.spost.body,
+          body: $scope.spost.body2.trim() || $scope.spost.body.trim(),
           json_metadata: angular.toJson(json)
         }]
         ];
       }
-      if (!$scope.bexist) {
+      if (!$scope.edit) {
         var xx = ['comment_options', {
           allow_curation_rewards: true,
           allow_votes: true,
@@ -3032,7 +3032,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           $rootScope.$broadcast('close:popover');
           //$scope.menupopover.hide();
           
-          $scope.spost = {};
+          $scope.spost = {body:"", body2:"", title:"", tags:""};
           $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_SUBMITTED'));
           //$scope.closeMenuPopover();
           if ($scope.edit) {
@@ -3085,7 +3085,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             author: $rootScope.user.username,
             permlink: $scope.post.permlink,
             title: "",
-            body: $scope.data.comment,
+            body: $scope.data.comment.trim(),
             json_metadata: angular.toJson(json)
           }]
           ];
@@ -3153,7 +3153,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             author: $rootScope.user.username,
             permlink: "re-"+$scope.post.author.replace(/\./g, "")+"-"+timeformat,
             title: "",
-            body: $scope.data.comment,
+            body: $scope.data.comment.trim(),
             json_metadata: angular.toJson(json)
           }],
           ['comment_options', {
