@@ -837,10 +837,13 @@ module.exports = function (app) {
   app.filter("sumPostTotal", function($rootScope){
     function SumPostTotal(value, rate) {
       //console.log(value, rate);
-      if (value && value.pending_payout_value) {
+      if (value && value.pending_payout_value && value.last_payout=="1970-01-01T00:00:00") {
+
         //value.total_payout_value.split(" ")[0])+parseFloat(value.total_pending_payout_value.split(" ")[0])
         //return (parseFloat(value.pending_payout_value.split(" ")[0])*rate);
         return ((parseFloat(value.total_payout_value.split(" ")[0]))+(parseFloat(value.pending_payout_value.split(" ")[0]))*rate).toFixed(2);
+      } else {
+        return ((parseFloat(value.total_payout_value.split(" ")[0]))+(parseFloat(value.curator_payout_value.split(" ")[0]))*rate).toFixed(2);
       }
     }
     //SumPostTotal.$stateful = true;
