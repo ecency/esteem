@@ -1635,8 +1635,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
   $scope.submitStory = function() {
     //console.log($scope.spost.body);
-    $scope.tagsChange();
-    $scope.$applyAsync();
     if (!$scope.spost.title) {
       $rootScope.showAlert('Missing', 'Title');
       return;
@@ -1645,6 +1643,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $rootScope.showAlert('Missing', 'Tags');
       return;
     }
+    $scope.tagsChange();
+    //$scope.$applyAsync();
+    
     $rootScope.$broadcast('show:loading');
     if ($rootScope.user) {
       var wif = $rootScope.user.password
@@ -2976,7 +2977,11 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       var jjson = $filter("metadata")($scope.spost.body);
       //console.log(jjson);
       //$scope.spost.tags = $filter('lowercase')($scope.spost.tags);
-      var json = angular.merge(jjson, {tags: $scope.spost.tags.split(" "), app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' });
+      var ttags = $scope.spost.tags.split(" ");
+      if (ttags.length>5) {
+        ttags = ttags.slice(0,5);
+      }
+      var json = angular.merge(jjson, {tags: ttags, app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' });
 
 
       var operations_array = [];
