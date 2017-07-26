@@ -520,6 +520,19 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.$storage.currencies = $rootScope.$storage.currencies.concat(x);
         $rootScope.$storage.addition = true;
       } else {
+        if (!$rootScope.$storage.addition1) {
+          var x1 = [
+          {id:'idr', name: 'IDR', rate: 0, date: "1/1/2016"}, //indonesian rupiah
+          {id:'zar', name: 'ZAR', rate: 0, date: "1/1/2016"}, //south african rand
+          {id:'thb', name: 'THB', rate: 0, date: "1/1/2016"}, //thai baht
+          {id:'pkr', name: 'PKR', rate: 0, date: "1/1/2016"}, //pakistani rupi
+          {id:'vnd', name: 'VND', rate: 0, date: "1/1/2016"}, //vietnamese Dong
+          {id:'ngn', name: 'NGN', rate: 0, date: "1/1/2016"}];//nigerian Naira
+          $rootScope.$storage.currencies = $rootScope.$storage.currencies.concat(x1);
+          $rootScope.$storage.addition1 = true;
+        } else {
+          $rootScope.$storage.addition1 = true;
+        }
         $rootScope.$storage.addition = true;
       }
     }

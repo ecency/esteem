@@ -540,10 +540,11 @@ module.exports = function (app) {
         if (textu.body || textu.comment) {
           var s = textu.body||textu.comment;
           var md = new window.remarkable({ html: true, linkify: false, breaks: true });
-
+          var texts = "";
           //var texts = marked(s, options);
-          var texts = md.render(s);
-          texts = marked(texts, options);
+          //texts = md.render(s);
+          //texts = marked(s, options);
+          texts = md.render(s)
           //console.log(textu);
           if (!$rootScope.$storage.download) {
             texts = texts.replace(imgd, 'src="img/isimage.png" onclick="this.src=\'$1\'"');  
