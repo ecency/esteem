@@ -61,7 +61,7 @@
   "PROFILE_4":"Nilai perkiraan ini berdasar pada nilai rata-rata 7 hari {{platformname}}.",
   "TRANSACTION_HISTORY":"Riwayat Transaksi",
   "POSTING":"Kiriman",
-  "PROFILE_5":"Kunci posting digunakan untuk posting dan voting. Ini harus berbeda dari kunci aktif dan kunci pemilik.",
+  "PROFILE_5":"Kunci postingan digunakan untuk posting dan voting. Ini harus berbeda dari kunci aktif dan kunci pemilik.",
   "OWNER":"Pemilik",
   "PROFILE_6":"Kunci pemilik adalah kunci master untuk akun dan diperlukan untuk mengubah kunci lainnya. Kunci pribadi (privat) atau kata sandi untuk kunci pemilik harus disimpan secara offline sebanyak mungkin.",
   "ACTIVE":"Aktif",
