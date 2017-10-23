@@ -30,7 +30,7 @@
             <img ion-img-cache ng-src="{{$root.user.json_metadata.profile.profile_image || $root.user.json_metadata.user_image}}" ng-if="$root.user.json_metadata.user_image || $root.user.json_metadata.profile.profile_image" />
           </a>
           <div>
-            <div class="h4">@{{$root.user.username}}&nbsp;<div class="reputation">{{$root.user.reputation|reputation:true|number:1}}</div></div>
+            <div class="h4">@{{$root.user.username}}&nbsp;<div class="reputation">{{$root.user.reputation|reputation:true|number:2}}</div></div>
             <div ng-click="showMeExtra()" class="padding"><i class="icon ion-android-list"></i>&nbsp;{{$root.user.post_count}}&nbsp;&nbsp;<i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.user.voting_power/100|number:2}} <i class="icon pull-right" ng-class="{'ion-arrow-down-b':!showExtra, 'ion-arrow-up-b':showExtra}"></i></div>
           </div>
         </center>

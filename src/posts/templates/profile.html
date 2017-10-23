@@ -4,7 +4,7 @@
       <button class="button button-icon button-clear ion-ios-arrow-back profilebtn" on-tap="goBack()"></button>
       <button class="button button-outline button-light profilebtn_follow" on-tap="followUser(user.username)" ng-if="$root.user && $root.user.username != user.username && !isAmFollowing(user.username)"><!--<i class="fa fa-user-plus fa-lg"></i>-->{{::'FOLLOW'|translate}}</button>
       <button class="button button-outline button-light profilebtn_mute" on-tap="muteUser(user.username)" ng-if="$root.user && $root.user.username != user.username && !isAmMuting(user.username)"><!--<i class="fa fa-user-plus fa-lg"></i>-->{{::'MUTE'|translate}}</button>
-      <button class="button button-clear profilebtn_stats button-icon ion-stats-bars" on-tap="showStats(user.username)"></button>
+      <button class="button button-clear profilebtn_stats button-icon ion-stats-bars" ng-if="$root.user && $root.user.username == user.username" on-tap="showStats(user.username)"></button>
       <button class="button button-clear profilebtn_edit button-icon ion-ios-compose-outline" on-tap="showEdits()" ng-if="$root.user && $root.user.username === user.username"></button>
       <button class="button button-clear profilebtn_follow button-icon ion-camera" on-tap="showCover()" ng-if="$root.user && $root.user.username === user.username"></button>
       <button class="button button-outline button-light profilebtn_follow" on-tap="unfollowUser(user.username)" ng-if="$root.user && $root.user.username != user.username && isAmFollowing(user.username)"><!--button-icon button-clear<i class="fa fa-user-times fa-lg"></i>-->{{::'UNFOLLOW'|translate}}</button><button class="button button-outline button-light profilebtn_mute" on-tap="unmuteUser(user.username)" ng-if="$root.user && $root.user.username != user.username && isAmMuting(user.username)"><!--button-icon button-clear<i class="fa fa-user-times fa-lg"></i>-->{{::'UNMUTE'|translate}}</button>&nbsp;
@@ -21,7 +21,7 @@
               </h4>
               <div class="about">{{::$root.user.json_metadata.profile.about}}</div>
               <div class="padding profile_stats">
-                <i class="icon ion-android-list"></i>&nbsp;{{::$root.user.post_count}}&nbsp;| <i class="icon ion-ios-people"></i>&nbsp;{{::followdetails.follower_count}}&nbsp;| <i class="icon ion-person-add"></i>&nbsp;{{::followdetails.following_count}}&nbsp;| <i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.user.voting_power/100|number:2}}&nbsp;| <i class="fa fa-chevron-circle-up"></i>&nbsp;{{votecount}}
+                <i class="icon ion-android-list"></i>&nbsp;{{::$root.user.post_count}}&nbsp;| <i class="icon ion-ios-people"></i>&nbsp;{{::followdetails.follower_count}}&nbsp;| <i class="icon ion-person-add"></i>&nbsp;{{::followdetails.following_count}}&nbsp;| <i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.user.voting_power/100|number:2}}&nbsp;<span ng-if="votecount>0">| <i class="fa fa-chevron-circle-up"></i>&nbsp;{{votecount}}</span>
               </div>
               <p><span ng-if="$root.user.json_metadata.profile && $root.user.json_metadata.profile.location">
                 <i class="icon ion-location"></i>&nbsp;
@@ -46,7 +46,7 @@
             <div class="footprofileinfo">
               <h4 class="center"><span class="light">@{{::user.username}}</span>&nbsp;<div class="reputation">{{user.reputation|reputation}}</div></h4>
               <p>{{::user.json_metadata.profile.about}}</p>
-              <div class="padding profile_stats"><i class="icon ion-android-list"></i>&nbsp;{{::user.post_count}}&nbsp;| <i class="icon ion-ios-people"></i>&nbsp;{{::followdetails.follower_count}}&nbsp;| <i class="ion-person-add"></i>&nbsp;{{::followdetails.following_count}}&nbsp;| <i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{user.voting_power/100|number:2}}&nbsp;| <i class="fa fa-chevron-circle-up"></i>&nbsp;{{votecount}}
+              <div class="padding profile_stats"><i class="icon ion-android-list"></i>&nbsp;{{::user.post_count}}&nbsp;| <i class="icon ion-ios-people"></i>&nbsp;{{::followdetails.follower_count}}&nbsp;| <i class="ion-person-add"></i>&nbsp;{{::followdetails.following_count}}&nbsp;| <i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{user.voting_power/100|number:2}}&nbsp;<span ng-if="votecount>0">| <i class="fa fa-chevron-circle-up"></i>&nbsp;{{votecount}}</span>
               </div>
               <p><span ng-if="user.json_metadata.profile && user.json_metadata.profile.location">
                 <i class="icon ion-location"></i>&nbsp;
@@ -81,8 +81,8 @@
             next_vesting_withdrawal:"1969-12-31T23:59:59"
 
             -->
-            <div class="item" ng-repeat="playlist in data.profile | orderBy:'-created' track by $index" ng-class="{'item-thumbnail-left': playlist.json_metadata.image}">
-              <img check-image ng-src="{{playlist.json_metadata.image[0]}}" on-tap="open(playlist)" ng-if="playlist.json_metadata.image" onerror="this.src='img/noimage.png'"/>
+            <div class="item" ng-repeat="playlist in data.profile | orderBy:'-created' track by $index" >
+              <!--ng-class="{'item-thumbnail-left': playlist.json_metadata.image}" <img check-image on-tap="open(playlist)" ng-if='playlist.json_metadata.indexOf("image")>-1' ng-src="{{playlist|catchimage}}" onerror="this.src='img/noimage.png'"/>-->
                 <div on-tap="open(playlist)">
                 <div class="wrap">
                   <h2><i class="fa fa-money positive" ng-if="playlist.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="playlist.percent_steem_dollars === 0"></i>{{playlist.root_title}}</h2>
@@ -181,11 +181,15 @@
         <div class="box pink" ng-if="active=='permissions'">
           <div class="list card">
             <div class="item">
+              <h2><div class="bold"></div></h2>
+              <p class="wrap">{{::$root.user.password}}</p>
+            </div>
+            <div class="item">
               <h2><div class="bold">{{::'POSTING'|translate}}</div></h2>
               <p class="wrap">{{::$root.user.posting.key_auths[0][0]}}</p>
             </div>
             <div class="item item-body">
-              <center><qrcode class="full-image" text="{{$root.user.posting.key_auths[0][0]}}"></qrcode></center>
+              <center><qr class="full-image" text="$root.user.posting.key_auths[0][0]"></qr></center>
               <p>
                 {{::'PROFILE_5'|translate}}
               </p>
@@ -195,7 +199,7 @@
               <p class="wrap">{{::$root.user.owner.key_auths[0][0]}}</p>
             </div>
             <div class="item item-body">
-              <center><qrcode class="full-image" text="{{$root.user.owner.key_auths[0][0]}}"></qrcode></center>
+              <center><qr class="full-image" text="$root.user.owner.key_auths[0][0]"></qr></center>
               <p>
                 {{::'PROFILE_6'|translate}}
               </p>
@@ -205,7 +209,7 @@
               <p class="wrap">{{::$root.user.active.key_auths[0][0]}}</p>
             </div>
             <div class="item item-body">
-              <center><qrcode class="full-image" text="{{$root.user.active.key_auths[0][0]}}"></qrcode></center>
+              <center><qr class="full-image" text="$root.user.active.key_auths[0][0]"></qr></center>
               <p>
                 {{::'PROFILE_7'|translate}}
               </p>
@@ -215,7 +219,7 @@
               <p class="wrap">{{::$root.user.memo_key}}</p>
             </div>
             <div class="item item-body">
-              <center><qrcode class="full-image" text="{{$root.user.memo_key}}"></qrcode></center>
+              <center><qr class="full-image" text="$root.user.memo_key"></qr></center>
               <p>
                 {{::'PROFILE_8'|translate}}
               </p>
@@ -253,7 +257,7 @@
       <a class="button button-royal icon ion-document-text" ng-class="{'active':active=='posts'}" on-tap="change('posts')">&nbsp;{{::'COMMENTS'|translate}}</a>
       <a class="button button-royal icon ion-chatbubbles" ng-class="{'active':active=='recent-replies'}" on-tap="change('recent-replies')">&nbsp;{{'REPLIES'|translate}}</a>
       <a class="button button-royal icon ion-card" ng-class="{'active':active=='transfers'}"  on-tap="change('transfers')">&nbsp;{{::'WALLET'|translate}}</a>
-      <!--<a class="button button-royal icon ion-lock-combination" ng-class="{'active':active=='permissions'}" on-tap="change('permissions')">Keys</a>-->
+      <a class="button button-royal icon ion-lock-combination" ng-class="{'active':active=='permissions'}" on-tap="change('permissions')">Keys</a>
     </div>
   </div>
   <script id="my-edit.html" type="text/ng-template">
@@ -307,45 +311,6 @@
           </center>
       </div>
       </ion-content>
-    </ion-modal-view>
-
-  </script>
-
-  <script id="my-stats.html" type="text/ng-template">
-    <ion-modal-view>
-      <ion-header-bar class='bar-positive'>
-         <h1 class="title">{{::"ACTIVITY"|translate}}</h1>
-         <button class="button button-clear button-outline" ng-click="closeStats()">
-          {{::"CANCEL"|translate}}
-        </button>
-      </ion-header-bar>
-      
-          <ion-tabs class="tabs-striped tabs-icon-top tabs-top tabs-positive">
-            <ion-tab title="{{'VOTES'|translate}}" icon-on="fa fa-chevron-circle-up light" icon-off="fa fa-chevron-circle-up" on-select="showVotes()" >
-              <ion-scroll overflow-scroll="true" class='has-header has-tabs-top'>
-              <div class="list">
-                <div class="item" ng-repeat="xx in myvotes" ng-click="navPost(xx)">
-                  {{xx.timestamp|timeago}}&nbsp;<b>{{xx.voter}}</b>&nbsp;({{xx.weight/100}}%)&nbsp;{{xx.permlink}}
-                </div>
-              </div>
-              </ion-scroll>
-            </ion-tab>
-            <ion-tab title="{{'MENTIONS'|translate}}" icon-on="fa fa-bullhorn light" icon-off="fa fa-bullhorn" on-select="showMentions()">
-              <ion-scroll overflow-scroll="true" class='has-header has-tabs-top'>
-              <div class="list">
-                <div class="item" ng-repeat="xx in mymentions" ng-click="navPost(xx)">
-                  {{xx.created|timeago}}&nbsp;<b>{{xx.author}}</b>&nbsp;{{xx.permlink}}
-                </div>
-              </div>
-              </ion-scroll>
-            </ion-tab>
-            <ion-tab title="{{'LEADERBOARD'|translate}}" icon-on="fa fa-star light" icon-off="fa fa-star" on-select="showLeaders()">
-              
-            </ion-tab>
-            <ion-tab title="{{'ACHIEVEMENTS'|translate}}" icon-on="fa fa-trophy light" icon-off="fa fa-trophy" on-select="showAchievements()">
-              
-            </ion-tab>
-        </ion-tabs>
     </ion-modal-view>
 
   </script>

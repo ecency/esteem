@@ -1,8 +1,6 @@
 console.log('index.js');
 
 var fs = require('fs');
-Buffer = require('buffer').Buffer;
-
 
 var app = angular.module('esteem', [
 	'ionic',
@@ -26,6 +24,8 @@ localStorage.golosId = "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9d
 localStorage.steemId = "0000000000000000000000000000000000000000000000000000000000000000";
 //process.env.DEBUG = "steem.ws*";
 
+Buffer = require('buffer').Buffer;
+
 window.steem = require('steem');
 window.remarkable = require('remarkable');
 window.diff_match_patch = require('diff-match-patch');
@@ -35,6 +35,7 @@ require('./config')(app);
 require('./services')(app);
 require('./controllers')(app);
 
+//var limitless = require('limitless-google-translate');
 
 app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $sceDelegateProvider, $logProvider, $compileProvider, $animateProvider, $translateProvider, $httpProvider, ionicImgCacheProvider) {
   $stateProvider
@@ -120,6 +121,16 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
         //templateUrl: 'templates/profile.html',
         template: fs.readFileSync(__dirname + '/templates/profile.html', 'utf8'),
         controller: "ProfileCtrl"
+      }
+    }
+  })
+
+  .state('app.activity', {
+    url: '/activity/:username',
+    views: {
+      'menuContent': {
+        template: fs.readFileSync(__dirname + '/templates/activity.html', 'utf8'),
+        controller: 'ActivityCtrl'
       }
     }
   })

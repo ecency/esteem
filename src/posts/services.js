@@ -71,8 +71,35 @@ module.exports = function (app) {
       getMyMentions: function(user) {
         return $http.get(API_END_POINT+"/api/mentions/"+$rootScope.$storage.chain+"/"+user);
       },
+      getMyFollows: function(user) {
+        return $http.get(API_END_POINT+"/api/follows/"+$rootScope.$storage.chain+"/"+user);
+      },
+      getMyReblogs: function(user) {
+        return $http.get(API_END_POINT+"/api/reblogs/"+$rootScope.$storage.chain+"/"+user);
+      },
+      getLeaderboard: function() {
+        return $http.get(API_END_POINT+"/api/leaderboard/"+$rootScope.$storage.chain);
+      },
       getMyAchievements: function(user) {
         return $http.get(API_END_POINT+"/api/achievements/"+$rootScope.$storage.chain+"/"+user);
+      },
+      search: function(text) {
+        return $http.get("https://api.asksteem.com/search?q="+text+"&include=meta&sort_by=created&order=desc");
+      },
+      sendMsg: function(user, msg, room) {
+        return $http.post(API_END_POINT+"/api/messages", {sender: user, content: msg, room: room, chain: $rootScope.$storage.chain});
+      },
+      getMsg: function(user, room) {
+        return $http.get(API_END_POINT+"/api/messages/"+room+"/"+user);
+      },
+      getRoom: function(user) {
+        return $http.get(API_END_POINT+"/api/rooms/"+user);
+      },
+      addMyImage: function(user, url) {
+        return $http.post(API_END_POINT+"/api/image", {username: user, image_url:url});
+      },
+      getNodes: function() {
+        return $http.get("https://storage.googleapis.com/esteem/public_nodes.json");
       }
 		};
 	}])
@@ -430,7 +457,37 @@ module.exports = function (app) {
         },
     };
   }])
+  app.filter('capitalize', function() {
+      return function(input) {
+        return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+      }
+  });
 
+  app.filter('catchimage', function(){
+    return function(inp) {
+      var rege = /\b(https?:\/\/\S*?\.(?:png|jpe?g|gif)(?:\?(?:(?:(?:[\w_-]+=[\w_-]+)(?:&[\w_-]+=[\w_-]+)*)|(?:[\w_-]+)))?)\b/igm;
+      var regg = /((?:https?\:\/\/)(?:[a-zA-Z]{1}(?:[\w\-]+\.)+(?:[\w]{2,5}))(?:\:[\d]{1,5})?\/(?:[^\s\/]+\/)*(?:[^\s]+\.(?:jpe?g|gif|png))(?:\?\w+=\w+(?:&\w+=\w+)*)?)/gim;
+
+      if ((typeof inp.json_metadata !== 'string' || !inp.json_metadata instanceof String) && inp.json_metadata) {
+        return inp.json_metadata.image[0];
+      }
+
+      var x1 = inp.json_metadata.split('"image":');
+      
+      if (x1 && x1.length>1){
+        return x1[1].split('"')[1];
+      } else {
+        return "";
+      }
+      /*var match = rege.exec(inp.json_metadata);
+      
+      if (match && match.length>0)
+        return match[0];
+      else 
+        return undefined;
+      */
+    }
+  });
 	app.filter('timeago', function($filter, $translate, $rootScope) {
 
       function TimeAgo(input, p_allowFuture) {
@@ -519,12 +576,17 @@ module.exports = function (app) {
     app.filter('parseUrl', function($sce, $rootScope) {
 	    //var urls = /(\b(https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;-]*[-A-Z0-9+&@#\/%=~_|])/gim;
 	    //var emails = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/gim;
-      var imgs = /(https?:\/\/.*\.(?:tiff?|jpe?g|gif|png|svg|ico))(.*)/gim;
+      //var imgs = /(https?:\/\/.*\.(?:tiff?|jpe?g|gif|png|svg|ico))(.*)/gim;
       var img = /(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gim;
       var imgd = /src=\"([^\"]*)\"/gim;
 
   		//var youtube = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
   		//var youtubeid = /(?:(?:youtube.com\/watch\?v=)|(?:youtu.be\/))([A-Za-z0-9\_\-]+)/i;
+
+      var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+      var imgRegex = /(https?:\/\/.*\.(?:tiff?|jpe?g|gif|png|svg|ico))(.*)/gim;
+      
+      var vimeoRegex = /(?:http:\/\/)?(?:www\.)?(?:vimeo\.com)\/(.+)/g;
 
 	    return function(textu, subpart) {
         var options = {
@@ -541,11 +603,18 @@ module.exports = function (app) {
           var s = textu.body||textu.comment;
           var md = new window.remarkable({ html: true, linkify: false, breaks: true });
           var texts = "";
-          //var texts = marked(s, options);
-          //texts = md.render(s);
-          //texts = marked(s, options);
-          texts = md.render(s)
-          //console.log(textu);
+          
+          texts = marked(s, options);
+          
+          //texts = md.render(s)
+          //image links to html
+          //texts = texts.replace(imgRegex, '<img check-image src="$1" class="postimg" />');
+          //texts = transformYoutubeLinks(texts);
+          //texts = transformVimeoLinks(texts);
+          //texts = transformInternalLinks(texts);
+          
+
+
           if (!$rootScope.$storage.download) {
             texts = texts.replace(imgd, 'src="img/isimage.png" onclick="this.src=\'$1\'"');  
           }
@@ -665,7 +734,7 @@ module.exports = function (app) {
       eng = "shch sh ch cz ij yo ye yu ya kh zh a b v g d e z i k l m n o p r s t u f xx y x".split(d);
       return function (str, reverse) {
         if (!str) return str;
-        if (!reverse && str.substring(0, 4) !== 'ru--') return str;
+        if (!reverse && str.toString().substring(0, 4) !== 'ru--') return str;
         if (!reverse) str = str.substring(4)
 
         // TODO rework this
@@ -842,9 +911,9 @@ module.exports = function (app) {
 
         //value.total_payout_value.split(" ")[0])+parseFloat(value.total_pending_payout_value.split(" ")[0])
         //return (parseFloat(value.pending_payout_value.split(" ")[0])*rate);
-        return ((parseFloat(value.total_payout_value.split(" ")[0]))+(parseFloat(value.pending_payout_value.split(" ")[0]))*rate).toFixed(2);
+        return value.total_payout_value?((parseFloat(value.total_payout_value.split(" ")[0]))+(parseFloat(value.pending_payout_value.split(" ")[0]))*rate).toFixed(2):0;
       } else {
-        return ((parseFloat(value.total_payout_value.split(" ")[0]))+(parseFloat(value.curator_payout_value.split(" ")[0]))*rate).toFixed(2);
+        return value.total_payout_value?((parseFloat(value.total_payout_value.split(" ")[0]))+(parseFloat(value.curator_payout_value.split(" ")[0]))*rate).toFixed(2):0;
       }
     }
     //SumPostTotal.$stateful = true;
@@ -1256,16 +1325,16 @@ module.exports = function (app) {
         selectOptions: '='
       },
       require: '?^ngModel',
-      template: '<div class="item-input item-icon-right" style="width:100%;"><input ng-model="currentInput" type="text" ng-change="socketChange(currentInput)"><i class="icon ion-android-arrow-dropdown" ng-click="showOptions()"></i></div>',
+      template: '<div class="item-input item-icon-right" style="width:100%;"><input ng-model="currentInput" type="text" ng-change="socketChange(currentInput)" ng-click="showOptions()"><i class="icon ion-android-arrow-dropdown" ng-click="showOptions()"></i></div>',
       link: function(scope, element, attrs) {
         scope.options = {
           selected: ''
         }
         scope.socketChange = function(xx){
-          console.log(xx);
           $rootScope.$storage["socket"+$rootScope.$storage.chain] = xx;
           localStorage.socketUrl = xx;
           scope.restart = true;
+          scope.$emit('socketCheck');
         }
         scope.showOptions = function() {
           $ionicPopup.show({
@@ -1280,6 +1349,7 @@ module.exports = function (app) {
               type: 'button-positive',
               onTap: function(e) {
                 scope.currentInput = scope.options.selected;
+                scope.socketChange(scope.currentInput);
               }
             }]
           });
@@ -1348,12 +1418,12 @@ module.exports = function (app) {
                 comment: '='
             },
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
-                        <div class="ion-comment--author"><img class="round-avatar" check-image ng-src="{{::$root.paccounts[comment.author].profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{::comment.author}}">{{::comment.author}}</a></b>&nbsp;<div class="reputation">{{::comment.author_reputation|reputation|number:0}}</div>&middot;{{::comment.created|timeago}}</div>\
+                        <div class="ion-comment--author"><img class="round-avatar" check-image ng-src="https://img.busy.org/@{{comment.author}}?s=100" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{::comment.author}}">{{::comment.author}}</a></b>&nbsp;<div class="reputation">{{::comment.author_reputation|reputation|number:0}}</div>&middot;{{::comment.created|timeago}}</div>\
                         <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="comment.max_accepted_payout.split(\' \')[0] === \'0.000\'"><del>{{::comment | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="comment.max_accepted_payout.split(\' \')[0] !== \'0.000\'">{{::comment | sumPostTotal:$root.$storage.currencyRate | number}}</span> </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
                         <div class="ion-comment--text bodytext selectable" ng-class="{\'mask\': comment.net_rshares<0}" ng-bind-html="comment | parseUrl "></div>\
                         <div class="ion-comment--replies"><ion-spinner ng-if="comment.invoting"></ion-spinner><span ng-click="upvotePost(comment)" ng-if="!comment.upvoted" on-hold="openSliderr($event, comment)"><span class="fa fa-md fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{::"UPVOTE"|translate}}</span><span ng-click="unvotePost(comment)" ng-if="comment.upvoted" on-hold="openSliderr($event, comment)"><span class="fa fa-md fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{::"UNVOTE_UPVOTED"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{::"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.cashout_time !== \'1969-12-31T23:59:59\'" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{::\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.abs_rshares == 0" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{::\'REMOVE\'|translate}}</span></div>\
                     </ion-item>',
-            controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopover, $ionicPopup, $ionicActionSheet, $cordovaCamera, $filter, ImageUploadService) {
+            controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopover, $ionicPopup, $ionicActionSheet, $cordovaCamera, $filter, ImageUploadService, APIs) {
                   $ionicPopover.fromTemplateUrl('popoverTr.html', {
                       scope: $scope
                    }).then(function(popover) {
@@ -1459,7 +1529,7 @@ module.exports = function (app) {
                               }
                             });
                             
-                            angular.forEach(dd.accounts, function(v,k){
+                            /*angular.forEach(dd.accounts, function(v,k){
                               //console.log(k);
                               if ($rootScope.postAccounts && $rootScope.postAccounts.indexOf(k) == -1) {
                                 $rootScope.postAccounts.push(k);
@@ -1476,7 +1546,7 @@ module.exports = function (app) {
                                   $rootScope.paccounts[key] = v.json_metadata;
                                 }
                               }
-                            });
+                            });*/
                             
                             comment.comments = po;
                             comment.showChildren = true;
@@ -1512,7 +1582,7 @@ module.exports = function (app) {
                         //$rootScope.$broadcast('update:content');
                     //$rootScope.$broadcast('hide:loading');
                   };
-                  $scope.$on('postAccounts', function(){
+                  /*$scope.$on('postAccounts', function(){
                     window.steem.api.getAccountsAsync($rootScope.postAccounts, function(err, res){
                         //console.log(err, res);
                         for (var i = 0, len = res.length; i < len; i++) {
@@ -1531,7 +1601,7 @@ module.exports = function (app) {
                       }
                       $scope.$applyAsync();
                     });
-                  });
+                  });*/
                   $scope.upvotePost = function(post) {
                     $rootScope.votePost(post, 'upvote', 'update:content');
                   };
@@ -1671,7 +1741,7 @@ module.exports = function (app) {
                         setTimeout(function() {
                           ImageUploadService.uploadImage(imageData).then(function(result) {
                             //var url = result.secure_url || '';
-                            var url = result.imageUrl || '';
+                            var url = result.url || '';
                             var final = " ![image](" + url + ")";
                             $rootScope.log(final);
                             if ($scope.data.comment) {
@@ -1681,6 +1751,12 @@ module.exports = function (app) {
                             }
                             if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
                               $cordovaCamera.cleanup();
+                            }
+                            if (url) {
+                              APIs.addMyImage($rootScope.user.username, url).then(function(res){
+                                if (res)
+                                  console.log('saved image to db');
+                              });
                             }
                           },
                           function(err) {
@@ -1723,7 +1799,7 @@ module.exports = function (app) {
                       return patch;
                   }
                   function makernd() {
-                    return (Math.random()+1).toString(36).substring(2);
+                    return (Math.random()+1).toString(16).substring(2);
                   }
                   $scope.reply = function (xx) {
                     
@@ -1736,7 +1812,7 @@ module.exports = function (app) {
                         if ($rootScope.user) {
 
                           var t = new Date();
-                          var timeformat = makernd();//t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
+                          var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
                           console.log($scope.post.json_metadata);
                           var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ["esteem"], app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };                              
                           var operations_array = [];
@@ -1956,10 +2032,13 @@ module.exports = function (app) {
             // Add the Cloudinary "upload preset" name to the headers
             // "https://api.cloudinary.com/v1_1/esteem/image/upload"
             var uploadOptions = {
-              params : { 'username': $rootScope.user.username}
+              params : { 'username': $rootScope.user.username},
+              fileKey: 'postimage'
             };
             $ionicPlatform.ready(function() {
-                $cordovaFileTransfer.upload(API_END_POINT+"/api/upload", imageURI, uploadOptions).then(function(result) {
+              //API_END_POINT+"/api/upload"
+              
+                $cordovaFileTransfer.upload('https://img.esteem.ws/backend.php', imageURI, uploadOptions).then(function(result) {
                     // Let the user know the upload is completed
                     $ionicLoading.show({template : $filter('translate')('UPLOAD_COMPLETED'), duration: 1000});
                     // Result has a "response" property that is escaped
@@ -2213,6 +2292,62 @@ module.exports = function (app) {
         return textTag;
     }
 
+    function createYoutubeEmbed(key) {
+      return '<iframe width="420" height="345" src="https://www.youtube.com/embed/' + key + '" frameborder="0" allowfullscreen></iframe><br/>';
+    };
+
+    function transformYoutubeLinks(text) {
+      //const self = this;
+      const fullreg = /(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([^& \n<]+)(?:[^ \n<]+)?/g;
+      const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([^& \n<]+)(?:[^ \n<]+)?/g;
+
+      // get all the matches for youtube links using the first regex
+      const match = text.match(fullreg);
+      if (match && match.length > 0) {
+        let resultHtml = text;
+        // go through the matches one by one
+        for (var i=0; i < match.length; i++) {
+          // get the key out of the match using the second regex
+          let matchParts = match[i].split(regex);
+          // replace the full match with the embedded youtube code
+          resultHtml = resultHtml.replace(match[i], createYoutubeEmbed(matchParts[1]));
+        }
+        return resultHtml;
+
+      } else {
+        return text;
+      }
+    };
+    function transformVimeoLinks(text){
+        var vimeoRegex = /(https?:\/\/)?(www\.)?(?:vimeo)\.com.*(?:videos|video|channels|)\/([\d]+)/i;
+        var parsed = text.match(vimeoRegex);
+        console.log(parsed);
+        if (parsed && parsed.length>0) {
+          return text.replace(vimeoRegex, '<iframe width="420" height="345" src="//player.vimeo.com/video/' + parsed[3] + '" frameborder="0" allowfullscreen></iframe><br/>');
+        } else {
+          return text;
+        }
+    };
+    function transformInternalLinks(text) {
+      var users = /(^|\s)(@)([a-z][-\.a-z\d]+[a-z\d])/gim;
+      var tags = /(^|\s)(#)([a-z][-\.a-z\d]+[a-z\d])/gim;
+      var out = "";
+
+      if (text.match(users)){
+        var exist = text.match(users);
+        //console.log(exist)
+        out = text.replace(users, '<a href="#/app/profile/$3">$&</a>');  
+      } else {
+        out = text;
+      }
+      var existt = out.match(tags);
+      if(existt) {
+        //console.log(existt);
+        out = out.replace(tags, '<a href="#/app/posts/$3">$&</a>');  
+      }
+
+      return out;
+    };
 }
 
 

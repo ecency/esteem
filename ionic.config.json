@@ -3,6 +3,18 @@
   "app_id": "",
   "type": "ionic1",
   "watchPatterns": [
-    "scss/**/*"
+    "scss/**/*",
+    "www/**/*",
+    "!www/lib/**/*",
+    "!www/**/*.map"
+  ],
+  "integrations": {
+    "cordova": {}
+  },
+  "proxies": [
+    {
+      "path": "/nodes",
+      "proxyUrl": "https://storage.googleapis.com/esteem/nodes.json"
+    }
   ]
 }

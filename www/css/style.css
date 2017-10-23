@@ -1650,6 +1650,7 @@ body[dir=rtl] .bar .button.back-button, .bar button.back-button {
 }
 .bar.bar-positive {
   background-color: rgba(31,83,152,1);
+  /*#1f5398*/
 }
 .tabs-icon-top.tabs-positive .tabs {
   background-color: rgba(31,83,152,1);
@@ -1731,4 +1732,15 @@ highchart {
 .commentarea {
   max-height: 110px;
   overflow-y: scroll;
+}
+.filter.item-select .input-label{
+    width:10%;
+}
+.filter.item-select select{
+    width:100%;
+}
+div.item-input.item-icon-right {
+  border: 0;
+  margin: 0;
+  padding: 0;
 }

@@ -299,5 +299,7 @@
 	"AUTHOR_REWARD_BADGES": "Author reward badges",
 	"OTHER": "Other",
 	"ACTIVITY": "Activity",
-	"LEADERBOARD": "Leaderboard"
+	"LEADERBOARD": "Leaderboard",
+	"TRANSLATE": "Translate",
+	"TYPE": "Type"
 }
