@@ -281,7 +281,7 @@
   "DELETED_SCHEDULE":"Pianificazione eliminata",
   "MOVED_SCHEDULE":"Pianificazione spostata",
   "MOVE_TO_DRAFT":"Sposta in bozze",
-  "POWER_DOWN_SCHEDULE":"",
-  "LANGUAGE":"",
-  "INVITES":""
+  "POWER_DOWN_SCHEDULE":"Il prossimo spegnimento sarà il",
+  "LANGUAGE":"Lingua",
+  "INVITES":"Inviti"
 }

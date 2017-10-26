@@ -281,7 +281,7 @@
   "DELETED_SCHEDULE":"Excluído da agenda",
   "MOVED_SCHEDULE":"Agenda removida",
   "MOVE_TO_DRAFT":"Transferir para os rascunhos",
-  "POWER_DOWN_SCHEDULE":"",
-  "LANGUAGE":"",
-  "INVITES":""
+  "POWER_DOWN_SCHEDULE":"O próximo Power Down será",
+  "LANGUAGE":"Idioma",
+  "INVITES":"Convida"
 }
