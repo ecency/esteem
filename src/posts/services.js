@@ -639,6 +639,17 @@ module.exports = function (app) {
 	    };
 	});
 
+    app.filter('downvote', function($sce, $rootScope) {
+      
+      return function(content) {
+        //console.log(content);
+        if (content.net_rshares < 0) {
+          content.body = "This post was hidden due to low ratings.";
+        }
+        return content;
+      };
+  });
+
     app.filter('metadata', function($sce) {
         var urls = /(\b(https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;-]*[-A-Z0-9+&@#\/%=~_|])/gim;
         var users = /(^|\s)(@[a-z][-\.a-z\d]+[a-z\d])/gim;
@@ -1420,8 +1431,9 @@ module.exports = function (app) {
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
                         <div class="ion-comment--author"><img class="round-avatar" check-image ng-src="https://img.busy.org/@{{comment.author}}?s=100" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{::comment.author}}">{{::comment.author}}</a></b>&nbsp;<div class="reputation">{{::comment.author_reputation|reputation|number:0}}</div>&middot;{{::comment.created|timeago}}</div>\
                         <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="comment.max_accepted_payout.split(\' \')[0] === \'0.000\'"><del>{{::comment | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="comment.max_accepted_payout.split(\' \')[0] !== \'0.000\'">{{::comment | sumPostTotal:$root.$storage.currencyRate | number}}</span> </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
-                        <div class="ion-comment--text bodytext selectable" ng-class="{\'mask\': comment.net_rshares<0}" ng-bind-html="comment | parseUrl "></div>\
-                        <div class="ion-comment--replies"><ion-spinner ng-if="comment.invoting"></ion-spinner><span ng-click="upvotePost(comment)" ng-if="!comment.upvoted" on-hold="openSliderr($event, comment)"><span class="fa fa-md fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{::"UPVOTE"|translate}}</span><span ng-click="unvotePost(comment)" ng-if="comment.upvoted" on-hold="openSliderr($event, comment)"><span class="fa fa-md fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{::"UNVOTE_UPVOTED"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{::"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.cashout_time !== \'1969-12-31T23:59:59\'" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{::\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.abs_rshares == 0" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{::\'REMOVE\'|translate}}</span></div>\
+                        <div class="ion-comment--text bodytext selectable" ng-if="comment.net_rshares>-1" ng-bind-html="comment | parseUrl "></div>\
+                        <div class="ion-comment--text bodytext selectable" ng-if="comment.net_rshares<0">{{"HIDDEN_TEXT"|translate}}</div>\
+                        <div class="ion-comment--replies"><ion-spinner ng-if="comment.invoting"></ion-spinner><span ng-click="upvotePost(comment)" ng-if="!comment.upvoted" on-hold="openSliderr($event, comment)"><span class="fa fa-md fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{::"UPVOTE"|translate}}</span><span ng-click="unvotePost(comment)" ng-if="comment.upvoted" on-hold="openSliderr($event, comment)"><span class="fa fa-md fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{::"UNVOTE_UPVOTED"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{::"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.cashout_time !== \'1969-12-31T23:59:59\'" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{::\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.abs_rshares == 0" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{::\'REMOVE\'|translate}}</span> <span on-tap="comment.net_rshares=0" ng-if="comment.net_rshares<0"> | <span class="ion-ios-eye-outline"></span> {{::\'SHOW\'|translate}}</span></div>\
                     </ion-item>',
             controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopover, $ionicPopup, $ionicActionSheet, $cordovaCamera, $filter, ImageUploadService, APIs) {
                   $ionicPopover.fromTemplateUrl('popoverTr.html', {

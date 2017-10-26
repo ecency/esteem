@@ -19,7 +19,7 @@
                 <div class="reputation">{{$root.user.reputation|reputation}}
                 </div>
               </h4>
-              <div class="about">{{::$root.user.json_metadata.profile.about}}</div>
+              <div class="about">{{$root.user.json_metadata.profile.about}}</div>
               <div class="padding profile_stats">
                 <i class="icon ion-android-list"></i>&nbsp;{{::$root.user.post_count}}&nbsp;| <i class="icon ion-ios-people"></i>&nbsp;{{::followdetails.follower_count}}&nbsp;| <i class="icon ion-person-add"></i>&nbsp;{{::followdetails.following_count}}&nbsp;| <i class="icon ion-arrow-graph-up-right"></i>&nbsp;{{$root.user.voting_power/100|number:2}}&nbsp;<span ng-if="votecount>0">| <i class="fa fa-chevron-circle-up"></i>&nbsp;{{votecount}}</span>
               </div>
