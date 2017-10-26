@@ -281,7 +281,7 @@
   "DELETED_SCHEDULE":"Supprimer planification",
   "MOVED_SCHEDULE":"Déplacer planification",
   "MOVE_TO_DRAFT":"Déplacer vers brouillon",
-  "POWER_DOWN_SCHEDULE":"",
-  "LANGUAGE":"",
-  "INVITES":""
+  "POWER_DOWN_SCHEDULE":"La prochaine diminution de puissance",
+  "LANGUAGE":"Langue",
+  "INVITES":"Invitations"
 }
