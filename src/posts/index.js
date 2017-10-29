@@ -283,7 +283,6 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('ur-PK', require('./locales/ready/ur-PK')); //Urdu Pakistani
   $translateProvider.translations('hi-IN', require('./locales/ready/hi-IN')); //Hindi
   $translateProvider.translations('th-TH', require('./locales/ready/th-TH')); //Thai
-
   $translateProvider.translations('en-GB', require('./locales/ready/en-GB')); //en-GB
   $translateProvider.translations('en-CA', require('./locales/ready/en-CA')); //en-CA
   $translateProvider.translations('sq-AL', require('./locales/ready/sq-AL')); //Albanian
@@ -293,6 +292,21 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('no-NO', require('./locales/ready/no-NO')); //Norwegian
   $translateProvider.translations('sk-SK', require('./locales/ready/sk-SK')); //Slovak
   $translateProvider.translations('ta-IN', require('./locales/ready/ta-IN')); //Tamil
+
+  $translateProvider.translations('yo-NG', require('./locales/ready/yo-NG')); //Yoruba
+  $translateProvider.translations('vi-VN', require('./locales/ready/vi-VN')); //Vietnamese
+  $translateProvider.translations('ac-ace', require('./locales/ready/ac-ace')); //Acehnese
+  $translateProvider.translations('sk-SK', require('./locales/ready/sk-SK')); //Slovenian
+  $translateProvider.translations('si-LK', require('./locales/ready/si-LK')); //Sinhala
+  $translateProvider.translations('ka-GE', require('./locales/ready/ka-GE')); //Georgian
+  $translateProvider.translations('en-AU', require('./locales/ready/en-AU')); //English Australia
+  $translateProvider.translations('ro-RO', require('./locales/ready/ro-RO')); //Romanian
+  $translateProvider.translations('pa-IN', require('./locales/ready/pa-IN')); //Punjabi
+  $translateProvider.translations('da-DK', require('./locales/ready/da-DK')); //Danish
+  $translateProvider.translations('ha-HG', require('./locales/ready/ha-HG')); //Hausa
+  $translateProvider.translations('ceb-PH', require('./locales/ready/ceb-PH')); //Cebuana
+  $translateProvider.translations('as-IN', require('./locales/ready/as-IN')); //Assamese
+
 
   $translateProvider.useSanitizeValueStrategy(null);
   $translateProvider.preferredLanguage('en-US');
@@ -439,6 +453,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       {id:'en-US', name: 'English'},
       {id:'en-GB', name: 'English GB'},
       {id:'en-CA', name: 'English CA'},
+      {id:'en-AU', name: 'English AU'}, //English Australia
       {id:'es-ES', name: 'Español'}, 
       {id:'el-GR', name: 'Ελληνικά'}, 
       {id:'fr-FR', name: 'Français'}, 
@@ -479,8 +494,19 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       {id:'ne-NP', name: 'नेपाली भाषा'},
       {id:'ca-ES', name: 'Català'},
       {id:'bn-BD', name: 'বাংলা'},
-      {id:'sq-AL', name: 'Shqip'}
-
+      {id:'sq-AL', name: 'Shqip'},
+      {id:'yo-NG', name: 'Èdè Yorùbá'}, //Yoruba
+      {id:'vi-VN', name: 'Tiếng Việt'}, //Vietnamese
+      {id:'ac-ace', name: 'Basa Acèh'}, //Acehnese
+      {id:'sk-SK', name: 'Slovenščina'}, //Slovenian
+      {id:'si-LK', name: 'සිංහල'}, //Sinhala
+      {id:'ka-GE', name: 'ქართული'}, //Georgian
+      {id:'ro-RO', name: 'Limba română'}, //Romanian
+      {id:'pa-IN', name: 'ਪੰਜਾਬੀ'}, //Punjabi
+      {id:'da-DK', name: 'Dansk'}, //Danish
+      {id:'ha-HG', name: 'Harshen Hausa'}, //Hausa
+      {id:'ceb-PH', name: 'Cebuan'}, //Cebuano
+      {id:'as-IN', name: 'অসমীয়া'} //Assamese
     ];
     if (!$rootScope.$storage.dir) {
       $rootScope.$storage.dir = 'ltr';
