@@ -306,6 +306,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
   $translateProvider.translations('ha-HG', require('./locales/ready/ha-HG')); //Hausa
   $translateProvider.translations('ceb-PH', require('./locales/ready/ceb-PH')); //Cebuana
   $translateProvider.translations('as-IN', require('./locales/ready/as-IN')); //Assamese
+  $translateProvider.translations('tr-TR', require('./locales/ready/tr-TR')); //Turkish
 
 
   $translateProvider.useSanitizeValueStrategy(null);
@@ -506,7 +507,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       {id:'da-DK', name: 'Dansk'}, //Danish
       {id:'ha-HG', name: 'Harshen Hausa'}, //Hausa
       {id:'ceb-PH', name: 'Cebuan'}, //Cebuano
-      {id:'as-IN', name: 'অসমীয়া'} //Assamese
+      {id:'as-IN', name: 'অসমীয়া'}, //Assamese
+      {id:'tr-TR', name: 'Türkçe'} //Turkish
     ];
     if (!$rootScope.$storage.dir) {
       $rootScope.$storage.dir = 'ltr';
@@ -1398,7 +1400,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                       }
                       setTimeout(function() {
                         $rootScope.getContentAndOpen({author:data.author, permlink:data.permlink});
-                      }, 10);
+                      }, 300);
                     } else {
                       $rootScope.log("not sure to open alert");
                     }

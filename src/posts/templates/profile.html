@@ -81,8 +81,9 @@
             next_vesting_withdrawal:"1969-12-31T23:59:59"
 
             -->
-            <div class="item" ng-repeat="playlist in data.profile | orderBy:'-created' track by $index" >
+            <div class="item" ng-repeat="playlist in data.profile | orderBy:'-created' track by $index" ng-class="{'item-thumbnail-left': playlist.json_metadata.indexOf('image')>-1}">
               <!--ng-class="{'item-thumbnail-left': playlist.json_metadata.image}" <img check-image on-tap="open(playlist)" ng-if='playlist.json_metadata.indexOf("image")>-1' ng-src="{{playlist|catchimage}}" onerror="this.src='img/noimage.png'"/>-->
+              <img check-image on-tap="open(playlist)" ng-if='playlist.json_metadata.indexOf("image")>-1' ng-src="{{playlist|catchimage}}" onerror="this.src='img/noimage.png'"/>
                 <div on-tap="open(playlist)">
                 <div class="wrap">
                   <h2><i class="fa fa-money positive" ng-if="playlist.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="playlist.percent_steem_dollars === 0"></i>{{playlist.root_title}}</h2>
