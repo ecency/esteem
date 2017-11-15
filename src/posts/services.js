@@ -1380,7 +1380,7 @@ module.exports = function (app) {
                   }).error(function(){
                       //alert('image not exist');
                       if ($rootScope.chain && $rootScope.chain == 'steem') {
-                        element.attr('src', 'https://steemitimages.com/0x0/'+ngSrc); // set default image  
+                        element.attr('src', ngSrc); // set default image  
                       } else if ($rootScope.chain && $rootScope.chain == 'golos') {
                         element.attr('src', 'https://imgp.golos.io/0x0/'+ngSrc); // set default image  
                       } else {
@@ -1846,7 +1846,7 @@ module.exports = function (app) {
                               permlink: "re-"+$scope.post.author.replace(/\./g, "")+"-"+timeformat,  
                               max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
                               percent_steem_dollars: 10000,
-                              extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
+                              extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
                             }]
                             ];
                           

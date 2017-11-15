@@ -1201,7 +1201,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       if (checkDate(resultObject.date, ignore)) {
         if ($rootScope.$storage.chain == 'steem'){
           APIs.getCurrencyRate("USD", xx ).then(function(res){
-            $rootScope.$storage.currencyRate = Number(res.data.query.results.rate.Rate);
+            console.log(res);
+
+            $rootScope.$storage.currencyRate = (res.data.query.results!==null)?Number(res.data.query.results.rate.Rate):1;
             $rootScope.$storage.currencies.filter(function(obj){
               if (obj.id == xx) {
                 obj.rate = $rootScope.$storage.currencyRate;

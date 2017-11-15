@@ -817,7 +817,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
           permlink: permlink,
           max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
           percent_steem_dollars: 10000,
-          extensions: [[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
+          extensions: [[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
         }]
         ];
       
@@ -1724,7 +1724,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             permlink: permlink,
             max_accepted_payout: $scope.spost.operation_type==='sp'?"1000000.000 "+$rootScope.$storage.platformdunit:"0.000 "+$rootScope.$storage.platformdunit,
             percent_steem_dollars: $scope.spost.operation_type==='sp'?0:10000,
-            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
+            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
           }]
           ];
           if ($scope.spost.upvote_this) {
@@ -1754,7 +1754,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             permlink: permlink,
             max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
             percent_steem_dollars: 10000,
-            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
+            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
           }]
           ];
           if ($scope.spost.upvote_this) {
@@ -3088,7 +3088,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           permlink: $scope.spost.permlink,
           max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
           percent_steem_dollars: 10000,
-          extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
+          extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
         }];
         operations_array.push(xx);
       }
@@ -3179,7 +3179,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             permlink: $scope.post.permlink,  
             max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
             percent_steem_dollars: 10000,
-            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
+            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
           }];
           operations_array.push(xx);
         }
@@ -3245,7 +3245,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             permlink: "re-"+$scope.post.author.replace(/\./g, "")+"-"+timeformat,  
             max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
             percent_steem_dollars: 10000,
-            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
+            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
           }]
           ];
         window.steem.broadcast.sendAsync({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
@@ -5254,7 +5254,6 @@ app.controller('ActivityCtrl', function($scope, $rootScope, APIs, $stateParams, 
     if ($scope.filter.activity == 'votes') {
       APIs.getMyVotes($stateParams.username).then(function(res){
         if (res) {
-          console.log(res);
           //$rootScope.log(angular.toJson(res.data));
           if (res.data.fatal) {
             //$scope.showVotes();
@@ -5462,8 +5461,8 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
         var received_msg = JSON.parse(evt.data);
         var local_time = new Date(new Date().toISOString().split('.')[0]);
         var server_time = new Date(received_msg.result.time);
-        console.log("Message is received...", local_time-server_time>3100);
-        $scope.alive = local_time-server_time<3100;
+        console.log("Message is received...",local_time,server_time,local_time-server_time>9000);
+        $scope.alive = local_time-server_time<9000;
         if(!$scope.$$phase){
           $scope.$apply();
         }

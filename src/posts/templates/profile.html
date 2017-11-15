@@ -84,12 +84,13 @@
             <div class="item" ng-repeat="playlist in data.profile | orderBy:'-created' track by $index" ng-class="{'item-thumbnail-left': playlist.json_metadata.indexOf('image')>-1}">
               <!--ng-class="{'item-thumbnail-left': playlist.json_metadata.image}" <img check-image on-tap="open(playlist)" ng-if='playlist.json_metadata.indexOf("image")>-1' ng-src="{{playlist|catchimage}}" onerror="this.src='img/noimage.png'"/>-->
               <img check-image on-tap="open(playlist)" ng-if='playlist.json_metadata.indexOf("image")>-1' ng-src="{{playlist|catchimage}}" onerror="this.src='img/noimage.png'"/>
+                <span class="item-myavatarsmall"><img ion-img-cache ng-src="https://img.busy.org/@{{playlist.author}}?s=25">&nbsp;<span>{{playlist.author}}&nbsp;<div class="reputation">{{playlist.author_reputation|reputation|number:0}}</div></span><span ng-if="playlist.author!==user.username && active!=='recent-replies'">&nbsp; <i class="icon ion-arrow-return-right"></i></span></span>
                 <div on-tap="open(playlist)">
                 <div class="wrap">
                   <h2><i class="fa fa-money positive" ng-if="playlist.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="playlist.percent_steem_dollars === 0"></i>{{playlist.root_title}}</h2>
                 </div>
                 <p ng-bind-html="playlist|parseUrl|limitTo:20|ldots" ng-if="active!='blog'"></p>
-                <div class="postdetails"><i class="icon ion-android-time"></i>&nbsp;{{playlist.created|timeago}}&nbsp;{{::'BY'|translate}}&nbsp;<i class="icon ion-android-person"></i>&nbsp;{{playlist.author}}&nbsp;<div class="reputation">{{playlist.author_reputation|reputation|number:0}}</div></div>
+                <div class="postdetails"><i class="icon ion-android-time"></i>&nbsp;{{playlist.created|timeago}}</div>
                 </div>
                 <div class="row gray profile">
                   <div class="col"><ion-spinner ng-if="playlist.invoting"></ion-spinner>
@@ -97,7 +98,6 @@
                    <!--<i class="fa fa-chevron-circle-down fa-lg" on-tap="downvotePost(playlist)" ng-if="!playlist.downvoted"></i><i class="fa fa-chevron-circle-down fa-lg positive" on-tap="unvotePost(playlist)" ng-if="playlist.downvoted"></i>--></div>
                   <div class="col" on-tap="openTooltip($event,playlist)">&nbsp; <b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="playlist.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{playlist | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="playlist.max_accepted_payout.split(' ')[0] !== '0.000'">{{playlist | sumPostTotal:$root.$storage.currencyRate | number}}</span></div>
                   <div class="col">&nbsp; <i class="icon ion-chatbubbles"></i>&nbsp;{{playlist.children}}</div>
-                  <div class="col" ng-if="playlist.author!==user.username && active!=='recent-replies'">&nbsp; <i class="icon ion-arrow-return-right"></i></div>
                 </div>
             </div>
           </ion-list>
