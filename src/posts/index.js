@@ -341,17 +341,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     //window.steem.config.set('websocket',localStorage.socketUrl); 
     window.steem.api.setOptions({ url: localStorage.socketUrl });
     console.log('run ready');
-    /*$ionicPlatform.registerBackButtonAction(function (event) {
-    if ( ($state.$current.name=="app.posts") ){
-            // H/W BACK button is disabled for these states (these views)
-            // Do not go to the previous state (or view) for these states. 
-            // Do nothing here to disable H/W back button.
-        } else {
-            // For all other states, the H/W BACK button is enabled
-            navigator.app.backHistory();
-        }
-    }, 100);
-    */
+    
 
     if (ionic.Platform.isIOS()){
       setTimeout(function () {
@@ -657,33 +647,16 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       }, 100);
     });
 
-    /*$rootScope.$on('openurl', function(event, args){
-      
-      console.log(localStorage.openurl);
-
-      if (localStorage.openurl) {
-        var parts = localStorage.openurl.split('/');
-        $state.go('app.post', {category: parts[2], author: parts[3].substr(1), permlink: [4]});
-      }
-    });*/
-
+   
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
       $rootScope.log("from "+fromState.name+" to "+toState.name);
     });
 
-    /*if (localStorage.openurl) {
-      $rootScope.$broadcast('openurl');
-    }*/
+   
 
     $ionicPlatform.on('resume', function(){
       $rootScope.log("app resume");
       
-      /*setTimeout(function() {
-        if (localStorage.openurl) {
-          $rootScope.$broadcast('openurl');
-        }  
-      }, 1000);
-      */
       if ($rootScope.$storage.pincode) {
         $rootScope.pincheck = true;
         $rootScope.$broadcast("pin:check");
@@ -1269,23 +1242,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           }
           //$rootScope.showMessage("title", angular.toJson(data));
         });  
-     
-        /*window.FirebasePlugin.getToken(function(token) {
-            // save this server-side and use it to push notifications to this device
-            $rootScope.log("device "+token);
-            $rootScope.$storage.deviceid = token;
-            if ($rootScope.$storage.user) {
-              APIs.saveSubscription(token, $rootScope.$storage.user.username, { device: ionic.Platform.platform() }).then(function(res){
-                $rootScope.log(angular.toJson(res));
-              });
-            } else {
-              APIs.saveSubscription(token, "", { device: ionic.Platform.platform() }).then(function(res){
-                $rootScope.log(angular.toJson(res));
-              });
-            }
-        }, function(error) {
-            console.error(error);
-        });*/
 
         FCMPlugin.getToken(function(token){
           // save this server-side and use it to push notifications to this device
@@ -1302,20 +1258,6 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           }
         });
 
-        /*window.FirebasePlugin.onTokenRefresh(function(token) {
-          APIs.updateToken($rootScope.$storage.deviceid, token).then(function(res){
-            console.log(angular.toJson(res));
-            if (res.status) {
-              $rootScope.$storage.deviceid = token  
-            }
-          });
-          if (!$rootScope.$$phase){
-            $rootScope.$apply();
-          }
-        }, function(error) {
-          console.error(error);
-        });*/
-
         FCMPlugin.onTokenRefresh(function(token){
           console.log('token refreshing....')
           APIs.updateToken($rootScope.$storage.deviceid, token).then(function(res){
@@ -1329,61 +1271,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           }
         });
 
-        /*window.FirebasePlugin.onNotificationOpen(function(data) {
-            $rootScope.log(angular.toJson(data));
-
-            //console.log(angular.toJson(data));
-
-            //$rootScope.$storage.notifications.push({title:data.title, message: data.body, author: data.author, permlink: data.permlink, created: new Date()});
-
-            if(data.tap){
-              //Notification was received on device tray and tapped by the user.
-              if (data.author && data.permlink) {
-                if (!$rootScope.$storage.pincode) {
-
-                  var alertPopup = $ionicPopup.confirm({
-                    title: data.title,
-                    template: data.body + $filter('translate')('OPENING_POST')
-                  });
-
-                  alertPopup.then(function(res) {
-                    $rootScope.log('Thank you for seeing alert from tray');
-                    if (res) {
-                      setTimeout(function() {
-                        $rootScope.getContentAndOpen({author:data.author, permlink:data.permlink});
-                      }, 10);
-                    } else {
-                      $rootScope.log("not sure to open alert");
-                    }
-                  });
-
-                } else {
-                  $rootScope.$storage.notifData = {title:data.title, body: data.body, author: data.author, permlink: data.permlink};
-                  $rootScope.pinenabled = true;
-                }
-              }
-            } else{
-              //Notification was received in foreground. Maybe the user needs to be notified.
-              //alert( JSON.stringify(data) );
-              if (data.author && data.permlink) {
-                $rootScope.showMessage(data.title, data.body+" "+data.permlink);
-              } else {
-                $rootScope.showMessage(data.title, data.body);
-              }
-            }
-        }, function(error) {
-            console.error(error);
-        });
-        */
-
         //FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
         //Here you define your application behaviour based on the notification data.
         FCMPlugin.onNotification(function(data){
           $rootScope.log(angular.toJson(data));
-
-            //console.log(angular.toJson(data));
-
-            //$rootScope.$storage.notifications.push({title:data.title, message: data.body, author: data.author, permlink: data.permlink, created: new Date()});
 
             if(data.wasTapped){
               //Notification was received on device tray and tapped by the user.
