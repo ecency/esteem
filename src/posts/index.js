@@ -15,9 +15,9 @@ var app = angular.module('esteem', [
 ]);
 
 if (localStorage.getItem("socketUrl") === null) {
-  localStorage.setItem("socketUrl", "wss://steemd.steemit.com");
+  localStorage.setItem("socketUrl", "https://api.steemit.com");
 } else if (localStorage.getItem("socketUrl") == "wss://steemit.com/wspa") {
-  localStorage.socketUrl="wss://steemd.steemit.com";
+  localStorage.socketUrl="https://steemd.steemit.com";
 }
 
 localStorage.golosId = "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12";
@@ -338,8 +338,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       //StatusBar.styleLightContent();
     }
 
-    window.steem.config.set('websocket',localStorage.socketUrl); 
-
+    //window.steem.config.set('websocket',localStorage.socketUrl); 
+    window.steem.api.setOptions({ url: localStorage.socketUrl });
     console.log('run ready');
     /*$ionicPlatform.registerBackButtonAction(function (event) {
     if ( ($state.$current.name=="app.posts") ){
@@ -404,10 +404,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     }
 
     if (!$rootScope.$storage.socketgolos) {
-      $rootScope.$storage.socketgolos = "wss://ws.golos.io/";
+      $rootScope.$storage.socketgolos = "https://ws.golos.io/";
     }
     if (!$rootScope.$storage.socketsteem) {
-      $rootScope.$storage.socketsteem = "wss://steemd.steemit.com";
+      $rootScope.$storage.socketsteem = "https://steemd.steemit.com";
     }
     
     window.steem.config.set('chain_id',localStorage[$rootScope.$storage.chain+"Id"]);
@@ -689,7 +689,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.$broadcast("pin:check");
       }
 
-      window.steem.config.set('websocket',localStorage.socketUrl);
+      //window.steem.config.set('websocket',localStorage.socketUrl);
+      window.steem.api.setOptions({ url: localStorage.socketUrl });
       window.steem.config.set('chain_id',localStorage[$rootScope.$storage.chain+"Id"]);
       
       if ($rootScope.$storage.chain == 'golos') {
@@ -1144,7 +1145,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       
       console.log(localStorage.socketUrl, $rootScope.$storage.chain);
 
-      window.steem.config.set('websocket',localStorage.socketUrl);
+      //window.steem.config.set('websocket',localStorage.socketUrl);
+      window.steem.api.setOptions({ url: localStorage.socketUrl });
+
       window.steem.config.set('chain_id',localStorage[$rootScope.$storage.chain+"Id"]);
       if ($rootScope.$storage.chain == 'golos') {
         window.steem.config.set('address_prefix','GLS');  
@@ -1168,7 +1171,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.$storage.platformdunit = "SBD";
         $rootScope.$storage.platformpunit = "SP";
         $rootScope.$storage.platformlunit = "STEEM";
-        $rootScope.$storage.socketsteem = "wss://steemd.steemit.com";
+        $rootScope.$storage.socketsteem = "https://steemd.steemit.com";
       } else {
         $rootScope.$storage.platformname = "ГОЛОС";
         $rootScope.$storage.platformpower = "СИЛА ГОЛОСА";
@@ -1177,7 +1180,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.$storage.platformdunit = "GBG";
         $rootScope.$storage.platformpunit = "GOLOSP";
         $rootScope.$storage.platformlunit = "GOLOS";
-        $rootScope.$storage.socketgolos = "wss://ws.golos.io/";
+        $rootScope.$storage.socketgolos = "https://ws.golos.io/";
       }
       $rootScope.chain = $rootScope.$storage.chain;
       if (!$rootScope.$$phase) {
@@ -1207,7 +1210,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
             $rootScope.$storage.currencies.filter(function(obj){
               if (obj.id == xx) {
                 obj.rate = $rootScope.$storage.currencyRate;
-                obj.date = res.data.query.results.rate.Date==="N/A"?new Date() : res.data.query.results.rate.Date;
+                obj.date = (res.data.query.results===null || res.data.query.results.rate.Date==="N/A")?new Date() : res.data.query.results.rate.Date;
               }
             });
           });

@@ -257,7 +257,9 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     
     //console.log(localStorage.socketUrl);
 
-    window.steem.config.set('websocket',localStorage.socketUrl);
+    //window.steem.config.set('websocket',localStorage.socketUrl);
+    window.steem.api.setOptions({ url: localStorage.socketUrl });
+
     window.steem.config.set('chain_id',localStorage[$scope.loginData.chain+"Id"]);
 
     if ($scope.loginData.chain == 'golos') {
@@ -281,7 +283,8 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         var socketUrl = $rootScope.$storage["socket"+$scope.loginData.chain];
         //console.log(socketUrl);
         //window.Api = window.steemRPC.Client.get({url:socketUrl}, true);
-        window.steem.config.set('websocket',socketUrl); 
+        //window.steem.config.set('websocket',socketUrl); 
+        window.steem.api.setOptions({ url: socketUrl });
 
       }
       var loginSuccess = false;
@@ -3561,74 +3564,27 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     });*/
   }
   $scope.$on('postAccounts', function(event, data){
-    //console.log(event);
-    //console.log('postAccounts');
-    /*$rootScope.paccounts = {};
-    if (!$scope.$$phase) {
-      $scope.$apply();
-    }
-    //console.log(window.Api);
-    //window.Api = steemRPC.Client.get({url:localStorage.socketUrl}, true);
-    window.steem.api.getAccountsAsync($rootScope.postAccounts, function(err, res){
-      //console.log(err, res);
-      if (res) {
-          for (var i = 0, len = res.length; i < len; i++) {
-            var v = res[i];
-            var key = v.name;
-            if (!$rootScope.paccounts.hasOwnProperty(key)) {
-              if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
-                if (v.json_metadata) {
-                  if (v.json_metadata.indexOf("created_at")>-1) {
-                    v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
-                  } else {
-                    v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):{};
-                  }
-                  $rootScope.paccounts[key] = v.json_metadata;
-                }
-              }
-            }
-          }  
-        $scope.$applyAsync();
-      }
-    });
-    event.preventDefault();*/
+    console.log('postAccounts');
   });
   
   $scope.$on('$ionicView.afterEnter', function(ev){
-    //if(ev.targetScope !== $scope)
-    //  return;
     $rootScope.log('enter postctrl');
-    //$scope.user = $rootScope.$storage.user || undefined;
     $rootScope.postAccounts = [];
     $rootScope.paccounts = [];
-    //$rootScope.$broadcast('show:loading');
     if ($stateParams.category === '111') {
       var ttemp = $rootScope.sitem;
       $scope.post = ttemp;
       
-      //if ($rootScope.sitem && $rootScope.sitem.body) {
-      /*if ($rootScope.postAccounts && $rootScope.postAccounts.indexOf($rootScope.sitem.author) == -1) {
-        $rootScope.postAccounts.push($rootScope.sitem.author);
-      }*/
+     
       $scope.$evalAsync(function($scope){
         $rootScope.$emit('update:content');
-        //$scope.$broadcast('postAccounts');
       });
-      //} else {
-        
-      //}
     } else {
       if ($stateParams.author.indexOf('@')>-1){
         $stateParams.author = $stateParams.author.substr(1);
       }
-      //$rootScope.postAccounts.push($stateParams.author);
-      //$scope.$broadcast('postAccounts');
-      /*if ($rootScope.postAccounts && $rootScope.postAccounts.indexOf($rootScope.sitem.author) == -1) {
-        $rootScope.postAccounts.push($rootScope.sitem.author);
-      }*/
       $scope.$evalAsync(function($scope){
         $scope.getContent($stateParams.author, $stateParams.permlink);    
-        //$scope.$broadcast('postAccounts');
       });      
     }
   });
@@ -3638,9 +3594,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   };
   $rootScope.$on('getContent', function() {
     setTimeout(function() {
-    //$scope.$evalAsync(function($scope) {
       $scope.getContent($rootScope.sitem.author, $rootScope.sitem.permlink);  
-    //});
     }, 1);
   });
   $scope.downvotePost = function(post) {
@@ -5404,8 +5358,8 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       $rootScope.$storage.platformdunit = "SBD";
       $rootScope.$storage.platformpunit = "SP";
       $rootScope.$storage.platformlunit = "STEEM";
-      $rootScope.$storage.socketsteem = "wss://steemd.steemit.com";
-      $scope.socket = "wss://steemd.steemit.com";
+      $rootScope.$storage.socketsteem = "https://steemd.steemit.com";
+      $scope.socket = "https://steemd.steemit.com";
     } else {
       $rootScope.$storage.platformname = "ГОЛОС";
       $rootScope.$storage.platformpower = "СИЛА ГОЛОСА";
@@ -5414,8 +5368,8 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       $rootScope.$storage.platformdunit = "GBG";
       $rootScope.$storage.platformpunit = "GOLOSP";
       $rootScope.$storage.platformlunit = "GOLOS";
-      $rootScope.$storage.socketgolos = "wss://ws.golos.io/";
-      $scope.socket = "wss://ws.golos.io/";
+      $rootScope.$storage.socketgolos = "https://ws.golos.io/";
+      $scope.socket = "https://ws.golos.io/";
     }
     $rootScope.chain = $rootScope.$storage.chain;
     window.steem.config.set('chain_id',localStorage[$rootScope.$storage.chain+"Id"]);
@@ -5440,7 +5394,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
 
   $scope.$on('socketCheck', function(){
     //console.log(localStorage.socketUrl);
-    var ws = new WebSocket(localStorage.socketUrl);
+    var ws = new WebSocket(localStorage.socketUrl.replace('http','ws'));
     ws.onopen = function()
     {
       var message = {
@@ -5461,8 +5415,8 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
         var received_msg = JSON.parse(evt.data);
         var local_time = new Date(new Date().toISOString().split('.')[0]);
         var server_time = new Date(received_msg.result.time);
-        console.log("Message is received...",local_time,server_time,local_time-server_time>9000);
-        $scope.alive = local_time-server_time<9000;
+        console.log("Message is received...",local_time,server_time,local_time-server_time>15000);
+        $scope.alive = local_time-server_time<15000;
         if(!$scope.$$phase){
           $scope.$apply();
         }
@@ -5652,7 +5606,8 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
            
             window.steem.config.set('chain_id',localStorage[$rootScope.$storage.chain+"Id"]);
             
-            window.steem.config.set('websocket',socketUrl); 
+            //window.steem.config.set('websocket',socketUrl); 
+            window.steem.api.setOptions({ url: socketUrl });
             
             if ($rootScope.$storage.chain == 'golos') {
               window.steem.config.set('address_prefix','GLS');  

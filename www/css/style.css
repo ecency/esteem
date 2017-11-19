@@ -226,6 +226,7 @@ hr {
 .profile.bar-footer {
 	height: 60px;
 	padding: 0;
+  bottom: 0;
 }/*
 .button-small {
   width: 30px;
