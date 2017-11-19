@@ -4,9 +4,8 @@ module.exports = function (app) {
 	app.service('APIs', ['$http', '$rootScope', 'API_END_POINT', function ($http, $rootScope, API_END_POINT) {
 		'use strict';
 		return {
-      getCurrencyRate: function(code_from, code_to){
-        console.log(code_from,code_to);
-        return $http.get("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.xchange%20where%20pair%20in%20(%22"+code_from+code_to+"%22)&format=json&diagnostics=false&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
+      getCurrencyRate: function(code_to, chain){
+        return $http.get(API_END_POINT+"/api/currencyRate/"+code_to.toUpperCase()+"/"+chain);
       },
       saveSubscription: function(deviceid, username, subscription) {
         return $http.post(API_END_POINT+"/api/devices", {deviceid: deviceid, username: username, subscription: subscription, chain: $rootScope.$storage.chain});

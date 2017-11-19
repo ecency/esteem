@@ -1176,26 +1176,27 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       //searchObj(xx, $rootScope.$storage.currencies);
       if (checkDate(resultObject.date, ignore)) {
         if ($rootScope.$storage.chain == 'steem'){
-          APIs.getCurrencyRate("USD", xx ).then(function(res){
+          APIs.getCurrencyRate( xx,'steem' ).then(function(res){
             console.log(res);
 
-            $rootScope.$storage.currencyRate = (res.data.query.results!==null)?Number(res.data.query.results.rate.Rate):1;
+            $rootScope.$storage.currencyRate = (res.data)?Number(res.data):1;
             $rootScope.$storage.currencies.filter(function(obj){
               if (obj.id == xx) {
                 obj.rate = $rootScope.$storage.currencyRate;
-                obj.date = (res.data.query.results===null || res.data.query.results.rate.Date==="N/A")?new Date() : res.data.query.results.rate.Date;
+                obj.date = new Date();
               }
             });
           });
         } else {
-          APIs.getCurrencyRate("XAU", xx ).then(function(res){
+          APIs.getCurrencyRate( xx,'golos' ).then(function(res){
+            console.log(res);
             //XAU - 31.1034768g
             //GBG rate in mg. so exchangeRate/31103.4768
-            $rootScope.$storage.currencyRate = Number(res.data.query.results.rate.Rate)/31103.4768;
+            $rootScope.$storage.currencyRate = Number(res.data)/31103.4768;
             $rootScope.$storage.currencies.filter(function(obj){
               if (obj.id == xx) {
                 obj.rate = $rootScope.$storage.currencyRate;
-                obj.date = res.data.query.results.rate.Date==="N/A"?new Date() : res.data.query.results.rate.Date;
+                obj.date = new Date();
               }
             });
             //console.log($rootScope.$storage.currencyRate);
