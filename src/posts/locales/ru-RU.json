@@ -292,7 +292,7 @@
 	"POWER_UP": "",
 	"FAQ": "",
 	"TRANSFER_TO_SAVINGS": "",
-	"CONVERT_TO_STEEM": "",
+	"CONVERT_TO_STEEM": "Конвертировать в {{platformname}}",
 	"WITHDRAW": "",
 	"PARTICIPATION_BADGES": "",
 	"FOLLOWER_BADGES": "",
@@ -300,8 +300,8 @@
 	"OTHER": "",
 	"ACTIVITY": "",
 	"LEADERBOARD": "",
-	"TRANSLATE": "",
-	"TYPE": "",
-	"SHOW": "",
-	"HIDDEN_TEXT": ""
+	"TRANSLATE": "Перевести",
+	"TYPE": "Тип",
+	"SHOW": "Показать",
+	"HIDDEN_TEXT": "Этот пост был скрыт из-за низкого рейтинга"
 }
