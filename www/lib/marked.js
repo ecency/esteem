@@ -914,9 +914,9 @@ Renderer.prototype.link = function(href, title, text) {
       if (href.indexOf('http://dirtyimg.com/')>-1){
         //href='https://img1.steemit.com/0x0/'+href;
         //https://steemitimages.com/0x0/https://scontent-frt3-2.xx.fbcdn.net/v/t31.0-8/18451703_119604535281306_269245501681123810_o.jpg?oh=bb4511494db5f4fe3aa51e282fe5c361&oe=597629E3
-        out = href.replace(imgs, '<img check-image src="$1$2" class="postimg" />');  
+        out = href.replace(imgs, '<img check-image src="https://steemitimages.com/0x0/$1$2" class="postimg" />');  
       } else {
-        out = href.replace(imgs, '<img check-image src="$1$2" class="postimg" />');  
+        out = href.replace(imgs, '<img check-image src="https://steemitimages.com/0x0/$1$2" class="postimg" />');  
       }  
     } else {
       out = '<a href onClick=\'window.open("' + href + '", \"_system\", \"location=yes\");return false;\'';
@@ -966,7 +966,7 @@ Renderer.prototype.link = function(href, title, text) {
 
 Renderer.prototype.image = function(href, title, text) {
   
-  var out = '<img check-image src="' + href + '" alt="' + text + '"';
+  var out = '<img check-image src="https://steemitimages.com/0x0/' + href + '" alt="' + text + '"';
   //var out = '<img src="img/isimage.png" alt="' + text + '"';
   
   if (title) {

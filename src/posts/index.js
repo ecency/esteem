@@ -15,7 +15,7 @@ var app = angular.module('esteem', [
 ]);
 
 if (localStorage.getItem("socketUrl") === null) {
-  localStorage.setItem("socketUrl", "https://api.steemit.com");
+  localStorage.setItem("socketUrl", "https://steemd.steemit.com");
 } else if (localStorage.getItem("socketUrl") == "wss://steemit.com/wspa") {
   localStorage.socketUrl="https://steemd.steemit.com";
 }

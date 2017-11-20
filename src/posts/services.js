@@ -474,7 +474,7 @@ module.exports = function (app) {
       var x1 = inp.json_metadata.split('"image":');
       
       if (x1 && x1.length>1){
-        return x1[1].split('"')[1];
+        return "https://steemitimages.com/0x0/"+x1[1].split('"')[1];
       } else {
         return "";
       }
@@ -1376,12 +1376,11 @@ module.exports = function (app) {
               attrs.$observe('ngSrc', function(ngSrc) {
                 if (ngSrc) {
                   $http.get(ngSrc).success(function(){
-                      //alert('image exist');
-                      //console.log(image exist)
+                      console.log('image exist');
                   }).error(function(){
                       //alert('image not exist');
                       if ($rootScope.chain && $rootScope.chain == 'steem') {
-                        element.attr('src', ngSrc); // set default image  
+                        element.attr('src', 'https://steemitimages.com/0x0/'+ngSrc); // set default image  
                       } else if ($rootScope.chain && $rootScope.chain == 'golos') {
                         element.attr('src', 'https://imgp.golos.io/0x0/'+ngSrc); // set default image  
                       } else {
