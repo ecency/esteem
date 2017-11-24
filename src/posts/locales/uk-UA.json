@@ -298,10 +298,10 @@
 	"FOLLOWER_BADGES": "",
 	"AUTHOR_REWARD_BADGES": "",
 	"OTHER": "",
-	"ACTIVITY": "",
+	"ACTIVITY": "Активність",
 	"LEADERBOARD": "",
 	"TRANSLATE": "",
 	"TYPE": "",
-	"SHOW": "",
-	"HIDDEN_TEXT": ""
+	"SHOW": "Показати",
+	"HIDDEN_TEXT": "Цей пост було приховано через низький рейтинг"
 }
