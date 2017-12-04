@@ -905,6 +905,7 @@ app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $io
   $scope.searchEscrowID = function(id){
     if (id.length>3){
       APIs.searchEscrow(id).then(function(res){
+        console.log(res);
         if (res.data.length>0) {
           $scope.escrow = res.data[0];
           $scope.escrow.json_meta = angular.fromJson($scope.escrow.json_meta);  
@@ -3266,6 +3267,9 @@ app.controller('DraftsCtrl', function($scope, $stateParams, $rootScope, $state, 
     APIs.removeDraft(_id,$rootScope.user.username).then(function(res){
       APIs.getDrafts($rootScope.user.username).then(function(res){
         //console.log(res);
+        angular.forEach(res.data, function(v,k){
+          v.created = new Date(v.created);
+        })
         $scope.drafts = res.data;
       });
       $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_IS_UNDRAFT'));
@@ -3275,6 +3279,9 @@ app.controller('DraftsCtrl', function($scope, $stateParams, $rootScope, $state, 
   $scope.$on('$ionicView.beforeEnter', function(){
     APIs.getDrafts($rootScope.user.username).then(function(res){
       //console.log(res);
+      angular.forEach(res.data, function(v,k){
+        v.created = new Date(v.created);
+      });
       $scope.drafts = res.data;
     });
   });

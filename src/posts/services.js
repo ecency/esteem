@@ -476,15 +476,16 @@ module.exports = function (app) {
       if (x1 && x1.length>1){
         return "https://steemitimages.com/0x0/"+x1[1].split('"')[1];
       } else {
-        return "";
+        /*if (x1.length == 1) {
+          var match = regg.exec(inp.body);
+          console.log(match);
+          if (match && match.length>0)
+            return match[0];
+          else*/ 
+            return undefined;
+        //}
       }
-      /*var match = rege.exec(inp.json_metadata);
       
-      if (match && match.length>0)
-        return match[0];
-      else 
-        return undefined;
-      */
     }
   });
 	app.filter('timeago', function($filter, $translate, $rootScope) {
@@ -497,7 +498,13 @@ module.exports = function (app) {
         }
         if (input) {
           var nowTime = (new Date()).getTime();
-          var date = (input && input.indexOf('Z')===-1)?(new Date(input+".000Z")).getTime():(new Date(input)).getTime();
+          var date;
+          if (typeof input === 'string' || input instanceof String) {
+            date = (input && input.indexOf('Z')===-1)?(new Date(input+".000Z")).getTime():(new Date(input)).getTime();
+          } else {
+            date = input;
+          }
+          
           //refreshMillis= 6e4, //A minute
 
           // get difference between UTC and local time in milliseconds
@@ -1374,13 +1381,13 @@ module.exports = function (app) {
           restrict: 'A',
           link: function(scope, element, attrs) {
               attrs.$observe('ngSrc', function(ngSrc) {
-                if (ngSrc) {
+                if (angular.isDefined(ngSrc)) {
                   $http.get(ngSrc).success(function(){
-                      console.log('image exist');
+                      //console.log('image exist');
                   }).error(function(){
                       //alert('image not exist');
                       if ($rootScope.chain && $rootScope.chain == 'steem') {
-                        element.attr('src', 'https://steemitimages.com/0x0/'+ngSrc); // set default image  
+                        element.attr('src', ngSrc); // set default image  
                       } else if ($rootScope.chain && $rootScope.chain == 'golos') {
                         element.attr('src', 'https://imgp.golos.io/0x0/'+ngSrc); // set default image  
                       } else {
@@ -1429,7 +1436,7 @@ module.exports = function (app) {
                 comment: '='
             },
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
-                        <div class="ion-comment--author"><img class="round-avatar" check-image ng-src="https://img.busy.org/@{{comment.author}}?s=100" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{::comment.author}}">{{::comment.author}}</a></b>&nbsp;<div class="reputation">{{::comment.author_reputation|reputation|number:0}}</div>&middot;{{::comment.created|timeago}}</div>\
+                        <div class="ion-comment--author"><img class="round-avatar" ng-src="https://img.busy.org/@{{comment.author}}?s=100" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{::comment.author}}">{{::comment.author}}</a></b>&nbsp;<div class="reputation">{{::comment.author_reputation|reputation|number:0}}</div>&middot;{{::comment.created|timeago}}</div>\
                         <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="comment.max_accepted_payout.split(\' \')[0] === \'0.000\'"><del>{{::comment | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="comment.max_accepted_payout.split(\' \')[0] !== \'0.000\'">{{::comment | sumPostTotal:$root.$storage.currencyRate | number}}</span> </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
                         <div class="ion-comment--text bodytext selectable" ng-if="comment.net_rshares>-1" ng-bind-html="comment | parseUrl "></div>\
                         <div class="ion-comment--text bodytext selectable" ng-if="comment.net_rshares<0">{{"HIDDEN_TEXT"|translate}}</div>\

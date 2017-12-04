@@ -29,7 +29,7 @@
 				    <div on-tap="open(d)">
 				    <span ng-if="d.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{::translations.resteem}} {{::d.reblogged_by}}</span>
 				    <p><h2 class=""><i class="fa fa-money positive" ng-if="d.promoted.split(' ')[0] !== '0.000'"></i>&nbsp;<i class="fa fa-fire positive" ng-if="d.percent_steem_dollars === 0"></i> {{::d.title}}</h2></p>
-				    <div class="row postdetails"><div class="col"><i class="icon ion-android-time"></i> {{::d.created|timeago}}&nbsp;{{::translations.by}}&nbsp;<b>{{::d.author}}</b>&nbsp;<div class="reputation">{{::d.author_reputation|reputation|number:0}}</div><p><i class="icon ion-ios-book-outline"></i> {{::d.body|readingtime}} {{::translations.min}} <i class="icon ion-ios-grid-view-outline"></i> {{::d.category|detransliterate:false}}</p></div></div>
+				    <div class="row postdetails"><div class="col"><i class="icon ion-android-time"></i> {{::d.created|timeago}}&nbsp;{{::translations.by}}&nbsp;<b>{{::d.author}}</b>&nbsp;<div class="reputation">{{::d.author_reputation|reputation|number:0}}</div><p><i class="icon ion-ios-book-outline"></i> {{d.body|readingtime}} {{translations.min}} <i class="icon ion-ios-grid-view-outline"></i> {{::d.category|detransliterate:false}}</p></div></div>
 				    </div>
 				    <div class="row">
 				     <div class="col">
@@ -61,7 +61,7 @@
 				<div class="item" on-tap="open(ds)" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 					<span ng-if="ds.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{::translations.resteem}} {{::ds.reblogged_by}}</span>
 				    <h2 class=""><i class="fa fa-money positive" ng-if="ds.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="ds.percent_steem_dollars === 0"></i> {{::ds.title}}</h2>
-				    <div class="row postdetails"><div class="col"><i class="icon ion-ios-time-outline"></i> {{ds.created|timeago}}&nbsp;{{::translations.by}}&nbsp;<b>{{::ds.author}}</b>&nbsp;<div class="reputation">{{::ds.author_reputation|reputation|number:0}}</div><p><i class="icon ion-ios-book-outline"></i> {{::ds.body|readingtime}} {{::translations.min}} <i class="icon ion-ios-grid-view-outline"></i> {{::ds.category|detransliterate:false}}</p></div></div>
+				    <div class="row postdetails"><div class="col"><i class="icon ion-ios-time-outline"></i> {{ds.created|timeago}}&nbsp;{{::translations.by}}&nbsp;<b>{{::ds.author}}</b>&nbsp;<div class="reputation">{{::ds.author_reputation|reputation|number:0}}</div><p><i class="icon ion-ios-book-outline"></i> {{ds.body|readingtime}} {{translations.min}} <i class="icon ion-ios-grid-view-outline"></i> {{::ds.category|detransliterate:false}}</p></div></div>
 				</div>
 				<div class="item-body ibody"><!--ds.json_metadata.image[0]-->
 				    <center><img class="full-image" check-image ng-src="{{ds|catchimage}}" on-tap="open(ds)" ng-if="ds.json_metadata.indexOf('nsfw')==-1" />
@@ -75,7 +75,7 @@
 					      <span ng-if="$root.voiceOver">
 					      <a href="#" class="subdued" ng-if="!ds.upvoted" on-tap="votePost(ds)" on-hold="openSlider($event, ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!ds.invoting"></i>{{::translations.upvote}}</a>
 					      <a href="#" class="subdued" ng-if="ds.upvoted" on-tap="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!ds.invoting"></i>{{::translations.unvote}}</a>&nbsp;<span class="gray" on-tap="openTooltip($event,ds)">
-									<b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="ds.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{ds | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="ds.max_accepted_payout.split(' ')[0] !== '0.000'">{{::ds | sumPostTotal:$root.$storage.currencyRate | number}}</span></span>
+									<b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="ds.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{ds | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="ds.max_accepted_payout.split(' ')[0] !== '0.000'">{{ds | sumPostTotal:$root.$storage.currencyRate | number}}</span></span>
 					      </span>
 					      </div>
 					      <div class="col col-25 tright" on-tap="$root.openInfo(ds)">

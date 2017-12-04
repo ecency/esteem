@@ -1,0 +1,64 @@
+<ion-view view-title="">
+  <ion-nav-bar class="bar-positive">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+      <ion-nav-buttons side='left'>
+        <button class="button button-icon button-clear ion-navicon" ng-if="!$root.voiceOver" menu-toggle="left"></button>
+        <a href class="button button-icon ion-more" ng-if="$root.voiceOver" menu-toggle="left">{{::translations.menu}}</a>
+      </ion-nav-buttons>
+      <ion-nav-title>
+        {{::"ACTIVITY"|translate}}
+      </ion-nav-title>
+  </ion-nav-bar>
+  <div class="bar bar-subheader">
+    <!--<h2 class="title">Sub Header</h2>-->
+    <div class="button-bar title">
+      <label class="item item-input filter item-select">
+        <div class="input-label">
+          {{filter.activity | capitalize}} 
+          <i class="fa fa-chevron-circle-up" ng-if="filter.activity == 'votes'"></i>
+          <i class="fa fa-bullhorn" ng-if="filter.activity == 'mentions'"></i>
+          <i class="fa fa-users" ng-if="filter.activity == 'follows'"></i>
+          <i class="fa fa-retweet" ng-if="filter.activity == 'reblogs'"></i>
+          <i class="fa fa-trophy" ng-if="filter.activity == 'leaderboard'"></i>
+          <i class="fa fa-star" ng-if="filter.activity == 'achievements'"></i>
+        </div>
+        <select class="button-subscribe" name="Activities" id="" ng-model="filter.activity" ng-change="changeType()">
+          <option value="{{a.value}}" ng-repeat="a in activities">{{a.name}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
+  <ion-content class="has-header has-subheader">
+    <center><ion-spinner ng-if="data.loading"></ion-spinner></center>
+    <div class="list" ng-if="filter.activity =='votes'">
+      <div class="item" ng-repeat="xx in data.votes" ng-click="open(xx)">
+        {{xx.timestamp|timeago}}&nbsp;<b>{{xx.voter}}</b>&nbsp;({{xx.weight/100}}%)&nbsp;{{xx.permlink}}
+      </div>
+    </div>
+    <div class="list" ng-if="filter.activity =='mentions'">
+      <div class="item" ng-repeat="xx in data.mentions" ng-click="open(xx)">
+        {{xx.timestamp|timeago}}&nbsp;<b>{{xx.author}}</b>&nbsp;{{xx.permlink}}
+      </div>
+    </div>
+    <div class="list" ng-if="filter.activity =='follows'">
+      <div class="item" ng-repeat="xx in data.follows">
+        {{xx.timestamp|timeago}}&nbsp;<b><a href="#/app/profile/{{xx.json[1].follower}}">{{xx.json[1].follower}}</a></b>
+      </div>
+    </div>
+    <div class="list" ng-if="filter.activity =='reblogs'">
+      <div class="item" ng-repeat="xx in data.reblogs">
+        {{xx.timestamp|timeago}}&nbsp;<b><a href="#/app/profile/{{xx.json[1].account}}">{{xx.json[1].account}}</a></b>&nbsp;<a href="#/app/post/tag/{{xx.json[1].author}}/{{xx.json[1].permlink}}">{{xx.json[1].permlink}}</a>
+      </div>
+    </div>
+    <div class="list" ng-if="filter.activity =='leaderboard'">
+      <center class="gray italic">last 7 days</center>
+      <div class="item" ng-repeat="xx in data.leaderboard" href="#/app/profile/{{xx.author}}">
+        {{$index+1}}.&nbsp;<b><a href="#/app/profile/{{xx.author}}">{{xx.author}}</a></b>&nbsp;<div class="pull-right">{{xx.count}}</div>
+      </div>
+    </div>
+    <div class="list" ng-if="filter.activity =='achievements'">
+      <center class="gray italic">coming soon</center>
+    </div>
+  </ion-content>
+</ion-view>

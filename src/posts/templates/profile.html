@@ -169,6 +169,7 @@
               <div ng-if="tr[1].op[0]=='withdraw_vesting'">{{::tr[1].op[1].vesting_shares}} | {{::tr[1].op[1].memo}}</div>
               <p ng-if="tr[1].op[0]=='comment_reward'">@{{::tr[1].op[1].author}}/{{::tr[1].op[1].permlink}}</p>
               <p ng-if="tr[1].op[0]=='author_reward'" class="wrap">@{{::tr[1].op[1].author}}/{{::tr[1].op[1].permlink}}</p>
+              <p ng-if="tr[1].op[0]=='fill_order'" class="wrap">{{::tr[1].op[1].current_pays}} = {{::tr[1].op[1].open_pays}}</p>
               <p ng-if="tr[1].op[0]=='curation_reward'" class="wrap">@{{::tr[1].op[1].comment_author}}/{{::tr[1].op[1].comment_permlink}}</p>
               <p ng-if="tr[1].op[0]=='transfer'">{{::tr[1].op[1].from|uppercase}} {{::'TO'|translate}}  {{::tr[1].op[1].to|uppercase}}</p>
               <p ng-if="tr[1].op[0]=='transfer_to_vesting'"> {{::tr[1].op[1].from|uppercase}} {{::'TO'|translate}}  {{::tr[1].op[1].to|uppercase}}</p>

@@ -37,10 +37,9 @@
     <preference name="BackupWebStorage" value="none" />
     <preference name="LoadUrlTimeoutValue" value="70000" />
     <preference name="KeyboardDisplayRequiresUserAction" value="false" />
-    <preference name="StatusBarOverlaysWebView" value="true" />
-    <feature name="StatusBar">
-        <param name="ios-package" onload="true" value="CDVStatusBar" />
-    </feature>
+    <platform name="ios">
+        <preference name="StatusBarOverlaysWebView" value="true" />
+    </platform>
     <platform name="android">
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />

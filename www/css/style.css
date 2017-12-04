@@ -1645,6 +1645,10 @@ body[dir=rtl] .bar .button.back-button, .bar button.back-button {
     margin-right: 75px;
 }
 
+body { padding-top: constant(safe-area-inset-top); }
+
+
+
 .mask {
     position: absolute;
     left: 0;
@@ -1765,3 +1769,80 @@ div.item-input.item-icon-right {
 img {
   image-orientation: from-image!important;
 }
+/*
+.platform-ios ion-nav > .ion-page > .toolbar.statusbar-padding:first-child,
+.platform-ios ion-nav > .ion-page > ion-header > .toolbar.statusbar-padding:first-child,
+.platform-ios ion-tab > .ion-page > .toolbar.statusbar-padding:first-child,
+.platform-ios ion-tab > .ion-page > ion-header > .toolbar.statusbar-padding:first-child,
+.platform-ios ion-tabs > .ion-page.tab-subpage > ion-header > .toolbar.statusbar-padding:first-child,
+.platform-ios ion-menu > .menu-inner > .toolbar.statusbar-padding:first-child,
+.platform-ios ion-menu > .menu-inner > ion-header > .toolbar.statusbar-padding:first-child {
+  padding-top: calc(20px + 4px) !important;
+  min-height: calc(44px + 20px) !important;
+}
+
+.platform-ios ion-nav > .ion-page > ion-content.statusbar-padding:first-child .scroll-content,
+.platform-ios ion-nav > .ion-page > ion-header > ion-content.statusbar-padding:first-child .scroll-content,
+.platform-ios ion-tab > .ion-page > ion-content.statusbar-padding:first-child .scroll-content,
+.platform-ios ion-tab > .ion-page > ion-header > ion-content.statusbar-padding:first-child .scroll-content,
+.platform-ios ion-tabs > .ion-page.tab-subpage > ion-header > ion-content.statusbar-padding:first-child .scroll-content,
+.platform-ios ion-menu > .menu-inner > ion-content.statusbar-padding:first-child .scroll-content,
+.platform-ios ion-menu > .menu-inner > ion-header > ion-content.statusbar-padding:first-child .scroll-content {
+  padding-top: 20px !important;
+}
+
+.platform-ios ion-nav > .ion-page > ion-content.statusbar-padding:first-child[padding] .scroll-content,
+.platform-ios ion-nav > .ion-page > ion-content.statusbar-padding:first-child[padding-top] .scroll-content,
+.platform-ios ion-nav > .ion-page > ion-header > ion-content.statusbar-padding:first-child[padding] .scroll-content,
+.platform-ios ion-nav > .ion-page > ion-header > ion-content.statusbar-padding:first-child[padding-top] .scroll-content,
+.platform-ios ion-tab > .ion-page > ion-content.statusbar-padding:first-child[padding] .scroll-content,
+.platform-ios ion-tab > .ion-page > ion-content.statusbar-padding:first-child[padding-top] .scroll-content,
+.platform-ios ion-tab > .ion-page > ion-header > ion-content.statusbar-padding:first-child[padding] .scroll-content,
+.platform-ios ion-tab > .ion-page > ion-header > ion-content.statusbar-padding:first-child[padding-top] .scroll-content,
+.platform-ios ion-tabs > .ion-page.tab-subpage > ion-header > ion-content.statusbar-padding:first-child[padding] .scroll-content,
+.platform-ios ion-tabs > .ion-page.tab-subpage > ion-header > ion-content.statusbar-padding:first-child[padding-top] .scroll-content,
+.platform-ios ion-menu > .menu-inner > ion-content.statusbar-padding:first-child[padding] .scroll-content,
+.platform-ios ion-menu > .menu-inner > ion-content.statusbar-padding:first-child[padding-top] .scroll-content,
+.platform-ios ion-menu > .menu-inner > ion-header > ion-content.statusbar-padding:first-child[padding] .scroll-content,
+.platform-ios ion-menu > .menu-inner > ion-header > ion-content.statusbar-padding:first-child[padding-top] .scroll-content {
+  padding-top: calc(16px + 20px) !important;
+}
+
+.platform-ios ion-nav > .ion-page > .toolbar.statusbar-padding:first-child ion-segment,
+.platform-ios ion-nav > .ion-page > .toolbar.statusbar-padding:first-child ion-title,
+.platform-ios ion-nav > .ion-page > ion-header > .toolbar.statusbar-padding:first-child ion-segment,
+.platform-ios ion-nav > .ion-page > ion-header > .toolbar.statusbar-padding:first-child ion-title,
+.platform-ios ion-tab > .ion-page > .toolbar.statusbar-padding:first-child ion-segment,
+.platform-ios ion-tab > .ion-page > .toolbar.statusbar-padding:first-child ion-title,
+.platform-ios ion-tab > .ion-page > ion-header > .toolbar.statusbar-padding:first-child ion-segment,
+.platform-ios ion-tab > .ion-page > ion-header > .toolbar.statusbar-padding:first-child ion-title,
+.platform-ios ion-tabs > .ion-page.tab-subpage > ion-header > .toolbar.statusbar-padding:first-child ion-segment,
+.platform-ios ion-tabs > .ion-page.tab-subpage > ion-header > .toolbar.statusbar-padding:first-child ion-title,
+.platform-ios ion-menu > .menu-inner > .toolbar.statusbar-padding:first-child ion-segment,
+.platform-ios ion-menu > .menu-inner > .toolbar.statusbar-padding:first-child ion-title,
+.platform-ios ion-menu > .menu-inner > ion-header > .toolbar.statusbar-padding:first-child ion-segment,
+.platform-ios ion-menu > .menu-inner > ion-header > .toolbar.statusbar-padding:first-child ion-title {
+  padding-top: 20px !important;
+  height: calc(44px + 20px) !important;
+  min-height: calc(44px + 20px) !important;
+}
+
+@media only screen and (max-width: 767px) {
+  .platform-ios .modal-wrapper > .ion-page > ion-header > .toolbar.statusbar-padding:first-child {
+    padding-top: calc(20px + 4px) !important;
+    min-height: calc(44px + 20px) !important;
+  }
+  .platform-ios .modal-wrapper > .ion-page > ion-header > ion-content.statusbar-padding:first-child .scroll-content {
+    padding-top: 20px !important;
+  }
+  .platform-ios .modal-wrapper > .ion-page > ion-header > ion-content.statusbar-padding:first-child[padding] .scroll-content,
+  .platform-ios .modal-wrapper > .ion-page > ion-header > ion-content.statusbar-padding:first-child[padding-top] .scroll-content {
+    padding-top: calc(16px + 20px) !important;
+  }
+  .platform-ios .modal-wrapper > .ion-page > ion-header > .toolbar.statusbar-padding:first-child ion-segment,
+  .platform-ios .modal-wrapper > .ion-page > ion-header > .toolbar.statusbar-padding:first-child ion-title {
+    padding-top: 20px !important;
+    height: calc(44px + 20px) !important;
+    min-height: calc(44px + 20px) !important;
+  }
+}*/
