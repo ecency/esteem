@@ -55,7 +55,7 @@
 	"NOTHING_HERE": "ဘာမွမ႐ွိေသးပါ",
 	"BALANCES": "စာရင္းလက္က်န္ေငြ",
 	"PROFILE_1": "{{platformname}},ကို အခိ်န္မေရြး လဲွြေျပာင္းေရာင္းခ်နိုင္သလို {{platformname}} ကို powering up ျခင္းျဖင့္{{platformpower}}, အျဖစ္ေျပာင္းႏိုင္သည္။",
-	"PROFILE_2": "",
+	"PROFILE_2": "{{platformpower}} အား ကာလတာရွည္ စုေဆာင္းထားျခင္းျဖင့္မဲေပးရာတြင္ ဆုလာဘ္ ပိုမိုရရိွေစမည္ျဖစ္သည္။ {{platformpower}} မ်ားေလေလ ဆုလာဘ္ မဲေပးရာတြင္မ်ားမ်ားရေလေလျဖစ္သည္။",
 	"PROFILE_3": "",
 	"ESTIMATED_VALUE": "",
 	"PROFILE_4": "",
