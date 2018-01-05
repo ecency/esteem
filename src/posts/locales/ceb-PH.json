@@ -297,11 +297,11 @@
 	"PARTICIPATION_BADGES": "",
 	"FOLLOWER_BADGES": "",
 	"AUTHOR_REWARD_BADGES": "",
-	"OTHER": "",
-	"ACTIVITY": "",
+	"OTHER": "Uban pa",
+	"ACTIVITY": "Kalihokan",
 	"LEADERBOARD": "",
-	"TRANSLATE": "",
-	"TYPE": "",
-	"SHOW": "",
-	"HIDDEN_TEXT": ""
+	"TRANSLATE": "Paghubad",
+	"TYPE": "Isulat",
+	"SHOW": "Ipakita",
+	"HIDDEN_TEXT": "Kini nga post gitago tungod sa ubos nga rating"
 }
