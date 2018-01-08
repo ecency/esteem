@@ -4956,7 +4956,24 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
 
   $scope.$on('socketCheck', function(){
     //console.log(localStorage.socketUrl);
-    var ws = new WebSocket(localStorage.socketUrl.replace('http','ws'));
+    window.steem.api.getDynamicGlobalPropertiesAsync(function(err, r) {
+      if (r){
+        var received_msg = JSON.parse(r);
+        var local_time = new Date(new Date().toISOString().split('.')[0]);
+        var server_time = new Date(received_msg.time);
+        console.log("Message is received...",local_time,server_time,local_time-server_time>15000);
+        $scope.alive = local_time-server_time<15000;
+        if(!$scope.$$phase){
+          $scope.$apply();
+        }
+      }
+      if (err) {
+        $scope.alive = false;
+        window.steem.api.stop();
+      }
+    });
+
+    /*var ws = new WebSocket(localStorage.socketUrl.replace('http','ws'));
     ws.onopen = function()
     {
       var message = {
@@ -5002,7 +5019,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
 
     window.onbeforeunload = function(event) {
         ws.close();
-    };
+    };*/
   });
 
   $scope.changeLanguage = function(locale){

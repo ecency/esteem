@@ -1,11 +1,12 @@
 { 
 	"steemd" : [
 		"https://rpc.esteem.ws",
-		"https://api.steemit.com", 
+		"https://rpc.steemviz.com",
+		"https://rpc.buildteam.io",
 		"https://steemd.steemit.com",
-		"https://steemd.steemitdev.com",
 		"https://gtg.steem.house:8090", 
-		"https://rpc.buildteam.io", 
+		"https://steemd.steemitdev.com",
+		"https://api.steemit.com", 
 		"https://steemd.pevo.science", 
 		"https://steemd.steemitstage.com",
 		"https://steemd.previx.io:8090", 
