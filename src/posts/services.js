@@ -482,7 +482,7 @@ module.exports = function (app) {
           if (match && match.length>0)
             return match[0];
           else*/ 
-            return undefined;
+          return 'img/noimage.png';
         //}
       }
       
@@ -1386,12 +1386,12 @@ module.exports = function (app) {
                       //console.log('image exist');
                   }).error(function(){
                       //alert('image not exist');
-                      if ($rootScope.chain && $rootScope.chain == 'steem') {
-                        element.attr('src', ngSrc); // set default image  
+                      if (ngSrc && $rootScope.chain && $rootScope.chain == 'steem') {
+                        element.attr('ng-src', ngSrc); // set default image  'img/noimage.png'
                       } else if ($rootScope.chain && $rootScope.chain == 'golos') {
-                        element.attr('src', 'https://imgp.golos.io/0x0/'+ngSrc); // set default image  
+                        element.attr('ng-src', 'https://imgp.golos.io/0x0/'+ngSrc); // set default image  
                       } else {
-                        element.attr('src', 'img/noimage.png'); // set default image 
+                        element.attr('ng-src', 'img/noimage.png'); // set default image 
                       }
                   });
                 }
@@ -1436,7 +1436,7 @@ module.exports = function (app) {
                 comment: '='
             },
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
-                        <div class="ion-comment--author"><img class="round-avatar" ng-src="https://img.busy.org/@{{comment.author}}?s=100" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{::comment.author}}">{{::comment.author}}</a></b>&nbsp;<div class="reputation">{{::comment.author_reputation|reputation|number:0}}</div>&middot;{{::comment.created|timeago}}</div>\
+                        <div class="ion-comment--author"><img class="round-avatar" ng-src="https://steemitimages.com/u/{{comment.author}}/avatar" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{::comment.author}}">{{::comment.author}}</a></b>&nbsp;<div class="reputation">{{::comment.author_reputation|reputation|number:0}}</div>&middot;{{::comment.created|timeago}}</div>\
                         <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="comment.max_accepted_payout.split(\' \')[0] === \'0.000\'"><del>{{::comment | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="comment.max_accepted_payout.split(\' \')[0] !== \'0.000\'">{{::comment | sumPostTotal:$root.$storage.currencyRate | number}}</span> </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
                         <div class="ion-comment--text bodytext selectable" ng-if="comment.net_rshares>-1" ng-bind-html="comment | parseUrl "></div>\
                         <div class="ion-comment--text bodytext selectable" ng-if="comment.net_rshares<0">{{"HIDDEN_TEXT"|translate}}</div>\
@@ -1547,25 +1547,6 @@ module.exports = function (app) {
                                 po.push(v);
                               }
                             });
-                            
-                            /*angular.forEach(dd.accounts, function(v,k){
-                              //console.log(k);
-                              if ($rootScope.postAccounts && $rootScope.postAccounts.indexOf(k) == -1) {
-                                $rootScope.postAccounts.push(k);
-                              }
-
-                              if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
-                                if (v.json_metadata) {
-                                  if (v.json_metadata.indexOf("created_at")>-1) {
-                                    v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
-                                  } else {
-                                    v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):{};
-                                  }
-                                  var key = v.name;
-                                  $rootScope.paccounts[key] = v.json_metadata;
-                                }
-                              }
-                            });*/
                             
                             comment.comments = po;
                             comment.showChildren = true;
@@ -1872,7 +1853,7 @@ module.exports = function (app) {
                               //$scope.$evalAsync(function( $scope ) {
                                 $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
                                 //$rootScope.$broadcast('hide:loading');
-                                $rootScope.$emit("update:content");  
+                                //$rootScope.$emit("update:content");  
                                 $rootScope.$broadcast('hide:loading');
                               //});
                               }, 1);
@@ -1922,7 +1903,7 @@ module.exports = function (app) {
                                 //$scope.$evalAsync(function( $scope ) {
                                   $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
                                   $rootScope.$broadcast('hide:loading');
-                                  $rootScope.$emit("update:content");  
+                                  //$rootScope.$emit("update:content");  
                                 //});
                                 }, 1);
                               }
@@ -1968,7 +1949,7 @@ module.exports = function (app) {
                                   $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
                                 } else {
                                   $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('DELETED_COMMENT'));
-                                  $rootScope.$emit("update:content");                                
+                                  //$rootScope.$emit("update:content");                                
                                 }
                                 $rootScope.$broadcast('hide:loading');
                               });

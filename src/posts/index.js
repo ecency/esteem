@@ -15,9 +15,11 @@ var app = angular.module('esteem', [
 ]);
 
 if (localStorage.getItem("socketUrl") === null) {
-  localStorage.setItem("socketUrl", "https://steemd.steemit.com");
+  localStorage.setItem("socketUrl", "https://api.steemit.com");
 } else if (localStorage.getItem("socketUrl") == "wss://steemit.com/wspa") {
-  localStorage.socketUrl="https://steemd.steemit.com";
+  localStorage.socketUrl="https://api.steemit.com";
+} else if (localStorage.getItem("socketUrl") == "wss://steemd.steemit.com" || localStorage.getItem("socketUrl") == "https://steemd.steemit.com") {
+  localStorage.socketUrl="https://api.steemit.com";
 }
 
 localStorage.golosId = "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12";
@@ -26,7 +28,7 @@ localStorage.steemId = "00000000000000000000000000000000000000000000000000000000
 
 Buffer = require('buffer').Buffer;
 
-window.steem = require('steem');
+window.steem = require('@steemit/steem-js');
 window.remarkable = require('remarkable');
 window.diff_match_patch = require('diff-match-patch');
 window.getSymbol = require('currency-symbol-map');
@@ -397,7 +399,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.$storage.socketgolos = "https://ws.golos.io/";
     }
     if (!$rootScope.$storage.socketsteem) {
-      $rootScope.$storage.socketsteem = "https://steemd.steemit.com";
+      $rootScope.$storage.socketsteem = "https://api.steemit.com";
     }
     
     window.steem.config.set('chain_id',localStorage[$rootScope.$storage.chain+"Id"]);
@@ -1144,7 +1146,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         $rootScope.$storage.platformdunit = "SBD";
         $rootScope.$storage.platformpunit = "SP";
         $rootScope.$storage.platformlunit = "STEEM";
-        $rootScope.$storage.socketsteem = "https://steemd.steemit.com";
+        $rootScope.$storage.socketsteem = "https://api.steemit.com";
       } else {
         $rootScope.$storage.platformname = "ГОЛОС";
         $rootScope.$storage.platformpower = "СИЛА ГОЛОСА";
@@ -1244,38 +1246,38 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           //$rootScope.showMessage("title", angular.toJson(data));
         });  
 
-        FCMPlugin.getToken(function(token){
-          // save this server-side and use it to push notifications to this device
-          $rootScope.log("device "+token);
-          $rootScope.$storage.deviceid = token;
-          if ($rootScope.user) {
-            APIs.saveSubscription(token, $rootScope.user.username, { device: ionic.Platform.platform() }).then(function(res){
-              $rootScope.log(angular.toJson(res));
-            });
-          } else {
-            APIs.saveSubscription(token, "", { device: ionic.Platform.platform() }).then(function(res){
-              $rootScope.log(angular.toJson(res));
-            });
-          }
-        });
-
-        FCMPlugin.onTokenRefresh(function(token){
-          console.log('token refreshing....')
-          APIs.updateToken($rootScope.$storage.deviceid, token).then(function(res){
-            console.log(angular.toJson(res));
-            if (res.status) {
-              $rootScope.$storage.deviceid = token  
+        if (FCMPlugin) {
+          FCMPlugin.getToken(function(token){
+            // save this server-side and use it to push notifications to this device
+            $rootScope.log("device "+token);
+            $rootScope.$storage.deviceid = token;
+            if ($rootScope.user) {
+              APIs.saveSubscription(token, $rootScope.user.username, { device: ionic.Platform.platform() }).then(function(res){
+                $rootScope.log(angular.toJson(res));
+              });
+            } else {
+              APIs.saveSubscription(token, "", { device: ionic.Platform.platform() }).then(function(res){
+                $rootScope.log(angular.toJson(res));
+              });
             }
           });
-          if (!$rootScope.$$phase){
-            $rootScope.$apply();
-          }
-        });
 
-        //FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
-        //Here you define your application behaviour based on the notification data.
-        FCMPlugin.onNotification(function(data){
-          $rootScope.log(angular.toJson(data));
+          FCMPlugin.onTokenRefresh(function(token){
+            console.log('token refreshing....')
+            APIs.updateToken($rootScope.$storage.deviceid, token).then(function(res){
+              console.log(angular.toJson(res));
+              if (res.status) {
+                $rootScope.$storage.deviceid = token  
+              }
+            });
+            if (!$rootScope.$$phase){
+              $rootScope.$apply();
+            }
+          });
+          //FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
+          //Here you define your application behaviour based on the notification data.
+          FCMPlugin.onNotification(function(data){
+            $rootScope.log(angular.toJson(data));
 
             if(data.wasTapped){
               //Notification was received on device tray and tapped by the user.
@@ -1317,7 +1319,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
                 $rootScope.showMessage(data.title, data.body);
               }
             }
-        });
+          });
+        }
       }
 
     }

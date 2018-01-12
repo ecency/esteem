@@ -3,6 +3,7 @@
     "version": "1.1.1",
     "description": "eSteem Mobile Application",
     "dependencies": {
+        "@steemit/steem-js": "^0.6.10",
         "acorn": "^3.3.0",
         "angular-ui-scroll": "^1.6.1",
         "brfs": "^1.4.2",
@@ -64,7 +65,7 @@
         "plist": "^1.2.0",
         "remarkable": "^1.7.1",
         "require-main-filename": "^1.0.1",
-        "steem": "^0.6.6",
+        "steem": "^0.6.7",
         "steem-rpc": "^0.6.6",
         "vinyl-buffer": "^1.0.0",
         "vinyl-source-stream": "^1.1.0"

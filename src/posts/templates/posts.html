@@ -65,8 +65,7 @@
 				</div>
 				<div class="item-body ibody"><!--ds.json_metadata.image[0]-->
 				    <center><img class="full-image" check-image ng-src="{{ds|catchimage}}" on-tap="open(ds)" ng-if="ds.json_metadata.indexOf('nsfw')==-1" />
-				    <!--<img class="full-image" src="img/logo.png" ng-if="!$root.$storage.nsfw && !ds.json_metadata.image[0]">-->
-				    <img class="full-image" ng-src="img/nsfwimage.png" on-tap="open(ds)" ng-if="!$root.$storage.nsfw && ds.json_metadata.indexOf('nsfw')>-1" /></center>
+				    <img class="full-image" ng-src="img/nsfwimage.png" on-tap="open(ds)" ng-if="$root.$storage.nsfw && ds.json_metadata.indexOf('nsfw')>-1" /></center>
 				    <div class="row">
 					    <div class="col">
 					      <span ng-if="!$root.voiceOver">

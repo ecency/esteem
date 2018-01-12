@@ -2018,6 +2018,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         delete params.tags; 
       }
       params.truncate_body = 1;
+
+      window.steem.api.setOptions({ url: localStorage.socketUrl });
+
       var xyz = camelCase("get_discussions_by_"+type) + "Async";
       //window.steem.api.getDiscussionsBy
       window.steem.api[xyz](params, function(err, response) {
@@ -3092,8 +3095,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   };
   $scope.accounts = {};
   $scope.getContent = function(author, permlink) {
-
-     window.steem.api.getContentAsync(author, permlink, function(err, result) {
+    window.steem.api.setOptions({ url: localStorage.socketUrl });
+    window.steem.api.getContentAsync(author, permlink, function(err, result) {
       //console.log(err, result);
       if (result) {
         var len = result.active_votes.length;
@@ -4920,8 +4923,8 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       $rootScope.$storage.platformdunit = "SBD";
       $rootScope.$storage.platformpunit = "SP";
       $rootScope.$storage.platformlunit = "STEEM";
-      $rootScope.$storage.socketsteem = "https://steemd.steemit.com";
-      $scope.socket = "https://steemd.steemit.com";
+      $rootScope.$storage.socketsteem = "https://api.steemit.com";
+      $scope.socket = "https://api.steemit.com";
     } else {
       $rootScope.$storage.platformname = "ГОЛОС";
       $rootScope.$storage.platformpower = "СИЛА ГОЛОСА";
@@ -4955,10 +4958,9 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
   });
 
   $scope.$on('socketCheck', function(){
-    //console.log(localStorage.socketUrl);
-    window.steem.api.getDynamicGlobalPropertiesAsync(function(err, r) {
+    window.steem.api.getDynamicGlobalProperties(function(err, r) {
       if (r){
-        var received_msg = JSON.parse(r);
+        var received_msg = r;
         var local_time = new Date(new Date().toISOString().split('.')[0]);
         var server_time = new Date(received_msg.time);
         console.log("Message is received...",local_time,server_time,local_time-server_time>15000);
@@ -4972,54 +4974,6 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
         window.steem.api.stop();
       }
     });
-
-    /*var ws = new WebSocket(localStorage.socketUrl.replace('http','ws'));
-    ws.onopen = function()
-    {
-      var message = {
-        id: new Date().getTime(),
-        method: 'call',
-        jsonrpc: '2.0',
-        params: ['database_api', 'get_dynamic_global_properties', []]        
-      }
-      ws.send(JSON.stringify(message));
-      $scope.alive = true;
-      if(!$scope.$$phase){
-        $scope.$apply();
-      }
-    };
-
-    ws.onmessage = function (evt) 
-    { 
-        var received_msg = JSON.parse(evt.data);
-        var local_time = new Date(new Date().toISOString().split('.')[0]);
-        var server_time = new Date(received_msg.result.time);
-        console.log("Message is received...",local_time,server_time,local_time-server_time>15000);
-        $scope.alive = local_time-server_time<15000;
-        if(!$scope.$$phase){
-          $scope.$apply();
-        }
-    };
-
-    ws.onclose = function()
-    { 
-        // websocket is closed.
-        console.log("Connection is closed..."); 
-    };
-
-    ws.onerror = function()
-    { 
-        // websocket connection error.
-        console.log("Connection error..."); 
-        $scope.alive = false;
-        if(!$scope.$$phase){
-          $scope.$apply();
-        }
-    };
-
-    window.onbeforeunload = function(event) {
-        ws.close();
-    };*/
   });
 
   $scope.changeLanguage = function(locale){
