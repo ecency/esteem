@@ -60,7 +60,7 @@
 	"ESTIMATED_VALUE": "Anslået værdi",
 	"PROFILE_4": "Anslået værdi er baseret på et 7-dages gennemsnit af {{platformname}}.",
 	"TRANSACTION_HISTORY": "Transaktionshistorik",
-	"POSTING": "Indsender",
+	"POSTING": "Indlæg",
 	"PROFILE_5": "Indlægsnøglen bruges til at lægge indlæg op og stemme. Den bør ikke være den aktive nøgle eller ejernøglerne.",
 	"OWNER": "Ejer",
 	"PROFILE_6": "Ejernøglen er hovednøgle for kontoen og kræves, hvis du vil ændre de andre nøgler. Den private nøgle eller kodeord til ejernøglen bør opbevares offline så vidt muligt.",
