@@ -317,7 +317,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
 
 });
 
-app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state, $log, $ionicScrollDelegate, $filter, $translate, $ionicHistory, $sessionStorage) {
+app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPopup, $ionicLoading, $cordovaSplashscreen, $ionicModal, $timeout, $cordovaToast, APIs, $state, $log, $ionicScrollDelegate, $filter, $translate, $ionicHistory, $sessionStorage, $ionicBody) {
   
   $rootScope.$storage = $localStorage;
   $rootScope.$sstorage = $sessionStorage;
@@ -863,7 +863,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     };
 
     $rootScope.closeInfo = function() {
-      $rootScope.infomodal.hide();
+      
+      $rootScope.infomodal.hide();  
+      $ionicBody.removeClass('modal-open');
       //$rootScope.infomodal.remove();
     };
 

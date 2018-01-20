@@ -2151,7 +2151,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 })
 //epostsctrl
 //spostctrl
-app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPopover, $filter, $state, APIs, $ionicHistory, $ionicPosition, $cordovaFileTransfer, $ionicLoading, $translate) {
+app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval, $ionicScrollDelegate, $ionicModal, $filter, $ionicActionSheet, $cordovaCamera, $ionicPopup, ImageUploadService, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPopover, $filter, $state, APIs, $ionicHistory, $ionicPosition, $cordovaFileTransfer, $ionicLoading, $translate, $ionicBody) {
   $scope.post = $rootScope.sitem;
   $scope.data = {};
   $scope.spost = {};
@@ -2401,7 +2401,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
   $scope.closeGalleryModal = function() {
     $scope.modalg.hide();
-    $scope.modalg.remove()
+    $ionicBody.removeClass('modal-open');
   };
 
   $scope.updateSlideStatus = function(slide) {
@@ -2673,10 +2673,13 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   };
 
   $rootScope.$on('closePostModal', function(){
-    if ($scope.pmodal)
+    if ($scope.pmodal) {
       $scope.pmodal.hide();
-    if ($scope.modalp)
+    }
+    if ($scope.modalp) {
       $scope.modalp.hide();
+    }
+    $ionicBody.removeClass('modal-open');
   });
 
   $scope.closeGallery = function(){
@@ -2684,6 +2687,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
   $scope.manageGallery = function(){
     $scope.modal.hide();
+    $ionicBody.removeClass('modal-open');
     $state.go('app.images');
   }
   var dmp = new window.diff_match_patch();
@@ -3058,6 +3062,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.closeModal = function() {
     $scope.replying = false;
     $scope.modal.hide();
+    $ionicBody.removeClass('modal-open');
   };
   $scope.translateMe = function(item, check){
     if (item.body) {
@@ -3476,7 +3481,7 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
 
 })
 //sprofilectrl
-app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicActionSheet, $cordovaCamera, ImageUploadService, $ionicPopup, $ionicSideMenuDelegate, $ionicHistory, $state, APIs, $ionicPopover, $filter, $ionicModal) {
+app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicActionSheet, $cordovaCamera, ImageUploadService, $ionicPopup, $ionicSideMenuDelegate, $ionicHistory, $state, APIs, $ionicPopover, $filter, $ionicModal, $ionicBody) {
 
   $ionicPopover.fromTemplateUrl('popoverSliderrp.html', {
       scope: $scope
@@ -3579,6 +3584,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
   });
   $scope.closeEdits = function() {
     $scope.modalEdit.hide();
+    $ionicBody.removeClass('modal-open');
   };
   // Cleanup the modal when we're done with it!
   $scope.$on('$destroy', function() {
