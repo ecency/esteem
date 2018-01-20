@@ -916,7 +916,7 @@ module.exports = function (app) {
 
 				reputation_level = (reputation_level*9) + 25;
 			} else {
-				return 0;
+				return 25;
 			}
 
 			return bool?reputation_level:Math.floor(reputation_level);
