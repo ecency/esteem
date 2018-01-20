@@ -1336,7 +1336,7 @@ module.exports = function (app) {
       }
     };
   }]);
-  app.directive('selectInput', ['$ionicPopup', '$rootScope', function($ionicPopup, $rootScope) {
+  app.directive('selectInput', ['$ionicPopup', '$rootScope', '$timeout', function($ionicPopup, $rootScope, $timeout) {
     return {
       restric: 'E',
       scope: {
@@ -1350,10 +1350,15 @@ module.exports = function (app) {
           selected: ''
         }
         scope.socketChange = function(xx){
+          console.log(xx);
           $rootScope.$storage["socket"+$rootScope.$storage.chain] = xx;
           localStorage.socketUrl = xx;
+          window.steem.api.stop();
           scope.restart = true;
-          scope.$emit('socketCheck');
+          scope.$applyAsync();
+          $timeout(function(){
+            scope.$emit('socketCheck');
+          });
         }
         scope.showOptions = function() {
           $ionicPopup.show({
@@ -1834,7 +1839,7 @@ module.exports = function (app) {
                               permlink: "re-"+$scope.post.author.replace(/\./g, "")+"-"+timeformat,  
                               max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
                               percent_steem_dollars: 10000,
-                              extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
+                              extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1500 }] }]]
                             }]
                             ];
                           

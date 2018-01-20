@@ -350,6 +350,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         navigator.splashscreen.hide();
       }, 3000 - 1000);
     }
+
+    $rootScope.$storage.chain = 'steem';
     
     $rootScope.chain = $rootScope.$storage.chain;
     

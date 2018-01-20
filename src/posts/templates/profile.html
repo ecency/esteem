@@ -84,7 +84,7 @@
             <div class="item" ng-repeat="playlist in data.profile | orderBy:'-created' track by $index" ng-class="{'item-thumbnail-left': playlist.json_metadata.indexOf('image')>-1}">
               <!--ng-class="{'item-thumbnail-left': playlist.json_metadata.image}" <img check-image on-tap="open(playlist)" ng-if='playlist.json_metadata.indexOf("image")>-1' ng-src="{{playlist|catchimage}}" onerror="this.src='img/noimage.png'"/>-->
               <img check-image on-tap="open(playlist)" ng-if='playlist.json_metadata.indexOf("image")>-1' ng-src="{{playlist|catchimage}}" onerror="this.src='img/noimage.png'"/>
-                <span class="item-myavatarsmall"><img ion-img-cache ng-src="https://img.busy.org/@{{playlist.author}}?s=25">&nbsp;<span>{{playlist.author}}&nbsp;<div class="reputation">{{playlist.author_reputation|reputation|number:0}}</div></span><span ng-if="playlist.author!==user.username && active!=='recent-replies'">&nbsp; <i class="icon ion-arrow-return-right"></i></span></span>
+                <span class="item-myavatarsmall"><img ion-img-cache ng-src="https://steemitimages.com/u/{{playlist.author}}/avatar">&nbsp;<span>{{playlist.author}}&nbsp;<div class="reputation">{{playlist.author_reputation|reputation|number:0}}</div></span><span ng-if="playlist.author!==user.username && active!=='recent-replies'">&nbsp; <i class="icon ion-arrow-return-right"></i></span></span>
                 <div on-tap="open(playlist)">
                 <div class="wrap">
                   <h2><i class="fa fa-money positive" ng-if="playlist.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="playlist.percent_steem_dollars === 0"></i>{{playlist.root_title}}</h2>

@@ -113,16 +113,13 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   }
   
   $scope.openLogin = function() {
-    if ($rootScope.$storage.language == 'ru-RU') {
+    /*if ($rootScope.$storage.language == 'ru-RU') {
       $scope.loginData.chain = "golos";
     } else {
       $scope.loginData.chain = "steem";
-    }
-    
-    //$scope.$evalAsync(function( $scope ) {
-      //console.log( "$evalAsync" );
-      $scope.loginModal.show();
-    //});
+    }*/
+    $scope.loginData.chain = "steem";
+    $scope.loginModal.show();
   };
 
   $scope.goProfile = function() {
@@ -258,7 +255,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       
       if ($scope.loginData.chain !== $rootScope.$storage.chain) {
         
-        var socketUrl = $rootScope.$storage["socket"+$scope.loginData.chain];
+        var socketUrl = $rootScope.$storage["socket"+$rootScope.$storage.chain];
         
         window.steem.api.setOptions({ url: socketUrl });
 
@@ -534,7 +531,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         $rootScope.$storage.appversion = version;
       });
     } else {
-      $rootScope.$storage.appversion = '1.5.0';
+      $rootScope.$storage.appversion = '1.5.1';
     }
   });
 
@@ -1580,7 +1577,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             permlink: permlink,
             max_accepted_payout: $scope.spost.operation_type==='sp'?"1000000.000 "+$rootScope.$storage.platformdunit:"0.000 "+$rootScope.$storage.platformdunit,
             percent_steem_dollars: $scope.spost.operation_type==='sp'?0:10000,
-            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
+            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1500 }] }]]
           }]
           ];
           if ($scope.spost.upvote_this) {
@@ -1610,7 +1607,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             permlink: permlink,
             max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
             percent_steem_dollars: 10000,
-            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
+            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1500 }] }]]
           }]
           ];
           if ($scope.spost.upvote_this) {
@@ -1942,7 +1939,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
   $scope.fetchContent = function(author, permlink) {
     window.steem.api.getContentAsync(author, permlink, function(err, result) {
-      //console.log(err, result);
+      console.log('getContentA1',err, result);
       var len = result.active_votes.length;
       //var user = $rootScope.$storage.user;
       if ($rootScope.user) {
@@ -2875,7 +2872,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           permlink: $scope.spost.permlink,
           max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
           percent_steem_dollars: 10000,
-          extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
+          extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1500 }] }]]
         }];
         operations_array.push(xx);
       }
@@ -2905,7 +2902,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_SUBMITTED'));
           //$scope.closeMenuPopover();
           if ($scope.edit) {
-            $rootScope.$emit('update:content');
+            $rootScope.$broadcast('update:content');
           } else {
             $scope.spost = {};
             $state.go("app.profile", {username: $rootScope.user.username});  
@@ -2963,7 +2960,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             permlink: $scope.post.permlink,  
             max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
             percent_steem_dollars: 10000,
-            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
+            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1500 }] }]]
           }];
           operations_array.push(xx);
         }
@@ -3008,7 +3005,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             permlink: "re-"+$scope.post.author.replace(/\./g, "")+"-"+timeformat,  
             max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
             percent_steem_dollars: 10000,
-            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
+            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1500 }] }]]
           }]
           ];
         window.steem.broadcast.sendAsync({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
@@ -3096,8 +3093,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.accounts = {};
   $scope.getContent = function(author, permlink) {
     window.steem.api.setOptions({ url: localStorage.socketUrl });
+
     window.steem.api.getContentAsync(author, permlink, function(err, result) {
-      //console.log(err, result);
+      console.log('getContentA',err, result);
       if (result) {
         var len = result.active_votes.length;
         
@@ -4952,12 +4950,11 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
     $scope.tooltip.hide();
   };
 
-  //Cleanup the popover when we're done with it!
-  $scope.$on('$destroy', function() {
-    $scope.tooltip.remove();
-  });
-
   $scope.$on('socketCheck', function(){
+    window.steem.api.setOptions({ url: localStorage.socketUrl });
+    window.steem.config.set('chain_id',localStorage.steemId);
+    window.steem.config.set('address_prefix','STM');  
+
     window.steem.api.getDynamicGlobalProperties(function(err, r) {
       if (r){
         var received_msg = r;
@@ -5042,13 +5039,19 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       resteem: $scope.data.resteem,
       device: ionic.Platform.platform(),
       timestamp: $filter('date')(new Date(), 'medium'),
-      appversion: '1.5.0'
+      appversion: '1.5.1'
     }
     APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.user.username, $rootScope.$storage.subscription).then(function(res){
       //console.log(angular.toJson(res));
     });
 
   }
+
+  $scope.$watch('alive', function (value) {
+      if (value) {
+          console.log(value);
+      }
+  });
 
   $scope.pinChange = function() {
     $rootScope.log("pinChange");
