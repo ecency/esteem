@@ -787,7 +787,9 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     }
 
     $ionicModal.fromTemplateUrl('templates/pincode.html', {
-      scope: $rootScope
+      scope: $rootScope,
+      backdropClickToClose: false,
+      hardwareBackButtonClose: false
     }).then(function(modal) {
       $rootScope.pinmodal = modal;
     });
