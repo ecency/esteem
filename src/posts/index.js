@@ -331,7 +331,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
       cordova.plugins.Keyboard.disableScroll(true);
     }
     if (window.StatusBar) {
@@ -442,7 +442,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     $rootScope.$storage.chain = "steem";
     $rootScope.$storage.currency = "usd";
     $rootScope.$storage.currencyRate = 1;
-    
+
     $rootScope.$storage.languages = [
       {id:'en-US', name: 'English'},
       {id:'en-GB', name: 'English GB'},
