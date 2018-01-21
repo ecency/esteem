@@ -3420,6 +3420,13 @@ app.controller('FollowCtrl', function($scope, $stateParams, $rootScope, $state, 
     $scope.rfetching();
     $scope.dfetching();
 
+    window.steem.api.getFollowCountAsync($rootScope.user.username, function(err, res) {
+      //console.log(err, res);
+      if (res) {
+        $scope.followdetails = res;
+      }
+    });
+
   });
 
   $scope.$on('$ionicView.leave', function(){
