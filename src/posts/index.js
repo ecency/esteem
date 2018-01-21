@@ -432,18 +432,17 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     } else {
       $translate.use($rootScope.$storage.language);
     }
-    if (!$rootScope.$storage.chain){
-      $rootScope.$storage.platformname = "Steem";
-      $rootScope.$storage.platformpower = "Steem Power";
-      $rootScope.$storage.platformsunit = "Steem";
-      $rootScope.$storage.platformdollar = "Steem Dollar";
-      $rootScope.$storage.platformdunit = "SBD";
-      $rootScope.$storage.platformpunit = "SP";
-      $rootScope.$storage.platformlunit = "STEEM";
-      $rootScope.$storage.chain = "steem";
-      $rootScope.$storage.currency = "usd";
-      $rootScope.$storage.currencyRate = 1;
-    }
+    $rootScope.$storage.platformname = "Steem";
+    $rootScope.$storage.platformpower = "Steem Power";
+    $rootScope.$storage.platformsunit = "Steem";
+    $rootScope.$storage.platformdollar = "Steem Dollar";
+    $rootScope.$storage.platformdunit = "SBD";
+    $rootScope.$storage.platformpunit = "SP";
+    $rootScope.$storage.platformlunit = "STEEM";
+    $rootScope.$storage.chain = "steem";
+    $rootScope.$storage.currency = "usd";
+    $rootScope.$storage.currencyRate = 1;
+    
     $rootScope.$storage.languages = [
       {id:'en-US', name: 'English'},
       {id:'en-GB', name: 'English GB'},
@@ -1122,7 +1121,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     }
     $rootScope.$on('changedChain', function(){
       console.log('chain differs');
-      localStorage.socketUrl = $rootScope.$storage["socket"+$rootScope.$storage.chain];
+      localStorage.socketUrl = $rootScope.$storage["socketsteem"];
       
       console.log(localStorage.socketUrl, $rootScope.$storage.chain);
 
@@ -1144,26 +1143,16 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
         }
       });
 
-      if ($rootScope.$storage.chain == 'steem'){
-        $rootScope.$storage.platformname = "Steem";
-        $rootScope.$storage.platformpower = "Steem Power";
-        $rootScope.$storage.platformsunit = "Steem";
-        $rootScope.$storage.platformdollar = "Steem Dollar";
-        $rootScope.$storage.platformdunit = "SBD";
-        $rootScope.$storage.platformpunit = "SP";
-        $rootScope.$storage.platformlunit = "STEEM";
-        $rootScope.$storage.socketsteem = "https://api.steemit.com";
-      } else {
-        $rootScope.$storage.platformname = "ГОЛОС";
-        $rootScope.$storage.platformpower = "СИЛА ГОЛОСА";
-        $rootScope.$storage.platformsunit = "Голос";
-        $rootScope.$storage.platformdollar = "ЗОЛОТОЙ";
-        $rootScope.$storage.platformdunit = "GBG";
-        $rootScope.$storage.platformpunit = "GOLOSP";
-        $rootScope.$storage.platformlunit = "GOLOS";
-        $rootScope.$storage.socketgolos = "https://ws.golos.io/";
-      }
+      $rootScope.$storage.platformname = "Steem";
+      $rootScope.$storage.platformpower = "Steem Power";
+      $rootScope.$storage.platformsunit = "Steem";
+      $rootScope.$storage.platformdollar = "Steem Dollar";
+      $rootScope.$storage.platformdunit = "SBD";
+      $rootScope.$storage.platformpunit = "SP";
+      $rootScope.$storage.platformlunit = "STEEM";
+      $rootScope.$storage.socketsteem = "https://api.steemit.com";
       $rootScope.chain = $rootScope.$storage.chain;
+
       if (!$rootScope.$$phase) {
         $rootScope.$apply();
       }
