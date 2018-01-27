@@ -1476,10 +1476,10 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       } else {
         $scope.disableBtn = false;
       }
-      if (!$scope.$$phase){
-        $scope.$apply();
-      }  
     }
+    if (!$scope.$$phase){
+      $scope.$apply();
+    }  
   }
   $scope.contentChanged = function (editor, html, text) {
     //console.log($scope.spost.body);
@@ -2757,10 +2757,10 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       } else {
         $scope.disableBtn = false;
       }
-      if (!$scope.$$phase){
-        $scope.$apply();
-      }  
     }
+    if (!$scope.$$phase){
+      $scope.$apply();
+    }  
   }
   $scope.edit = false;
   $scope.editPost = function(xx) {
