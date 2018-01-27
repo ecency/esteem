@@ -2481,7 +2481,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
 
   $scope.hideKeyboard = function(){
-    setTimeout(function () {
+    $ionicPlatform.ready(function() {  
       if (window.cordova && window.cordova.plugins.Keyboard) {
         if(cordova.plugins.Keyboard.isVisible){
             window.cordova.plugins.Keyboard.close();
@@ -2489,7 +2489,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             window.cordova.plugins.Keyboard.show();
         }
       }
-    }, 100);
+    });
   }
 
   $scope.showImg = function() {
