@@ -2136,7 +2136,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     {text: $filter('translate')('PAYOUT'), custom: 'payout'}];
 
     if ($rootScope.$storage.tag && $scope.mymenu) {
-      $scope.mymenu.unshift({text:'#'+$rootScope.$storage.tag, custom:'tag'});
+      $scope.mymenu.unshift({text:$filter('translate')('CLEAR')+' #'+$rootScope.$storage.tag, custom:'tag'});
     }
 
     for (var i = 0, len = $scope.mymenu.length; i < len; i++) {
