@@ -568,8 +568,9 @@ select-input input {
 }
 .action-sheet-group{
   overflow: scroll;
-  max-height: 400px;
+  max-height: 300px;
 }
+
 .platform-android .action-sheet-backdrop.active {
   background-color: rgba(0, 0, 0, 0.1);
 }
