@@ -28,6 +28,7 @@
             {{'LANGUAGE'|translate}}
          </div>  
          <select ng-model="spost.language" ng-change='changePostLanguage(spost.language)'>
+            <option value="" selected></option>
             <option ng-repeat="option in $root.$storage.languages" value="{{option.id}}">{{option.name}}</option>
           </select>
       </label>
