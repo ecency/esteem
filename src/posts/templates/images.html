@@ -1,7 +1,7 @@
 <ion-view view-title="{{'MANAGE' | translate}} {{'GALLERY' | translate}}">
   <ion-content class="has-header">
 	<ion-list ng-if="images" can-swipe="true">
-  		<ion-item ng-repeat="item in images" class="item-thumbnail-left">
+  		<ion-item ng-repeat="item in images | orderBy:'-created'" class="item-thumbnail-left">
         <img ng-src="{{item.url}}"/>
         <p><h2>{{item.url}}</h2></p>
 			  <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{item.created|timeago}}&nbsp;</div></div>
