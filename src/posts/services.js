@@ -1739,8 +1739,8 @@ module.exports = function (app) {
                         allowEdit: (type===0)?true:false,
                         encodingType: Camera.EncodingType.JPEG,
                         popoverOptions: CameraPopoverOptions,
-                        saveToPhotoAlbum: false
-                        //correctOrientation:true
+                        saveToPhotoAlbum: false,
+                        correctOrientation:true
                       };
                       $cordovaCamera.getPicture(options).then(function(imageData) {
                         setTimeout(function() {

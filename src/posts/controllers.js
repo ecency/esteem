@@ -1345,8 +1345,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         allowEdit: (type===0)?true:false,
         encodingType: Camera.EncodingType.JPEG,
         popoverOptions: CameraPopoverOptions,
-        saveToPhotoAlbum: false
-        //correctOrientation:true
+        saveToPhotoAlbum: false,
+        correctOrientation:true
       };
       $cordovaCamera.getPicture(options).then(function(imageData) {
         //$scope.$evalAsync(function( $scope ) {
@@ -2136,7 +2136,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     {text: $filter('translate')('PAYOUT'), custom: 'payout'}];
 
     if ($rootScope.$storage.tag && $scope.mymenu) {
-      $scope.mymenu.unshift({text:$filter('translate')('CLEAR')+' #'+$rootScope.$storage.tag, custom:'tag'});
+      $scope.mymenu.unshift({text:$filter('translate')('REMOVE')+' #'+$rootScope.$storage.tag, custom:'tag'});
     }
 
     for (var i = 0, len = $scope.mymenu.length; i < len; i++) {
@@ -2522,8 +2522,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           allowEdit: (type===0)?true:false,
           encodingType: Camera.EncodingType.JPEG,
           popoverOptions: CameraPopoverOptions,
-          saveToPhotoAlbum: false
-          //correctOrientation:true
+          saveToPhotoAlbum: false,
+          correctOrientation:true
         };
         $cordovaCamera.getPicture(options).then(function(imageData) {
           //setTimeout(function() {
@@ -2594,8 +2594,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           allowEdit: (type===0)?true:false,
           encodingType: Camera.EncodingType.JPEG,
           popoverOptions: CameraPopoverOptions,
-          saveToPhotoAlbum: false
-          //correctOrientation:true
+          saveToPhotoAlbum: false,
+          correctOrientation:true
         };
         $cordovaCamera.getPicture(options).then(function(imageData) {
           //setTimeout(function() {
@@ -3743,8 +3743,8 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
           targetWidth: which==='profile'?500:1000,
           targetHeight: 500,
           popoverOptions: CameraPopoverOptions,
-          saveToPhotoAlbum: false
-          //correctOrientation:true
+          saveToPhotoAlbum: false,
+          correctOrientation:true
         };
         $cordovaCamera.getPicture(options).then(function(imageData) {
           ImageUploadService.uploadImage(imageData).then(function(result) {
