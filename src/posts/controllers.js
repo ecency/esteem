@@ -622,6 +622,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   };
   $scope.clearSearch = function() {
     if ($rootScope.$storage.tag) {
+      console.log('clear tag');
       $rootScope.$storage.tag = undefined;
       $rootScope.$storage.taglimits = undefined;
       $scope.mymenu?$scope.mymenu.shift():true;
@@ -1476,6 +1477,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       } else {
         $scope.disableBtn = false;
       }
+    } else {
+      $scope.spost.category = [];
     }
     if (!$scope.$$phase){
       $scope.$apply();
@@ -2757,6 +2760,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       } else {
         $scope.disableBtn = false;
       }
+    } else {
+      $scope.spost.category = [];
     }
     if (!$scope.$$phase){
       $scope.$apply();
@@ -2796,7 +2801,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
       $rootScope.showAlert('Missing', 'Title');
       return;
     }
-    if (!$scope.spost.tags) {
+    if ($scope.spost.category.length<1) {
       $rootScope.showAlert('Missing', 'Tags');
       return;
     }
