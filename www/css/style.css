@@ -3,15 +3,16 @@
   color: #aaa;
 }
 
-.theme-dark h2, .theme-dark h1, .theme-dark h3, .theme-dark h4, .theme-dark h5 {
-  color: #ddca7e;
+.theme-dark h2, .theme-dark h1, .theme-dark h3, .theme-dark h4, .theme-dark h5, .theme-dark h6 {
+  /*color: #ddca7e;*/
+  color: #ddc;
 }
 
-.theme-dark .h2, .theme-dark .h1, .theme-dark .h3, .theme-dark .h4, .theme-dark .h5 {
-  color: #ddca7e;
+.theme-dark .h2, .theme-dark .h1, .theme-dark .h3, .theme-dark .h4, .theme-dark .h5, .theme-dark .h6 {
+  color: #ddc;
 }
 
-.theme-dark .item, .theme-dark p, .theme-dark div, .theme-dark .item-content, .theme-dark span {
+.theme-dark .item, .theme-dark p, .theme-dark div, .theme-dark .item-content, .theme-dark span, .theme-dark .reputation, .theme-dark input:not([type="range"]), .theme-dark textarea, .theme-dark select {
   color: #aaa;
   background: #444;
 }
@@ -21,14 +22,17 @@
 }
 
 .theme-dark .bar {
-  background: #444!important;
+  background-color: #444;
 }
 
 .scroll-content.theme-dark {
   background: #444;
   color: #aaa; 
 }
-
+.theme-dark .tag {
+  background: #aaa;
+  color: #000;
+}
 .theme-dark .tag::before {
   background: #444;
   border-radius: 10px;
@@ -44,7 +48,7 @@
 .theme-dark .tag::after {
   background: #444;
   border-bottom: 13px solid transparent;
-  border-left: 10px solid #eee;
+  border-left: 10px solid #aaa;
   border-top: 13px solid transparent;
   content: '';
   position: absolute;
@@ -216,10 +220,13 @@ hr {
 	border-bottom-left-radius: 0;
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
+  margin: 0;
+  padding: 0;
 }
 .profile.bar-footer {
 	height: 60px;
 	padding: 0;
+  bottom: 0;
 }/*
 .button-small {
   width: 30px;
@@ -303,6 +310,13 @@ textarea.markdown-input {
   position: absolute!important;
   left: 0!important;
   margin-right: 5px!important;
+  margin-bottom: 5px!important;
+  bottom: 0!important;
+}
+.profilebtn_stats {
+  position: absolute!important;
+  right: 0!important;
+  margin-left: 5px!important;
   margin-bottom: 5px!important;
   bottom: 0!important;
 }
@@ -501,7 +515,7 @@ select-input input {
   background-color: #f8f8f8;
   border-radius: 50%;
   border: 1px solid #dadada;
-  color: #000!important;
+  color: #000;
 }
 .stitle.row, .stitle.row .col {
 	padding: 0px;
@@ -529,6 +543,23 @@ select-input input {
   font: 14px Sans-Serif;
   line-height: 12pt;
 }
+.item-myavatarsmall > img:first-child {
+  display: inline-block;
+  vertical-align: middle;
+  width: 25px;
+  height: 25px;
+  max-width: 25px!important;
+  max-height: 25px!important;
+  background: #387ef5;
+  margin-bottom: 5px;
+  border-radius: 50%!important;
+  -webkit-border-radius: 50%!important;
+  -moz-border-radius: 50%!important;
+  -webkit-box-shadow: 0 0 0 1px #fff, 0 0 0 1px #999, 0 1px 1px 1px rgba(0,0,0,.2);
+  -moz-box-shadow: 0 0 0 1px #fff, 0 0 0 1px #999, 0 1px 1px 1px rgba(0,0,0,.2);
+  box-shadow: 0 0 0 1px #fff, 0 0 0 1px #999, 0 1px 1px 1px rgba(0,0,0,.2);
+}
+
 .h4 {
   color: inherit;
 }
@@ -537,8 +568,9 @@ select-input input {
 }
 .action-sheet-group{
   overflow: scroll;
-  max-height: 400px;
+  max-height: 300px;
 }
+
 .platform-android .action-sheet-backdrop.active {
   background-color: rgba(0, 0, 0, 0.1);
 }
@@ -1384,6 +1416,8 @@ div.text-left {
   width: auto;
   object-fit: cover;
   object-position: 50% 50%;
+  -webkit-animation-play-state: paused; /* Safari 4.0 - 8.0 */
+  animation-play-state: paused;
 }
 .max-lined {
   overflow: hidden;
@@ -1612,6 +1646,10 @@ body[dir=rtl] .bar .button.back-button, .bar button.back-button {
     margin-right: 75px;
 }
 
+body { padding-top: constant(safe-area-inset-top); }
+
+
+
 .mask {
     position: absolute;
     left: 0;
@@ -1635,6 +1673,13 @@ body[dir=rtl] .bar .button.back-button, .bar button.back-button {
 }
 .bar.bar-positive {
   background-color: rgba(31,83,152,1);
+  /*#1f5398*/
+}
+.tabs-icon-top.tabs-positive .tabs {
+  background-color: rgba(31,83,152,1);
+}
+.pane.tab-content {
+  margin-top: 88px;
 }
 .tabs-striped.tabs-background-positive .tabs {
   background-color: rgba(31,83,152,1);
@@ -1650,6 +1695,14 @@ body[dir=rtl] .bar .button.back-button, .bar button.back-button {
      left: 5%; 
      right: 5%; 
      bottom: 5%;
+  }
+  .mypinmodal {
+    width: 98%; 
+    height: 98%; 
+    top: 1%; 
+    left: 1%; 
+    right: 1%; 
+    bottom: 1%;
   }
 }
 .smaller-text {
@@ -1690,3 +1743,107 @@ highchart {
 .button-bar-story .button-bar button {
   height: 52px;
 }
+.ititle {
+  line-height: 20px;
+}
+.ibody {
+  
+}
+.extra-menu .item-icon-left.item {
+  padding-left: 15px!important;
+}
+.commentarea {
+  max-height: 110px;
+  overflow-y: scroll;
+}
+.filter.item-select .input-label{
+    width:10%;
+}
+.filter.item-select select{
+    width:100%;
+}
+div.item-input.item-icon-right {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+img {
+  image-orientation: from-image!important;
+}
+/*
+.platform-ios ion-nav > .ion-page > .toolbar.statusbar-padding:first-child,
+.platform-ios ion-nav > .ion-page > ion-header > .toolbar.statusbar-padding:first-child,
+.platform-ios ion-tab > .ion-page > .toolbar.statusbar-padding:first-child,
+.platform-ios ion-tab > .ion-page > ion-header > .toolbar.statusbar-padding:first-child,
+.platform-ios ion-tabs > .ion-page.tab-subpage > ion-header > .toolbar.statusbar-padding:first-child,
+.platform-ios ion-menu > .menu-inner > .toolbar.statusbar-padding:first-child,
+.platform-ios ion-menu > .menu-inner > ion-header > .toolbar.statusbar-padding:first-child {
+  padding-top: calc(20px + 4px) !important;
+  min-height: calc(44px + 20px) !important;
+}
+
+.platform-ios ion-nav > .ion-page > ion-content.statusbar-padding:first-child .scroll-content,
+.platform-ios ion-nav > .ion-page > ion-header > ion-content.statusbar-padding:first-child .scroll-content,
+.platform-ios ion-tab > .ion-page > ion-content.statusbar-padding:first-child .scroll-content,
+.platform-ios ion-tab > .ion-page > ion-header > ion-content.statusbar-padding:first-child .scroll-content,
+.platform-ios ion-tabs > .ion-page.tab-subpage > ion-header > ion-content.statusbar-padding:first-child .scroll-content,
+.platform-ios ion-menu > .menu-inner > ion-content.statusbar-padding:first-child .scroll-content,
+.platform-ios ion-menu > .menu-inner > ion-header > ion-content.statusbar-padding:first-child .scroll-content {
+  padding-top: 20px !important;
+}
+
+.platform-ios ion-nav > .ion-page > ion-content.statusbar-padding:first-child[padding] .scroll-content,
+.platform-ios ion-nav > .ion-page > ion-content.statusbar-padding:first-child[padding-top] .scroll-content,
+.platform-ios ion-nav > .ion-page > ion-header > ion-content.statusbar-padding:first-child[padding] .scroll-content,
+.platform-ios ion-nav > .ion-page > ion-header > ion-content.statusbar-padding:first-child[padding-top] .scroll-content,
+.platform-ios ion-tab > .ion-page > ion-content.statusbar-padding:first-child[padding] .scroll-content,
+.platform-ios ion-tab > .ion-page > ion-content.statusbar-padding:first-child[padding-top] .scroll-content,
+.platform-ios ion-tab > .ion-page > ion-header > ion-content.statusbar-padding:first-child[padding] .scroll-content,
+.platform-ios ion-tab > .ion-page > ion-header > ion-content.statusbar-padding:first-child[padding-top] .scroll-content,
+.platform-ios ion-tabs > .ion-page.tab-subpage > ion-header > ion-content.statusbar-padding:first-child[padding] .scroll-content,
+.platform-ios ion-tabs > .ion-page.tab-subpage > ion-header > ion-content.statusbar-padding:first-child[padding-top] .scroll-content,
+.platform-ios ion-menu > .menu-inner > ion-content.statusbar-padding:first-child[padding] .scroll-content,
+.platform-ios ion-menu > .menu-inner > ion-content.statusbar-padding:first-child[padding-top] .scroll-content,
+.platform-ios ion-menu > .menu-inner > ion-header > ion-content.statusbar-padding:first-child[padding] .scroll-content,
+.platform-ios ion-menu > .menu-inner > ion-header > ion-content.statusbar-padding:first-child[padding-top] .scroll-content {
+  padding-top: calc(16px + 20px) !important;
+}
+
+.platform-ios ion-nav > .ion-page > .toolbar.statusbar-padding:first-child ion-segment,
+.platform-ios ion-nav > .ion-page > .toolbar.statusbar-padding:first-child ion-title,
+.platform-ios ion-nav > .ion-page > ion-header > .toolbar.statusbar-padding:first-child ion-segment,
+.platform-ios ion-nav > .ion-page > ion-header > .toolbar.statusbar-padding:first-child ion-title,
+.platform-ios ion-tab > .ion-page > .toolbar.statusbar-padding:first-child ion-segment,
+.platform-ios ion-tab > .ion-page > .toolbar.statusbar-padding:first-child ion-title,
+.platform-ios ion-tab > .ion-page > ion-header > .toolbar.statusbar-padding:first-child ion-segment,
+.platform-ios ion-tab > .ion-page > ion-header > .toolbar.statusbar-padding:first-child ion-title,
+.platform-ios ion-tabs > .ion-page.tab-subpage > ion-header > .toolbar.statusbar-padding:first-child ion-segment,
+.platform-ios ion-tabs > .ion-page.tab-subpage > ion-header > .toolbar.statusbar-padding:first-child ion-title,
+.platform-ios ion-menu > .menu-inner > .toolbar.statusbar-padding:first-child ion-segment,
+.platform-ios ion-menu > .menu-inner > .toolbar.statusbar-padding:first-child ion-title,
+.platform-ios ion-menu > .menu-inner > ion-header > .toolbar.statusbar-padding:first-child ion-segment,
+.platform-ios ion-menu > .menu-inner > ion-header > .toolbar.statusbar-padding:first-child ion-title {
+  padding-top: 20px !important;
+  height: calc(44px + 20px) !important;
+  min-height: calc(44px + 20px) !important;
+}
+
+@media only screen and (max-width: 767px) {
+  .platform-ios .modal-wrapper > .ion-page > ion-header > .toolbar.statusbar-padding:first-child {
+    padding-top: calc(20px + 4px) !important;
+    min-height: calc(44px + 20px) !important;
+  }
+  .platform-ios .modal-wrapper > .ion-page > ion-header > ion-content.statusbar-padding:first-child .scroll-content {
+    padding-top: 20px !important;
+  }
+  .platform-ios .modal-wrapper > .ion-page > ion-header > ion-content.statusbar-padding:first-child[padding] .scroll-content,
+  .platform-ios .modal-wrapper > .ion-page > ion-header > ion-content.statusbar-padding:first-child[padding-top] .scroll-content {
+    padding-top: calc(16px + 20px) !important;
+  }
+  .platform-ios .modal-wrapper > .ion-page > ion-header > .toolbar.statusbar-padding:first-child ion-segment,
+  .platform-ios .modal-wrapper > .ion-page > ion-header > .toolbar.statusbar-padding:first-child ion-title {
+    padding-top: 20px !important;
+    height: calc(44px + 20px) !important;
+    min-height: calc(44px + 20px) !important;
+  }
+}*/

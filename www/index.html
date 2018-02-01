@@ -3,6 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+
+    <!--<meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; style-src 'self' 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">-->
+    
     <title></title>
 
     <link href="css/font-awesome.css" rel="stylesheet">
@@ -13,6 +16,27 @@
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
 
+    <!-- Find Debugging errors -->
+    <script type="text/javascript">
+        window.onerror = function (errorMsg, url, lineNumber) {
+          console.log('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber);
+        }
+        window.handleOpenURL = function(url) {
+          console.log(">>>>>>>>>>>>>>>>>>>");
+          // do stuff, for example
+          // document.getElementById("url").value = url;
+          setTimeout(function() {
+              // TODO: call some Cordova API here
+             console.log(url);
+             if (url) {
+               //localStorage.openurl = url;
+               var parts = url.split('/');
+               window.location = '#/app/post/'+parts[2]+'/'+parts[3].substr(1)+'/'+parts[4];
+             }
+          }, 100);
+        };
+    </script>
+
     <script src="lib/marked.js"></script>
     <script src="lib/highstock.src.js"></script>
 
@@ -20,12 +44,15 @@
     <script src="lib/blockies.js"></script>
     <script src="lib/speakingurl.min.js"></script>
     <script src="lib/ion-datetime-picker.min.js"></script>
+    <script src="lib/imgcache.js"></script>
+    <script src="lib/ionic-img-cache.js"></script>
     <link href="lib/ion-datetime-picker.min.css" rel="stylesheet">
 
     <script src="js/index.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
+
   </head>
 
   <body ng-app="esteem" dir="{{$root.$storage.dir}}">

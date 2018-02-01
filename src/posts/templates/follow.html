@@ -3,13 +3,13 @@
     <div class="list list-inset" ng-if="active=='followers'">
       <label class="item item-input">
         <i class="icon ion-search placeholder-icon"></i>
-        <input type="text" ng-model="searchu.follower" placeholder="{{'SEARCH_FOLLOWERS' | translate}}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <input type="text" ng-model="searchu.follower" placeholder="{{'SEARCH_FOLLOWERS' | translate}}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" ng-model-options="{debounce: 500}">
       </label>
     </div>
     <div class="list list-inset" ng-if="active=='following'">
       <label class="item item-input">
         <i class="icon ion-search placeholder-icon"></i>
-        <input type="text" ng-model="searchu.following" placeholder="{{'SEARCH_FOLLOWING' | translate}}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <input type="text" ng-model="searchu.following" placeholder="{{'SEARCH_FOLLOWING' | translate}}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" ng-model-options="{debounce: 500}">
       </label>
     </div>
     <div class="list" ng-if="active=='followers' && followers.length>0">
@@ -38,8 +38,8 @@
   </ion-content>
   <div class="bar profile bar-footer">
     <div class="button-bar">
-      <a class="button button-large button-royal icon ion-ios-people" ng-class="{'active':active=='followers'}" ng-click="change('followers')"> {{'FOLLOWERS' | translate}} <span ng-if="followers.length>0">({{followers.length}})</span></a>
-      <a class="button button-royal icon ion-person-add" ng-class="{'active':active=='following'}" ng-click="change('following')"> {{'FOLLOWED' | translate}} <span ng-if="following.length>0">({{following.length}})</span></a>
+      <a class="button button-large button-royal icon ion-ios-people" ng-class="{'active':active=='followers'}" ng-click="change('followers')"> {{'FOLLOWERS' | translate}} <span ng-if="followers.length>0">({{::followdetails.follower_count}})</span></a>
+      <a class="button button-royal icon ion-person-add" ng-class="{'active':active=='following'}" ng-click="change('following')"> {{'FOLLOWED' | translate}} <span ng-if="following.length>0">({{::followdetails.following_count}})</span></a>
     </div>
   </div>
 </ion-view>

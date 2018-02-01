@@ -914,9 +914,9 @@ Renderer.prototype.link = function(href, title, text) {
       if (href.indexOf('http://dirtyimg.com/')>-1){
         //href='https://img1.steemit.com/0x0/'+href;
         //https://steemitimages.com/0x0/https://scontent-frt3-2.xx.fbcdn.net/v/t31.0-8/18451703_119604535281306_269245501681123810_o.jpg?oh=bb4511494db5f4fe3aa51e282fe5c361&oe=597629E3
-        out = href.replace(imgs, '<img src="https://steemitimages.com/0x0/$1$2" class="postimg" onerror="this.src=\'img/noimage.png\'" />');  
+        out = href.replace(imgs, '<img check-image src="https://steemitimages.com/0x0/$1$2" class="postimg" />');  
       } else {
-        out = href.replace(imgs, '<img src="$1$2" class="postimg" onerror="this.src=\'img/noimage.png\'" />');  
+        out = href.replace(imgs, '<img check-image src="https://steemitimages.com/0x0/$1$2" class="postimg" />');  
       }  
     } else {
       out = '<a href onClick=\'window.open("' + href + '", \"_system\", \"location=yes\");return false;\'';
@@ -926,11 +926,14 @@ Renderer.prototype.link = function(href, title, text) {
       out += '>' + text + '</a>'; 
     }
   } else {
-    if (href.match(youtube)) {
+    if (href.match(youtubeid)) {
       var YouTube1 = mediaParseIdFromUrl('youtube', href);
       //console.log(YouTube1, href);
-      out = href.replace(youtube, '<iframe width="100%" height="280" src="http://www.youtube.com/embed/' + YouTube1 + '?enablejsapi=1" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
-    } else if (href.indexOf('https://steemit.com') === 0) {
+      if (YouTube1) {
+        out = href.replace(youtube, '<iframe width="100%" height="280" src="http://www.youtube.com/embed/' + YouTube1 + '?enablejsapi=1" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');  
+      }
+      
+    } else if (href.indexOf('https://steemit.com') === 0 || href.indexOf('https://golos.io') === 0) {
         var parts = href.split('/');
         //console.log(parts);
           if (parts.length===6) {
@@ -938,7 +941,7 @@ Renderer.prototype.link = function(href, title, text) {
             //out = '<a href ng-click=\"$root.getContentAndOpen(\'' + parts[4].substr(1) + '\', \''+parts[5]+'\')\" >'+text+'</a>';
             out = '<a href="#/app/post/'+parts[3]+'/'+parts[4].substr(1)+'/'+parts[5]+'">'+text+'</a>';
           } else {
-            if (parts.length===4) {
+            if (parts.length===4 && parts[3] !== "~witnesses") {
               out = '<a href="#/app/profile/'+parts[3].substr(1)+'">'+text+'</a>';
             } else {
               out = '<a href onClick=\'window.open("' + href + '", \"_system\", \"location=yes\");return false;\'';
@@ -962,18 +965,14 @@ Renderer.prototype.link = function(href, title, text) {
 };
 
 Renderer.prototype.image = function(href, title, text) {
-  if (href.indexOf('http://dirtyimg.com/')>-1){
-    //console.log(href);
-    href='https://steemitimages.com/0x0/'+href;
-  }
-
-  var out = '<img src="' + href + '" alt="' + text + '"';
+  
+  var out = '<img check-image src="https://steemitimages.com/0x0/' + href + '" alt="' + text + '"';
   //var out = '<img src="img/isimage.png" alt="' + text + '"';
   
   if (title) {
     out += ' title="' + title + '"';
   }
-  out += this.options.xhtml ? ' onerror="this.src=\'img/noimage.png\'" />' : ' onerror="this.src=\'img/noimage.png\'">';//this.parentNode.removeChild(this);
+  out += this.options.xhtml ? '/>' : '>';
   return out;
 };
 

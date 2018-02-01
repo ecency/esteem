@@ -1,0 +1,21 @@
+{ 
+	"steemd" : [
+		"https://rpc.esteem.ws",
+		"https://rpc.steemviz.com",
+		"https://rpc.buildteam.io",
+		"https://steemd.steemit.com",
+		"https://gtg.steem.house:8090", 
+		"https://steemd.steemitdev.com",
+		"https://api.steemit.com", 
+		"https://steemd.pevo.science", 
+		"https://steemd.steemitstage.com",
+		"https://steemd.previx.io:8090", 
+		"https://seed.bitcoiner.me", 
+		"https://rpc.steemliberator.com",
+		"https://steemd.minnowsupportproject.org"
+	], 
+	"golosd" : [
+		"https://ws.golos.io",
+		"https://node.golos.ws"
+	] 
+}

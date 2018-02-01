@@ -1,11 +1,11 @@
 //angular.module('window.steem.services', [])
 module.exports = function (app) {
+  console.log('services.js');
 	app.service('APIs', ['$http', '$rootScope', 'API_END_POINT', function ($http, $rootScope, API_END_POINT) {
 		'use strict';
 		return {
-      getCurrencyRate: function(code_from, code_to){
-        console.log(code_from,code_to);
-        return $http.get("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.xchange%20where%20pair%20in%20(%22"+code_from+code_to+"%22)&format=json&diagnostics=false&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
+      getCurrencyRate: function(code_to, chain){
+        return $http.get(API_END_POINT+"/api/currencyRate/"+code_to.toUpperCase()+"/"+chain);
       },
       saveSubscription: function(deviceid, username, subscription) {
         return $http.post(API_END_POINT+"/api/devices", {deviceid: deviceid, username: username, subscription: subscription, chain: $rootScope.$storage.chain});
@@ -60,6 +60,45 @@ module.exports = function (app) {
       },
       moveSchedule: function(id, user) {
         return $http.put(API_END_POINT+"/api/schedules/"+user+"/"+id);
+      },
+      getVotes: function(user) {
+        return $http.get(API_END_POINT+"/api/votes/"+$rootScope.$storage.chain+"/"+user);
+      },
+      getMyVotes: function(user) {
+        return $http.get(API_END_POINT+"/api/rvotes/"+$rootScope.$storage.chain+"/"+user);
+      },
+      getMyMentions: function(user) {
+        return $http.get(API_END_POINT+"/api/mentions/"+$rootScope.$storage.chain+"/"+user);
+      },
+      getMyFollows: function(user) {
+        return $http.get(API_END_POINT+"/api/follows/"+$rootScope.$storage.chain+"/"+user);
+      },
+      getMyReblogs: function(user) {
+        return $http.get(API_END_POINT+"/api/reblogs/"+$rootScope.$storage.chain+"/"+user);
+      },
+      getLeaderboard: function() {
+        return $http.get(API_END_POINT+"/api/leaderboard/"+$rootScope.$storage.chain);
+      },
+      getMyAchievements: function(user) {
+        return $http.get(API_END_POINT+"/api/achievements/"+$rootScope.$storage.chain+"/"+user);
+      },
+      search: function(text) {
+        return $http.get("https://api.asksteem.com/search?q="+text+"&include=meta&sort_by=created&order=desc");
+      },
+      sendMsg: function(user, msg, room) {
+        return $http.post(API_END_POINT+"/api/messages", {sender: user, content: msg, room: room, chain: $rootScope.$storage.chain});
+      },
+      getMsg: function(user, room) {
+        return $http.get(API_END_POINT+"/api/messages/"+room+"/"+user);
+      },
+      getRoom: function(user) {
+        return $http.get(API_END_POINT+"/api/rooms/"+user);
+      },
+      addMyImage: function(user, url) {
+        return $http.post(API_END_POINT+"/api/image", {username: user, image_url:url});
+      },
+      getNodes: function() {
+        return $http.get("https://storage.googleapis.com/esteem/public_nodes.json",{headers:{'Cache-Control': 'no-cache'}});
       }
 		};
 	}])
@@ -135,97 +174,6 @@ module.exports = function (app) {
       }
     };
   });
-  app.directive('navigation', function () {
-    var controller = ['$scope', '$rootScope', function ($scope, $rootScope) {
-      $scope.addactiveclass = function (menuItem) {
-          $scope.activeMenu = menuItem.name;
-          //$rootScope.log(menuItem);
-          $rootScope.$storage.filter = menuItem.href;
-          $rootScope.$broadcast('filter:change');
-          $scope.center(menuItem.name);
-          $scope.someCtrlFn({menulinks: menuItem});
-      };
-
-      $(window).resize(function(){
-        $scope.center();
-      });
-      $scope.center = function(menuItem) {
-        var nav = document.getElementById("nav1");
-        var navWidth = document.getElementById("nav2").offsetWidth;
-        var currentElement = document.querySelectorAll('[name="'+menuItem+'"]');
-        currentElement = menuItem ? currentElement[0] : document.getElementsByClassName('active')[0];
-        if(currentElement) {
-          var margin = 0;
-          var lenm = nav.children.length;
-          for(var i =0; i<lenm; i++){
-
-            if(currentElement == nav.children[i]){
-              break;
-            }else {
-              margin += nav.children[i].offsetWidth;
-            }
-          }
-          nav.style.marginLeft = (navWidth/2 - margin - currentElement.offsetWidth/2) + 'px';
-        }
-        else {
-          nav.style.marginLeft = (navWidth/2 - $scope.activeMenu.length) + 'px';
-        }
-      };
-      var _len = $scope.menulinks.length;
-      for (var i = 0; i < _len; i++) {
-        if ($rootScope.$storage.filter) {
-          if ($scope.menulinks[i].href == $rootScope.$storage.filter) {
-            $scope.activeMenu = $scope.menulinks[i].name;
-          }
-        } else {
-          $scope.activeMenu = "Trending";
-        }
-      }
-
-      //$scope.center();
-      setTimeout(function() {
-        $scope.center();
-      }, 50);
-    }];
-
-    return {
-      restrict: "E",
-      replace: true,
-      scope: {
-        menulinks: '=',
-        someCtrlFn: '&callbackFn'
-      },
-      controller: controller,
-      template: "<ul id='nav1'>"+
-              "<li ng-repeat='menulinks in menulinks' name='{{menulink.name}}' class='top {{menulink.role}}' ng-class='{active : activeMenu === menulink.name}'>"+
-                "<a on-tap='addactiveclass(menulink)'>"+
-                  "{{menulink.name}}"
-                +"</a>"+
-                "<div class='arrow'></div>"+
-                "</li>"
-            +"</ul>"
-    }
-  });
-  function SimplePubSub() {
-      var events = {};
-      return {
-          on: function(names, handler) {
-              names.split(' ').forEach(function(name) {
-                  if (!events[name]) {
-                      events[name] = [];
-                  }
-                  events[name].push(handler);
-              });
-              return this;
-          },
-          trigger: function(name, args) {
-              angular.forEach(events[name], function(handler) {
-                  handler.call(null, args);
-              });
-              return this;
-          }
-      };
-  };
 
   app.directive('onFinishRender', function ($timeout) {
       return {
@@ -252,400 +200,381 @@ module.exports = function (app) {
           }
       };
   })
-  app.directive('tabSlideBox', [ '$timeout', '$window', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$rootScope',
-    function($timeout, $window, $ionicSlideBoxDelegate, $ionicScrollDelegate, $rootScope) {
-      'use strict';
+  
+  app.directive('fastRepeat', ['$compile', '$parse', '$animate', function ($compile, $parse, $animate) {
+    'use strict';
+    var $ = angular.element;
 
-      return {
-        restrict : 'A, E, C',
-        link : function(scope, element, attrs, ngModel) {
+    var fastRepeatId = 0,
+        showProfilingInfo = false,
+        isGteAngular14 = /^(\d+\.\d+)\./.exec(angular.version.full)[1] > 1.3;
 
-          var ta = element[0], $ta = element;
-          $ta.addClass("tabbed-slidebox");
-          if(attrs.tabsPosition === "bottom"){
-            $ta.addClass("btm");
-          }
-
-          //Handle multiple slide/scroll boxes
-          var handle = ta.querySelector('.slider').getAttribute('delegate-handle');
-
-          var ionicSlideBoxDelegate = $ionicSlideBoxDelegate;
-          if(handle){
-            ionicSlideBoxDelegate = ionicSlideBoxDelegate.$getByHandle(handle);
-          }
-
-          var ionicScrollDelegate = $ionicScrollDelegate;
-          if(handle){
-            ionicScrollDelegate = ionicScrollDelegate.$getByHandle(handle);
-          }
-
-          function renderScrollableTabs(){
-            var iconsDiv = angular.element(ta.querySelector(".tsb-icons")), icons = iconsDiv.find("a"), wrap = iconsDiv[0].querySelector(".tsb-ic-wrp"), totalTabs = icons.length;
-            var scrollDiv = wrap.querySelector(".scroll");
-
-            angular.forEach(icons, function(value, key){
-                 var a = angular.element(value);
-                 a.on('click', function(){
-                   ionicSlideBoxDelegate.slide(key);
-                 });
-
-              if(a.attr('icon-off')) {
-                a.attr("class", a.attr('icon-off'));
-              }
-            });
-
-            var initialIndex = attrs.tab;
-            //Initializing the middle tab
-            if(typeof attrs.tab === 'undefined' || (totalTabs <= initialIndex) || initialIndex < 0){
-              initialIndex = Math.floor(icons.length/2);
-            }
-
-            //If initial element is 0, set position of the tab to 0th tab
-            if(initialIndex == 0){
-              setPosition(0);
-            }
-            //$rootScope.log('initialIndex '+initialIndex);
-            if ($rootScope.$storage.filter) {
-              if ($rootScope.user) {
-                if ($rootScope.$storage.filter === 'feed') {
-                  //$scope.events.trigger("slideChange", {"index" : 0});
-                  initialIndex = 0;
-                }
-                if ($rootScope.$storage.filter === 'trending') {
-                  //$scope.events.trigger("slideChange", {"index" : 0});
-                  initialIndex = 1;
-                }
-                if ($rootScope.$storage.filter === 'hot'){
-                  //$scope.events.trigger("slideChange", {"index" : 1});
-                  initialIndex = 2;
-                }
-                if ($rootScope.$storage.filter === 'created'){
-                  //$scope.events.trigger("slideChange", {"index" : 2});
-                  initialIndex = 3;
-                }
-                if ($rootScope.$storage.filter === 'active'){
-                  //$scope.events.trigger("slideChange", {"index" : 3});
-                  initialIndex = 4;
-                }
-                if ($rootScope.$storage.filter === 'promoted'){
-                  //$scope.events.trigger("slideChange", {"index" : 4});
-                  initialIndex = 5;
-                }
-                if ($rootScope.$storage.filter === 'trending30'){
-                  //$scope.events.trigger("slideChange", {"index" : 5});
-                  initialIndex = 6;
-                }
-                if ($rootScope.$storage.filter === 'votes'){
-                  //$scope.events.trigger("slideChange", {"index" : 6});
-                  initialIndex = 7;
-                }
-                if ($rootScope.$storage.filter === 'children'){
-                  //$scope.events.trigger("slideChange", {"index" : 7});
-                  initialIndex = 8;
-                }
-                if ($rootScope.$storage.filter === 'cashout'){
-                  //$scope.events.trigger("slideChange", {"index" : 8});
-                  initialIndex = 9;
-                }
-              } else {
-                if ($rootScope.$storage.filter === 'trending') {
-                  //$scope.events.trigger("slideChange", {"index" : 0});
-                  initialIndex = 0;
-                }
-                if ($rootScope.$storage.filter === 'hot'){
-                  //$scope.events.trigger("slideChange", {"index" : 1});
-                  initialIndex = 1;
-                }
-                if ($rootScope.$storage.filter === 'created'){
-                  //$scope.events.trigger("slideChange", {"index" : 2});
-                  initialIndex = 2;
-                }
-                if ($rootScope.$storage.filter === 'active'){
-                  //$scope.events.trigger("slideChange", {"index" : 3});
-                  initialIndex = 3;
-                }
-                if ($rootScope.$storage.filter === 'promoted'){
-                  //$scope.events.trigger("slideChange", {"index" : 4});
-                  initialIndex = 4;
-                }
-                if ($rootScope.$storage.filter === 'trending30'){
-                  //$scope.events.trigger("slideChange", {"index" : 5});
-                  initialIndex = 5;
-                }
-                if ($rootScope.$storage.filter === 'votes'){
-                  //$scope.events.trigger("slideChange", {"index" : 6});
-                  initialIndex = 6;
-                }
-                if ($rootScope.$storage.filter === 'children'){
-                  //$scope.events.trigger("slideChange", {"index" : 7});
-                  initialIndex = 7;
-                }
-                if ($rootScope.$storage.filter === 'cashout'){
-                  //$scope.events.trigger("slideChange", {"index" : 8});
-                  initialIndex = 8;
-                }
-              }
-            }
-            $timeout(function() {
-              ionicSlideBoxDelegate.slide(initialIndex);
-            }, 10);
-          }
-
-          function setPosition(index){
-            var iconsDiv = angular.element(ta.querySelector(".tsb-icons")), icons = iconsDiv.find("a"), wrap = iconsDiv[0].querySelector(".tsb-ic-wrp"), totalTabs = icons.length;
-            var scrollDiv = wrap.querySelector(".scroll");
-
-            var middle = iconsDiv[0].offsetWidth/2;
-            var curEl = angular.element(icons[index]);
-            var prvEl = angular.element(iconsDiv[0].querySelector(".active"));
-            if(curEl && curEl.length){
-              var curElWidth = curEl[0].offsetWidth, curElLeft = curEl[0].offsetLeft;
-
-              if(prvEl.attr('icon-off')) {
-                prvEl.attr("class", prvEl.attr('icon-off'));
-              } else{
-                prvEl.removeClass("active");
-              }
-              if(curEl.attr('icon-on')) {
-                curEl.attr("class", curEl.attr('icon-on'));
-              }
-              curEl.addClass("active");
-
-              var leftStr = (middle  - (curElLeft) -  curElWidth/2 + 5);
-              //If tabs are not scrollable
-              if(!scrollDiv){
-                var leftStr = (middle  - (curElLeft) -  curElWidth/2 + 5) + "px";
-                wrap.style.webkitTransform =  "translate3d("+leftStr+",0,0)" ;
-              } else {
-                //If scrollable tabs
-                var wrapWidth = wrap.offsetWidth;
-                var currentX = Math.abs(getX(scrollDiv.style.webkitTransform));
-                var leftOffset = 100;
-                var elementOffset = 54;
-                //If tabs are reaching right end or left end
-                if(((currentX + wrapWidth) < (curElLeft + curElWidth + elementOffset)) || (currentX > (curElLeft - leftOffset))){
-                  if(leftStr > 0){
-                    leftStr = 0;
-                  }
-                  //Use this scrollTo, so when scrolling tab manually will not flicker
-                  setTimeout(function() {
-                    ionicScrollDelegate.scrollTo(Math.abs(leftStr), 0, true);
-                  }, 1);
-
-                } else {
-                  if(leftStr > 0){
-                    leftStr = 0;
-                  }
-                  setTimeout(function() {
-                    ionicScrollDelegate.scrollTo(Math.abs(leftStr), 0, true);
-                  }, 1);
-                }
-              }
-            }
-          };
-          function getX(matrix) {
-
-            matrix = matrix.replace("translate3d(","");
-            matrix = matrix.replace("translate(","");
-            return (parseInt(matrix));
-          }
-          var events = scope.events;
-          events.on('slideChange', function(data){
-            setPosition(data.index);
-          });
-          events.on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
-            renderScrollableTabs();
-          });
-          setTimeout(function() {
-            renderScrollableTabs();
-          }, 10);
-
-        },
-        controller : function($scope, $attrs, $element, $rootScope) {
-          $scope.events = new SimplePubSub();
-          $scope.slideHasChanged = function(index){
-            $rootScope.log("SlideChanged "+index);
-            $scope.currentSlide = index;
-            $scope.events.trigger("slideChange", {"index" : index});
-            $timeout(function(){
-              if($scope.onSlideMove) {
-                $scope.onSlideMove({"index" : eval(index)});
-              }
-
-              if ($rootScope.user) {
-                if (index === 0) {
-                  $rootScope.$storage.filter = 'feed';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 1) {
-                  $rootScope.$storage.filter = 'trending';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 2) {
-                  $rootScope.$storage.filter = 'hot';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 3) {
-                  $rootScope.$storage.filter = 'created';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 4) {
-                  $rootScope.$storage.filter = 'active';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 5) {
-                  $rootScope.$storage.filter = 'promoted';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 6) {
-                  $rootScope.$storage.filter = 'trending30';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 7) {
-                  $rootScope.$storage.filter = 'votes';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 8) {
-                  $rootScope.$storage.filter = 'children';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 9) {
-                  $rootScope.$storage.filter = 'cashout';
-                  $rootScope.$broadcast('filter:change');
-                }
-              } else {
-                if (index === 0) {
-                  $rootScope.$storage.filter = 'trending';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 1) {
-                  $rootScope.$storage.filter = 'hot';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 2) {
-                  $rootScope.$storage.filter = 'created';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 3) {
-                  $rootScope.$storage.filter = 'active';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 4) {
-                  $rootScope.$storage.filter = 'promoted';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 5) {
-                  $rootScope.$storage.filter = 'trending30';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 6) {
-                  $rootScope.$storage.filter = 'votes';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 7) {
-                  $rootScope.$storage.filter = 'children';
-                  $rootScope.$broadcast('filter:change');
-                }
-                if (index === 8) {
-                  $rootScope.$storage.filter = 'cashout';
-                  $rootScope.$broadcast('filter:change');
-                }
-              }
-              if (!$rootScope.$$phase){
-                $rootScope.$apply();
-              }
-            }, 10);
-          };
-
-          $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
-            $rootScope.log('ngRepeatFinished');
-            $scope.events.trigger("ngRepeatFinished", {"event" : ngRepeatFinishedEvent});
-          });
-        }
-      };
-
+    // JSON.stringify replacer function which removes any keys that start with $$.
+    // This prevents unnecessary updates when we watch a JSON stringified value.
+    function JSONStripper(key, value) {
+        if(key.slice && key.slice(0,2) == '$$') { return undefined; }
+        return value;
     }
-  ]);
 
+    function getTime() { // For profiling
+        if(window.performance && window.performance.now) { return window.performance.now(); }
+        else { return (new Date()).getTime(); }
+    }
+
+    return {
+        restrict: 'A',
+        transclude: 'element',
+        priority: 1000,
+        compile: function(tElement, tAttrs) {
+            return function link(listScope, element, attrs, ctrl, transclude) {
+                var repeatParts = attrs.fastRepeat.split(' in ');
+                var repeatListName = repeatParts[1], repeatVarName = repeatParts[0];
+                var getter = $parse(repeatListName); // getter(scope) should be the value of the list.
+                var disableOpts = $parse(attrs.fastRepeatDisableOpts)(listScope);
+                var currentRowEls = {};
+                var t;
+
+                // The rowTpl will be digested once -- want to make sure it has valid data for the first wasted digest.  Default to first row or {} if no rows
+                var scope = listScope.$new();
+                scope[repeatVarName] = getter(scope)[0] || {};
+                scope.fastRepeatStatic = true; scope.fastRepeatDynamic = false;
+
+
+                // Transclude the contents of the fast repeat.
+                // This function is called for every row. It reuses the rowTpl and scope for each row.
+                var rowTpl = transclude(scope, function(rowTpl, scope) {
+                    if (isGteAngular14) {
+                        $animate.enabled(rowTpl, false);
+                    } else {
+                        $animate.enabled(false, rowTpl);
+                    }
+                });
+
+                // Create an offscreen div for the template
+                var tplContainer = $("<div/>");
+                $('body').append(tplContainer);
+                scope.$on('$destroy', function() {
+                    tplContainer.remove();
+                    rowTpl.remove();
+                });
+                tplContainer.css({position: 'absolute', top: '-100%'});
+                var elParent = element.parents().filter(function() { return $(this).css('display') !== 'inline'; }).first();
+                tplContainer.width(elParent.width());
+                tplContainer.css({visibility: 'hidden'});
+
+                tplContainer.append(rowTpl);
+
+                var updateList = function(rowTpl, scope, forceUpdate) {
+                    function render(item) {
+                        scope[repeatVarName] = item;
+                        scope.$digest();
+                        rowTpl.attr('fast-repeat-id', item.$$fastRepeatId);
+                        return rowTpl.clone();
+                    }
+
+
+                    var list = getter(scope);
+                    // Generate ids if necessary and arrange in a hash map
+                    var listByIds = {};
+                    angular.forEach(list, function(item) {
+                        if(!item.$$fastRepeatId) {
+                            if(item.id) { item.$$fastRepeatId = item.id; }
+                            else if(item._id) { item.$$fastRepeatId = item._id; }
+                            else { item.$$fastRepeatId = ++fastRepeatId; }
+                        }
+                        listByIds[item.$$fastRepeatId] = item;
+                    });
+
+                    // Delete removed rows
+                    angular.forEach(currentRowEls, function(row, id) {
+                        if(!listByIds[id]) {
+                            row.el.detach();
+                        }
+                    });
+                    // Add/rearrange all rows
+                    var previousEl = element;
+                    angular.forEach(list, function(item) {
+                        var id = item.$$fastRepeatId;
+                        var row=currentRowEls[id];
+
+
+                        if(row) {
+                            // We've already seen this one
+                            if((!row.compiled && (forceUpdate || !angular.equals(row.copy, item))) || (row.compiled && row.item!==item)) {
+                                // This item has not been compiled and it apparently has changed -- need to rerender
+                                var newEl = render(item);
+                                row.el.replaceWith(newEl);
+                                row.el = newEl;
+                                row.copy = angular.copy(item);
+                                row.compiled = false;
+                                row.item = item;
+                            }
+                        } else {
+                            // This must be a new node
+
+                            if(!disableOpts) {
+                                row = {
+                                    copy: angular.copy(item),
+                                    item: item,
+                                    el: render(item)
+                                };
+                            } else {
+                                // Optimizations are disabled
+                                row = {
+                                    copy: angular.copy(item),
+                                    item: item,
+                                    el: $('<div/>'),
+                                    compiled: true
+                                };
+
+                                renderUnoptimized(item, function(newEl) {
+                                    row.el.replaceWith(newEl);
+                                    row.el=newEl;
+                                });
+                            }
+
+                            currentRowEls[id] =  row;
+                        }
+                        previousEl.after(row.el.last());
+                        previousEl = row.el.last();
+                    });
+
+                };
+
+
+                // Here is the main watch. Testing has shown that watching the stringified list can
+                // save roughly 500ms per digest in certain cases.
+                // JSONStripper is used to remove the $$fastRepeatId that we attach to the objects.
+                var busy=false;
+                listScope.$watch(function(scp){ return JSON.stringify(getter(scp), JSONStripper); }, function(list) {
+                    tplContainer.width(elParent.width());
+
+                    if(busy) { return; }
+                    busy=true;
+
+                    if (showProfilingInfo) {
+                        t = getTime();
+                    }
+
+                    // Rendering is done in a postDigest so that we are outside of the main digest cycle.
+                    // This allows us to digest the individual row scope repeatedly without major hackery.
+                    listScope.$$postDigest(function() {
+                        tplContainer.width(elParent.width());
+                        scope.$digest();
+
+                        updateList(rowTpl, scope);
+                        if (showProfilingInfo) {
+                            t = getTime() - t;
+                            console.log("Total time: ", t, "ms");
+                            console.log("time per row: ", t/list.length);
+                        }
+                        busy=false;
+                    });
+                }, false);
+
+                function renderRows() {
+                    listScope.$$postDigest(function() {
+                        tplContainer.width(elParent.width());
+                        scope.$digest();
+                        updateList(rowTpl, scope, true);
+                    });
+                }
+                if(attrs.fastRepeatWatch) {
+                    listScope.$watch(attrs.fastRepeatWatch, renderRows, true);
+                }
+                listScope.$on('fastRepeatForceRedraw', renderRows);
+
+                function renderUnoptimized(item, cb) {
+                    var newScope = scope.$new(false);
+
+                    newScope[repeatVarName] = item;
+                    newScope.fastRepeatStatic = false; newScope.fastRepeatDynamic = true;
+                    var clone = transclude(newScope, function(clone) {
+                        tplContainer.append(clone);
+                    });
+
+                    newScope.$$postDigest(function() {
+                        cb(clone);
+                    });
+
+                    newScope.$digest();
+
+                    return newScope;
+                }
+
+                var parentClickHandler = function parentClickHandler(evt) {
+                    var $target = $(this);
+                    if($target.parents().filter('[fast-repeat-id]').length) {
+                        return; // This event wasn't meant for us
+                    }
+                    evt.stopPropagation();
+
+                    var rowId = $target.attr('fast-repeat-id');
+                    var item = currentRowEls[rowId].item;
+
+
+                    // Find index of clicked dom element in list of all children element of the row.
+                    // -1 would indicate the row itself was clicked.
+                    var elIndex = $target.find('*').index(evt.target);
+                    var newScope = renderUnoptimized(item, function(clone) {
+                        $target.replaceWith(clone);
+
+                        currentRowEls[rowId] = {
+                            compiled: true,
+                            el: clone,
+                            item: item
+                        };
+
+                        setTimeout(function() {
+                            if(elIndex >= 0) {
+                                clone.find('*').eq(elIndex).trigger('click');
+                            } else {
+                                clone.trigger('click');
+                            }
+                        }, 0);
+                    });
+
+                    newScope.$digest();
+                };
+
+
+                element.parent().on('click', '[fast-repeat-id]',parentClickHandler);
+                
+                // Handle resizes
+                //
+                var onResize = function() {
+                    tplContainer.width(elParent.width());
+                };
+
+                var jqWindow = $(window);
+                jqWindow.on('resize', onResize);
+                scope.$on('$destroy', function() { 
+                    jqWindow.off('resize', onResize);
+                    element.parent().off('click', '[fast-repeat-id]', parentClickHandler);
+                });
+            };
+        },
+    };
+  }])
+  app.filter('capitalize', function() {
+      return function(input) {
+        return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+      }
+  });
+
+  app.filter('catchimage', function(){
+    return function(inp) {
+      var rege = /\b(https?:\/\/\S*?\.(?:png|jpe?g|gif)(?:\?(?:(?:(?:[\w_-]+=[\w_-]+)(?:&[\w_-]+=[\w_-]+)*)|(?:[\w_-]+)))?)\b/igm;
+      var regg = /((?:https?\:\/\/)(?:[a-zA-Z]{1}(?:[\w\-]+\.)+(?:[\w]{2,5}))(?:\:[\d]{1,5})?\/(?:[^\s\/]+\/)*(?:[^\s]+\.(?:jpe?g|gif|png))(?:\?\w+=\w+(?:&\w+=\w+)*)?)/gim;
+
+      if ((typeof inp.json_metadata !== 'string' || !inp.json_metadata instanceof String) && inp.json_metadata) {
+        return inp.json_metadata.image[0];
+      }
+
+      var x1 = inp.json_metadata.split('"image":');
+      
+      if (x1 && x1.length>1){
+        return "https://steemitimages.com/0x0/"+x1[1].split('"')[1];
+      } else {
+        /*if (x1.length == 1) {
+          var match = regg.exec(inp.body);
+          console.log(match);
+          if (match && match.length>0)
+            return match[0];
+          else*/ 
+          return 'img/noimage.png';
+        //}
+      }
+      
+    }
+  });
 	app.filter('timeago', function($filter, $translate, $rootScope) {
 
       function TimeAgo(input, p_allowFuture) {
         var substitute = function (stringOrFunction, number, strings) {
-                var string = angular.isFunction(stringOrFunction) ? stringOrFunction(number, dateDifference) : stringOrFunction;
-                var value = (strings.numbers && strings.numbers[number]) || number;
-                return string.replace(/%d/i, value);
-            }
-            var nowTime = (new Date()).getTime();
-            var date = (new Date(input)).getTime();
-            //refreshMillis= 6e4, //A minute
-
-            // get difference between UTC and local time in milliseconds
-            
-            //var timeZoneOffset = (new Date().getTimezoneOffset()) * 60000;
-            
-            // convert local to UTC
-            //console.log(timeZoneOffset);
-
-            /*if (timeZoneOffset != 0) {
-              nowTime = nowTime + timeZoneOffset;
-            }*/
-
-            var allowFuture = p_allowFuture || false,
-            strings= {
-                prefixAgo: '',
-                prefixFromNow: '',
-                suffixAgo: $filter('translate')('AGO'),
-                suffixFromNow: $filter('translate')('FROM_NOW'),
-                seconds: $filter('translate')('SECS'),
-                minute: $filter('translate')('A_MIN'),
-                minutes: "%d "+$filter('translate')('MINS'),
-                hour: $filter('translate')('AN_HOUR'),
-                hours: "%d "+$filter('translate')('HOURS'),
-                day: $filter('translate')('A_DAY'),
-                days: "%d "+$filter('translate')('DAYS'),
-                month: $filter('translate')('A_MONTH'),
-                months: "%d "+$filter('translate')('MONTHS'),
-                year: $filter('translate')('A_YEAR'),
-                years: "%d "+$filter('translate')('YEARS')
-            },
-            dateDifference = nowTime - date,
-            words,
-            seconds = Math.abs(dateDifference) / 1000,
-            minutes = seconds / 60,
-            hours = minutes / 60,
-            days = hours / 24,
-            years = days / 365,
-            separator = strings.wordSeparator === undefined ?  " " : strings.wordSeparator,
-
-            prefix = strings.prefixAgo,
-            suffix = strings.suffixAgo;
-            
-            //console.log(timeZoneOffset);
-
-        if (allowFuture) {
-            if (dateDifference < 0) {
-                prefix = strings.prefixFromNow;
-                suffix = strings.suffixFromNow;
-            }
+            var string = angular.isFunction(stringOrFunction) ? stringOrFunction(number, dateDifference) : stringOrFunction;
+            var value = (strings.numbers && strings.numbers[number]) || number;
+            return string.replace(/%d/i, value);
         }
+        if (input) {
+          var nowTime = (new Date()).getTime();
+          var date;
+          if (typeof input === 'string' || input instanceof String) {
+            date = (input && input.indexOf('Z')===-1)?(new Date(input+".000Z")).getTime():(new Date(input)).getTime();
+          } else {
+            date = input;
+          }
+          
+          //refreshMillis= 6e4, //A minute
 
-        words = seconds < 45 && substitute(strings.seconds, Math.round(seconds), strings) ||
-        seconds < 90 && substitute(strings.minute, 1, strings) ||
-        minutes < 45 && substitute(strings.minutes, Math.round(minutes), strings) ||
-        minutes < 90 && substitute(strings.hour, 1, strings) ||
-        hours < 24 && substitute(strings.hours, Math.round(hours), strings) ||
-        hours < 42 && substitute(strings.day, 1, strings) ||
-        days < 30 && substitute(strings.days, Math.round(days), strings) ||
-        days < 45 && substitute(strings.month, 1, strings) ||
-        days < 365 && substitute(strings.months, Math.round(days / 30), strings) ||
-        years < 1.5 && substitute(strings.year, 1, strings) ||
-        substitute(strings.years, Math.round(years), strings);
-        //$rootScope.log(prefix+words+suffix+separator);
-        prefix.replace(/ /g, '')
-        words.replace(/ /g, '')
-        suffix.replace(/ /g, '')
-        return (prefix+' '+words+' '+suffix+' '+separator);
+          // get difference between UTC and local time in milliseconds
+          
+          //var timeZoneOffset = (new Date().getTimezoneOffset()) * 60000;
+          
+          // convert local to UTC
+          //console.log(timeZoneOffset);
 
+          /*if (timeZoneOffset != 0) {
+            nowTime = nowTime + timeZoneOffset;
+          }*/
+
+          var allowFuture = p_allowFuture || false,
+          strings= {
+              prefixAgo: '',
+              prefixFromNow: '',
+              suffixAgo: $filter('translate')('AGO'),
+              suffixFromNow: $filter('translate')('FROM_NOW'),
+              seconds: $filter('translate')('SECS'),
+              minute: $filter('translate')('A_MIN'),
+              minutes: "%d "+$filter('translate')('MINS'),
+              hour: $filter('translate')('AN_HOUR'),
+              hours: "%d "+$filter('translate')('HOURS'),
+              day: $filter('translate')('A_DAY'),
+              days: "%d "+$filter('translate')('DAYS'),
+              month: $filter('translate')('A_MONTH'),
+              months: "%d "+$filter('translate')('MONTHS'),
+              year: $filter('translate')('A_YEAR'),
+              years: "%d "+$filter('translate')('YEARS')
+          },
+          dateDifference = nowTime - date,
+          words,
+          seconds = Math.abs(dateDifference) / 1000,
+          minutes = seconds / 60,
+          hours = minutes / 60,
+          days = hours / 24,
+          years = days / 365,
+          separator = strings.wordSeparator === undefined ?  " " : strings.wordSeparator,
+
+          prefix = strings.prefixAgo,
+          suffix = strings.suffixAgo;
+          
+          //console.log(timeZoneOffset);
+
+          if (allowFuture) {
+              if (dateDifference < 0) {
+                  prefix = strings.prefixFromNow;
+                  suffix = strings.suffixFromNow;
+              }
+          }
+
+          words = seconds < 45 && substitute(strings.seconds, Math.round(seconds), strings) ||
+          seconds < 90 && substitute(strings.minute, 1, strings) ||
+          minutes < 45 && substitute(strings.minutes, Math.round(minutes), strings) ||
+          minutes < 90 && substitute(strings.hour, 1, strings) ||
+          hours < 24 && substitute(strings.hours, Math.round(hours), strings) ||
+          hours < 42 && substitute(strings.day, 1, strings) ||
+          days < 30 && substitute(strings.days, Math.round(days), strings) ||
+          days < 45 && substitute(strings.month, 1, strings) ||
+          days < 365 && substitute(strings.months, Math.round(days / 30), strings) ||
+          years < 1.5 && substitute(strings.year, 1, strings) ||
+          substitute(strings.years, Math.round(years), strings);
+          //$rootScope.log(prefix+words+suffix+separator);
+          prefix.replace(/ /g, '')
+          words.replace(/ /g, '')
+          suffix.replace(/ /g, '')
+
+          return (prefix+' '+words+' '+suffix+' '+separator);
+        }
       };
 
       TimeAgo.$stateful = true;
@@ -655,12 +584,17 @@ module.exports = function (app) {
     app.filter('parseUrl', function($sce, $rootScope) {
 	    //var urls = /(\b(https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;-]*[-A-Z0-9+&@#\/%=~_|])/gim;
 	    //var emails = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/gim;
-      var imgs = /(https?:\/\/.*\.(?:tiff?|jpe?g|gif|png|svg|ico))(.*)/gim;
+      //var imgs = /(https?:\/\/.*\.(?:tiff?|jpe?g|gif|png|svg|ico))(.*)/gim;
       var img = /(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gim;
       var imgd = /src=\"([^\"]*)\"/gim;
 
   		//var youtube = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
   		//var youtubeid = /(?:(?:youtube.com\/watch\?v=)|(?:youtu.be\/))([A-Za-z0-9\_\-]+)/i;
+
+      var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+      var imgRegex = /(https?:\/\/.*\.(?:tiff?|jpe?g|gif|png|svg|ico))(.*)/gim;
+      
+      var vimeoRegex = /(?:http:\/\/)?(?:www\.)?(?:vimeo\.com)\/(.+)/g;
 
 	    return function(textu, subpart) {
         var options = {
@@ -675,8 +609,20 @@ module.exports = function (app) {
 			  };
         if (textu.body || textu.comment) {
           var s = textu.body||textu.comment;
-          var texts = marked(s, options);
-          //console.log(textu);
+          var md = new window.remarkable({ html: true, linkify: false, breaks: true });
+          var texts = "";
+          
+          texts = marked(s, options);
+          
+          //texts = md.render(s)
+          //image links to html
+          //texts = texts.replace(imgRegex, '<img check-image src="$1" class="postimg" />');
+          //texts = transformYoutubeLinks(texts);
+          //texts = transformVimeoLinks(texts);
+          //texts = transformInternalLinks(texts);
+          
+
+
           if (!$rootScope.$storage.download) {
             texts = texts.replace(imgd, 'src="img/isimage.png" onclick="this.src=\'$1\'"');  
           }
@@ -684,6 +630,12 @@ module.exports = function (app) {
             texts = texts.replace(img, 'img/nsfwimage.png');  
           }
           //console.log('after '+texts);
+
+          var regex = /<a href="((?!#\/app\/)[\S]+)"/g;
+          texts = texts.replace(regex, "<a href onClick=\"window.open('$1', '_system', 'location=yes');return false;\"");
+          //return $sce.trustAsHtml(newString);
+
+
           if (subpart) {
             var s = $sce.trustAsHtml(texts).toString();
             var text = s.substring(s.indexOf("<p>"), s.indexOf("</p>"));
@@ -694,6 +646,17 @@ module.exports = function (app) {
         }
 	    };
 	});
+
+    app.filter('downvote', function($sce, $rootScope) {
+      
+      return function(content) {
+        //console.log(content);
+        if (content.net_rshares < 0) {
+          content.body = "This post was hidden due to low ratings.";
+        }
+        return content;
+      };
+  });
 
     app.filter('metadata', function($sce) {
         var urls = /(\b(https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;-]*[-A-Z0-9+&@#\/%=~_|])/gim;
@@ -760,16 +723,20 @@ module.exports = function (app) {
         };
     });
 
-    app.filter('regex', function() {
+    app.filter('regex', function($rootScope) {
       return function(input, field, regex) {
-          var patt = new RegExp(regex);      
-          var out = [];
-          for (var i = 0; i < input.length; i++){
-            //console.log(patt.test(input[i][field]));
-            if(!patt.test(input[i][field]))
-              out.push(input[i]);
-          }      
-        return out;
+        if ($rootScope.$storage.chain == 'golos') {
+          return input;
+        } else {
+            var patt = new RegExp(regex);      
+            var out = [];
+            for (var i = 0; i < input.length; i++){
+              //console.log(patt.test(input[i][field]));
+              if(!patt.test(input[i][field]))
+                out.push(input[i]);
+            }      
+          return out;
+        }
       };
     });
     
@@ -786,7 +753,7 @@ module.exports = function (app) {
       eng = "shch sh ch cz ij yo ye yu ya kh zh a b v g d e z i k l m n o p r s t u f xx y x".split(d);
       return function (str, reverse) {
         if (!str) return str;
-        if (!reverse && str.substring(0, 4) !== 'ru--') return str;
+        if (!reverse && str.toString().substring(0, 4) !== 'ru--') return str;
         if (!reverse) str = str.substring(4)
 
         // TODO rework this
@@ -949,7 +916,7 @@ module.exports = function (app) {
 
 				reputation_level = (reputation_level*9) + 25;
 			} else {
-				return 0;
+				return 25;
 			}
 
 			return bool?reputation_level:Math.floor(reputation_level);
@@ -959,10 +926,13 @@ module.exports = function (app) {
   app.filter("sumPostTotal", function($rootScope){
     function SumPostTotal(value, rate) {
       //console.log(value, rate);
-      if (value && value.pending_payout_value) {
+      if (value && value.pending_payout_value && value.last_payout=="1970-01-01T00:00:00") {
+
         //value.total_payout_value.split(" ")[0])+parseFloat(value.total_pending_payout_value.split(" ")[0])
         //return (parseFloat(value.pending_payout_value.split(" ")[0])*rate);
-        return ((parseFloat(value.total_payout_value.split(" ")[0]))+(parseFloat(value.pending_payout_value.split(" ")[0]))*rate).toFixed(2);
+        return value.total_payout_value?((parseFloat(value.total_payout_value.split(" ")[0]))+(parseFloat(value.pending_payout_value.split(" ")[0]))*rate).toFixed(2):0;
+      } else {
+        return value.total_payout_value?((parseFloat(value.total_payout_value.split(" ")[0]))+(parseFloat(value.curator_payout_value.split(" ")[0]))*rate).toFixed(2):0;
       }
     }
     //SumPostTotal.$stateful = true;
@@ -980,8 +950,8 @@ module.exports = function (app) {
 
   app.filter('hrefToJS', function ($sce, $sanitize) {
       return function (text) {
-          var regex = /href="([\S]+)"/g;
-          var newString = $sanitize(text).replace(regex, "href onClick=\"window.open('$1', '_system', 'location=yes');return false;\"");
+          var regex = /<a href="((?!#\/app\/)[\S]+)"/g;
+          var newString = $sanitize(text).replace(regex, "<a href onClick=\"window.open('$1', '_system', 'location=yes');return false;\"");
           return $sce.trustAsHtml(newString);
       }
   });
@@ -998,7 +968,375 @@ module.exports = function (app) {
       };
     }]);
 
-  app.directive('selectInput', ['$ionicPopup', '$rootScope', function($ionicPopup, $rootScope) {
+  app.directive(
+      "bnLogDomCreation",
+      function() {
+          // I link the DOM element to the view model.
+          function link( $scope, element, attributes ) {
+              console.log(
+                  "Link Executed:",
+                  $scope.ds.permlink,
+                  $scope.ds
+              );
+          }
+          // Return directive configuration.
+          return({
+              link: link,
+              restrict: "A"
+          });
+      }
+  );
+  //virtual type of scrolling, only issue one way scrolling :/
+  app.directive('itemList', function() {
+    return {
+      restrict: 'A',
+      scope: {
+        itemList: '='
+      },
+      link: function(scope, element, attrs) {
+        var el = element[0];
+        var emptySpace = angular.element('<div class="empty-space"></div>');
+        element.append(emptySpace);
+
+        // Keep a selection of previous elements so we can remove them
+        // if the user scrolls far enough
+        var prevElems = null;
+        var prevHeight = 0;
+        var nextElems = 0;
+        var nextHeight = 0;
+
+        // Options are defined above the directive to keep things modular
+        var options = scope.itemList;
+
+        // Keep track of how many rows we've rendered so we know where we left off
+        var renderedRows = 0;
+
+        var pendingLoad = false;
+
+        // Add some API functions to let the calling scope interact
+        // with the directive more effectively
+        options.api = {
+          refresh: refresh
+        };
+
+        element.on('scroll', checkScroll);
+
+        // Perform the initial setup
+        refresh();
+
+        function refresh() {
+          addRows();
+          checkScroll();
+        }
+
+        // Adds any rows that haven't already been rendered. Note that the
+        // directive does not process any removed items, so if that functionality
+        // is needed you'll need to make changes to this directive
+        function addRows() {
+          nextElems = [];
+          for (var i = renderedRows; i < options.items.length; i++) {
+            var e = options.renderer(options.items[i]);
+            nextElems.push(e[0])
+            element.append(e);
+            renderedRows++;
+            pendingLoad = false;
+          }
+          nextElems = angular.element(nextElems);
+          nextHeight = el.scrollHeight;
+
+          // Do this for the first time to initialize
+          if (!prevElems && nextElems.length) {
+            prevElems = nextElems;
+            prevHeight = nextHeight;
+          }
+        }
+
+        function checkScroll() {
+          // Only check if we need to load if there isn't already an async load pending
+          if (!pendingLoad) {
+            if ((el.scrollHeight - el.scrollTop - el.clientHeight) < options.threshold) {
+              console.log('Loading new items!');
+              pendingLoad = options.loadFn();
+
+              // If we're not waiting for an async event, render the new rows
+              if (!pendingLoad) {
+                addRows();
+              }
+            }
+          }
+          // if we're past the remove threshld, remove all previous elements and replace 
+          // lengthen the empty space div to fill the space they occupied
+          if (options.removeThreshold && el.scrollTop > prevHeight + options.removeThreshold) {
+            console.log('Removing previous elements');
+            prevElems.remove();
+            emptySpace.css('height', prevHeight + 'px');
+
+            // Stage the next elements for removal
+            prevElems = nextElems;
+            prevHeight = nextHeight;
+          }
+        }
+      }
+    };
+  });
+  //works with same height items/ just like collection-repeat
+  app.value('quickRepeatList', {});
+  app.directive('quickNgRepeat',
+  ['$parse', '$animate', '$rootScope', 'quickRepeatList', function($parse, $animate, $rootScope, quick_repeat_list) {
+    var NG_REMOVED = '$$NG_REMOVED';
+    var ngRepeatMinErr = 'err';
+    var uid = ['0', '0', '0'];
+    var list_id = window.list_id = (function(){
+      var i = 0;
+      return function(){
+        return 'list_' + (++i);
+      };
+    }());
+
+    function hashKey(obj) {
+      var objType = typeof obj,
+          key;
+
+      if (objType == 'object' && obj !== null) {
+        if (typeof (key = obj.$$hashKey) == 'function') {
+          // must invoke on object to keep the right this
+          key = obj.$$hashKey();
+        } else if (key === undefined) {
+          key = obj.$$hashKey = nextUid();
+        }
+      } else {
+        key = obj;
+      }
+
+      return objType + ':' + key;
+    };
+
+    function isWindow(obj) {
+      return obj && obj.document && obj.location && obj.alert && obj.setInterval;
+    };
+
+    function nextUid() {
+      var index = uid.length;
+      var digit;
+
+      while(index) {
+        index--;
+        digit = uid[index].charCodeAt(0);
+        if (digit == 57 /*'9'*/) {
+          uid[index] = 'A';
+          return uid.join('');
+        }
+        if (digit == 90  /*'Z'*/) {
+          uid[index] = '0';
+        } else {
+          uid[index] = String.fromCharCode(digit + 1);
+          return uid.join('');
+        }
+      }
+      uid.unshift('0');
+      return uid.join('');
+    };
+
+    function isArrayLike(obj) {
+      if (obj == null || isWindow(obj)) {
+        return false;
+      }
+
+      var length = obj.length;
+
+      if (obj.nodeType === 1 && length) {
+        return true;
+      }
+
+      return angular.isArray(obj) || !angular.isFunction(obj) && (
+        length === 0 || typeof length === "number" && length > 0 && (length - 1) in obj
+      );
+    };
+
+
+    return {
+      transclude: 'element',
+      priority: 1000,
+      terminal: true,
+      compile: function(element, attr, linker) {
+        return function($scope, $element, $attr){
+          var expression = $attr.quickNgRepeat;
+          var match = expression.match(/^\s*(.+)\s+in\s+(.*?)\s*(\s+track\s+by\s+(.+)\s*)?$/),
+            trackByExp, trackByExpGetter, trackByIdFn, trackByIdArrayFn, trackByIdObjFn, lhs, rhs, valueIdentifier, keyIdentifier,
+            hashFnLocals = {$id: hashKey};
+
+          if (!match) {
+            throw ngRepeatMinErr('iexp', "Expected expression in form of '_item_ in _collection_[ track by _id_]' but got '{0}'.",
+              expression);
+          }
+
+          lhs = match[1];
+          rhs = match[2];
+          trackByExp = match[4];
+
+          if (trackByExp) {
+            trackByExpGetter = $parse(trackByExp);
+            trackByIdFn = function(key, value, index) {
+              // assign key, value, and $index to the locals so that they can be used in hash functions
+              if (keyIdentifier) hashFnLocals[keyIdentifier] = key;
+              hashFnLocals[valueIdentifier] = value;
+              hashFnLocals.$index = index;
+              return trackByExpGetter($scope, hashFnLocals);
+            };
+          } else {
+            trackByIdArrayFn = function(key, value) {
+              return hashKey(value);
+            }
+            trackByIdObjFn = function(key) {
+              return key;
+            }
+          }
+
+          match = lhs.match(/^(?:([\$\w]+)|\(([\$\w]+)\s*,\s*([\$\w]+)\))$/);
+          if (!match) {
+            throw ngRepeatMinErr('iidexp', "'_item_' in '_item_ in _collection_' should be an identifier or '(_key_, _value_)' expression, but got '{0}'.",
+                                                                      lhs);
+          }
+          valueIdentifier = match[3] || match[1];
+          keyIdentifier = match[2];
+
+          // Store a list of elements from previous run. This is a hash where key is the item from the
+          // iterator, and the value is objects with following properties.
+          //   - scope: bound scope
+          //   - element: previous element.
+          //   - index: position
+          var lastBlockMap = {};
+
+          var list_name = $attr.quickRepeatList || list_id();
+
+          //watch props
+          $scope.$watch(rhs, quick_repeat_list[list_name] = function(collection){
+            var index, length,
+                previousNode = $element[0],     // current position of the node
+                nextNode,
+                // Same as lastBlockMap but it has the current state. It will become the
+                // lastBlockMap on the next iteration.
+                nextBlockMap = {},
+                arrayLength,
+                childScope,
+                key, value, // key/value of iteration
+                trackById,
+                collectionKeys,
+                block,       // last object information {scope, element, id}
+                nextBlockOrder = [];
+
+
+            if (isArrayLike(collection)) {
+              collectionKeys = collection;
+              trackByIdFn = trackByIdFn || trackByIdArrayFn;
+            } else {
+              trackByIdFn = trackByIdFn || trackByIdObjFn;
+              // if object, extract keys, sort them and use to determine order of iteration over obj props
+              collectionKeys = [];
+              for (key in collection) {
+                if (collection.hasOwnProperty(key) && key.charAt(0) != '$') {
+                  collectionKeys.push(key);
+                }
+              }
+              collectionKeys.sort();
+            }
+
+            arrayLength = collectionKeys.length;
+
+            // locate existing items
+            length = nextBlockOrder.length = collectionKeys.length;
+            for(index = 0; index < length; index++) {
+             key = (collection === collectionKeys) ? index : collectionKeys[index];
+             value = collection[key];
+             trackById = trackByIdFn(key, value, index);
+             if(lastBlockMap.hasOwnProperty(trackById)) {
+               block = lastBlockMap[trackById]
+               delete lastBlockMap[trackById];
+               nextBlockMap[trackById] = block;
+               nextBlockOrder[index] = block;
+             } else if (nextBlockMap.hasOwnProperty(trackById)) {
+               // restore lastBlockMap
+               angular.forEach(nextBlockOrder, function(block) {
+                 if (block && block.startNode) lastBlockMap[block.id] = block;
+               });
+               // This is a duplicate and we need to throw an error
+               throw ngRepeatMinErr('dupes', "Duplicates in a repeater are not allowed. Use 'track by' expression to specify unique keys. Repeater: {0}, Duplicate key: {1}", expression,       trackById);
+             } else {
+               // new never before seen block
+               nextBlockOrder[index] = { id: trackById };
+               nextBlockMap[trackById] = false;
+             }
+           }
+
+            // remove existing items
+            for (key in lastBlockMap) {
+              if (lastBlockMap.hasOwnProperty(key)) {
+                block = lastBlockMap[key];
+                $animate.leave(block.elements);
+                angular.forEach(block.elements, function(element) { element[NG_REMOVED] = true});
+                block.scope.$destroy();
+              }
+            }
+
+            // we are not using forEach for perf reasons (trying to avoid #call)
+            for (index = 0, length = collectionKeys.length; index < length; index++) {
+              key = (collection === collectionKeys) ? index : collectionKeys[index];
+              value = collection[key];
+              block = nextBlockOrder[index];
+
+              if (block.startNode) {
+                // if we have already seen this object, then we need to reuse the
+                // associated scope/element
+                childScope = block.scope;
+
+                nextNode = previousNode;
+                do {
+                  nextNode = nextNode.nextSibling;
+                } while(nextNode && nextNode[NG_REMOVED]);
+
+                if (block.startNode == nextNode) {
+                  // do nothing
+                } else {
+                  // existing item which got moved
+                  $animate.move(block.elements, null, angular.element(previousNode));
+                }
+                previousNode = block.endNode;
+              } else {
+                // new item which we don't know about
+                childScope = $scope.$new();
+              }
+
+              childScope[valueIdentifier] = value;
+              if (keyIdentifier) childScope[keyIdentifier] = key;
+              childScope.$index = index;
+              childScope.$first = (index === 0);
+              childScope.$last = (index === (arrayLength - 1));
+              childScope.$middle = !(childScope.$first || childScope.$last);
+              childScope.$odd = !(childScope.$even = index%2==0);
+
+              if (!block.startNode) {
+                linker(childScope, function(clone) {
+                  $animate.enter(clone, null, angular.element(previousNode));
+                  previousNode = clone;
+                  block.scope = childScope;
+                  block.startNode = clone[0];
+                  block.elements = clone;
+                  block.endNode = clone[clone.length - 1];
+                  nextBlockMap[block.id] = block;
+                });
+
+                if ($rootScope.$$phase !== '$digest' && childScope.$$phase !== '$digest'){
+                  childScope.$digest();
+                }
+              }
+            }
+            lastBlockMap = nextBlockMap;
+          });
+        };
+      }
+    };
+  }]);
+  app.directive('selectInput', ['$ionicPopup', '$rootScope', '$timeout', function($ionicPopup, $rootScope, $timeout) {
     return {
       restric: 'E',
       scope: {
@@ -1006,7 +1344,7 @@ module.exports = function (app) {
         selectOptions: '='
       },
       require: '?^ngModel',
-      template: '<div class="item-input item-icon-right" style="width:100%;"><input ng-model="currentInput" type="text" ng-change="socketChange(currentInput)"><i class="icon ion-android-arrow-dropdown" ng-click="showOptions()"></i></div>',
+      template: '<div class="item-input item-icon-right" style="width:100%;"><input ng-model="currentInput" type="text" ng-change="socketChange(currentInput)" ng-click="showOptions()"><i class="icon ion-android-arrow-dropdown" ng-click="showOptions()"></i></div>',
       link: function(scope, element, attrs) {
         scope.options = {
           selected: ''
@@ -1015,7 +1353,12 @@ module.exports = function (app) {
           console.log(xx);
           $rootScope.$storage["socket"+$rootScope.$storage.chain] = xx;
           localStorage.socketUrl = xx;
+          window.steem.api.stop();
           scope.restart = true;
+          scope.$applyAsync();
+          $timeout(function(){
+            scope.$emit('socketCheck');
+          });
         }
         scope.showOptions = function() {
           $ionicPopup.show({
@@ -1030,6 +1373,7 @@ module.exports = function (app) {
               type: 'button-positive',
               onTap: function(e) {
                 scope.currentInput = scope.options.selected;
+                scope.socketChange(scope.currentInput);
               }
             }]
           });
@@ -1037,7 +1381,29 @@ module.exports = function (app) {
       }
     }
   }])
-
+  app.directive('checkImage', function($http, $rootScope) {
+      return {
+          restrict: 'A',
+          link: function(scope, element, attrs) {
+              attrs.$observe('ngSrc', function(ngSrc) {
+                if (angular.isDefined(ngSrc)) {
+                  $http.get(ngSrc).success(function(){
+                      //console.log('image exist');
+                  }).error(function(){
+                      //alert('image not exist');
+                      if (ngSrc && $rootScope.chain && $rootScope.chain == 'steem') {
+                        element.attr('ng-src', ngSrc); // set default image  'img/noimage.png'
+                      } else if ($rootScope.chain && $rootScope.chain == 'golos') {
+                        element.attr('ng-src', 'https://imgp.golos.io/0x0/'+ngSrc); // set default image  
+                      } else {
+                        element.attr('ng-src', 'img/noimage.png'); // set default image 
+                      }
+                  });
+                }
+              });
+          }
+      };
+  });
 	app.directive('qrcode', function($interpolate) {
 		return {
 		    restrict: 'E',
@@ -1075,12 +1441,13 @@ module.exports = function (app) {
                 comment: '='
             },
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
-                        <div class="ion-comment--author"><img class="round-avatar" src="img/user_profile.png" ng-src="{{$root.paccounts[comment.author].profile.profile_image}}" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{comment.author}}">{{comment.author}}</a></b>&nbsp;<div class="reputation">{{comment.author_reputation|reputation|number:0}}</div>&middot;{{comment.created|timeago}}</div>\
-                        <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="comment.max_accepted_payout.split(\' \')[0] === \'0.000\'"><del>{{comment | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="comment.max_accepted_payout.split(\' \')[0] !== \'0.000\'">{{comment | sumPostTotal:$root.$storage.currencyRate | number}}</span> </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
-                        <div class="ion-comment--text bodytext selectable" ng-class="{\'mask\': comment.net_rshares<0}" ng-bind-html="comment | parseUrl "></div>\
-                        <div class="ion-comment--replies"><ion-spinner ng-if="comment.invoting"></ion-spinner><span ng-click="upvotePost(comment)" ng-if="!comment.upvoted" on-hold="openSliderr($event, comment)"><span class="fa fa-md fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UPVOTE"|translate}}</span><span ng-click="unvotePost(comment)" ng-if="comment.upvoted" on-hold="openSliderr($event, comment)"><span class="fa fa-md fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{"UNVOTE_UPVOTED"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.cashout_time !== \'1969-12-31T23:59:59\'" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.abs_rshares == 0" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{\'REMOVE\'|translate}}</span></div>\
+                        <div class="ion-comment--author"><img class="round-avatar" ng-src="https://steemitimages.com/u/{{comment.author}}/avatar" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{::comment.author}}">{{::comment.author}}</a></b>&nbsp;<div class="reputation">{{::comment.author_reputation|reputation|number:0}}</div>&middot;{{::comment.created|timeago}}</div>\
+                        <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="comment.max_accepted_payout.split(\' \')[0] === \'0.000\'"><del>{{::comment | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="comment.max_accepted_payout.split(\' \')[0] !== \'0.000\'">{{::comment | sumPostTotal:$root.$storage.currencyRate | number}}</span> </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
+                        <div class="ion-comment--text bodytext selectable" ng-if="comment.net_rshares>-1" ng-bind-html="comment | parseUrl "></div>\
+                        <div class="ion-comment--text bodytext selectable" ng-if="comment.net_rshares<0">{{"HIDDEN_TEXT"|translate}}</div>\
+                        <div class="ion-comment--replies"><ion-spinner ng-if="comment.invoting"></ion-spinner><span ng-click="upvotePost(comment)" ng-if="!comment.upvoted" on-hold="openSliderr($event, comment)"><span class="fa fa-md fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{::"UPVOTE"|translate}}</span><span ng-click="unvotePost(comment)" ng-if="comment.upvoted" on-hold="openSliderr($event, comment)"><span class="fa fa-md fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{::"UNVOTE_UPVOTED"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{::"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.cashout_time !== \'1969-12-31T23:59:59\'" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{::\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.abs_rshares == 0" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{::\'REMOVE\'|translate}}</span> <span on-tap="comment.net_rshares=0" ng-if="comment.net_rshares<0"> | <span class="ion-ios-eye-outline"></span> {{::\'SHOW\'|translate}}</span></div>\
                     </ion-item>',
-            controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopover, $ionicPopup, $ionicActionSheet, $cordovaCamera, $filter, ImageUploadService) {
+            controller: function($scope, $rootScope, $state, $ionicModal, $ionicPopover, $ionicPopup, $ionicActionSheet, $cordovaCamera, $filter, ImageUploadService, APIs) {
                   $ionicPopover.fromTemplateUrl('popoverTr.html', {
                       scope: $scope
                    }).then(function(popover) {
@@ -1105,6 +1472,12 @@ module.exports = function (app) {
                   $scope.drag = function(v) {
                     //console.log(v);
                     $rootScope.$storage.voteWeight = v*100;
+                    if (!$scope.$$phase) {
+                      $scope.$apply();
+                    }
+                    if (!$rootScope.$$phase) {
+                      $rootScope.$apply();
+                    }
                   };
 
                   $scope.closeSliderr = function() {
@@ -1155,7 +1528,7 @@ module.exports = function (app) {
                           console.log('depth5');
                           $rootScope.$broadcast('openComments', { data: comment });
                         } else {
-                          window.steem.api.getState('tag/@'+comment.author+'/'+comment.permlink, function(err, dd) {
+                          window.steem.api.getStateAsync('tag/@'+comment.author+'/'+comment.permlink, function(err, dd) {
                             //console.log(dd);
                             var po = [];
 
@@ -1177,25 +1550,6 @@ module.exports = function (app) {
                                   }
                                 }
                                 po.push(v);
-                              }
-                            });
-                            
-                            angular.forEach(dd.accounts, function(v,k){
-                              //console.log(k);
-                              if ($rootScope.postAccounts && $rootScope.postAccounts.indexOf(k) == -1) {
-                                $rootScope.postAccounts.push(k);
-                              }
-
-                              if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
-                                if (v.json_metadata) {
-                                  if (v.json_metadata.indexOf("created_at")>-1) {
-                                    v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
-                                  } else {
-                                    v.json_metadata = v.json_metadata?angular.fromJson(v.json_metadata):{};
-                                  }
-                                  var key = v.name;
-                                  $rootScope.paccounts[key] = v.json_metadata;
-                                }
                               }
                             });
                             
@@ -1233,8 +1587,8 @@ module.exports = function (app) {
                         //$rootScope.$broadcast('update:content');
                     //$rootScope.$broadcast('hide:loading');
                   };
-                  $scope.$on('postAccounts', function(){
-                    window.steem.api.getAccounts($rootScope.postAccounts, function(err, res){
+                  /*$scope.$on('postAccounts', function(){
+                    window.steem.api.getAccountsAsync($rootScope.postAccounts, function(err, res){
                         //console.log(err, res);
                         for (var i = 0, len = res.length; i < len; i++) {
                         var v = res[i];
@@ -1252,7 +1606,7 @@ module.exports = function (app) {
                       }
                       $scope.$applyAsync();
                     });
-                  });
+                  });*/
                   $scope.upvotePost = function(post) {
                     $rootScope.votePost(post, 'upvote', 'update:content');
                   };
@@ -1306,7 +1660,17 @@ module.exports = function (app) {
                         $scope.openModal();
                     }
                   };
-
+                  $scope.hideKeyboard = function(){
+                    setTimeout(function () {
+                        if (window.cordova && window.cordova.plugins.Keyboard) {
+                          if(cordova.plugins.Keyboard.isVisible){
+                              window.cordova.plugins.Keyboard.close();
+                          } else {
+                              window.cordova.plugins.Keyboard.show();
+                          }
+                        }
+                    }, 100);
+                  }
                   $scope.showImg = function() {
                    var hideSheet = $ionicActionSheet.show({
                      buttons: [
@@ -1325,7 +1689,46 @@ module.exports = function (app) {
                      }
                    });
                   };
+                  $scope.insertText = function(text) {
+                    //console.log(text);
+                    var input = $scope.lastFocused;
+                    //console.log(input);
+                    input.focus();
+                    if (input == undefined) { return; }
+                    var scrollPos = input.scrollTop;
+                    var pos = 0;
+                    var browser = ((input.selectionStart || input.selectionStart == "0") ?
+                                   "ff" : (document.selection ? "ie" : false ) );
+                    if (browser == "ie") {
+                      input.focus();
+                      var range = document.selection.createRange();
+                      range.moveStart ("character", -input.value.length);
+                      pos = range.text.length;
+                    }
+                    else if (browser == "ff") { pos = input.selectionStart };
 
+                    var front = (input.value).substring(0, pos);
+                    var back = (input.value).substring(pos, input.value.length);
+                    input.value = front+text+back;
+                    pos = pos + text.length;
+                    if (browser == "ie") {
+                      input.focus();
+                      var range = document.selection.createRange();
+                      range.moveStart ("character", -input.value.length);
+                      range.moveStart ("character", pos);
+                      range.moveEnd ("character", 0);
+                      range.select();
+                    }
+                    else if (browser == "ff") {
+                      input.selectionStart = pos;
+                      input.selectionEnd = pos;
+                      input.focus();
+                    }
+                    //input.focus();
+                    input.scrollTop = scrollPos;
+                    //console.log(angular.element(input).val());
+                    angular.element(input).trigger('input');
+                  }
                   $scope.insertImageC = function(type) {
                     var options = {};
                     if (type == 0 || type == 1) {
@@ -1336,14 +1739,14 @@ module.exports = function (app) {
                         allowEdit: (type===0)?true:false,
                         encodingType: Camera.EncodingType.JPEG,
                         popoverOptions: CameraPopoverOptions,
-                        saveToPhotoAlbum: false
-                        //correctOrientation:true
+                        saveToPhotoAlbum: false,
+                        correctOrientation:true
                       };
                       $cordovaCamera.getPicture(options).then(function(imageData) {
                         setTimeout(function() {
                           ImageUploadService.uploadImage(imageData).then(function(result) {
                             //var url = result.secure_url || '';
-                            var url = result.imageUrl || '';
+                            var url = result.url || '';
                             var final = " ![image](" + url + ")";
                             $rootScope.log(final);
                             if ($scope.data.comment) {
@@ -1353,6 +1756,12 @@ module.exports = function (app) {
                             }
                             if (!ionic.Platform.isAndroid() || !ionic.Platform.isWindowsPhone()) {
                               $cordovaCamera.cleanup();
+                            }
+                            if (url) {
+                              APIs.addMyImage($rootScope.user.username, url).then(function(res){
+                                if (res)
+                                  console.log('saved image to db');
+                              });
                             }
                           },
                           function(err) {
@@ -1394,9 +1803,12 @@ module.exports = function (app) {
                       var patch = dmp.patch_toText(patches);
                       return patch;
                   }
+                  function makernd() {
+                    return (Math.random()+1).toString(16).substring(2);
+                  }
                   $scope.reply = function (xx) {
                     
-                    const wif = $rootScope.user.password
+                    var wif = $rootScope.user.password
                     ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
                     : $rootScope.user.privatePostingKey;
 
@@ -1406,7 +1818,8 @@ module.exports = function (app) {
 
                           var t = new Date();
                           var timeformat = t.getFullYear().toString()+(t.getMonth()+1).toString()+t.getDate().toString()+"t"+t.getHours().toString()+t.getMinutes().toString()+t.getSeconds().toString()+t.getMilliseconds().toString()+"z";
-                          var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };                              
+                          console.log($scope.post.json_metadata);
+                          var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ["esteem"], app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };                              
                           var operations_array = [];
 
                           operations_array = [
@@ -1426,28 +1839,29 @@ module.exports = function (app) {
                               permlink: "re-"+$scope.post.author.replace(/\./g, "")+"-"+timeformat,  
                               max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
                               percent_steem_dollars: 10000,
-                              extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":500 }] }]]
+                              extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
                             }]
                             ];
                           
                           window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
-                            console.log(err, result);
+                            //console.log(err, result);
                             $scope.replying = false;
                             if (err) {
-                              $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+                              var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+                              $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message);
                             } else {
                               $scope.closeModal();
                               $scope.replying = false;
                               $scope.cmodal.hide();
                               $scope.data.comment = "";
-                              //setTimeout(function() {
-                              $scope.$evalAsync(function( $scope ) {
+                              setTimeout(function() {
+                              //$scope.$evalAsync(function( $scope ) {
                                 $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
+                                //$rootScope.$broadcast('hide:loading');
+                                //$rootScope.$emit("update:content");  
                                 $rootScope.$broadcast('hide:loading');
-                                $rootScope.$emit("update:content");  
-                                $rootScope.$broadcast('hide:loading');
-                              });
-                              //}, 1);
+                              //});
+                              }, 1);
                             }
                             $rootScope.$broadcast('hide:loading');
                           });
@@ -1466,7 +1880,7 @@ module.exports = function (app) {
                         $rootScope.$broadcast('show:loading');
                         if ($rootScope.user) {
                           var operations_array = [];
-                          var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || "", app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };
+                          var json = {tags: angular.fromJson($scope.post.json_metadata).tags[0] || ["esteem"], app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' };
                           operations_array = [
                             ['comment', {
                               parent_author: $scope.post.parent_author,
@@ -1480,22 +1894,23 @@ module.exports = function (app) {
                             ];
                           
                           window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
-                            console.log(err, result);
+                            //console.log(err, result);
                             $scope.replying = false;
                             if (err) {
-                                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+                              var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+                                $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
                               } else {
                                 $scope.closeModal();
                                 $scope.replying = false;
                                 $scope.cmodal.hide();
                                 $scope.data.comment = "";
-                                //setTimeout(function() {
-                                $scope.$evalAsync(function( $scope ) {
+                                setTimeout(function() {
+                                //$scope.$evalAsync(function( $scope ) {
                                   $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('COMMENT_SUBMITTED'));
                                   $rootScope.$broadcast('hide:loading');
-                                  $rootScope.$emit("update:content");  
-                                });
-                                //}, 1);
+                                  //$rootScope.$emit("update:content");  
+                                //});
+                                }, 1);
                               }
                               $rootScope.$broadcast('hide:loading');
                           });
@@ -1528,17 +1943,18 @@ module.exports = function (app) {
                             $rootScope.$broadcast('show:loading');
                             if ($rootScope.user) {
 
-                              const wif = $rootScope.user.password
+                              var wif = $rootScope.user.password
                               ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'posting')
                               : $rootScope.user.privatePostingKey;
 
                               window.steem.broadcast.deleteComment(wif, comment.author, comment.permlink, function(err, result) {
-                                console.log(err, result);
+                                //console.log(err, result);
                                 if (err) {
-                                  $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+err.message?err.message.split(":")[2].split('.')[0]:err)
+                                  var message = err.message?(err.message.split(":")[2]?err.message.split(":")[2].split('.')[0]:err.message.split(":")[0]):err;
+                                  $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
                                 } else {
                                   $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('DELETED_COMMENT'));
-                                  $rootScope.$emit("update:content");                                
+                                  //$rootScope.$emit("update:content");                                
                                 }
                                 $rootScope.$broadcast('hide:loading');
                               });
@@ -1568,7 +1984,7 @@ module.exports = function (app) {
                             </ion-comment>\
                             <div class="reddit-post--comment--container">\
                                  <ul ng-if="comment.showChildren" class="animate-if ion-comment--children">\
-                                    <li ng-repeat="comment in comment.comments | orderBy:\'-pending_payout_value\' track by $index ">\
+                                    <li ng-repeat="comment in comment.comments | orderBy:\'-pending_payout_value\' track by comment.id ">\
                                         <ng-include src="\'node.html\'"/>\
                                     </li>\
                                 </ul>\
@@ -1576,7 +1992,7 @@ module.exports = function (app) {
                         </script>\
                         <ion-list ng-if="comments && comments.length > 0">\
                           <ul>\
-                            <li ng-repeat="comment in comments | orderBy:\'-pending_payout_value\' track by $index">\
+                            <li ng-repeat="comment in comments | orderBy:\'-pending_payout_value\' track by comment.id">\
                                 <ng-include src="\'node.html\'"/>\
                             </li>\
                           </ul>\
@@ -1621,10 +2037,13 @@ module.exports = function (app) {
             // Add the Cloudinary "upload preset" name to the headers
             // "https://api.cloudinary.com/v1_1/esteem/image/upload"
             var uploadOptions = {
-              params : { 'username': $rootScope.user.username}
+              params : { 'username': $rootScope.user.username},
+              fileKey: 'postimage'
             };
             $ionicPlatform.ready(function() {
-                $cordovaFileTransfer.upload(API_END_POINT+"/api/upload", imageURI, uploadOptions).then(function(result) {
+              //API_END_POINT+"/api/upload"
+              
+                $cordovaFileTransfer.upload('https://img.esteem.ws/backend.php', imageURI, uploadOptions).then(function(result) {
                     // Let the user know the upload is completed
                     $ionicLoading.show({template : $filter('translate')('UPLOAD_COMPLETED'), duration: 1000});
                     // Result has a "response" property that is escaped
@@ -1878,6 +2297,62 @@ module.exports = function (app) {
         return textTag;
     }
 
+    function createYoutubeEmbed(key) {
+      return '<iframe width="420" height="345" src="https://www.youtube.com/embed/' + key + '" frameborder="0" allowfullscreen></iframe><br/>';
+    };
+
+    function transformYoutubeLinks(text) {
+      //const self = this;
+      const fullreg = /(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([^& \n<]+)(?:[^ \n<]+)?/g;
+      const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([^& \n<]+)(?:[^ \n<]+)?/g;
+
+      // get all the matches for youtube links using the first regex
+      const match = text.match(fullreg);
+      if (match && match.length > 0) {
+        let resultHtml = text;
+        // go through the matches one by one
+        for (var i=0; i < match.length; i++) {
+          // get the key out of the match using the second regex
+          let matchParts = match[i].split(regex);
+          // replace the full match with the embedded youtube code
+          resultHtml = resultHtml.replace(match[i], createYoutubeEmbed(matchParts[1]));
+        }
+        return resultHtml;
+
+      } else {
+        return text;
+      }
+    };
+    function transformVimeoLinks(text){
+        var vimeoRegex = /(https?:\/\/)?(www\.)?(?:vimeo)\.com.*(?:videos|video|channels|)\/([\d]+)/i;
+        var parsed = text.match(vimeoRegex);
+        console.log(parsed);
+        if (parsed && parsed.length>0) {
+          return text.replace(vimeoRegex, '<iframe width="420" height="345" src="//player.vimeo.com/video/' + parsed[3] + '" frameborder="0" allowfullscreen></iframe><br/>');
+        } else {
+          return text;
+        }
+    };
+    function transformInternalLinks(text) {
+      var users = /(^|\s)(@)([a-z][-\.a-z\d]+[a-z\d])/gim;
+      var tags = /(^|\s)(#)([a-z][-\.a-z\d]+[a-z\d])/gim;
+      var out = "";
+
+      if (text.match(users)){
+        var exist = text.match(users);
+        //console.log(exist)
+        out = text.replace(users, '<a href="#/app/profile/$3">$&</a>');  
+      } else {
+        out = text;
+      }
+      var existt = out.match(tags);
+      if(existt) {
+        //console.log(existt);
+        out = out.replace(tags, '<a href="#/app/posts/$3">$&</a>');  
+      }
+
+      return out;
+    };
 }
 
 

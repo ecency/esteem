@@ -5,10 +5,11 @@
     <button class="button button-positive button-primary" ng-click="reply()">{{'POST'|translate}}</button>
   </ion-header-bar>
   <ion-content class="padding posting" overflow-scroll="false">
-    <div ng-if="post.body&&post.parent_author!=''" class="padding bodytext selectable" ng-bind-html="post | parseUrl"></div>
-    <textarea autofocus ng-model='data.comment' rows="10" placeholder="{{'COMMENT_CONTENT'|translate}}" class="width100" ng-focus='cfocus()' autocomplete="off""></textarea>
-      <p ng-if="data.comment">{{'PREVIEW'|translate}}</p>
-      <div ng-if="data.comment" class="padding bodytext" ng-bind-html="data | parseUrl "></div>
+    <div ng-if="post.body&&post.parent_author!=''" class="padding bodytext selectable commentarea" ng-bind-html="post | parseUrl"></div>
+    <textarea autofocus ng-model='data.comment' rows="10" placeholder="{{'COMMENT_CONTENT'|translate}}" class="width100" ng-focus='cfocus()'></textarea>
+    <p ng-if="data.comment">{{'PREVIEW'|translate}}</p>
+    <div ng-if="data.comment" class="padding bodytext" ng-bind-html="data | parseUrl "></div>
+    
   </ion-content>
   <ion-slides options="options" class="drawer" ng-if="showgallery" slider="gallery.slider">
     <ion-slide-page ng-repeat="image in gallery.images" ng-if="image.url" ng-click="addImage(image.url)">
@@ -31,10 +32,11 @@
       <a class="button button-small" ng-click="insertText('# header')"><i class="fa fa-header"></i></a>
       <a class="button button-small" ng-click="insertText('<code>code</code>')"><i class="fa fa-code"></i></a>
       <a class="button button-small" ng-click="insertText('>quote')"><i class="fa fa-quote-right"></i></a>
-      <a class="button button-small" ng-click="insertText('1. item')"><i class='fa fa-list'></i></a>
-      <a class="button button-small" ng-click="insertText('* item')"><i class='fa fa-list-ol'></i></a>
+      <a class="button button-small" ng-click="insertText('1. item')"><i class='fa fa-list-ol'></i></a>
+      <a class="button button-small" ng-click="insertText('* item')"><i class='fa fa-list'></i></a>
       <a class="button button-small" ng-click="insertText('<hr>')"><i class="fa ion-minus"></i></a>
       <a class="button button-small" ng-click="showImg()"><i class="fa fa-picture-o"></i></a>
+      <a class="button button-small" ng-click="hideKeyboard()"><i class="fa fa-keyboard-o"></i></a>
     </div>
   </ion-footer-bar>
 </ion-modal-view>

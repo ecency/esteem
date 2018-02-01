@@ -9,6 +9,7 @@
       <select ng-model="data.type" ng-change="typechange()">
 	      	<option value="tag">{{'TAG'|translate}}</option>
         	<option value="user">{{'USER'|translate}}</option>
+          <option value="posts">{{'POSTS'|translate}}</option>
 	    </select>
     </label>
     <div class="buttons">
@@ -28,6 +29,17 @@
 	      <a class="item" ng-repeat="x in data.searchResult" ng-click="openUser(x)">
 	        <h2>{{'USER'|translate}} - {{x}}</h2>
 	      </a>
+      </div>
+      <div ng-if="data.type=='posts'">
+        <div class="list">
+            <a class="item" href ng-repeat="x in data.searchResult" ng-click="open(x)">
+              <!--<img ng-src="{{x.meta.image[0]}}">item-thumbnail-left-->
+              <h2>{{x.title}}</h2>
+              <p>by {{x.author}}</p>
+              <span>{{x.created|timeago}}</span>
+            </a>
+        </div>
+
       </div>
     </div>
   </ion-content>
