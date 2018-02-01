@@ -336,8 +336,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
-      //StatusBar.styleLightContent();
+      //StatusBar.styleDefault();
+      StatusBar.styleLightContent();
     }
 
     //window.steem.config.set('websocket',localStorage.socketUrl); 
