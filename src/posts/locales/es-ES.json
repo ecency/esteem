@@ -288,8 +288,8 @@
 	"REWARDS": "",
 	"FEEDBACK": "",
 	"PROMOTE": "",
-	"POWER_DOWN": "",
-	"POWER_UP": "",
+	"POWER_DOWN": "Transferir a STEEM",
+	"POWER_UP": "Transferir a SP",
 	"FAQ": "",
 	"TRANSFER_TO_SAVINGS": "",
 	"CONVERT_TO_STEEM": "",
@@ -303,5 +303,5 @@
 	"TRANSLATE": "",
 	"TYPE": "",
 	"SHOW": "",
-	"HIDDEN_TEXT": ""
+	"HIDDEN_TEXT": "Esta publicación se ha ocultado debido sus bajas calificaciones"
 }
