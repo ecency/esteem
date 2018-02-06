@@ -180,7 +180,7 @@
           </div>
         </div>
 
-        <div class="box pink" ng-if="active=='permissions'">
+        <div class="box pink" ng-if="active=='permissions' && $root.user && $root.user.username === user.username">
           <div class="list card">
             <div class="item">
               <h2><div class="bold"></div></h2>
@@ -189,6 +189,7 @@
             <div class="item">
               <h2><div class="bold">{{::'POSTING'|translate}}</div></h2>
               <p class="wrap">{{::$root.user.posting.key_auths[0][0]}}</p>
+              <p class="wrap">{{$root.user|pkeys:'posting'}}</p>
             </div>
             <div class="item item-body">
               <center><qr class="full-image" text="$root.user.posting.key_auths[0][0]"></qr></center>
@@ -199,6 +200,7 @@
             <div class="item">
               <h2><div class="bold">{{::'OWNER'|translate}}</div></h2>
               <p class="wrap">{{::$root.user.owner.key_auths[0][0]}}</p>
+              <p class="wrap">{{$root.user|pkeys:'owner'}}</p>
             </div>
             <div class="item item-body">
               <center><qr class="full-image" text="$root.user.owner.key_auths[0][0]"></qr></center>
@@ -209,6 +211,7 @@
             <div class="item">
               <h2><div class="bold">{{::'ACTIVE'|translate}}</div></h2>
               <p class="wrap">{{::$root.user.active.key_auths[0][0]}}</p>
+              <p class="wrap">{{$root.user|pkeys:'active'}}</p>
             </div>
             <div class="item item-body">
               <center><qr class="full-image" text="$root.user.active.key_auths[0][0]"></qr></center>
@@ -219,6 +222,7 @@
             <div class="item">
               <h2><div class="bold">{{::'MEMO'|translate}}</div></h2>
               <p class="wrap">{{::$root.user.memo_key}}</p>
+              <p class="wrap">{{$root.user|pkeys:'memo'}}</p>
             </div>
             <div class="item item-body">
               <center><qr class="full-image" text="$root.user.memo_key"></qr></center>
@@ -259,7 +263,7 @@
       <a class="button button-royal icon ion-document-text" ng-class="{'active':active=='posts'}" on-tap="change('posts')">&nbsp;{{::'COMMENTS'|translate}}</a>
       <a class="button button-royal icon ion-chatbubbles" ng-class="{'active':active=='recent-replies'}" on-tap="change('recent-replies')">&nbsp;{{'REPLIES'|translate}}</a>
       <a class="button button-royal icon ion-card" ng-class="{'active':active=='transfers'}"  on-tap="change('transfers')">&nbsp;{{::'WALLET'|translate}}</a>
-      <!--<a class="button button-royal icon ion-lock-combination" ng-class="{'active':active=='permissions'}" on-tap="change('permissions')">Keys</a>-->
+      <a class="button button-royal icon ion-lock-combination" ng-class="{'active':active=='permissions'}" on-tap="change('permissions')" ng-if="$root.user && $root.user.username === user.username">Keys</a>
     </div>
   </div>
   <script id="my-edit.html" type="text/ng-template">
