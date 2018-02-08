@@ -19,6 +19,25 @@ eSteem features
 - Personalize your profile.
 - Many more features to come.
 
+eSteem adalah aplikasi sosial dimana Anda dibayar untuk blogging, berkomentar dan curating.
+
+fitur eSteem
+
+- Akses artikel unik dalam topik apapun yang ingin Anda baca.
+- Terlibat dengan penulis dengan berkomentar, membahas topik.
+- Voting untuk posting untuk memberi penghargaan kepada penulis sekaligus mendapatkan hadiah curation.
+- Publikasikan artikel, posting blog dan host mereka secara gratis dan dapatkan reward dengan melibatkan dan mendapatkan pengikut.
+- Tulis artikel yang ada, simpan beberapa draf dari posting untuk publikasi selanjutnya.
+- Tandai artikel favorit untuk dibaca nanti.
+- Menukar atau mencairkan penghasilan Anda.
+- Kirimkan dana Anda ke penulis atau pengguna, teman, pengikut, dll.
+- Ikuti penulis yang menarik, blogger.
+- Cari pengikut dan penulis yang Anda ikuti.
+- Dapatkan notifikasi untuk tetap berhubungan dengan pengikut dan diskusi Anda yang terlibat.
+- Mencari tag / kategori menarik dari artikel, penulis.
+- Personalisasikan profil Anda.
+- Masih banyak lagi fitur yang akan datang.
+
 
 Security
 
@@ -29,6 +48,14 @@ Security
 
 eSteem supports Steem and Golos platforms.
 
+Keamanan
+
+1. App tidak pernah mengakses atau menahan dana pengguna.
+2. App menawarkan model keamanan sisi klien, dengan kunci privat yang dihosting secara lokal dan tidak pernah dikirim ke server manapun, Anda bertanggung jawab untuk mencadangkan kata sandi Anda.
+3. App menawarkan antarmuka pengguna dan pengalaman yang sederhana dan menarik
+4. App menawarkan lapisan keamanan ekstra dengan pin-code
+
+eSteem mendukung platform Steem dan Golos.
 
 ## Development
 
@@ -40,8 +67,19 @@ eSteem supports Steem and Golos platforms.
 
 Start developing with Ionic.
 
+## Pembangunan
+
+`npm install`
+
+`bower install`
+
+`skrip teguk`
+
+Mulai berkembang dengan ionik.
 
 Please use [issue tracker](https://github.com/feruzm/esteem/issues) for questions or feedbacks
+
+Silakan gunakan [issue tracker] (https://github.com/feruzm/esteem/issues) untuk pertanyaan atau masukan
 
 ### What's Steem/Golos?
 
@@ -49,6 +87,9 @@ Steem and Golos is a blockchain-based social media platform where anyone can ear
 
 Visit http://www.esteem.ws for more info about development and project.
 
+Steem dan Golos adalah platform media sosial berbasis blokir di mana ada orang yang bisa mendapatkan ganjaran. Algoritma konsensus kedua rantai sama disamping mereka memiliki komunitas / budaya yang berbeda dari orang-orang dengan visi dan tujuan yang sama. eSteem mendukung kedua komunitas tersebut dan mendekatkan mereka dengan menawarkan seperangkat fitur dan kombinasi layanan serupa.
+
+Kunjungi http://www.esteem.ws untuk informasi lebih lanjut tentang pengembangan dan proyek.
 
 # License
 
@@ -57,3 +98,11 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# Lisensi
+
+Izin dengan ini diberikan secara gratis kepada siapa saja yang mendapatkan salinan perangkat lunak ini dan file dokumentasi terkait ("Perangkat Lunak"), untuk menangani Perangkat Lunak tanpa batasan, termasuk namun tidak terbatas pada hak untuk menggunakan, menyalin, memodifikasi, menggabungkan , menerbitkan, mendistribusikan, mensublisensikan, dan / atau menjual salinan Perangkat Lunak, dan untuk mengizinkan orang-orang yang diberi Perangkat Lunak untuk melakukan hal tersebut, dengan syarat sebagai berikut:
+
+Pemberitahuan hak cipta di atas dan pemberitahuan izin ini harus disertakan dalam semua salinan atau sebagian besar Perangkat Lunak.
+
+PERANGKAT LUNAK INI DISEDIAKAN "APA ADANYA", TANPA JAMINAN APAPUN, TERSURAT MAUPUN TERSIRAT, TERMASUK NAMUN TIDAK TERBATAS PADA JAMINAN KELAYAKAN UNTUK DIPERDAGANGKAN, KESESUAIAN UNTUK TUJUAN TERTENTU DAN PELANGGARAN TERTENTU. DALAM HAL APAPUN, PENULIS ATAU PEMEGANG HAK CIPTA TIDAK BERTANGGUNG JAWAB ATAS KLAIM, KERUGIAN, ATAU KEWAJIBAN LAINNYA, BAIK DALAM TINDAKAN KONTRAK, TORT ATAU LAINNYA, YANG TIMBUL DARI, DARI ATAU BERHUBUNGAN DENGAN PERANGKAT LUNAK ATAU PENGGUNAAN ATAU KEPALA LAIN DI DALAM PERANGKAT LUNAK.
