@@ -1830,8 +1830,6 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
           }
           postingAuth.account_auths.splice(i, 1);
           //--------
-
-
           var wif = $rootScope.user.password
           ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'active')
           : $rootScope.$storage.user.privateActiveKey;

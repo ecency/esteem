@@ -488,6 +488,16 @@ module.exports = function (app) {
       
     }
   });
+  app.filter('pkeys', function($rootScope){
+    return function(inp,role){
+      if (inp) {
+        if (!inp.password) {
+          return role=='active'?inp.privateActiveKey:(role=='posting')?inp.privatePostingKey:'';
+        }
+        return window.steem.auth.toWif(inp.name, inp.password, role);
+      }
+    }
+  });
 	app.filter('timeago', function($filter, $translate, $rootScope) {
 
       function TimeAgo(input, p_allowFuture) {

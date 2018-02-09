@@ -283,5 +283,16 @@
 	"MOVE_TO_DRAFT": "Pinah u Draf",
 	"POWER_DOWN_SCHEDULE": "Power yang rhet selanjut jih adalah",
 	"LANGUAGE": "Basa",
-	"INVITES": "Undang"
+	"INVITES": "Undang",
+	"ACHIEVEMENTS": "Meusampoe",
+	"REWARDS": "Peunayah",
+	"FEEDBACK": "Peunapat",
+	"PROMOTE": "Peumaju",
+	"POWER_DOWN": "Peukureueng Teunaga",
+	"POWER_UP": "Tamah Teunaga",
+	"CONVERT_TO_STEEM": "Gantoe Jeuneh Peng Keu {{platformname}}",
+	"WITHDRAW": "Peucaye Peng",
+	"PARTICIPATION_BADGES": "Tanda Peuturi Peuserta",
+	"OTHER": "Seulaen Nibak Nyan",
+	"TYPE": "Jeuneh"
 }
