@@ -303,5 +303,6 @@
 	"TRANSLATE": "翻譯",
 	"TYPE": "類別",
 	"SHOW": "顯示",
-	"HIDDEN_TEXT": "由於評分過低，此帖已被隱藏"
+	"HIDDEN_TEXT": "由於評分過低，此帖已被隱藏",
+	"FETCHCOMMENTS": ""
 }
