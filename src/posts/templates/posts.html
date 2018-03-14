@@ -20,7 +20,7 @@
 	<!--<ion-header-bar align-title="left" class="bar-subheader bar-positive">
 	  <input type="search" placeholder="{{'SEARCH'|translate}}" ng-model="data.search" ng-change="search()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 	</ion-header-bar>-->
-	<ion-floating-button click="openPostModal()" has-footer="false" button-color="#1f5398" icon="ion-android-create" icon-color="#fff" ng-if="$root.user">
+	<ion-floating-button click="openPostModal()" has-footer="false" button-color="#284b78" icon="ion-android-create" icon-color="#fff" ng-if="$root.user">
 	</ion-floating-button>
   <ion-content class="has-header" scroll="true" delegate-handle="mainScroll" overflow-scroll="true" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 		<ion-refresher pulling-text="{{::pull}}" on-refresh="refresh()">

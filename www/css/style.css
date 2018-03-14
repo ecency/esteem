@@ -1131,7 +1131,7 @@ select-input input {
   border: 0!important;
 }
 .mynav nav {
-    background: rgba(31,83,152,1);
+    background: #284b78;
     /*border-bottom: 8px solid #fff;
     border-top: 2px solid #40b5a2;*/
     margin: 0 auto;
@@ -1680,20 +1680,20 @@ body { padding-top: constant(safe-area-inset-top); }
   height: 0;
 }
 .bar.bar-positive {
-  background-color: rgba(31,83,152,1);
+  background-color: #284b78;
   /*#1f5398*/
 }
 .tabs-icon-top.tabs-positive .tabs {
-  background-color: rgba(31,83,152,1);
+  background-color: #284b78;
 }
 .pane.tab-content {
   margin-top: 88px;
 }
 .tabs-striped.tabs-background-positive .tabs {
-  background-color: rgba(31,83,152,1);
+  background-color: #284b78;
 }
 .button-bar .button.button-royal {
-  background-color: rgba(31,83,152,1);
+  background-color: #284b78;
 }
 @media (min-width: 680px) {
   .mymodal {  
