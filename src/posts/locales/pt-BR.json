@@ -303,5 +303,6 @@
 	"TRANSLATE": "Traduzir",
 	"TYPE": "Tipo",
 	"SHOW": "Mostrar",
-	"HIDDEN_TEXT": "Este post foi escondido devido à baixa audiência"
+	"HIDDEN_TEXT": "Este post foi escondido devido à baixa audiência",
+	"FETCHCOMMENTS": ""
 }
