@@ -303,5 +303,6 @@
 	"TRANSLATE": "অনুবাদ",
 	"TYPE": "প্রকার",
 	"SHOW": "প্রদর্শন করুন",
-	"HIDDEN_TEXT": ""
+	"HIDDEN_TEXT": "",
+	"FETCHCOMMENTS": ""
 }
