@@ -303,5 +303,6 @@
 	"TRANSLATE": "Paghubad",
 	"TYPE": "Isulat",
 	"SHOW": "Ipakita",
-	"HIDDEN_TEXT": "Kini nga post gitago tungod sa ubos nga rating"
+	"HIDDEN_TEXT": "Kini nga post gitago tungod sa ubos nga rating",
+	"FETCHCOMMENTS": ""
 }
