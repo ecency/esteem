@@ -107,7 +107,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   };
   
   $scope.openSignUP = function() {
-    $scope.chainurl = $rootScope.$storage.chain=='steem'?'https://steemit.com/create_account':'https://golos.io/create_account';
+    $scope.chainurl = "https://signup.steemit.com/?ref=esteem";
     window.open($scope.chainurl, '_system', 'location=yes');
     return false;  
   }
@@ -129,6 +129,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
   $scope.sharing = function(){
     var shareSheet = $ionicActionSheet.show({
      buttons: [
+       { text: $filter('translate')('REBLOG') },
        { text: $filter('translate')('INVITES') },
        { text: $filter('translate')('SHARE') },
        { text: $filter('translate')('OTHER') }
@@ -140,8 +141,11 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       },
      buttonClicked: function(index) {
         if (index === 0) {
+          //$scope.share('reblog');
+          $rootScope.reBlog($rootScope.sitem.author, $rootScope.sitem.permlink);
+        } else if (index === 1) {
           $scope.share('invites');
-        } else if (index===1){
+        } else if (index===2){
           $scope.share('share');
         } else {
           $scope.share('other');
@@ -251,7 +255,6 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     if ($scope.loginData.password || $scope.loginData.privatePostingKey) {
       $rootScope.$broadcast('show:loading');
       $scope.loginData.username = $scope.loginData.username.trim();
-      //console.log('doLogin'+$scope.loginData.username+$scope.loginData.password);
       
       if ($scope.loginData.chain !== $rootScope.$storage.chain) {
         
@@ -2149,6 +2152,12 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
 
   });
 
+  $scope.showStats = function(user) {
+    console.log(user);
+    //$scope.modalStats.show();
+    $state.go('app.activity',{username:user});
+  }
+
 })
 //epostsctrl
 //spostctrl
@@ -2176,8 +2185,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   $scope.translations.reblog = $translate.instant('REBLOG');
 
   $scope.translations.view = $translate.instant('VIEW_CONTEXT');
-  $scope.translations.comments = $translate.instant('COMMENTS');
-
+  $scope.translations.comments = $translate.instant('FETCHCOMMENTS');
 
   $scope.replying = false;
 
@@ -4819,7 +4827,7 @@ app.controller('ActivityCtrl', function($scope, $rootScope, APIs, $stateParams, 
     } else if ($scope.filter.activity == 'follows') {
       APIs.getMyFollows($stateParams.username).then(function(res){
         if (res) {
-          //$rootScope.log(angular.toJson(res.data));
+          $rootScope.log(angular.toJson(res.data));
           if (res.data.fatal) {
             //$scope.showMentions();
             $scope.data.loading = false;

@@ -1,13 +1,16 @@
-<ion-view view-title="">
-  <ion-nav-bar class="bar-positive">
+<ion-view>
+   <ion-nav-bar class="bar-positive">
       <ion-nav-back-button>
       </ion-nav-back-button>
       <ion-nav-buttons side='left'>
-        <button class="button button-icon button-clear ion-navicon" ng-if="!$root.voiceOver" menu-toggle="left"></button>
+        <button class="button button-icon button-clear" ng-if="!$root.voiceOver" menu-toggle="left">
+         <img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.user.username}}/avatar/small" class="headerAvatar" />
+          <i ng-if="!$root.user" class="icon ion-navicon"></i> 
+        </button>
         <a href class="button button-icon ion-more" ng-if="$root.voiceOver" menu-toggle="left">{{::translations.menu}}</a>
       </ion-nav-buttons>
       <ion-nav-title>
-        {{::"ACTIVITY"|translate}}
+        <div class="page-title">{{'ACTIVITY' | translate}}</div>
       </ion-nav-title>
   </ion-nav-bar>
   <div class="bar bar-subheader">
@@ -43,18 +46,18 @@
     </div>
     <div class="list" ng-if="filter.activity =='follows'">
       <div class="item" ng-repeat="xx in data.follows">
-        {{xx.timestamp|timeago}}&nbsp;<b><a href="#/app/profile/{{xx.json[1].follower}}">{{xx.json[1].follower}}</a></b>
+        {{xx.timestamp|timeago}}&nbsp;<b><a href="#/app/profile/{{xx.follower}}">{{xx.follower}}</a></b> <div ng-if="xx.blog">follows</div><div ng-if="!xx.blog">unfollows</div>
       </div>
     </div>
     <div class="list" ng-if="filter.activity =='reblogs'">
       <div class="item" ng-repeat="xx in data.reblogs">
-        {{xx.timestamp|timeago}}&nbsp;<b><a href="#/app/profile/{{xx.json[1].account}}">{{xx.json[1].account}}</a></b>&nbsp;<a href="#/app/post/tag/{{xx.json[1].author}}/{{xx.json[1].permlink}}">{{xx.json[1].permlink}}</a>
+        {{xx.timestamp|timeago}}&nbsp;<b><a href="#/app/profile/{{xx.account}}">{{xx.account}}</a></b>&nbsp;<a href="#/app/post/tag/{{xx.json[1].author}}/{{xx.permlink}}">{{xx.permlink}}</a>
       </div>
     </div>
     <div class="list" ng-if="filter.activity =='leaderboard'">
-      <center class="gray italic">last 7 days</center>
-      <div class="item" ng-repeat="xx in data.leaderboard" href="#/app/profile/{{xx.author}}">
-        {{$index+1}}.&nbsp;<b><a href="#/app/profile/{{xx.author}}">{{xx.author}}</a></b>&nbsp;<div class="pull-right">{{xx.count}}</div>
+      <center class="gray italic">last 30 days</center>
+      <div class="item" ng-repeat="xx in data.leaderboard" href="#/app/profile/{{xx._id}}">
+        {{$index+1}}.&nbsp;<b><a href="#/app/profile/{{xx._id}}">{{xx._id}}</a></b>&nbsp;<div class="pull-right">{{xx.count}}</div>
       </div>
     </div>
     <div class="list" ng-if="filter.activity =='achievements'">

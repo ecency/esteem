@@ -62,22 +62,25 @@ module.exports = function (app) {
         return $http.put(API_END_POINT+"/api/schedules/"+user+"/"+id);
       },
       getVotes: function(user) {
-        return $http.get(API_END_POINT+"/api/votes/"+$rootScope.$storage.chain+"/"+user);
+        return $http.get(API_END_POINT+"/api/votes/"+user);
       },
       getMyVotes: function(user) {
-        return $http.get(API_END_POINT+"/api/rvotes/"+$rootScope.$storage.chain+"/"+user);
+        return $http.get(API_END_POINT+"/api/rvotes/"+user);
       },
       getMyMentions: function(user) {
-        return $http.get(API_END_POINT+"/api/mentions/"+$rootScope.$storage.chain+"/"+user);
+        return $http.get(API_END_POINT+"/api/mentions/"+user);
       },
       getMyFollows: function(user) {
-        return $http.get(API_END_POINT+"/api/follows/"+$rootScope.$storage.chain+"/"+user);
+        return $http.get(API_END_POINT+"/api/follows/"+user);
       },
       getMyReblogs: function(user) {
-        return $http.get(API_END_POINT+"/api/reblogs/"+$rootScope.$storage.chain+"/"+user);
+        return $http.get(API_END_POINT+"/api/reblogs/"+user);
+      },
+      getMyReplies: function(user) {
+        return $http.get(API_END_POINT+"/api/replies/"+user);
       },
       getLeaderboard: function() {
-        return $http.get(API_END_POINT+"/api/leaderboard/"+$rootScope.$storage.chain);
+        return $http.get(API_END_POINT+"/api/leaderboard");
       },
       getMyAchievements: function(user) {
         return $http.get(API_END_POINT+"/api/achievements/"+$rootScope.$storage.chain+"/"+user);
@@ -859,7 +862,7 @@ module.exports = function (app) {
     }
 
     // reading time stats
-    var minutes = words / options.wordsPerMinute
+    var minutes = words / options.wordsPerMinute || 0
     var time = 0//minutes * 60 * 1000
     var displayed = 0//Math.ceil(minutes.toFixed(2))
 
@@ -1451,7 +1454,7 @@ module.exports = function (app) {
                 comment: '='
             },
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
-                        <div class="ion-comment--author"><img class="round-avatar" ng-src="https://steemitimages.com/u/{{comment.author}}/avatar" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{::comment.author}}">{{::comment.author}}</a></b>&nbsp;<div class="reputation">{{::comment.author_reputation|reputation|number:0}}</div>&middot;{{::comment.created|timeago}}</div>\
+                        <div class="ion-comment--author"><img class="round-avatar" ng-src="https://steemitimages.com/u/{{comment.author}}/avatar/small" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{::comment.author}}">{{::comment.author}}</a></b>&nbsp;<div class="reputation">{{::comment.author_reputation|reputation|number:0}}</div>&middot;{{::comment.created|timeago}}</div>\
                         <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="comment.max_accepted_payout.split(\' \')[0] === \'0.000\'"><del>{{::comment | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="comment.max_accepted_payout.split(\' \')[0] !== \'0.000\'">{{::comment | sumPostTotal:$root.$storage.currencyRate | number}}</span> </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
                         <div class="ion-comment--text bodytext selectable" ng-if="comment.net_rshares>-1" ng-bind-html="comment | parseUrl "></div>\
                         <div class="ion-comment--text bodytext selectable" ng-if="comment.net_rshares<0">{{"HIDDEN_TEXT"|translate}}</div>\

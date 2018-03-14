@@ -3,7 +3,10 @@
 		  <ion-nav-back-button>
     	</ion-nav-back-button>
 	    <ion-nav-buttons side='left'>
-	      <button class="button button-icon button-clear ion-navicon" ng-if="!$root.voiceOver" menu-toggle="left"></button>
+	      <button class="button button-icon button-clear" ng-if="!$root.voiceOver" menu-toggle="left">
+         <img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.user.username}}/avatar/small" class="headerAvatar" />
+          <i ng-if="!$root.user" class="icon ion-navicon"></i> 
+        </button>
         <a href class="button button-icon ion-more" ng-if="$root.voiceOver" menu-toggle="left">{{::translations.menu}}</a>
 	    </ion-nav-buttons>
       <ion-nav-title>
@@ -24,7 +27,6 @@
     <ion-floating-item icon="ion-android-arrow-dropup-circle" click="upvotePost($root.sitem)" button-color="#387ef5" icon-color="#fff" text="{{::translations.upvote}}" text-class="text-class"></ion-floating-item>
     <ion-floating-item icon="ion-edit" click="editPost($root.sitem)" button-color="#387ef5" icon-color="#fff" text="{{::translations.edit}}" ng-if="$root.user.username==$root.sitem.author" text-class="text-class"></ion-floating-item>
     <ion-floating-item icon="ion-image" click="showImages(0)" ng-if="isImages()" button-color="#387ef5" icon-color="#fff" text="{{::translations.gallery}}" text-class="text-class"></ion-floating-item>
-    <ion-floating-item icon="ion-arrow-return-right" ng-if="$root.user.username !== $root.sitem.author" click="$root.reBlog($root.sitem.author, $root.sitem.permlink)" button-color="#387ef5" icon-color="#fff" text="{{::translations.reblog}}" text-class="text-class"></ion-floating-item>
     <!--<ion-floating-item icon="ion-earth" click="translateMe($root.sitem, true)" button-color="#387ef5" icon-color="#fff" text="{{::translations.translate}}" text-class="text-class"></ion-floating-item>-->
   </ion-floating-menu>
   <ion-content class="padding has-header" delegate-handle="mainScroll" overflow-scroll="true" ng-class="{'theme-dark':$root.$storage.theme == 'night'}"><!---->

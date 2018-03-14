@@ -1,4 +1,19 @@
-<ion-view view-cache="false" view-title="{{'MARKETPLACE' | translate}}">
+<ion-view view-cache="false">
+  <ion-nav-bar class="bar-positive">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+      <ion-nav-buttons side='left'>
+        <button class="button button-icon button-clear" ng-if="!$root.voiceOver" menu-toggle="left">
+         <img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.user.username}}/avatar/small" class="headerAvatar" />
+          <i ng-if="!$root.user" class="icon ion-navicon"></i> 
+        </button>
+        <a href class="button button-icon ion-more" ng-if="$root.voiceOver" menu-toggle="left">{{::translations.menu}}</a>
+      </ion-nav-buttons>
+      <ion-nav-title>
+        <div class="page-title">{{'MARKETPLACE'|translate}}</div>
+      </ion-nav-title>
+  </ion-nav-bar>
+
   <ion-content class="padding" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
     <h4>{{'EXTERNAL_APPS'|translate}}</h4>
     <div class="row">

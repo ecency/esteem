@@ -3,22 +3,25 @@
 		<ion-nav-back-button>
   		</ion-nav-back-button>
 	    <ion-nav-buttons side="left">
-	      <button class="button button-icon button-clear ion-navicon" ng-if="!$root.voiceOver" menu-toggle="left"></button>
+	      <button class="button button-icon button-clear" ng-if="!$root.voiceOver" menu-toggle="left">
+	      	<img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.user.username}}/avatar/small" class="headerAvatar" />
+	      	<i ng-if="!$root.user" class="icon ion-navicon"></i>
+	      </button>
 	      <a href class="button button-icon button-clear ion-navicon" ng-if="$root.voiceOver" menu-toggle="left">{{::translations.menu}}</a>
 	    </ion-nav-buttons>
 	    <ion-nav-title on-tap="showFilter()">
           <div class="page-title">{{$root.$storage.filterName}} {{$root.$storage.tag}} &emsp; <i class="icon ion-arrow-down-b"></i></div>
         </ion-nav-title>
 	    <ion-nav-buttons side="right">
-	      <!--<button class="button" on-tap="testfunction()">Test</button>-->
-	      <a href class="button button-icon ion-android-search" on-tap="openSmodal()" ng-if="$root.voiceOver">{{::translations.options}}</a>
-	      <button class="button button-icon ion-android-create" ng-if="$root.user&&!$root.voiceOver" ng-click="openPostModal()"></button>
-	      <button class="button button-icon ion-android-search" ng-if="!$root.voiceOver" on-tap="openSmodal()"></button>
+	      <button class="button button-icon ion-ios-bell" ng-if="$root.user&&!$root.voiceOver" on-tap="showStats($root.user.username)"></button>
+	      <button class="button button-icon ion-ios-search-strong" ng-if="!$root.voiceOver" on-tap="openSmodal()"></button>
 	    </ion-nav-buttons>
 	</ion-nav-bar>
 	<!--<ion-header-bar align-title="left" class="bar-subheader bar-positive">
 	  <input type="search" placeholder="{{'SEARCH'|translate}}" ng-model="data.search" ng-change="search()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 	</ion-header-bar>-->
+	<ion-floating-button click="openPostModal()" has-footer="false" button-color="#1f5398" icon="ion-android-create" icon-color="#fff" ng-if="$root.user">
+	</ion-floating-button>
   <ion-content class="has-header" scroll="true" delegate-handle="mainScroll" overflow-scroll="true" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 		<ion-refresher pulling-text="{{::pull}}" on-refresh="refresh()">
   		</ion-refresher>

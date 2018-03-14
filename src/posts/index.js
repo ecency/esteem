@@ -659,6 +659,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     $ionicPlatform.on('resume', function(){
       $rootScope.log("app resume");
+      $rootScope.user = $rootScope.$storage.user || undefined;
       
       if ($rootScope.$storage.pincode) {
         $rootScope.pincheck = true;

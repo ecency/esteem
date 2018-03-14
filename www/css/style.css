@@ -1659,12 +1659,13 @@ body { padding-top: constant(safe-area-inset-top); }
     background-color: black;
     opacity: 0.9;
 
-    filter: blur(10px);
+/*    filter: blur(10px);
     -webkit-filter: blur(10px);
     -moz-filter: blur(10px);
     -o-filter: blur(10px);
     -ms-filter: blur(10px);
     filter: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='svgMask'><feGaussianBlur stdDeviation='10' /></filter></svg>#svgMask");
+    */
 }
 
 .mask img {
@@ -1769,6 +1770,16 @@ div.item-input.item-icon-right {
 }
 img {
   image-orientation: from-image!important;
+}
+.headerAvatar {
+  max-height: 28px;
+  vertical-align:middle;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  box-shadow: 0 0 8px rgba(255, 255, 255, .3);
+  -webkit-box-shadow: 0 0 8px rgba(255, 255, 255, .3);
+  -moz-box-shadow: 0 0 8px rgba(255, 255, 255, .3);
 }
 /*
 .platform-ios ion-nav > .ion-page > .toolbar.statusbar-padding:first-child,
