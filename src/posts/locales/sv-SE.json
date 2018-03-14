@@ -303,5 +303,6 @@
 	"TRANSLATE": "Översätt",
 	"TYPE": "Typ",
 	"SHOW": "Visa",
-	"HIDDEN_TEXT": "Detta inlägg gömdes på grund av lågt betyg"
+	"HIDDEN_TEXT": "Detta inlägg gömdes på grund av lågt betyg",
+	"FETCHCOMMENTS": ""
 }
