@@ -303,5 +303,6 @@
 	"TRANSLATE": "",
 	"TYPE": "",
 	"SHOW": "",
-	"HIDDEN_TEXT": ""
+	"HIDDEN_TEXT": "",
+	"FETCHCOMMENTS": ""
 }
