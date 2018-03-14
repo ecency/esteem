@@ -12,7 +12,7 @@
 	    <ion-nav-title on-tap="showFilter()">
           <div class="page-title">{{$root.$storage.filterName}} {{$root.$storage.tag}} &emsp; <i class="icon ion-arrow-down-b"></i></div>
         </ion-nav-title>
-	    <ion-nav-buttons side="right">
+	    <ion-nav-buttons side="right" class="headerIcon">
 	      <button class="button button-icon ion-ios-bell" ng-if="$root.user&&!$root.voiceOver" on-tap="showStats($root.user.username)"></button>
 	      <button class="button button-icon ion-ios-search-strong" ng-if="!$root.voiceOver" on-tap="openSmodal()"></button>
 	    </ion-nav-buttons>
@@ -58,16 +58,21 @@
 		</div>
 		<!--track by ds.id  | limitTo : 10 : data.length-10-->
 		<div ng-if="$root.$storage.view=='card' && data.length>0" class="masonry-layout">
-			<div ng-repeat="ds in data | regex:'category':'bm.*' track by ds.id " class="masonry-layout__panel">
+			<div ng-repeat="ds in data track by ds.id " class="masonry-layout__panel">
 	    	   <div class="list card masonry-layout__panel-content" ng-if="ds" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 
-				<div class="item" on-tap="open(ds)" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
-					<span ng-if="ds.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{::translations.resteem}} {{::ds.reblogged_by}}</span>
-				    <h2 class=""><i class="fa fa-money positive" ng-if="ds.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="ds.percent_steem_dollars === 0"></i> {{::ds.title}}</h2>
-				    <div class="row postdetails"><div class="col"><i class="icon ion-ios-time-outline"></i> {{ds.created|timeago}}&nbsp;{{::translations.by}}&nbsp;<b>{{::ds.author}}</b>&nbsp;<div class="reputation">{{::ds.author_reputation|reputation|number:0}}</div><p><i class="icon ion-ios-book-outline"></i> {{ds.body|readingtime}} {{translations.min}} <i class="icon ion-ios-grid-view-outline"></i> {{::ds.category|detransliterate:false}}</p></div></div>
+				<div class="item item-avatar" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
+					<img class="round-avatar-title" ng-src="https://steemitimages.com/u/{{ds.author}}/avatar/small" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" />
+				    <div class="row postdetails">
+				    	<div class="col"><b><a href="#/app/profile/{{ds.author}}">{{ds.author}}</b></a>&nbsp;<div class="reputation">{{::ds.author_reputation|reputation|number:0}}</div>&nbsp;&middot;&nbsp;{{ds.created|timeago}}&nbsp;<p>{{ds.body|readingtime}} {{translations.min}}&nbsp;&middot;&nbsp;<a href on-tap="openTag(ds.category, 5)"><i class="icon ion-ios-grid-view-outline"></i> {{::ds.category|detransliterate:false}}</a></p></div></div>
+				    <span ng-if="ds.reblogged_by.length>0">
+						<i class="icon ion-arrow-return-right"></i> {{::translations.resteem}} {{::ds.reblogged_by}}
+					</span>
 				</div>
-				<div class="item-body ibody"><!--ds.json_metadata.image[0]-->
-				    <center><img class="full-image" check-image ng-src="{{ds|catchimage}}" on-tap="open(ds)" ng-if="ds.json_metadata.indexOf('nsfw')==-1" />
+				<h2 class="postTitle" on-tap="open(ds)">
+		    		<i class="fa fa-money positive" ng-if="ds.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="ds.percent_steem_dollars === 0"></i> {{::ds.title}}</h2>
+				<div class="item-body ibody" on-tap="open(ds)"><!--ds.json_metadata.image[0]-->
+				    <center><img class="full-image" check-image ng-src="{{ds|catchimage}}" ng-if="ds.json_metadata.indexOf('nsfw')==-1" />
 				    <img class="full-image" ng-src="img/nsfwimage.png" on-tap="open(ds)" ng-if="$root.$storage.nsfw && ds.json_metadata.indexOf('nsfw')>-1" /></center>
 				    <div class="row">
 					    <div class="col">

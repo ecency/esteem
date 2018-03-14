@@ -486,7 +486,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
           angular.merge($rootScope.$storage.user, dd);
           $rootScope.user = $rootScope.$storage.user;
 
-          $scope.mcss = ($rootScope.user.json_metadata && $rootScope.user.json_metadata.profile && $rootScope.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed', 'color': 'white', 'box-shadow':'inset 0 0 0 2000px rgba(255,0,150,0.3)'} : {'background-color': 'rgba(31,83,152,1)', 'color': 'white'};
+          $scope.mcss = ($rootScope.user.json_metadata && $rootScope.user.json_metadata.profile && $rootScope.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed', 'color': 'white', 'box-shadow':'inset 0 0 0 2000px rgba(33,34,35,0.7)'} : {'background-color': 'rgba(31,83,152,1)', 'color': 'white'};
           
           $scope.$applyAsync();
 
@@ -4268,7 +4268,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
             //console.log($scope.user.json_metadata.profile.cover_image);
 
             if ($rootScope.user) {
-              $scope.css = ($rootScope.user.username === $scope.user.username && $rootScope.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed', 'box-shadow':'inset 0 0 0 2000px rgba(255,0,150,0.3)' } : ($rootScope.user.username !== $scope.user.username && ($scope.user.json_metadata && $scope.user.json_metadata.profile && $scope.user.json_metadata.profile.cover_image)) ? {'background': 'url('+$scope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed', 'box-shadow':'inset 0 0 0 2000px rgba(0,0,0,0.5)'} : null;
+              $scope.css = ($rootScope.user.username === $scope.user.username && $rootScope.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed', 'box-shadow':'inset 0 0 0 2000px rgba(33,34,35,0.7)' } : ($rootScope.user.username !== $scope.user.username && ($scope.user.json_metadata && $scope.user.json_metadata.profile && $scope.user.json_metadata.profile.cover_image)) ? {'background': 'url('+$scope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed', 'box-shadow':'inset 0 0 0 2000px rgba(0,0,0,0.5)'} : null;
             } else {
               $scope.css = null;
             }

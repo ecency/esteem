@@ -365,7 +365,14 @@ img.round-avatar {
   -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
   -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
 }
-
+img.round-avatar-title {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 0px 10px 0px 0px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+}
 .col img {
   float: left;
 }
@@ -1781,6 +1788,25 @@ img {
   -webkit-box-shadow: 0 0 8px rgba(255, 255, 255, .3);
   -moz-box-shadow: 0 0 8px rgba(255, 255, 255, .3);
 }
+
+.postTitle {
+  padding-left: 10px;
+  font-size: 12pt;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bar .button.button-icon:before {
+  font-size: 20px;
+}
+.bar .button.button-icon .icon:before {
+  font-size: 20px;
+}
+.bar .button.back-button .icon:before {
+  font-size: 20px;
+}
+
 /*
 .platform-ios ion-nav > .ion-page > .toolbar.statusbar-padding:first-child,
 .platform-ios ion-nav > .ion-page > ion-header > .toolbar.statusbar-padding:first-child,
