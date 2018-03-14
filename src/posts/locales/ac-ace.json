@@ -303,5 +303,6 @@
 	"TRANSLATE": "",
 	"TYPE": "Jeuneh",
 	"SHOW": "",
-	"HIDDEN_TEXT": ""
+	"HIDDEN_TEXT": "",
+	"FETCHCOMMENTS": ""
 }
