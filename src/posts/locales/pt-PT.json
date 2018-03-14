@@ -303,5 +303,6 @@
 	"TRANSLATE": "Traduzir",
 	"TYPE": "Tipo",
 	"SHOW": "Mostrar",
-	"HIDDEN_TEXT": "Esta publicação foi ocultada devido a baixas classificações"
+	"HIDDEN_TEXT": "Esta publicação foi ocultada devido a baixas classificações",
+	"FETCHCOMMENTS": ""
 }
