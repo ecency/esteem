@@ -303,5 +303,6 @@
 	"TRANSLATE": "Oversæt",
 	"TYPE": "Type",
 	"SHOW": "Vis",
-	"HIDDEN_TEXT": "Dette indlæg blev skjult pga. lav rating"
+	"HIDDEN_TEXT": "Dette indlæg blev skjult pga. lav rating",
+	"FETCHCOMMENTS": ""
 }
