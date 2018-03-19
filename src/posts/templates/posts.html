@@ -61,11 +61,11 @@
 			<div ng-repeat="ds in data track by ds.id " class="masonry-layout__panel">
 	    	   <div class="list card masonry-layout__panel-content" ng-if="ds" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 
-				<div class="item item-avatar" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
+				<div class="item item-avatar postList" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 					<img class="round-avatar-title" ng-src="https://steemitimages.com/u/{{ds.author}}/avatar/small" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" />
 				    <div class="row postdetails">
 				    	<div class="col"><b><a href="#/app/profile/{{ds.author}}">{{ds.author}}</b></a>&nbsp;<div class="reputation">{{::ds.author_reputation|reputation|number:0}}</div>&nbsp;&middot;&nbsp;{{ds.created|timeago}}&nbsp;<p>{{ds.body|readingtime}} {{translations.min}}&nbsp;&middot;&nbsp;<a href on-tap="openTag(ds.category, 5)"><i class="icon ion-ios-grid-view-outline"></i> {{::ds.category|detransliterate:false}}</a></p></div></div>
-				    <span ng-if="ds.reblogged_by.length>0">
+				    <span ng-if="ds.reblogged_by.length>0" class="reBlogged">
 						<i class="icon ion-arrow-return-right"></i> {{::translations.resteem}} {{::ds.reblogged_by}}
 					</span>
 				</div>

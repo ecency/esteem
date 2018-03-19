@@ -1788,15 +1788,17 @@ img {
   -webkit-box-shadow: 0 0 8px rgba(255, 255, 255, .3);
   -moz-box-shadow: 0 0 8px rgba(255, 255, 255, .3);
 }
-
 .postTitle {
+  margin-top: 0;
   padding-left: 10px;
   font-size: 12pt;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
+.reBlogged {
+  font-size: 9pt;
+}
 .bar .button.button-icon:before {
   font-size: 20px;
 }
@@ -1806,7 +1808,10 @@ img {
 .bar .button.back-button .icon:before {
   font-size: 20px;
 }
-
+.item.postList {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
 /*
 .platform-ios ion-nav > .ion-page > .toolbar.statusbar-padding:first-child,
 .platform-ios ion-nav > .ion-page > ion-header > .toolbar.statusbar-padding:first-child,
