@@ -28,12 +28,21 @@
   		<div ng-if="$root.$storage.view=='compact' && data.length>0" class="masonry-layout">
 	    	<div ng-repeat="d in data | regex:'category':'bm.*' track by d.id" class="masonry-layout__panel">
 	    	   <div class="list masonry-layout__panel-content" >
-		    	<div class="item" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
-				    <div on-tap="open(d)">
-				    <span ng-if="d.reblogged_by.length>0"><i class="icon ion-arrow-return-right"></i> {{::translations.resteem}} {{::d.reblogged_by}}</span>
-				    <p><h2 class=""><i class="fa fa-money positive" ng-if="d.promoted.split(' ')[0] !== '0.000'"></i>&nbsp;<i class="fa fa-fire positive" ng-if="d.percent_steem_dollars === 0"></i> {{::d.title}}</h2></p>
-				    <div class="row postdetails"><div class="col"><i class="icon ion-android-time"></i> {{::d.created|timeago}}&nbsp;{{::translations.by}}&nbsp;<b>{{::d.author}}</b>&nbsp;<div class="reputation">{{::d.author_reputation|reputation|number:0}}</div><p><i class="icon ion-ios-book-outline"></i> {{d.body|readingtime}} {{translations.min}} <i class="icon ion-ios-grid-view-outline"></i> {{::d.category|detransliterate:false}}</p></div></div>
-				    </div>
+				<div class="item item-avatar postList" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
+						<img class="round-avatar-title" ng-src="https://steemitimages.com/u/{{d.author}}/avatar/small" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" />
+					    <div class="row postdetails">
+					    	<div class="col"><b><a href="#/app/profile/{{d.author}}">{{d.author}}</a></b>&nbsp;<div class="reputation">{{::d.author_reputation|reputation|number:0}}</div>&nbsp;&middot;&nbsp;{{d.created|timeago}}&nbsp;<p>{{d.body|readingtime}} {{translations.min}}&nbsp;&middot;&nbsp;<a href on-tap="openTag(d.category, 5)"><i class="icon ion-ios-grid-view-outline"></i> {{::d.category|detransliterate:false}}</a></p>
+					    	</div>
+					    </div>
+					    <span ng-if="d.reblogged_by.length>0" class="reBlogged">
+							<i class="icon ion-arrow-return-right"></i> {{::translations.resteem}} {{::d.reblogged_by}}
+						</span>
+				</div>
+				<h2 class="postTitle" on-tap="open(d)">
+		    		<i class="fa fa-money positive" ng-if="d.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="d.percent_steem_dollars === 0"></i> {{::d.title}}
+		    	</h2>
+		    	<div class="item-body ibody">
+		    		<div class="postSummary" on-tap="open(d)">{{d.body | postSummary}}</div>
 				    <div class="row">
 				     <div class="col">
 				      <span ng-if="!$root.voiceOver">
@@ -51,8 +60,8 @@
 				      <!--<div class="col col-10 tright">
 				      <a href="#" class="subdued" on-tap="$root.reBlog(d.author, d.permlink)"><i class="icon ion-arrow-return-right"></i>&nbsp;</a>
 				      </div>-->
-				    </div>
-			  	</div>
+					</div>
+				</div>
 			  </div>
 			</div>
 		</div>
@@ -64,17 +73,17 @@
 				<div class="item item-avatar postList" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 					<img class="round-avatar-title" ng-src="https://steemitimages.com/u/{{ds.author}}/avatar/small" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" />
 				    <div class="row postdetails">
-				    	<div class="col"><b><a href="#/app/profile/{{ds.author}}">{{ds.author}}</b></a>&nbsp;<div class="reputation">{{::ds.author_reputation|reputation|number:0}}</div>&nbsp;&middot;&nbsp;{{ds.created|timeago}}&nbsp;<p>{{ds.body|readingtime}} {{translations.min}}&nbsp;&middot;&nbsp;<a href on-tap="openTag(ds.category, 5)"><i class="icon ion-ios-grid-view-outline"></i> {{::ds.category|detransliterate:false}}</a></p></div></div>
+				    	<div class="col"><b><a href="#/app/profile/{{ds.author}}">{{ds.author}}</a></b>&nbsp;<div class="reputation">{{::ds.author_reputation|reputation|number:0}}</div>&nbsp;&middot;&nbsp;{{ds.created|timeago}}&nbsp;<p>{{ds.body|readingtime}} {{translations.min}}&nbsp;&middot;&nbsp;<a href on-tap="openTag(ds.category, 5)"><i class="icon ion-ios-grid-view-outline"></i> {{::ds.category|detransliterate:false}}</a></p></div></div>
 				    <span ng-if="ds.reblogged_by.length>0" class="reBlogged">
 						<i class="icon ion-arrow-return-right"></i> {{::translations.resteem}} {{::ds.reblogged_by}}
 					</span>
 				</div>
 				<h2 class="postTitle" on-tap="open(ds)">
 		    		<i class="fa fa-money positive" ng-if="ds.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="ds.percent_steem_dollars === 0"></i> {{::ds.title}}</h2>
-				<div class="item-body ibody" on-tap="open(ds)"><!--ds.json_metadata.image[0]-->
-				    <center><img class="full-image" check-image ng-src="{{ds|catchimage}}" ng-if="ds.json_metadata.indexOf('nsfw')==-1" />
+				<div class="item-body ibody"><!--ds.json_metadata.image[0]-->
+				    <center><img class="full-image" check-image ng-src="{{ds|catchimage}}" ng-if="ds.json_metadata.indexOf('nsfw')==-1" on-tap="open(ds)" />
 				    <img class="full-image" ng-src="img/nsfwimage.png" on-tap="open(ds)" ng-if="$root.$storage.nsfw && ds.json_metadata.indexOf('nsfw')>-1" /></center>
-				    <div class="postSummary">{{ds.body | postSummary}}</div>
+				    <div class="postSummary" on-tap="open(ds)">{{ds.body | postSummary}}</div>
 				    <div class="row">
 					    <div class="col">
 					      <span ng-if="!$root.voiceOver">

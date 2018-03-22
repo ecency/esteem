@@ -18,8 +18,14 @@
 }
 
 .theme-dark .card {
-  background: #111;
+  background: #444;
 }
+
+.theme-dark h2.postTitle {
+  background: #444;
+  color: #aaa;
+}
+
 
 .theme-dark .bar {
   background-color: #444;
@@ -1754,9 +1760,6 @@ highchart {
 .ititle {
   line-height: 20px;
 }
-.ibody {
-  
-}
 .extra-menu .item-icon-left.item {
   padding-left: 15px!important;
 }
@@ -1818,6 +1821,11 @@ img {
    display: -webkit-box;
    -webkit-box-orient: vertical;
    -webkit-line-clamp: 2; /* number of lines to show */
-   line-height: 1.8em;        /* fallback */
+   line-height: 1.4em;        /* fallback */
    max-height: 3.6em;       /* fallback */
+   color: #666;
+}
+.item-body .row {
+  padding-left: 0;
+  margin-left: 0;
 }
