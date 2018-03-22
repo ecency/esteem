@@ -2018,7 +2018,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
         params.select_authors = [$rootScope.user.username]; 
         delete params.tags; 
       }
-      params.truncate_body = 1;
+      params.truncate_body = 200;
 
       window.steem.api.setOptions({ url: localStorage.socketUrl });
 
