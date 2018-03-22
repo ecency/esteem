@@ -1572,54 +1572,13 @@ module.exports = function (app) {
 
                             $scope.$applyAsync();
                           });
-                          /*window.steem.api.getContentReplies(comment.author, comment.permlink, function(err, dd) {
-                            //console.log(err, dd);
-                            comment.comments = dd;
-
-                            for (var i = 0, len = dd.length; i < len; i++) {
-                              var v = dd[i];
-                              if ($rootScope.postAccounts.indexOf(v.author) == -1) {
-                                $rootScope.postAccounts.push(v.author);
-                              }  
-                            }
-                            setTimeout(function() {
-                              $scope.$emit('postAccounts');
-                            }, 10);
-
-                            if (!$scope.$$phase){
-                              $scope.$apply();
-                            }
-                            if (!$rootScope.$$phase){
-                              $rootScope.$apply();
-                            }
-                            comment.showChildren = true;
-                            //console.log(comment);
-                          });*/
+                         
                         }
                       }
                         //$rootScope.$broadcast('update:content');
                     //$rootScope.$broadcast('hide:loading');
                   };
-                  /*$scope.$on('postAccounts', function(){
-                    window.steem.api.getAccountsAsync($rootScope.postAccounts, function(err, res){
-                        //console.log(err, res);
-                        for (var i = 0, len = res.length; i < len; i++) {
-                        var v = res[i];
-                        if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
-                          if (v.json_metadata) {
-                            if (v.json_metadata.indexOf("created_at")>-1) {
-                              v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
-                            } else {
-                              v.json_metadata = angular.fromJson(v.json_metadata);
-                            }
-                            var key = v.name;
-                            $rootScope.paccounts[key] = v.json_metadata;
-                          }
-                        }
-                      }
-                      $scope.$applyAsync();
-                    });
-                  });*/
+                  
                   $scope.upvotePost = function(post) {
                     $rootScope.votePost(post, 'upvote', 'update:content');
                   };
@@ -2099,6 +2058,37 @@ module.exports = function (app) {
         dynamic: 'false',
         rotatedeg: '0'
     });
+
+    const Remarkable = require('remarkable');
+    const md = new Remarkable({html: true, breaks: true, linkify: false});
+
+    const postSummary = (postBody, length) => {
+      if (!postBody) {
+        return '';
+      }
+      // Convert markdown to html
+      let text = md.render(postBody);
+
+      text = text
+        .replace(/(<([^>]+)>)/ig, '') // Remove html tags
+        .replace(/\r?\n|\r/g, ' ') // Remove new lines
+        .replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') // Remove urls
+        .trim()
+        .replace(/ +(?= )/g, ''); // Remove all multiple spaces
+
+      if (length) {
+        // Truncate
+        text = text.substring(0, length);
+      }
+      return text;
+    };
+
+    app.filter('postSummary', function ($sce) {
+        return (postBody, length = 200) => {
+          return $sce.trustAsHtml(postSummary(postBody, length));
+        }
+    });
+
 
     /**
      * directive to create the avatar
