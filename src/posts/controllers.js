@@ -4,6 +4,7 @@ console.log('controllers.js');
 app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $state, $ionicHistory, $cordovaSocialSharing, ImageUploadService, $cordovaCamera, $ionicSideMenuDelegate, $ionicPlatform, $filter, APIs, $window, $ionicPopover, $cordovaBarcodeScanner, $cordovaSplashscreen, $ionicActionSheet) {
 
   console.log('AppCtrl ready');
+  var db = null;  
 
   $scope.loginData = {};
 
@@ -295,6 +296,22 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
                   }
                 }); 
 
+                $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS user (id integer primary key, username text, reputation text, memo_key text, post_count integer, voting_power integer,chain text, posting text,active text, witness_votes text,owner text)");
+                
+                $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS userSettings (id integer primary key, pincode text, language text, images text, view text, voteWeight text)"); 
+                
+                var userQuery = "INSERT INTO user (username,reputation,memo_key,post_count,voting_power,chain,posting,active,witness_votes,owner) VALUES (?,?,?,?,?,?,?,?,?,?)";
+
+                var userSettingsQuery = "INSERT INTO userSettings (pincode,language,images,view,voteWeight) VALUES (?,?,?,?,?)";
+                    
+                $cordovaSQLite.execute(db, userQuery, [ $scope.loginData.username , $scope.loginData.reputation , $scope.loginData.memo_key , $scope.loginData.post_count , $scope.loginData.voting_power, $scope.loginData.voting_power, JSON.stringify( $scope.loginData.posting), JSON.stringify( $scope.loginData.active), JSON.stringify( $scope.loginData.witness_votes), JSON.stringify( $scope.loginData.owner)]).then(function(r) {
+                    console.log("user Table INSERT ID -> " + r.insertId);
+                    console.log("user Table INSERT ID -> " , r);
+                    
+                }, function (err) {
+                    console.error('err +++',err);
+                });
+                
                 //console.log(wifIsValid); 
 
                 if (!wifIsValid) {
