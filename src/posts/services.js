@@ -2080,7 +2080,130 @@ module.exports = function (app) {
         }
     }
 
+    function SQLiteSevice($q, $ionicLoading, $cordovaFileTransfer, $ionicPlatform, $filter, $rootScope) {
+        var db = null;  
+        var service = {};
+        service.addSqLiteUserTable = addSqLiteUserTable;
+        service.addSqLiteUserSettingsTable = addSqLiteUserSettingsTable;
+
+        service.addUserSql = addUserSql;
+        service.addUserSettingsSql = addUserSettingsSql;
+
+        service.updateUserSql = updateUserSql;
+        service.updateUserSettingsSql = updateUserSettingsSql;
+
+        service.removeUserSql = removeUserSql;
+        service.removeUserSettingsSql = removeUserSettingsSql;
+
+        service.getUserSql = getUserSql;
+        service.getUserSettingsSql = getUserSettingsSql;
+        return service;
+
+        function addSqLiteUserTable() {
+          $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS user (id integer primary key, username text, reputation text, memo_key text, post_count integer, voting_power integer,chain text, posting text,active text, witness_votes text,owner text)");
+          return deferred.promise;
+        }
+        
+        function addSqLiteUserSettingsTable() {
+          $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS userSettings (id integer primary key, pincode text, language text, images text, view text, voteWeight text)"); 
+          return deferred.promise;
+        }
+
+        function addUserSql(tableName, loginData) {
+          var userQuery = "INSERT INTO user (username,reputation,memo_key,post_count,voting_power,chain,posting,active,witness_votes,owner) VALUES (?,?,?,?,?,?,?,?,?,?)";
+
+          $cordovaSQLite.execute(db, userQuery, [ loginData.username , loginData.reputation , loginData.memo_key , loginData.post_count , loginData.voting_power, loginData.voting_power, JSON.stringify( loginData.posting), JSON.stringify( loginData.active), JSON.stringify( loginData.witness_votes), JSON.stringify( loginData.owner)]).then(function(r) {
+              // console.log("user Table INSERT ID -> " + r.insertId);
+              console.log("user Table INSERT ID -> " , r);
+              return deferred.promise;
+          }, function (err) {
+              console.error('err +++',err);
+              return deferred.promise;
+          });
+        }
+        
+        function addUserSettingsSql(tableName, userSettingsQuery) {
+          var userSettingsQuery = "INSERT INTO userSettings (pincode, language, images, view, voteWeight) VALUES (?,?,?,?,?)";
+
+          $cordovaSQLite.execute(db, userSettingsQuery, [ userSettingsQuery.pincode, userSettingsQuery.language, userSettingsQuery.images, userSettingsQuery.view, userSettingsQuery.voteWeight]).then(function(r) {
+              console.log("user Table INSERT ID -> " + r.insertId);
+              return deferred.promise;
+          }, function (err) {
+              console.error('err +++',err);
+              return deferred.promise;
+          });
+        }
+        
+        function updateUserSql(tableName, record, id) {
+          return deferred.promise;
+        }
+        
+        function updateUserSettingsSql(tableName, record, id) {
+          return deferred.promise;
+        }
+        
+        function removeUserSql() {
+          var userRemove = "DROP TABLE user";
+
+          $cordovaSQLite.execute(db, userRemove).then(function(r) {
+              console.log("Removed " + r);
+              return deferred.promise;
+          }, function (err) {
+              console.error('err +++',err);
+              return deferred.promise;
+          });
+          return deferred.promise;
+        }
+        
+        function removeUserSettingsSql() {
+          var userSettingsRemove = "DROP TABLE userSettings";
+          
+          $cordovaSQLite.execute(db, userSettingsRemove).then(function(r) {
+              console.log("Removed " + r);
+              return deferred.promise;
+          }, function (err) {
+              console.error('err +++',err);
+              return deferred.promise;
+          });
+          return deferred.promise;
+        }
+        
+        function getUserSql(tableName) {
+          var query = "SELECT * FROM user";
+          $cordovaSQLite.execute(db, query, []).then(function(res) {
+              if(res.rows.length > 0) {
+                  console.log("SELECTED -> " + res.rows.item(0).firstname + " " + res.rows.item(0).lastname);
+                  return deferred.promise;
+              } else {
+                  console.log("No users found");
+                  return deferred.promise;
+              }
+          }, function (err) {
+              console.error(err);
+              return deferred.promise;
+          });
+        }
+        
+        function getUserSettingsSql(tableName) {
+          var query = "SELECT * FROM userSettings";
+          $cordovaSQLite.execute(db, query, []).then(function(res) {
+              if(res.rows.length > 0) {
+                  console.log("SELECTED -> " + res.rows);
+                  return deferred.promise;
+              } else {
+                  console.log("No user settings found");
+                  return deferred.promise;
+              }
+          }, function (err) {
+              console.error(err);
+              return deferred.promise;
+          });
+        }
+    }
+
     app.factory('ImageUploadService', ius);
+
+    app.factory('SQLiteService', SQLiteSevice);
 
     app.constant('defaultSettings', {
         alphabetcolors: ["#5A8770", "#B2B7BB", "#6FA9AB", "#F5AF29", "#0088B9", "#F18636", "#D93A37", "#A6B12E", "#5C9BBC", "#F5888D", "#9A89B5", "#407887", "#9A89B5", "#5A8770", "#D33F33", "#A2B01F", "#F0B126", "#0087BF", "#F18636", "#0087BF", "#B2B7BB", "#72ACAE", "#9C8AB4", "#5A8770", "#EEB424", "#407887"],
