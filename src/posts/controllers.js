@@ -12,7 +12,9 @@ module.exports = function (app) {
     });
   
     SQLiteService.getUserSql().then(function(result) {
-      $rootScope.user = result
+
+      console.log('getUserSql result', result);
+      $rootScope.sqlStorage.user = result;
     });
     
     SQLiteService.getUserSettingsSql().then(function(result) {
@@ -203,7 +205,7 @@ module.exports = function (app) {
     }
     $scope.share = function(type) {
       var host = "";
-      if ($rootScope.$storage.chain == 'steem') {
+      if ($rootScope.sqlStorage.chain == 'steem') {
         //host = "esteem://";
         host = "esteem://";
       } else {
@@ -217,16 +219,7 @@ module.exports = function (app) {
       $ionicPlatform.ready(function() {
   
         if (type === 'invites' && window.cordova) {
-          window.cordova.plugins.firebase.dynamiclinks.sendInvitation({
-              deepLink: link,
-              title: subject,
-              message: message,
-              callToActionText: 'Join'
-          }, function(res){
-            //console.log(res);
-          }, function(err){
-            //console.log(err);
-          });
+          
         } else if (type === 'share' && window.cordova) {
           $cordovaSocialSharing.share(message, subject, file, link) // Share via native share sheet
           .then(function(result) {
@@ -247,9 +240,9 @@ module.exports = function (app) {
     $scope.loginChain = function(x){
       //console.log(x);
       $scope.loginData.chain = x;
-      $rootScope.$storage.chain = x;
+      $rootScope.sqlStorage.chain = x;
   
-      localStorage.socketUrl = $rootScope.$storage["socket"+$scope.loginData.chain];
+      localStorage.socketUrl = $rootScope.sqlStorage["socket"+$scope.loginData.chain];
       
       //console.log(localStorage.socketUrl);
   
@@ -269,13 +262,19 @@ module.exports = function (app) {
     
     $scope.doLogin = function() {
       $rootScope.log('Doing login');
+      // console.log('testing');
+      SQLiteService.getUserSql().then(function(result) {
+
+        console.log('$rootScope.sqlStorage.user', result);
+        // $rootScope.sqlStorage.user = result;
+        });
       if ($scope.loginData.password || $scope.loginData.privatePostingKey) {
         $rootScope.$broadcast('show:loading');
         $scope.loginData.username = $scope.loginData.username.trim();
         
-        if ($scope.loginData.chain !== $rootScope.$storage.chain) {
+        if ($scope.loginData.chain !== $rootScope.sqlStorage.chain) {
           
-          var socketUrl = $rootScope.$storage["socket"+$rootScope.$storage.chain];
+          var socketUrl = $rootScope.sqlStorage["socket"+$rootScope.sqlStorage.chain];
           
           window.steem.api.setOptions({ url: socketUrl });
   
@@ -311,11 +310,17 @@ module.exports = function (app) {
                       wifIsValid = true;
                     }
                   });
+
+                  SQLiteService.addSqLiteUserTable().then(function(result) {
+                    console.log('==============addSqLiteUserTable', result);
+                  });
                   
+                  SQLiteService.addUserSql($scope.loginData).then(function(result) {
+                      console.log('==============addUserSql', result);
+                  });
+
                   SQLiteService.removeUserSql().then(function(removeResult) {
-                    SQLiteService.addUserSql().then(function(result) {
-                      
-                    });
+                    
                   });
 
                   SQLiteService.removeUserSettingsSql().then(function(removeResult) {
@@ -346,15 +351,15 @@ module.exports = function (app) {
                     $rootScope.$broadcast('hide:loading');
                     $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('PASSWORD_INCORRECT'));
                   } else {
-                    $rootScope.$storage.user = $scope.loginData;
+                    $rootScope.sqlStorage.user = $scope.loginData;
                     $rootScope.user = $scope.loginData;
   
                     $scope.loginData = {};
                     var found = false;
   
-                    if ($rootScope.$storage.users.length>0){
-                      for (var i = 0, len = $rootScope.$storage.users.length; i < len; i++) {
-                        var v = $rootScope.$storage.users[i];
+                    if ($rootScope.sqlStorage.users.length>0){
+                      for (var i = 0, len = $rootScope.sqlStorage.users.length; i < len; i++) {
+                        var v = $rootScope.sqlStorage.users[i];
                         if (v.username == $rootScope.user.username && v.chain == $rootScope.user.chain){
                           found = true;
                         }
@@ -363,9 +368,9 @@ module.exports = function (app) {
                     if (found) {
   
                     } else {
-                      $rootScope.$storage.users.push($rootScope.user);  
+                      $rootScope.sqlStorage.users.push($rootScope.user);  
                     }
-                    $rootScope.$storage.mylogin = $scope.login;
+                    $rootScope.sqlStorage.mylogin = $scope.login;
                     $rootScope.$broadcast('hide:loading');
                     $scope.loginModal.hide();
                     
@@ -377,8 +382,8 @@ module.exports = function (app) {
   
                     APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date(), 'medium'), appversion: $rootScope.$storage.appversion}).then(function(res){  
                         
-                      if ($rootScope.$storage.chain !== $rootScope.user.chain) {
-                        $rootScope.$storage.chain = $rootScope.user.chain;  
+                      if ($rootScope.sqlStorage.chain !== $rootScope.user.chain) {
+                        $rootScope.sqlStorage.chain = $rootScope.user.chain;  
                         $rootScope.$emit('changedChain');
                         $rootScope.$emit('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
                       }
@@ -422,15 +427,15 @@ module.exports = function (app) {
                       $rootScope.$broadcast('hide:loading');
                       $rootScope.showMessage($filter('translate')('ERROR'), $filter('translate')('PASSWORD_INCORRECT'));
                   } else {
-                    $rootScope.$storage.user = $scope.loginData;
+                    $rootScope.sqlStorage.user = $scope.loginData;
                     $rootScope.user = $scope.loginData;
   
                     $scope.loginData = {};
                     var found = false;
   
-                    if ($rootScope.$storage.users.length>0){
-                      for (var i = 0, len = $rootScope.$storage.users.length; i < len; i++) {
-                        var v = $rootScope.$storage.users[i];
+                    if ($rootScope.sqlStorage.users.length>0){
+                      for (var i = 0, len = $rootScope.sqlStorage.users.length; i < len; i++) {
+                        var v = $rootScope.sqlStorage.users[i];
                         if (v.username == $rootScope.user.username && v.chain == $rootScope.user.chain){
                           found = true;
                         }
@@ -439,13 +444,13 @@ module.exports = function (app) {
                     if (found) {
   
                     } else {
-                      $rootScope.$storage.users.push($rootScope.user);  
+                      $rootScope.sqlStorage.users.push($rootScope.user);  
                     }
                     if (!$scope.$$phase) {
                       $scope.$apply();
                     }
                     
-                    $rootScope.$storage.mylogin = $scope.login;
+                    $rootScope.sqlStorage.mylogin = $scope.login;
                     $rootScope.$broadcast('refreshLocalUserData');
   
                     APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.user.username, {device: ionic.Platform.platform(), timestamp: $filter('date')(new Date(), 'medium'), appversion: $rootScope.$storage.appversion}).then(function(res){
@@ -454,8 +459,8 @@ module.exports = function (app) {
                       $scope.loginModal.hide();
                       
                         
-                      if ($rootScope.$storage.chain !== $rootScope.user.chain) {
-                        $rootScope.$storage.chain = $rootScope.user.chain;  
+                      if ($rootScope.sqlStorage.chain !== $rootScope.user.chain) {
+                        $rootScope.sqlStorage.chain = $rootScope.user.chain;  
                         $rootScope.$emit('changedChain');
                         $rootScope.$emit('changedCurrency', {currency: $rootScope.$storage.currency, enforce: true});
                       }
@@ -488,15 +493,15 @@ module.exports = function (app) {
     };
   
     $scope.selectAccount = function(user) {
-      $rootScope.$storage.user = user;
+      $rootScope.sqlStorage.user = user;
       $rootScope.user = user;
   
       $ionicHistory.nextViewOptions({
         disableBack: true
       });
-      if ($rootScope.$storage.chain !== user.chain) {
+      if ($rootScope.sqlStorage.chain !== user.chain) {
         $scope.data = {};
-        $rootScope.$storage.chain = user.chain;  
+        $rootScope.sqlStorage.chain = user.chain;  
         $rootScope.$broadcast('changedChain');
       }
       setTimeout(function() {
@@ -521,15 +526,15 @@ module.exports = function (app) {
   
     $rootScope.$on('refreshLocalUserData', function() {
       $rootScope.log('refreshLocalUserData');
-      if ($rootScope.user && $rootScope.user.username && $rootScope.user.chain == $rootScope.$storage.chain) {
+      if ($rootScope.user && $rootScope.user.username && $rootScope.user.chain == $rootScope.sqlStorage.chain) {
         window.steem.api.getAccountsAsync([$rootScope.user.username], function(err, dd){
           if (dd) {
             dd = dd[0];
             if (dd && dd.json_metadata) {
               dd.json_metadata = angular.fromJson(dd.json_metadata);
             }
-            angular.merge($rootScope.$storage.user, dd);
-            $rootScope.user = $rootScope.$storage.user;
+            angular.merge($rootScope.sqlStorage.user, dd);
+            $rootScope.user = $rootScope.sqlStorage.user;
   
             $scope.mcss = ($rootScope.user.json_metadata && $rootScope.user.json_metadata.profile && $rootScope.user.json_metadata.profile.cover_image) ? {'background': 'url('+$rootScope.user.json_metadata.profile.cover_image+')', 'background-size': 'cover', 'background-position':'fixed', 'color': 'white', 'box-shadow':'inset 0 0 0 2000px rgba(33,34,35,0.7)'} : {'background-color': '#284b78', 'color': 'white'};
             
@@ -584,32 +589,33 @@ module.exports = function (app) {
     });
   
     $scope.logout = function() {
-      for (var i = 0, len = $rootScope.$storage.users.length; i < len; i++) {
-        var v = $rootScope.$storage.users[i];
-        $rootScope.user = $rootScope.$storage.user;
+
+      for (var i = 0, len = $rootScope.sqlStorage.users.length; i < len; i++) {
+        var v = $rootScope.sqlStorage.users[i];
+        $rootScope.user = $rootScope.sqlStorage.user;
         if (v.chain == $rootScope.user.chain && v.username == $rootScope.user.username) {
-          $rootScope.$storage.users.splice(i,1);
+          $rootScope.sqlStorage.users.splice(i,1);
         }
       };
-      if ($rootScope.$storage.users.length>1) {
-        $rootScope.$storage.user = $rootScope.$storage.users[0];  
-        $rootScope.user = $rootScope.$storage.user;
+      if ($rootScope.sqlStorage.users.length>1) {
+        $rootScope.sqlStorage.user = $rootScope.sqlStorage.users[0];  
+        $rootScope.user = $rootScope.sqlStorage.user;
   
-        for (var i = 0, len = $rootScope.$storage.users.length; i < len; i++) {
-          var v = $rootScope.$storage.users[i];
-          if (v.chain == $rootScope.$storage.chain) {
-            $rootScope.$storage.user = $rootScope.$storage.users[i];  
-            $rootScope.user = $rootScope.$storage.user;
+        for (var i = 0, len = $rootScope.sqlStorage.users.length; i < len; i++) {
+          var v = $rootScope.sqlStorage.users[i];
+          if (v.chain == $rootScope.sqlStorage.chain) {
+            $rootScope.sqlStorage.user = $rootScope.sqlStorage.users[i];  
+            $rootScope.user = $rootScope.sqlStorage.user;
           }
         }
       } else {
-        $rootScope.$storage.user = undefined;
-        $rootScope.$storage.user = null;
+        $rootScope.sqlStorage.user = undefined;
+        $rootScope.sqlStorage.user = null;
         $rootScope.user = undefined;
         $rootScope.user = null;
   
-        $rootScope.$storage.mylogin = undefined;
-        $rootScope.$storage.mylogin = null;
+        $rootScope.sqlStorage.mylogin = undefined;
+        $rootScope.sqlStorage.mylogin = null;
       }
       //make sure user credentials cleared.
       if ($rootScope.$storage.deviceid) {
@@ -757,7 +763,7 @@ module.exports = function (app) {
   
   app.controller('SendCtrl', function($scope, $rootScope, $state, $ionicPopup, $ionicPopover, $interval, $filter, $q, $cordovaBarcodeScanner, $ionicPlatform, $ionicModal, APIs) {
   
-    if ($rootScope.$storage.chain == "steem") {
+    if ($rootScope.sqlStorage.chain == "steem") {
       $scope.data = {types: [{type: "steem", name:"Steem", id:1},{type: "sbd", name:"Steem Dollar", id:2}, {type: "sp", name:"Steem Power", id:3}], type: "steem", amount: 0.001, etypes: [{type: "approve", name: $filter('translate')("APPROVE"), id:1},{type: "dispute", name: $filter('translate')("DISPUTE"), id:2},{type: "release", name: $filter('translate')("RELEASE"), id:3}]};
     } else {
       $scope.data = {types: [{type: "golos", name: "ГОЛОС", id:1},{type: "gbg", name:"ЗОЛОТОЙ", id:2}, {type: "golosp", name:"СИЛА ГОЛОСА", id:3}], type: "golos", amount: 0.001, etypes: [{type: "approve", name: $filter('translate')("APPROVE"), id:1},{type: "dispute", name: $filter('translate')("DISPUTE"), id:2},{type: "release", name: $filter('translate')("RELEASE"), id:3}]};
@@ -913,7 +919,7 @@ module.exports = function (app) {
                   $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message);
                 } else {
                   $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
-                    $scope.data.type=$rootScope.$storage.chain;
+                    $scope.data.type=$rootScope.sqlStorage.chain;
                     $scope.data.amount= 0.001;
                   });
                 }
@@ -926,7 +932,7 @@ module.exports = function (app) {
                   $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message);
                 } else {
                   $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
-                    $scope.data.type=$rootScope.$storage.chain;
+                    $scope.data.type=$rootScope.sqlStorage.chain;
                     $scope.data.amount= 0.001;
                   });
                 }
@@ -940,7 +946,7 @@ module.exports = function (app) {
                   $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message);
                 } else {
                   $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
-                    $scope.data.type=$rootScope.$storage.chain;
+                    $scope.data.type=$rootScope.sqlStorage.chain;
                     $scope.data.amount= 0.001;
                   });
                 }
@@ -1012,13 +1018,13 @@ module.exports = function (app) {
                         $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
                       } else {
                         $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
-                          $scope.data.type=$rootScope.$storage.chain;
+                          $scope.data.type=$rootScope.sqlStorage.chain;
                           $scope.data.amount= 0.001;
                         });
                       }
                     });
                   } else {
-                    var tt = $filter('number')($scope.data.amount, 3) + " "+$filter('uppercase')($rootScope.$storage.chain);
+                    var tt = $filter('number')($scope.data.amount, 3) + " "+$filter('uppercase')($rootScope.sqlStorage.chain);
                     
                     window.steem.broadcast.transferToVesting(wif, $rootScope.user.username, $scope.data.username, tt, function(err, result) {
                       //console.log(err, result);
@@ -1027,7 +1033,7 @@ module.exports = function (app) {
                         $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message)
                       } else {
                         $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED')).then(function(){
-                          $scope.data.type=$rootScope.$storage.chain;
+                          $scope.data.type=$rootScope.sqlStorage.chain;
                           $scope.data.amount= 0.001;
                         });
                       }
@@ -1058,7 +1064,7 @@ module.exports = function (app) {
                     $rootScope.showAlert($filter('translate')('ERROR'), $filter('translate')('BROADCAST_ERROR')+" "+message);
                   } else {
                     $rootScope.showAlert($filter('translate')('INFO'), $filter('translate')('TX_BROADCASTED') + " "+$filter('translate')('ESCROW')+" "+$filter('translate')('ID')+": "+escrow_id).then(function(){
-                      $scope.data.type=$rootScope.$storage.chain;
+                      $scope.data.type=$rootScope.sqlStorage.chain;
                       $scope.data.amount= 0.001;
                     });
                   }
@@ -1631,7 +1637,7 @@ module.exports = function (app) {
               permlink: permlink,
               max_accepted_payout: $scope.spost.operation_type==='sp'?"1000000.000 "+$rootScope.$storage.platformdunit:"0.000 "+$rootScope.$storage.platformdunit,
               percent_steem_dollars: $scope.spost.operation_type==='sp'?0:10000,
-              extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
+              extensions: $rootScope.sqlStorage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
             }]
             ];
             if ($scope.spost.upvote_this) {
@@ -1661,7 +1667,7 @@ module.exports = function (app) {
               permlink: permlink,
               max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
               percent_steem_dollars: 10000,
-              extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
+              extensions: $rootScope.sqlStorage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
             }]
             ];
             if ($scope.spost.upvote_this) {
@@ -1825,7 +1831,7 @@ module.exports = function (app) {
           //$rootScope.$broadcast('refreshLocalUserData');
           console.log('loadmore');
           
-          $rootScope.user = $rootScope.$storage.user || undefined;
+          $rootScope.user = $rootScope.sqlStorage.user || undefined;
   
           $scope.loadMore();
         }
@@ -1883,7 +1889,7 @@ module.exports = function (app) {
             //--------
             var wif = $rootScope.user.password
             ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'active')
-            : $rootScope.$storage.user.privateActiveKey;
+            : $rootScope.sqlStorage.user.privateActiveKey;
             //steem.broadcast.accountUpdate(wif, account, owner, active, posting, memoKey, jsonMetadata, function(err, result) {
             if (wif) {
               window.steem.broadcast.accountUpdate(wif, $rootScope.user.username, undefined, undefined, postingAuth, $rootScope.user.memo_key, account.json_metadata, function(err, result) {
@@ -1920,11 +1926,11 @@ module.exports = function (app) {
   
             var wif = $rootScope.user.password
             ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'active')
-            : $rootScope.$storage.user.privateActiveKey;
+            : $rootScope.sqlStorage.user.privateActiveKey;
             //steem.broadcast.accountUpdate(wif, account, owner, active, posting, memoKey, jsonMetadata, function(err, result) {
             if (wif) {
               window.steem.broadcast.accountUpdate(wif, $rootScope.user.username, undefined, undefined, postingAuth, $rootScope.user.memo_key, account.json_metadata, function(err, result) {
-                //$rootScope.$storage.user.memo_key
+                //$rootScope.sqlStorage.user.memo_key
                 //console.log(err, result);
                 //$scope.modalEdit.hide();
                 if (err) {
@@ -1962,7 +1968,7 @@ module.exports = function (app) {
     $scope.dataChanged = function(newValue) {
       if (newValue) {
         var lenn = newValue.length;
-        //var user = $rootScope.$storage.user || null;
+        //var user = $rootScope.sqlStorage.user || null;
         var view = $rootScope.$storage.view;
   
         if ($rootScope.user){
@@ -1993,7 +1999,7 @@ module.exports = function (app) {
       window.steem.api.getContentAsync(author, permlink, function(err, result) {
         console.log('getContentA1',err, result);
         var len = result.active_votes.length;
-        //var user = $rootScope.$storage.user;
+        //var user = $rootScope.sqlStorage.user;
         if ($rootScope.user) {
           for (var j = len - 1; j >= 0; j--) {
             if (result.active_votes[j].voter === $rootScope.user.username) {
@@ -2062,7 +2068,7 @@ module.exports = function (app) {
       } else {
         $rootScope.log("fetching..."+type+" "+limit+" "+tag);
          
-        if ($rootScope.$storage.chain == 'golos' && type == 'feed') {
+        if ($rootScope.sqlStorage.chain == 'golos' && type == 'feed') {
           params.select_authors = [$rootScope.user.username]; 
           delete params.tags; 
         }
@@ -2086,7 +2092,7 @@ module.exports = function (app) {
                 }
                 var permlink = response[i].permlink;
                 if (!$scope.ifExists(permlink)) {
-                  //var user = $rootScope.$storage.user || undefined;
+                  //var user = $rootScope.sqlStorage.user || undefined;
                   if ($rootScope.user) {
                     //console.log('exist');
                     if (response[i] && response[i].active_votes) {
@@ -2130,8 +2136,8 @@ module.exports = function (app) {
     $scope.$on('$ionicView.loaded', function(){
       $scope.limit = 10;
       //$rootScope.$broadcast('show:loading');
-      if (!$rootScope.$storage["socket"+$rootScope.$storage.chain]) {
-        $rootScope.$storage["socket"+$rootScope.$storage.chain] = localStorage.socketUrl;
+      if (!$rootScope.sqlStorage["socket"+$rootScope.sqlStorage.chain]) {
+        $rootScope.sqlStorage["socket"+$rootScope.sqlStorage.chain] = localStorage.socketUrl;
       }
       if (!$rootScope.$storage.view) {
         $rootScope.$storage.view = 'card';
@@ -2147,7 +2153,7 @@ module.exports = function (app) {
       if ($stateParams.tags) {
         $rootScope.$storage.tag = $stateParams.tags;
       }
-      $rootScope.user = $rootScope.$storage.user || undefined;
+      $rootScope.user = $rootScope.sqlStorage.user || undefined;
       
       if (!angular.isDefined($rootScope.$storage.language)) {
         if(typeof navigator.globalization !== "undefined") {
@@ -2935,7 +2941,7 @@ module.exports = function (app) {
             permlink: $scope.spost.permlink,
             max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
             percent_steem_dollars: 10000,
-            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
+            extensions: $rootScope.sqlStorage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
           }];
           operations_array.push(xx);
         }
@@ -3023,7 +3029,7 @@ module.exports = function (app) {
               permlink: $scope.post.permlink,  
               max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
               percent_steem_dollars: 10000,
-              extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
+              extensions: $rootScope.sqlStorage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
             }];
             operations_array.push(xx);
           }
@@ -3068,7 +3074,7 @@ module.exports = function (app) {
               permlink: "re-"+$scope.post.author.replace(/\./g, "")+"-"+timeformat,  
               max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
               percent_steem_dollars: 10000,
-              extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
+              extensions: $rootScope.sqlStorage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
             }]
             ];
           window.steem.broadcast.sendAsync({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
@@ -3695,10 +3701,10 @@ module.exports = function (app) {
   
               var wif = $rootScope.user.password
               ? window.steem.auth.toWif($rootScope.user.username, $rootScope.user.password, 'active')
-              : $rootScope.$storage.user.privateActiveKey;
+              : $rootScope.sqlStorage.user.privateActiveKey;
   
               window.steem.broadcast.accountUpdate(wif, $rootScope.user.username, undefined, undefined, undefined, $rootScope.user.memo_key, JSON.stringify(update), function(err, result) {
-                //$rootScope.$storage.user.memo_key
+                //$rootScope.sqlStorage.user.memo_key
                 //console.log(err, result);
                 $scope.modalEdit.hide();
                 if (err) {
@@ -4093,7 +4099,7 @@ module.exports = function (app) {
           //console.log(params);
           //$rootScope.log("fetching profile...blog 20 ");
           if ($scope.active == 'blog') {
-            if ($rootScope.$storage.chain == 'golos') {
+            if ($rootScope.sqlStorage.chain == 'golos') {
               params.select_authors = [$stateParams.username];
               delete params.tags;   
             }
@@ -4949,7 +4955,7 @@ module.exports = function (app) {
      });
     APIs.getNodes().then(function(res){
       console.log(res);
-      if ($rootScope.$storage.chain == 'steem'){
+      if ($rootScope.sqlStorage.chain == 'steem'){
         $scope.options = res.data.steemd;
       } else {
         $scope.options = res.data.golosd;
@@ -4985,7 +4991,7 @@ module.exports = function (app) {
     }
     $scope.changeChain = function() {
       $scope.restart = true;
-      if ($rootScope.$storage.chain == 'steem'){
+      if ($rootScope.sqlStorage.chain == 'steem'){
         $rootScope.$storage.platformname = "Steem";
         $rootScope.$storage.platformpower = "Steem Power";
         $rootScope.$storage.platformsunit = "Steem";
@@ -5006,9 +5012,9 @@ module.exports = function (app) {
         $rootScope.$storage.socketgolos = "https://ws.golos.io/";
         $scope.socket = "https://ws.golos.io/";
       }
-      $rootScope.chain = $rootScope.$storage.chain;
-      window.steem.config.set('chain_id',localStorage[$rootScope.$storage.chain+"Id"]);
-      if ($rootScope.$storage.chain == 'golos') {
+      $rootScope.chain = $rootScope.sqlStorage.chain;
+      window.steem.config.set('chain_id',localStorage[$rootScope.sqlStorage.chain+"Id"]);
+      if ($rootScope.sqlStorage.chain == 'golos') {
         window.steem.config.set('address_prefix','GLS');  
       } else {
         window.steem.config.set('address_prefix','STM');  
@@ -5067,7 +5073,7 @@ module.exports = function (app) {
       }
     }
     $scope.$on('$ionicView.beforeEnter', function(){
-      $rootScope.$storage["socket"+$rootScope.$storage.chain] = localStorage.socketUrl;
+      $rootScope.sqlStorage["socket"+$rootScope.sqlStorage.chain] = localStorage.socketUrl;
       $scope.data = {};
       if (!$rootScope.$storage.voteWeight){
         $rootScope.$storage.voteWeight = 10000;
@@ -5159,8 +5165,8 @@ module.exports = function (app) {
   
     });
     $scope.logouts = function() {
-      $rootScope.$storage.user = undefined;
-      $rootScope.$storage.user = null;
+      $rootScope.sqlStorage.user = undefined;
+      $rootScope.sqlStorage.user = null;
       $rootScope.user = undefined;
       $rootScope.user = null;
       
@@ -5189,11 +5195,11 @@ module.exports = function (app) {
       //});
       //}, 100);
     };
-    $scope.socket = $rootScope.$storage["socket"+$rootScope.$storage.chain];
+    $scope.socket = $rootScope.sqlStorage["socket"+$rootScope.sqlStorage.chain];
     $scope.socketChange = function(xx){
       console.log(xx);
       
-      $rootScope.$storage["socket"+$rootScope.$storage.chain] = xx;
+      $rootScope.sqlStorage["socket"+$rootScope.sqlStorage.chain] = xx;
       localStorage.socketUrl = xx;
       $scope.restart = true;
     }
@@ -5206,27 +5212,27 @@ module.exports = function (app) {
         confirmPopup.then(function(res) {
           if(res) {
             $rootScope.log('You are sure');
-            localStorage.socketUrl = $rootScope.$storage["socket"+$rootScope.$storage.chain];
+            localStorage.socketUrl = $rootScope.sqlStorage["socket"+$rootScope.sqlStorage.chain];
             //$scope.logouts();
             setTimeout(function() {
             //$scope.$evalAsync(function( $scope ) {
-              var socketUrl = $rootScope.$storage["socket"+$rootScope.$storage.chain];
+              var socketUrl = $rootScope.sqlStorage["socket"+$rootScope.sqlStorage.chain];
              
-              window.steem.config.set('chain_id',localStorage[$rootScope.$storage.chain+"Id"]);
+              window.steem.config.set('chain_id',localStorage[$rootScope.sqlStorage.chain+"Id"]);
               
               //window.steem.config.set('websocket',socketUrl); 
               window.steem.api.setOptions({ url: socketUrl });
               
-              if ($rootScope.$storage.chain == 'golos') {
+              if ($rootScope.sqlStorage.chain == 'golos') {
                 window.steem.config.set('address_prefix','GLS');  
               } else {
                 window.steem.config.set('address_prefix','STM');  
               }
-              if ($rootScope.user.chain != $rootScope.$storage.chain) {
-                for (var i = 0, len = $rootScope.$storage.users.length; i < len; i++) {
-                  var v = $rootScope.$storage.users[i];
-                  if (v.chain == $rootScope.$storage.chain){
-                    $rootScope.$storage.user = v;
+              if ($rootScope.user.chain != $rootScope.sqlStorage.chain) {
+                for (var i = 0, len = $rootScope.sqlStorage.users.length; i < len; i++) {
+                  var v = $rootScope.sqlStorage.users[i];
+                  if (v.chain == $rootScope.sqlStorage.chain){
+                    $rootScope.sqlStorage.user = v;
                     $rootScope.user = v;
                   }
                 }

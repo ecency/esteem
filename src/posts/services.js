@@ -2083,6 +2083,7 @@ module.exports = function (app) {
     function SQLiteSevice($q, $ionicLoading, $cordovaFileTransfer, $ionicPlatform, $filter, $rootScope) {
         var db = null;  
         var service = {};
+
         service.addSqLiteUserTable = addSqLiteUserTable;
         service.addSqLiteUserSettingsTable = addSqLiteUserSettingsTable;
 
@@ -2100,33 +2101,55 @@ module.exports = function (app) {
         return service;
 
         function addSqLiteUserTable() {
-          $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS user (id integer primary key, username text, reputation text, memo_key text, post_count integer, voting_power integer,chain text, posting text,active text, witness_votes text,owner text)");
+          var deferred = $q.defer();
+          console.log("====== addSqLiteUserTable -> ");
+          $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS user (id integer primary key, username text, reputation text, memo_key text, post_count integer, voting_power integer,chain text, posting text,active text, witness_votes text,owner text)").then(function(r) {
+              deferred.resolve(r);
+          }, function (err) {
+              console.error('err +++',err);
+              deferred.reject(err);
+          }); 
+          var deferred = $q.defer();
+
           return deferred.promise;
         }
         
         function addSqLiteUserSettingsTable() {
-          $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS userSettings (id integer primary key, pincode text, language text, images text, view text, voteWeight text)"); 
+          var deferred = $q.defer();
+          console.log("====== addSqLiteUserSettingsTable -> ");
+          $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS userSettings (id integer primary key, pincode text, language text, images text, view text, voteWeight text)").then(function(r) {
+              deferred.resolve(r);
+          }, function (err) {
+              console.error('err +++',err);
+              deferred.reject(err);
+          }); 
+          
           return deferred.promise;
         }
 
-        function addUserSql(tableName, loginData) {
+        function addUserSql(loginData) {
           var userQuery = "INSERT INTO user (username,reputation,memo_key,post_count,voting_power,chain,posting,active,witness_votes,owner) VALUES (?,?,?,?,?,?,?,?,?,?)";
 
+          console.log("====== userQuery -> " + userQuery);
+          var deferred = $q.defer();
           $cordovaSQLite.execute(db, userQuery, [ loginData.username , loginData.reputation , loginData.memo_key , loginData.post_count , loginData.voting_power, loginData.voting_power, JSON.stringify( loginData.posting), JSON.stringify( loginData.active), JSON.stringify( loginData.witness_votes), JSON.stringify( loginData.owner)]).then(function(r) {
               // console.log("user Table INSERT ID -> " + r.insertId);
-              console.log("user Table INSERT ID -> " , r);
-              return deferred.promise;
+              console.log("new user Table INSERT ID -> " , r.insertId);
+              deferred.resolve(res.rows);
+              
           }, function (err) {
               console.error('err +++',err);
-              return deferred.promise;
+              deferred.reject(err);
           });
+          return deferred.promise;
+          
         }
         
         function addUserSettingsSql(tableName, userSettingsQuery) {
           var userSettingsQuery = "INSERT INTO userSettings (pincode, language, images, view, voteWeight) VALUES (?,?,?,?,?)";
-
+          var deferred = $q.defer();
           $cordovaSQLite.execute(db, userSettingsQuery, [ userSettingsQuery.pincode, userSettingsQuery.language, userSettingsQuery.images, userSettingsQuery.view, userSettingsQuery.voteWeight]).then(function(r) {
-              console.log("user Table INSERT ID -> " + r.insertId);
+              console.log("new userSettings Table INSERT ID -> " + r.insertId);
               return deferred.promise;
           }, function (err) {
               console.error('err +++',err);
@@ -2135,21 +2158,25 @@ module.exports = function (app) {
         }
         
         function updateUserSql(tableName, record, id) {
+          var deferred = $q.defer();
           return deferred.promise;
         }
         
         function updateUserSettingsSql(tableName, record, id) {
+          var deferred = $q.defer();
           return deferred.promise;
         }
         
         function removeUserSql() {
           var userRemove = "DROP TABLE user";
-
+          var deferred = $q.defer();
           $cordovaSQLite.execute(db, userRemove).then(function(r) {
               console.log("Removed " + r);
+              deferred.resolve(r);
               return deferred.promise;
           }, function (err) {
               console.error('err +++',err);
+              deferred.reject(err);
               return deferred.promise;
           });
           return deferred.promise;
@@ -2157,9 +2184,10 @@ module.exports = function (app) {
         
         function removeUserSettingsSql() {
           var userSettingsRemove = "DROP TABLE userSettings";
-          
+          var deferred = $q.defer();
           $cordovaSQLite.execute(db, userSettingsRemove).then(function(r) {
               console.log("Removed " + r);
+
               return deferred.promise;
           }, function (err) {
               console.error('err +++',err);
@@ -2168,31 +2196,35 @@ module.exports = function (app) {
           return deferred.promise;
         }
         
-        function getUserSql(tableName) {
+        function getUserSql() {
           var query = "SELECT * FROM user";
-          $cordovaSQLite.execute(db, query, []).then(function(res) {
+          var deferred = $q.defer();
+          console.log("====== query -> " + query);
+          $cordovaSQLite.execute(db, query).then(function(res) {
+            console.log("getUserSql res -> " + res);
               if(res.rows.length > 0) {
                   console.log("SELECTED -> " + res.rows.item(0).firstname + " " + res.rows.item(0).lastname);
-                  return deferred.promise;
+                  deferred.resolve(res.rows);
+                  // return deferred.promise;
               } else {
                   console.log("No users found");
-                  return deferred.promise;
+                  deferred.resolve([]);
               }
           }, function (err) {
-              console.error(err);
-              return deferred.promise;
+              console.error('getUserSql err' + err);
+              deferred.reject(err);
           });
+          return deferred.promise;
+          
         }
         
-        function getUserSettingsSql(tableName) {
+        function getUserSettingsSql() {
           var query = "SELECT * FROM userSettings";
           $cordovaSQLite.execute(db, query, []).then(function(res) {
               if(res.rows.length > 0) {
                   console.log("SELECTED -> " + res.rows);
-                  return deferred.promise;
               } else {
                   console.log("No user settings found");
-                  return deferred.promise;
               }
           }, function (err) {
               console.error(err);
