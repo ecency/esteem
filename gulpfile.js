@@ -9,7 +9,6 @@ var sh = require('shelljs');
 var browserify = require('browserify');
 //var browserify = require('gulp-browserify');
 var clean_json = require("gulp-clean-json");
-var removeUseStrict = require("gulp-remove-use-strict");
 var replace = require('gulp-replace');
 var uglify = require("gulp-uglify");
 var source = require("vinyl-source-stream");

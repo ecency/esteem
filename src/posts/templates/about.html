@@ -1,6 +1,20 @@
-<ion-view view-cache="false" view-title="{{'ABOUT' | translate}} - v{{$root.$storage.appversion}}">
+<ion-view view-cache="false">
+     <ion-nav-bar class="bar-positive">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+      <ion-nav-buttons side='left'>
+        <button class="button button-icon button-clear" ng-if="!$root.voiceOver" menu-toggle="left">
+         <img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.user.username}}/avatar/small" class="headerAvatar" onerror="this.src=\'img/esteem_white.png\'" onabort="this.src=\'img/esteem_white.png\'"/>
+          <i ng-if="!$root.user" class="icon ion-navicon"></i> 
+        </button>
+        <a href class="button button-icon ion-more" ng-if="$root.voiceOver" menu-toggle="left">{{::translations.menu}}</a>
+      </ion-nav-buttons>
+      <ion-nav-title>
+        <div class="page-title">{{'ABOUT' | translate}} - v{{$root.$storage.appversion}}</div>
+      </ion-nav-title>
+  </ion-nav-bar>
   <ion-content class="padding" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
-    <center><img src="img/about.png"></center>
+    <center><img src="img/esteem.png" width="40%"></center>
     <p><b>eSteem</b> {{'ABOUT_2'|translate}} <div ng-bind-html="'ABOUT_11'|translate"></div>
     </p>
     <p ng-if="$root.user">{{"FOUNDER"|translate}} <a href="#app/profile/good-karma">good-karma</a></p>

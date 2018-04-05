@@ -1,11 +1,26 @@
-<ion-view view-cache="false" view-title="{{'SETTINGS'|translate}}">
+<ion-view view-cache="false">
+  <ion-nav-bar class="bar-positive">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+      <ion-nav-buttons side='left'>
+        <button class="button button-icon button-clear" ng-if="!$root.voiceOver" menu-toggle="left">
+         <img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.user.username}}/avatar/small" class="headerAvatar" onerror="this.src=\'img/esteem_white.png\'" onabort="this.src=\'img/esteem_white.png\'"/>
+          <i ng-if="!$root.user" class="icon ion-navicon"></i> 
+        </button>
+        <a href class="button button-icon ion-more" ng-if="$root.voiceOver" menu-toggle="left">{{::translations.menu}}</a>
+      </ion-nav-buttons>
+      <ion-nav-title>
+        <div class="page-title">{{'SETTINGS'|translate}}</div>
+      </ion-nav-title>
+  </ion-nav-bar>
+
   <ion-content class="padding has-header settings" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
     <br/>
     <div class="item item-divider">
       {{'SECURITY'|translate}}
     </div>
     <div class="row">
-      <div class="col col-33">
+      <div class="col col-50">
       <span class="slabel" ng-click='openTooltip($event,"{{"PIN_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'PIN_CODE'|translate}}</span>
       </div>
       <div class="col pull-right tright">
@@ -22,7 +37,7 @@
       {{'NOTIFICATIONS'|translate}}
     </div>
     <div class="row">
-      <div class="col col-33">
+      <div class="col col-50">
       <span class="slabel" ng-click='openTooltip($event,"{{"VOTE_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'VOTE'|translate}}</span>
       </div>
       <div class="col pull-right tright">
@@ -35,7 +50,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col col-33">
+      <div class="col col-50">
       <span class="slabel" ng-click='openTooltip($event,"{{"COMMENT_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'COMMENT'|translate}}</span>
       </div>
       <div class="col pull-right tright">
@@ -48,7 +63,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col col-33">
+      <div class="col col-50">
       <span class="slabel" ng-click='openTooltip($event,"{{"FOLLOW_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'FOLLOW'|translate}}</span>
       </div>
       <div class="col pull-right tright">
@@ -61,8 +76,8 @@
       </div>
     </div>
     <div class="row">
-      <div class="col col-33">
-      <span class="slabel" ng-click='openTooltip($event,"{{"MENTIONS_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'MENTIONS'|translate}}</span>
+      <div class="col col-50">
+      <span class="slabel" ng-click='openTooltip($event,"{{"MENTIONS_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'MENTION'|translate}}</span>
       </div>
       <div class="col pull-right tright">
         <label class="toggle toggle-positive">
@@ -74,7 +89,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col col-33">
+      <div class="col col-50">
       <span class="slabel" ng-click='openTooltip($event,"{{"RESTEEM_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'RESTEEM'|translate}}</span>
       </div>
       <div class="col pull-right tright">
@@ -92,8 +107,8 @@
     </div>
 
     <div class="row">
-      <div class="col col-33">
-      <span class="slabel" ng-click='openTooltip($event,"{{"NSFW_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'COMPACT_VIEW'|translate}}</span>
+      <div class="col col-50">
+      <span class="slabel" ng-click='openTooltip($event,"{{"COMPACT_VIEW_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'COMPACT_VIEW'|translate}}</span>
       </div>
       <div class="col pull-right tright">
         <label class="toggle toggle-positive">
@@ -106,8 +121,8 @@
     </div>
 
     <div class="row">
-      <div class="col col-33">
-      <span class="slabel" ng-click='openTooltip($event,"{{"NSFW_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'NIGHT_MODE'|translate}}</span>
+      <div class="col col-50">
+      <span class="slabel" ng-click='openTooltip($event,"{{"NIGHT_MODE_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'NIGHT_MODE'|translate}}</span>
       </div>
       <div class="col pull-right tright">
         <label class="toggle toggle-positive">
@@ -120,7 +135,7 @@
     </div>
 
     <div class="row">
-      <div class="col col-33">
+      <div class="col col-50">
       <span class="slabel" ng-click='openTooltip($event,"{{"AUTO_DOWNLOAD_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'AUTO_DOWNLOAD'|translate}}</span>
       </div>
       <div class="col pull-right tright">
@@ -134,8 +149,8 @@
     </div>
 
     <div class="row">
-      <div class="col col-33">
-      <span class="slabel" ng-click='openTooltip($event,"{{"NSFW_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'NSFW'|translate}}</span>
+      <div class="col col-50">
+      <span class="slabel" ng-click='openTooltip($event,"{{"NSFW_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'NSFW'|translate|uppercase}}</span>
       </div>
       <div class="col pull-right tright">
         <label class="toggle toggle-positive">
@@ -147,80 +162,45 @@
       </div>
     </div>
 
-    <div class="row" ng-if="$root.user">
-      <div class="col col-33">
-      <span class="slabel" ng-click='openTooltip($event,"{{"VOTING_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'VOTING'|translate}} (%)</span>
-      </div>
-      <div class="col">
-        <div class = "range range-positive">
-           {{vvalue}} <input type="range" name="range1" min="0.01" step="0.01" max="100" ng-model="vvalue" ng-change="drag(vvalue)">
-        </div>
-      </div>
-    </div>
-
     <div class="row">
-      <div class="col col-33">
+      <div class="col col-50">
         <span class="slabel" ng-click='openTooltip($event,"{{"LANGUAGES_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'LANGUAGES'|translate}}</span>
       </div>
       <div class="col">
         <select ng-model="$root.$storage.language" ng-change='changeLanguage($root.$storage.language)'>
           <option ng-repeat="option in $root.$storage.languages" value="{{option.id}}">{{option.name}}</option>
         </select>
-        <!--<div class="capital">{{$root.$storage.language}} <div class="pull-right"><i class="icon ion-chevron-right"></i></div></div>-->
       </div>
     </div>
 
     <div class="row">
-      <div class="col col-33">
+      <div class="col col-50">
         <span class="slabel" ng-click='openTooltip($event,"{{"CURRENCY_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'CURRENCY'|translate}}</span>
       </div>
       <div class="col">
         <select ng-model="$root.$storage.currency" ng-change='changeCurrency($root.$storage.currency)'>
           <option ng-repeat="option in $root.$storage.currencies" value="{{option.id}}">{{option.name}}</option>
         </select>
-        <!--<div class="capital">{{$root.$storage.language}} <div class="pull-right"><i class="icon ion-chevron-right"></i></div></div>-->
       </div>
     </div>
-    <!--
     <div class="row">
-      <div class="col col-33">
-        <span class="slabel" ng-click='openTooltip($event,"{{"CHAIN_TEXT"|translate}}")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'CHAIN'|translate}}</span>
-      </div>
       <div class="col">
-        <select ng-model="$root.$storage.chain" ng-change='changeChain($root.$storage.chain)'>
-          <option ng-repeat="option in $root.$storage.chains" value="{{option.id}}">{{option.name}}</option>
-        </select>
+        <span class="slabel" ng-click='openTooltip($event,"<span class=\"bold\">{{"SERVER_TEXT"|translate}}:</span><br><span class=\"wrap\">[steemit] https://api.steemit.com</span><br/><br/>")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'SERVER'|translate}}</span>&nbsp;<i class="icon ion-checkmark-circled balanced" ng-if="alive"></i><i class="icon ion-close-circled assertive" ng-if="!alive"></i>
       </div>
-    </div>
-  -->
-    <div class="row">
-      <div class="col col-33">
-        <span class="slabel" ng-click='openTooltip($event,"<span class=\"bold\">{{"SERVER_TEXT"|translate}}:</span><br><span class=\"wrap\">[steemit] wss://steemd.steemit.com</span><br/><br/><span class=\"wrap\">[golos] wss://ws.golos.io</span><br/><br/>")'><i class="icon ion-ios-information-outline gray"></i>&nbsp;{{'SERVER'|translate}}</span>&nbsp;<i class="icon ion-checkmark-circled balanced" ng-if="alive"></i><i class="icon ion-close-circled assertive" ng-if="!alive"></i>
-      </div>
-      <div class="col">
-        <!--<input type="text" placeholder="Server" ng-model="socket" style="width:100%;" ng-change="socketChange(socket)">-->
+      <div class="col col-66">
         <select-input ng-model="socket" select-options="options"></select-input>
       </div>
     </div>
-
-    <!--<div class="row">
-      <div class="col">
-      </div>
-      <div class="col">
-      </div>
-    </div>
-    <button class="button button-positive" ng-click="changeLanguage('ru')">Change RU</button>-->
     <br/>
     <script id = "popover.html" type="text/ng-template">
       <ion-popover-view>
         <ion-content>
           <div class="padding" ng-bind-html="tooltipText"></div>
         </ion-content>
-      
       </ion-popover-view>
     </script>
-    <div class="tcenter">
+    <!--<div class="tcenter">
       <button class="button button-positive" ng-click="save()">{{'SAVE_CHANGES'|translate}}</button>
-    </div>
+    </div>-->
   </ion-content>
 </ion-view>

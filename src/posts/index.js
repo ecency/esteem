@@ -347,7 +347,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     if (ionic.Platform.isIOS()){
       setTimeout(function () {
-        navigator.splashscreen.hide();
+        if (navigator.splashscreen)
+          navigator.splashscreen.hide();
       }, 3000 - 1000);
     }
 
@@ -659,6 +660,7 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     $ionicPlatform.on('resume', function(){
       $rootScope.log("app resume");
+      $rootScope.user = $rootScope.$storage.user || undefined;
       
       if ($rootScope.$storage.pincode) {
         $rootScope.pincheck = true;

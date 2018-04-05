@@ -62,22 +62,25 @@ module.exports = function (app) {
         return $http.put(API_END_POINT+"/api/schedules/"+user+"/"+id);
       },
       getVotes: function(user) {
-        return $http.get(API_END_POINT+"/api/votes/"+$rootScope.$storage.chain+"/"+user);
+        return $http.get(API_END_POINT+"/api/votes/"+user);
       },
       getMyVotes: function(user) {
-        return $http.get(API_END_POINT+"/api/rvotes/"+$rootScope.$storage.chain+"/"+user);
+        return $http.get(API_END_POINT+"/api/rvotes/"+user);
       },
       getMyMentions: function(user) {
-        return $http.get(API_END_POINT+"/api/mentions/"+$rootScope.$storage.chain+"/"+user);
+        return $http.get(API_END_POINT+"/api/mentions/"+user);
       },
       getMyFollows: function(user) {
-        return $http.get(API_END_POINT+"/api/follows/"+$rootScope.$storage.chain+"/"+user);
+        return $http.get(API_END_POINT+"/api/follows/"+user);
       },
       getMyReblogs: function(user) {
-        return $http.get(API_END_POINT+"/api/reblogs/"+$rootScope.$storage.chain+"/"+user);
+        return $http.get(API_END_POINT+"/api/reblogs/"+user);
+      },
+      getMyReplies: function(user) {
+        return $http.get(API_END_POINT+"/api/replies/"+user);
       },
       getLeaderboard: function() {
-        return $http.get(API_END_POINT+"/api/leaderboard/"+$rootScope.$storage.chain);
+        return $http.get(API_END_POINT+"/api/leaderboard");
       },
       getMyAchievements: function(user) {
         return $http.get(API_END_POINT+"/api/achievements/"+$rootScope.$storage.chain+"/"+user);
@@ -859,7 +862,7 @@ module.exports = function (app) {
     }
 
     // reading time stats
-    var minutes = words / options.wordsPerMinute
+    var minutes = words / options.wordsPerMinute || 0
     var time = 0//minutes * 60 * 1000
     var displayed = 0//Math.ceil(minutes.toFixed(2))
 
@@ -1354,7 +1357,7 @@ module.exports = function (app) {
         selectOptions: '='
       },
       require: '?^ngModel',
-      template: '<div class="item-input item-icon-right" style="width:100%;"><input ng-model="currentInput" type="text" ng-change="socketChange(currentInput)" ng-click="showOptions()"><i class="icon ion-android-arrow-dropdown" ng-click="showOptions()"></i></div>',
+      template: '<div class="item-input" style="width:100%;"><input ng-model="currentInput" type="text" ng-change="socketChange(currentInput)" on-hold="showOptions()"></div>',
       link: function(scope, element, attrs) {
         scope.options = {
           selected: ''
@@ -1451,7 +1454,7 @@ module.exports = function (app) {
                 comment: '='
             },
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
-                        <div class="ion-comment--author"><img class="round-avatar" ng-src="https://steemitimages.com/u/{{comment.author}}/avatar" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{::comment.author}}">{{::comment.author}}</a></b>&nbsp;<div class="reputation">{{::comment.author_reputation|reputation|number:0}}</div>&middot;{{::comment.created|timeago}}</div>\
+                        <div class="ion-comment--author"><img class="round-avatar" ng-src="https://steemitimages.com/u/{{comment.author}}/avatar/small" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{::comment.author}}">{{::comment.author}}</a></b>&nbsp;<div class="reputation">{{::comment.author_reputation|reputation|number:0}}</div>&middot;{{::comment.created|timeago}}</div>\
                         <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="comment.max_accepted_payout.split(\' \')[0] === \'0.000\'"><del>{{::comment | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="comment.max_accepted_payout.split(\' \')[0] !== \'0.000\'">{{::comment | sumPostTotal:$root.$storage.currencyRate | number}}</span> </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
                         <div class="ion-comment--text bodytext selectable" ng-if="comment.net_rshares>-1" ng-bind-html="comment | parseUrl "></div>\
                         <div class="ion-comment--text bodytext selectable" ng-if="comment.net_rshares<0">{{"HIDDEN_TEXT"|translate}}</div>\
@@ -1569,54 +1572,13 @@ module.exports = function (app) {
 
                             $scope.$applyAsync();
                           });
-                          /*window.steem.api.getContentReplies(comment.author, comment.permlink, function(err, dd) {
-                            //console.log(err, dd);
-                            comment.comments = dd;
-
-                            for (var i = 0, len = dd.length; i < len; i++) {
-                              var v = dd[i];
-                              if ($rootScope.postAccounts.indexOf(v.author) == -1) {
-                                $rootScope.postAccounts.push(v.author);
-                              }  
-                            }
-                            setTimeout(function() {
-                              $scope.$emit('postAccounts');
-                            }, 10);
-
-                            if (!$scope.$$phase){
-                              $scope.$apply();
-                            }
-                            if (!$rootScope.$$phase){
-                              $rootScope.$apply();
-                            }
-                            comment.showChildren = true;
-                            //console.log(comment);
-                          });*/
+                         
                         }
                       }
                         //$rootScope.$broadcast('update:content');
                     //$rootScope.$broadcast('hide:loading');
                   };
-                  /*$scope.$on('postAccounts', function(){
-                    window.steem.api.getAccountsAsync($rootScope.postAccounts, function(err, res){
-                        //console.log(err, res);
-                        for (var i = 0, len = res.length; i < len; i++) {
-                        var v = res[i];
-                        if (typeof v.json_metadata === 'string' || v.json_metadata instanceof String) {
-                          if (v.json_metadata) {
-                            if (v.json_metadata.indexOf("created_at")>-1) {
-                              v.json_metadata = angular.fromJson(angular.toJson(v.json_metadata));  
-                            } else {
-                              v.json_metadata = angular.fromJson(v.json_metadata);
-                            }
-                            var key = v.name;
-                            $rootScope.paccounts[key] = v.json_metadata;
-                          }
-                        }
-                      }
-                      $scope.$applyAsync();
-                    });
-                  });*/
+                  
                   $scope.upvotePost = function(post) {
                     $rootScope.votePost(post, 'upvote', 'update:content');
                   };
@@ -2096,6 +2058,37 @@ module.exports = function (app) {
         dynamic: 'false',
         rotatedeg: '0'
     });
+
+    const Remarkable = require('remarkable');
+    const md = new Remarkable({html: true, breaks: true, linkify: false});
+
+    const postSummary = (postBody, length) => {
+      if (!postBody) {
+        return '';
+      }
+      // Convert markdown to html
+      let text = md.render(postBody);
+
+      text = text
+        .replace(/(<([^>]+)>)/ig, '') // Remove html tags
+        .replace(/\r?\n|\r/g, ' ') // Remove new lines
+        .replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') // Remove urls
+        .trim()
+        .replace(/ +(?= )/g, ''); // Remove all multiple spaces
+
+      if (length) {
+        // Truncate
+        text = text.substring(0, length);
+      }
+      return text;
+    };
+
+    app.filter('postSummary', function ($sce) {
+        return (postBody, length = 200) => {
+          return $sce.trustAsHtml(postSummary(postBody, length));
+        }
+    });
+
 
     /**
      * directive to create the avatar
