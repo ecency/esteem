@@ -91,6 +91,7 @@
 	"COMMENT": "Hozzászólás",
 	"FOLLOW_TEXT": "Értesítést kapsz, amikor valaki Követ téged vagy Visszavonja a követést!",
 	"MENTIONS": "Említések",
+	"MENTION": "",
 	"MENTIONS_TEXT": "Értesítéseket kapsz, amikor valaki megemlít téged egy posztban/hozzászólásban!",
 	"RESTEEM": "Újrablogolás",
 	"RESTEEM_TEXT": "Értesítést kapsz, amikor valaki resteemeli a posztodat!",
@@ -116,6 +117,7 @@
 	"USERNAME": "Felhasználónév",
 	"CARD_VIEW": "Kártya nézet",
 	"COMPACT_VIEW": "Kompakt nézet",
+	"COMPACT_VIEW_TEXT": "",
 	"SEARCH": "Keresés",
 	"SUBMIT_A_STORY": "Cikk beküldése",
 	"REPLYTO": "Válasz neki",
@@ -240,7 +242,7 @@
 	"CHAIN_TEXT": "Itt tudsz blokkláncot vagy alapértelmezett felületet cserélni.",
 	"CURRENCY": "Pénznem",
 	"CURRENCY_TEXT": "Itt tudod megváltoztatni az alapértelmezett pénznemet. Ebben a pénznemben fogod látni a bejegyzéseid jutalmait.",
-	"ABOUT_11": "<br><b>Funkció lista</b><br>- Férj hozzá egyedi cikkekhez bármilyen témában, ami csak érdekel.<br>- Kerülj közelebb a szerzőkhöz hozzászólásokkal, beszélgetésekkel.<br>- Szavazz bejegyzésekre, hogy megjutalmazd a szerzőket és eközben kurátori jutalmat kapj.<br>- Publikáld a cikkeid és blog posztjaid, tárold őket ingyen és érj el jutalmakat azzal, hogy követőket szerzel és foglalkozol velük.<br>- Írj cikkeket menet közben, ments el több piszkozatot a későbbi publikációhoz.<br>- Könyvjelzőzd a kedvenc cikkeid a későbbi olvasáshoz.<br>- Váltsd át vagy vedd ki a fizetséged.<br>- Küldj pénzt bármely szerzőnek, felhasználónak, barátnak, követőnek, stb.<br>- Kövess érdekes szerzőket, bloggereket.<br>- Keress rá a követőidre és az általad követettekre.<br>- Kapj értesítéseket, hogy kapcsolatban maradhass a követőiddel és a beszélgetésekkel, amikben részt veszel.<br>- Keress cikkeket és szerzőket érdekes címkék/kategóriák alatt.<br>- Szabd személyre a profilodat.<br>- És még sok új funkció várható.<br><br><b>Biztonság</b><br>1. Az alkalmazás soha nem fér hozzá a felhasználó pénzéhez.<br>2. Az alkalmazás kliens-oldali hitelesítést használ, a privát kulcsok helyben vannak tárolva és soha nem kerülnek elküldésre semmilyen szerverre; te vagy a felelős a jelszavaid biztonsági mentéseiért.<br>3. Az alkalmazás egyszerű, tetszetős felhasználói felületet és élményt nyújt<br>4. Az alkalmazás extra biztonsági réteget kínál a PIN-kóddal<br><br>Az eSteem támogatja a Steem és a Golos platformokat.<br>",
+	"ABOUT_11": "",
 	"FOUNDER": "Alapító és Vezető fejlesztő",
 	"ADD_ACCOUNT": "Fiók hozzáadása",
 	"PLATFORM": "Platform",
@@ -251,6 +253,7 @@
 	"ESCROW_FEE": "Letéti díj",
 	"ESCROW_TERMS": "Letéti feltételek",
 	"NIGHT_MODE": "Éjszakai mód",
+	"NIGHT_MODE_TEXT": "",
 	"DAY_MODE": "Nappali mód",
 	"VIEW_CONTEXT": "Mutasd szövegkörnyezetben",
 	"USER_NOTFOUND": "A Felhasználó Nem Található",
@@ -303,5 +306,6 @@
 	"TRANSLATE": "",
 	"TYPE": "",
 	"SHOW": "",
-	"HIDDEN_TEXT": ""
+	"HIDDEN_TEXT": "",
+	"FETCHCOMMENTS": ""
 }

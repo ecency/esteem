@@ -91,6 +91,7 @@
 	"COMMENT": "",
 	"FOLLOW_TEXT": "",
 	"MENTIONS": "",
+	"MENTION": "",
 	"MENTIONS_TEXT": "",
 	"RESTEEM": "",
 	"RESTEEM_TEXT": "",
@@ -116,6 +117,7 @@
 	"USERNAME": "",
 	"CARD_VIEW": "",
 	"COMPACT_VIEW": "",
+	"COMPACT_VIEW_TEXT": "",
 	"SEARCH": "Tefu",
 	"SUBMIT_A_STORY": "",
 	"REPLYTO": "",
@@ -251,6 +253,7 @@
 	"ESCROW_FEE": "",
 	"ESCROW_TERMS": "",
 	"NIGHT_MODE": "",
+	"NIGHT_MODE_TEXT": "",
 	"DAY_MODE": "",
 	"VIEW_CONTEXT": "",
 	"USER_NOTFOUND": "",
@@ -303,5 +306,6 @@
 	"TRANSLATE": "",
 	"TYPE": "",
 	"SHOW": "",
-	"HIDDEN_TEXT": ""
+	"HIDDEN_TEXT": "",
+	"FETCHCOMMENTS": ""
 }

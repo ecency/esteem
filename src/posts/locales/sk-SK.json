@@ -91,6 +91,7 @@
 	"COMMENT": "Komentovať",
 	"FOLLOW_TEXT": "Dostanete upozornenie keď vás niekto začne sledovať, alebo sledovanie zruší!",
 	"MENTIONS": "Zmienky",
+	"MENTION": "",
 	"MENTIONS_TEXT": "Ak vás niekto zmieni v príspevku/komentári, dostanete upozornenie!",
 	"RESTEEM": "Reblog",
 	"RESTEEM_TEXT": "Ak niekto resteemuje váš príspevok, dostanete oznámenie!",
@@ -116,6 +117,7 @@
 	"USERNAME": "Užívateľské meno",
 	"CARD_VIEW": "Pohľad karta",
 	"COMPACT_VIEW": "Kompaktné zobrazenie",
+	"COMPACT_VIEW_TEXT": "",
 	"SEARCH": "Hladať",
 	"SUBMIT_A_STORY": "Vlož článok",
 	"REPLYTO": "Odpovedať",
@@ -240,7 +242,7 @@
 	"CHAIN_TEXT": "Tu môžete zmeniť blockchain alebo predvolenú platformu.",
 	"CURRENCY": "Mena",
 	"CURRENCY_TEXT": "Tu môžete zmeniť svoju predvolenú menu. V tejto mene sa potom budú zobrazovať odmeny za príspevky / komentáre.",
-	"ABOUT_11": "<br><b>Zoznam funkcií</ b><br>- Prístup k jedinečným článkom v každom téme, ktorý sú zaujímavé na čítanie.<br>- Angažovanie sa s autormi komentovaním a diskutovaním tém.<br>- Hlasovaním príspevkov odmeňovať autorov rovnako tak ako získavať kurátorský odmeny.<br>- Publikovať články, príspevky do blogu a hosťovať je zadarmo, dostávať odmeny za publikovanie a získavať stúpencov.<br>- Písať články kdekoľvek a kedykoľvek a mať možnosť uložiť ich do konceptov pre neskoršiu publikáciu.<br>- Uložiť si obľúbené články do záložiek pre neskoršie prečítanie.<br>- Výmena alebo preplatenie vášho zárobku.<br>- Možnosť poslať vaše prostriedky akémukoľvek autorovi, užívateľovi, priateľovi, stúpencom atď.<br>- Nasledovať zaujímavé autori, blogery.<br>- Prehliadať si príspevky stúpencov a autorov, ktoré sledujete.<br>- Dostávať oznámenia, aby ste zostali v kontakte so svojimi stúpencami a diskusiami, v ktorých ste zapojený.<br>- Prehledávať zaujímavé tagy / kategórie článkov a zaujímavé autori.<br>- Prispôsobovať si svoj profil.<br>- A oveľa viac funkcií, ktoré prídu.<br><br><b>Bezpečnosť</b><br>1. Aplikácia nemá prístup ani nedrží finančné prostriedky užívateľov.<br>2. Aplikácia ponúka model zabezpečenia na strane klienta so súkromnými kľúčmi umiestnené lokálne a nikdy ich neodosiela na server, ste sami zodpovední za zálohovanie Vašich hesiel.<br>3. Aplikácia ponúka jednoduché, atraktívny užívateľské rozhranie.<br>4. Aplikácia ponúka ďalšiu vrstvu zabezpečenia pomocou pin-kódu<br><br>eSteem podporuje platformy Steem a Golos. <br>",
+	"ABOUT_11": "",
 	"FOUNDER": "Zakladateľ a hlavný vývojár",
 	"ADD_ACCOUNT": "Pridať účet",
 	"PLATFORM": "Platforma",
@@ -251,6 +253,7 @@
 	"ESCROW_FEE": "Escrow poplatok",
 	"ESCROW_TERMS": "Escrow podmienky",
 	"NIGHT_MODE": "Nočný režim",
+	"NIGHT_MODE_TEXT": "",
 	"DAY_MODE": "Denný režim",
 	"VIEW_CONTEXT": "Zobraziť celý kontext",
 	"USER_NOTFOUND": "Užívateľ sa nenašiel",
@@ -303,5 +306,6 @@
 	"TRANSLATE": "",
 	"TYPE": "",
 	"SHOW": "",
-	"HIDDEN_TEXT": ""
+	"HIDDEN_TEXT": "",
+	"FETCHCOMMENTS": ""
 }

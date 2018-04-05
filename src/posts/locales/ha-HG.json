@@ -91,6 +91,7 @@
 	"COMMENT": "tsokaci",
 	"FOLLOW_TEXT": "Za ka samu sanarwar lokacin da wani ya bi ko ya fasa bin'ka!",
 	"MENTIONS": "ambato",
+	"MENTION": "",
 	"MENTIONS_TEXT": "Za ka samu sanarwar a yayin da wani ya ambace ka a matsayin sa ko cikin tsokacin sa!",
 	"RESTEEM": "Sake yadawa",
 	"RESTEEM_TEXT": "Za ka samu sanarwar lokacin da wani ya sake yada sakonka!",
@@ -116,6 +117,7 @@
 	"USERNAME": "Sunan Mai amfani",
 	"CARD_VIEW": "Hangen Kati",
 	"COMPACT_VIEW": "Hangen duk",
+	"COMPACT_VIEW_TEXT": "",
 	"SEARCH": "Bincika",
 	"SUBMIT_A_STORY": "mika labari",
 	"REPLYTO": "Ba da amsa zuwa ga",
@@ -240,7 +242,7 @@
 	"CHAIN_TEXT": "Anan zaka iya sauya manhajar blockchain ko kuma tsarin asali.",
 	"CURRENCY": "Kudi",
 	"CURRENCY_TEXT": "Anan za'a iya sauya nau'in kudin da ke kan manhajar zuwa salon kudin gida. Duk wani kyauta za'ayi lissafinsa ne ta wannan nau'in kudin.",
-	"ABOUT_11": "Jerin muhimman fasaloli\n1. Samun dama na musamman wajen riskar rubuce-rubuce akan kowane fanni na ilimi.\n2. Yin hulɗa da maruɓuta ta hanyar tofa albarkacin baki ko tattauna ra'ayi.\n3. kada kuri'a akan rubutu don bada kyauta ga marubuci da kuma damar samun damar kyauta a matsayinka na mataimakin marubuci.\n4. Rubuta kasidu, buloga, da sauransu, a kuma ajiye su a kyauta. A kuma sami kyauta ta hanyar hulda da mabiya.\n5. Yi rubutu nan take, ajiye wasu a daftarin saboda turashi nan gaba.\n6. sanya alamar shafi akan rubutu da ya kayatar.\n7. Yi musanya ko kuma cire kudin da aka tara.\n8. tura abinda aka samu zuwa ga mabiya ko marubuta ko duk wani mai amfani da manhaja. \n9. bi hazikan marubuta da yan buloga.\n10. lalubi mabiyanka da marubutan da kake bi cikin sauki.\n11. sami sanarwa na nantake. Kasance tare da mabiyanka don tofa albarkacin baki akan kari.\n12. zabi bangarorin da ke burgeka na rubuce-rubuce ko marubuta.\n13. aiwatarwar kai-da-kai.\n14. da ma wasu fasalolin da za mu zo da su nan gaba.\n\ntsaro\n\n1. Manhaja bata da dama ko ikon taba abin da ke cikin asusu.\n2. Manhaja tayi tanadi na musamman wajen shirya kalmomin sirri da mai asusu zai yi amfani da shi daga bangarensa. kuma ba'a aika kalmomin sirri zuwa wata kafa ko sava.\n3. Manhaja ta yi amfani da tsari mai kyau, wanda zai kayatar sannan kuma ga inganci wajen amfani.\n4. Manhaja ta shimfida wani shinge na tsaro ta hanyar sanya lambar sanarwa ta kai.\n5. manhajar Esteem na goyon bayan manhajar steem da Golos",
+	"ABOUT_11": "",
 	"FOUNDER": "Wanda ya kafa kuma ya gina",
 	"ADD_ACCOUNT": "Kara wani account",
 	"PLATFORM": "Manhaja",
@@ -251,6 +253,7 @@
 	"ESCROW_FEE": "Kudin alkalanci",
 	"ESCROW_TERMS": "Sharuddan alkalancin",
 	"NIGHT_MODE": "Yanayin dare",
+	"NIGHT_MODE_TEXT": "",
 	"DAY_MODE": "Yanayin rana",
 	"VIEW_CONTEXT": "Kalli dukkan rubutu",
 	"USER_NOTFOUND": "Babu mai wannan sunan",
@@ -303,5 +306,6 @@
 	"TRANSLATE": "",
 	"TYPE": "",
 	"SHOW": "",
-	"HIDDEN_TEXT": ""
+	"HIDDEN_TEXT": "",
+	"FETCHCOMMENTS": ""
 }

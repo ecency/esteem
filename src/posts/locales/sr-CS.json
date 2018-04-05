@@ -91,6 +91,7 @@
 	"COMMENT": "Komentar",
 	"FOLLOW_TEXT": "Dobićete notifikaciju kada god neko počne ili prestane da vas prati!",
 	"MENTIONS": "Pominjanja",
+	"MENTION": "",
 	"MENTIONS_TEXT": "Dobićete obaveštenje kada god vas neko pomene u svojoj objavi/komentaru!",
 	"RESTEEM": "Proslijedi",
 	"RESTEEM_TEXT": "Dobićete obaveštenje kada neko proslijedi vašu priču!",
@@ -116,6 +117,7 @@
 	"USERNAME": "Korisničko ime",
 	"CARD_VIEW": "Pregled kartice",
 	"COMPACT_VIEW": "Kompaktan pregled",
+	"COMPACT_VIEW_TEXT": "",
 	"SEARCH": "Pretraga",
 	"SUBMIT_A_STORY": "Objavi priču",
 	"REPLYTO": "Odgovori",
@@ -240,7 +242,7 @@
 	"CHAIN_TEXT": "Ovde možete promeniti blockchain ili zadatu platformu.",
 	"CURRENCY": "Valuta",
 	"CURRENCY_TEXT": "Ovde možete promeniti vašu zadatu valutu. Nagrade na objavama i komentarima će vam biti prikazane u ovoj valuti.",
-	"ABOUT_11": "<br>Lista karakteristika<b></b><br>Pristupi jedinstvenim člancima, u pojedinačnim temama, koje ste zainteresovani da pročitate.<br>Povežite se sa autorima putem komentarisanja, i diskutovanja na temu.<br>Glasajte za objave kako bi nagradili autore, i zaradili nagradu za prepoznavanje kvalitetnog sadržaja.<br>Objavljuj svoje članke, blog objave i promoviši ih besplatno, i zaradi nagrade putem angažovanja i sticanja pratioca.<br>Piši članke \"u pokretu\", sačuvaj nekoliko nacrta objave za odloženu objavu.<br>Omiljene članke sačuvaj za kasnije čitanje putem njihovog obeležavanja.<br>Razmeni ili unovči svoju zaradu.<br>Pošalji svoja sredstva bilo kojem autoru ili korisniku, prijateljima, pratiocima, i sl.<br>Prati zanimljive autore, blogere.<br>Potraži svoje pratioce i autore koje pratiš.<br>Primaj obaveštenja i ostani u kontaktu sa svojim pratiocima i diskusijama u kojima si uključen.<br>Potraži zanimljive oznake/kategorije članaka, autora.<br>Predstavite se putem svog profila.<br>Stiže mnoštvo novih karakteristika. <br><br><b>Bezbednost</b><br>1. Aplikacija nikad ne pristupa sredstvima niti ih zadržava.<br>2. Aplikacija nudi model sigurnosti usmeren ka korisniku, sa privatnim ključevima koji su čuvani lokalno i nikad se ne šalju na druge servere, vi ste odgovorni za čuvanje svojih lozinki.<br>3. Aplikacija nudi jednostavan, i privlačan korisnički pristup i doživljaj<br>4. Aplikacija nudi dodatan nivo bezbednosti uz korišćenje pin-koda.<br><br>eSteem je podržan od strane Steem i Golos platformi.<br>",
+	"ABOUT_11": "",
 	"FOUNDER": "Osnivač i glavni programer",
 	"ADD_ACCOUNT": "Dodaj račun",
 	"PLATFORM": "Platforma",
@@ -251,6 +253,7 @@
 	"ESCROW_FEE": "Escrow taksa",
 	"ESCROW_TERMS": "Escrow zahtevi",
 	"NIGHT_MODE": "Noćni režim",
+	"NIGHT_MODE_TEXT": "",
 	"DAY_MODE": "Dnevni režim",
 	"VIEW_CONTEXT": "Pogledaj ceo kontekst",
 	"USER_NOTFOUND": "Korisnik nije pronađen",
@@ -303,5 +306,6 @@
 	"TRANSLATE": "",
 	"TYPE": "",
 	"SHOW": "",
-	"HIDDEN_TEXT": ""
+	"HIDDEN_TEXT": "",
+	"FETCHCOMMENTS": ""
 }

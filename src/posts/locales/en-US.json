@@ -91,7 +91,7 @@
 	"COMMENT": "Comment",
 	"FOLLOW_TEXT": "You will get a notification when someone Follows or Unfollows you!",
 	"MENTIONS": "Mentions",
-	"MENTION": "Mention",
+	"MENTION": "",
 	"MENTIONS_TEXT": "You will get a notification when someone mentions you in their post or comment!",
 	"RESTEEM": "Reblog",
 	"RESTEEM_TEXT": "You will get a notification when someone re-blogs your post!",
@@ -117,7 +117,7 @@
 	"USERNAME": "Username",
 	"CARD_VIEW": "Card view",
 	"COMPACT_VIEW": "Compact view",
-	"COMPACT_VIEW_TEXT": "Allows you to have better control over your network data usage by changing view compact without images.",
+	"COMPACT_VIEW_TEXT": "",
 	"SEARCH": "Search",
 	"SUBMIT_A_STORY": "Submit a story",
 	"REPLYTO": "Reply to",
@@ -242,7 +242,7 @@
 	"CHAIN_TEXT": "You can change blockchain or default platform here.",
 	"CURRENCY": "Currency",
 	"CURRENCY_TEXT": "You can change your default currency here. You will see the post/comment reward value in this currency.",
-	"ABOUT_11": "<br><b>Feature list</b><br>- Access unique articles in any subject that you are interested in.<br> - Engage with authors by discussing topics through comments. <br>- Voting for posts rewards authors as well as earning curation rewards. <br>- Publish your articles, blog posts and host them for free and earn rewards by engaging and gain followers. <br>- Write articles on go and save multiple drafts of posts for later publication. <br>- Bookmark your favorite articles to read later. <br>- Exchange or cash out your earnings. <br>- Send your funds to any authors, users, friends, followers, etc.<br>- Follow interesting authors and bloggers.<br> - Search the followers and authors you are following. <br>- Get notifications to stay in touch with your followers and discussions you are involved in.<br>- Search for interesting tags/categories of articles and authors.<br> - Personalize your profile. <br>- Many more features to come. <br><br><b>Security</b><br>1. The eSteem app never accesses or holds onto user funds. <br>2. The app offers a client-side security model with private keys hosted locally and never sent to any servers. You are responsible for backing up any passwords. <br>3. The app offers a simple, attractive interface with a seamless user experience.<br>4. eSteem offers an extra layer of security with a pin-code<br><br>",
+	"ABOUT_11": "",
 	"FOUNDER": "Founder and Lead Developer",
 	"ADD_ACCOUNT": "Add account",
 	"PLATFORM": "Platform",
@@ -253,7 +253,7 @@
 	"ESCROW_FEE": "Escrow fee",
 	"ESCROW_TERMS": "Escrow terms",
 	"NIGHT_MODE": "Night Mode",
-    "NIGHT_MODE_TEXT": "Night mode, gives you darker color theme so you can continue to enjoy surfing during night or in low light environment without hurting your eye sight.",
+	"NIGHT_MODE_TEXT": "",
 	"DAY_MODE": "Day mode",
 	"VIEW_CONTEXT": "View the full context",
 	"USER_NOTFOUND": "User not found",
@@ -306,5 +306,6 @@
 	"TRANSLATE": "Translate",
 	"TYPE": "Type",
 	"SHOW": "Show",
-	"HIDDEN_TEXT": "This post was hidden due to low ratings"
+	"HIDDEN_TEXT": "This post was hidden due to low ratings",
+	"FETCHCOMMENTS": "Fetch comments"
 }

@@ -91,6 +91,7 @@
 	"COMMENT": "Comentar",
 	"FOLLOW_TEXT": "Rebrà una notificació quan algú et segueixi o et deixi de seguir!",
 	"MENTIONS": "Mencions",
+	"MENTION": "",
 	"MENTIONS_TEXT": "Rebrà una notificació quan algú el mencioni al seu comentari o publicació!",
 	"RESTEEM": "Reblog",
 	"RESTEEM_TEXT": "Rebrà la notificació quan algú responguí al seu post!",
@@ -116,6 +117,7 @@
 	"USERNAME": "Nom d'usuari",
 	"CARD_VIEW": "Veure targeta",
 	"COMPACT_VIEW": "Vista compacta",
+	"COMPACT_VIEW_TEXT": "",
 	"SEARCH": "Cercar",
 	"SUBMIT_A_STORY": "Enviar una publicació",
 	"REPLYTO": "Respondre a",
@@ -240,7 +242,7 @@
 	"CHAIN_TEXT": "Aquí pot canviar la blockchain o la plataforma per defecte",
 	"CURRENCY": "Divisa",
 	"CURRENCY_TEXT": "Aquí pot cambiar la seva divisa per defecte. Veurà el valor de la recompensa del post/comentari en aquesta divisa.",
-	"ABOUT_11": "<br><b>Llista de característiques</b> <br>-Accedeix a artícles únics de qualsevol tema en què estigui interessat <br> Comparteixi amb els autors comentant, discutint temes. <br> Votar els articles recompensa a l'autor tant com guanya recompenses per curació de continguts. <br> Publiqui els seus articles, notes de bloc, allotja gratuïtament i guanya recompenses per atreure i guanyar seguidors. <br> Escrigui articles en viu, així com també guardi múltiples esborranys de l'article per a una futura publicació. <br> Marca les teves publicacions preferides per llegir-les més tard. <br> Intercanvia o treu diners dels teus guanys <br> Enviï fons a qualsevol autor o usuari, amics, seguidors, etc. <br> Segueixi autors interessants, bloggers. <br> Busqui els seus seguidors i autors que segueixes . <br> Rep notificacions per mantenir-ste en contacte amb els seus seguidors i amb les discussions en les que estigui involucrat. <br> Busqui categories / etiquetes d'articles i autors. <br> Personalitza el teu perfil. <br> Vindràn moltes més funcionalitats <b> Seguretat </ b> de 1. L'aplicació mai accedirà o mantindrà fons d'usuaris. de 2. L'aplicació ofereix un model de seguretat costat-client, amb claus privades allotjades localment que mai seràn enviades a cap servidor, vostè és responsable de recolzar les seves contrasenyes. De 3. L'aplicació ofereix una experiència de l'usuari simple i atractiva, a través de la seva interfície. <br> 4. L'aplicació ofereix una capa extra de seguretat amb un codi-pin <br><br> qTé un suport de eSteem suporta Steem i Plataformes Golos. <br>",
+	"ABOUT_11": "",
 	"FOUNDER": "Fundador i desenvolupador principal",
 	"ADD_ACCOUNT": "Afegir compte",
 	"PLATFORM": "Plataforma",
@@ -251,6 +253,7 @@
 	"ESCROW_FEE": "Quota del dipòsit",
 	"ESCROW_TERMS": "Termes de garantia",
 	"NIGHT_MODE": "Mode nocturn",
+	"NIGHT_MODE_TEXT": "",
 	"DAY_MODE": "Mode diurn",
 	"VIEW_CONTEXT": "Veure el context complet",
 	"USER_NOTFOUND": "No s'ha trobat l'usuari",
@@ -303,5 +306,6 @@
 	"TRANSLATE": "",
 	"TYPE": "",
 	"SHOW": "",
-	"HIDDEN_TEXT": ""
+	"HIDDEN_TEXT": "",
+	"FETCHCOMMENTS": ""
 }

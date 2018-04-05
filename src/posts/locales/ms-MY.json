@@ -91,6 +91,7 @@
 	"COMMENT": "Komen",
 	"FOLLOW_TEXT": "Anda akan mendapatkan pemberitahuan apabila seseorang mengikuti atau ikut anda!",
 	"MENTIONS": "Menyebut",
+	"MENTION": "",
 	"MENTIONS_TEXT": "Anda akan mendapat pemberitahuan apabila seseorang menyebut anda di post/komen!",
 	"RESTEEM": "Reblog",
 	"RESTEEM_TEXT": "Anda akan mendapat pemberitahuan apabila seseorang reblog post anda!",
@@ -116,6 +117,7 @@
 	"USERNAME": "Nama Pengguna",
 	"CARD_VIEW": "Kad paparan",
 	"COMPACT_VIEW": "Paparan yang padat",
+	"COMPACT_VIEW_TEXT": "",
 	"SEARCH": "Carian",
 	"SUBMIT_A_STORY": "Hantar cerita",
 	"REPLYTO": "Balas kepada",
@@ -240,7 +242,7 @@
 	"CHAIN_TEXT": "Di sini anda boleh menukar platform blockchain atau lalai.",
 	"CURRENCY": "Matawang",
 	"CURRENCY_TEXT": "Di sini anda boleh menukar Mata Wang lalai anda. Anda akan melihat post/komen ganjaran nilai Mata Wang ini.",
-	"ABOUT_11": "<br><b>Senarai ciri-ciri</b> <br>akses unik artikel dalam mana-mana subjek anda berminat membaca. <br> -Melibatkan diri dengan penulis oleh mengulas, membincangkan topik. <br>-Pengundian bagi jawatan kepada pengarang ganjaran serta mendapat ganjaran curation. <br>-Siarkan artikel, posting blog anda dan host mereka secara percuma dan mendapat ganjaran dengan melibatkan dan mendapat pengikut. <br>Tulis artikel mengenai pergi, simpan beberapa Draf jawatan untuk penerbitan kemudian. <br>-Bookmark artikel kegemaran membaca kemudian. <br>-Pertukaran atau Wang Tunai daripada pendapatan anda. <br>Menghantar dana anda kepada mana-mana pengarang atau pengguna, rakan-rakan, pengikut, dan lain-lain <br>-ikut penulis menarik, Blogger. <br> -Cari pengikut dan penulis anda mengikuti anda. <br>-Dapatkan pemberitahuan untuk kekal berhubung dengan pengikut dan perbincangan anda anda akan terlibat in. <br>-Cari label/kategori menarik artikel, pengarang. <br> -Memperibadikan profil anda. <br>-Banyak lebih banyak ciri untuk datang. <br><br><b>Keselamatan</b> <br>1. Aplikasi tidak pernah mencapai atau memegang wang pengguna. <br>2. aplikasi menawarkan model Keselamatan-klien, dengan kunci peribadi yang dihoskan dalam negara dan tidak pernah dihantar ke mana-mana pelayan, anda bertanggungjawab untuk menyandarkan kata laluan anda. <br>3. aplikasi menawarkan antara muka pengguna yang mudah, menarik dan pengalaman <br>4. Aplikasi menawarkan tambahan lapisan Keselamatan dengan harga <br><br>kod pin menyokong platform Steem dan Golos. <br>",
+	"ABOUT_11": "",
 	"FOUNDER": "Pengasas dan pemaju utama",
 	"ADD_ACCOUNT": "Tambah akaun",
 	"PLATFORM": "Platform",
@@ -251,6 +253,7 @@
 	"ESCROW_FEE": "Yuran escrow",
 	"ESCROW_TERMS": "Terma-terma escrow",
 	"NIGHT_MODE": "Mod Malam",
+	"NIGHT_MODE_TEXT": "",
 	"DAY_MODE": "Mod hari",
 	"VIEW_CONTEXT": "Lihat konteks penuh",
 	"USER_NOTFOUND": "Pengguna yang tidak dijumpai",
@@ -303,5 +306,6 @@
 	"TRANSLATE": "",
 	"TYPE": "",
 	"SHOW": "",
-	"HIDDEN_TEXT": ""
+	"HIDDEN_TEXT": "",
+	"FETCHCOMMENTS": ""
 }

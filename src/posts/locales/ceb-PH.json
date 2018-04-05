@@ -91,6 +91,7 @@
 	"COMMENT": "Koment",
 	"FOLLOW_TEXT": "Makadawat ka pahibalo kung naay mosunod o dili mosunod kanimo!",
 	"MENTIONS": "Mga nahisgot",
+	"MENTION": "",
 	"MENTIONS_TEXT": "Makadawat ka pahibalo kon adunay usa ka tawo nga mohisgot kanimo sa ilang post / komento!",
 	"RESTEEM": "Iblog usab",
 	"RESTEEM_TEXT": "Makadawat ka ug pahibalo kung naay mo usab ug blog sa imong post!",
@@ -116,6 +117,7 @@
 	"USERNAME": "Username",
 	"CARD_VIEW": "Pagtan-aw ha kard",
 	"COMPACT_VIEW": "Kompak na pagtan-aw",
+	"COMPACT_VIEW_TEXT": "",
 	"SEARCH": "Mangita",
 	"SUBMIT_A_STORY": "Magpasa ug istorya",
 	"REPLYTO": "Balos kan",
@@ -240,7 +242,7 @@
 	"CHAIN_TEXT": "Dinhi mahimo mong usbon ang blockchain o default nga plataporma.",
 	"CURRENCY": "Currency",
 	"CURRENCY_TEXT": "Dinhi mahimo nimo mausab ang imong default currency. Makita nimo ang ganti nga kantidad sa post / comment kana nga currency.",
-	"ABOUT_11": "<br><b>Listahan sa Feature</b><br>- I-access ang mga talagsaong artikulo sa bisan unsang hilisgutan nga interesado nimo nga basahon.<br>- Makig-uban sa mga tigsulat pinaagi sa pagkomento, paghisgot sa mga hilisgutan. Ingon man usab nga makadawat og ganti nga kuration.<br>- Pag-imprinta sa imong mga artikulo, mga post sa blog ug ibutang kini nga libre ug makaangkon og mga ganti pinaagi sa pagdani ug pag-angkon sa mga sumusunod.<br>- Pagsulat og mga artikulo sa paglakaw, pagtipig daghang mga hulagway sa post alang sa ulahing publikasyon.<br>- Pagmarka sa mga paborito nga mga artikulo nga mabasa sa ulahi.<br>- Pagbalhin o ibayad ang imong kinitaan.<br>- Ipadala ang imong mga pundo sa bisan unsang mga tagsulat o tiggamit, mga higala, mga sumusunod, ug uban pa.<br>- Sunda ang mga nakapaikag nga mga awtor, bloggers.<br>- Susiha ang imong mga sumusunod ug mga tigsulat nga imong gisunod.<br>- Pagkuha og mga pahibalo aron makontak ang imong mga sumusunod ug mga panaghisgutan nga imong nalangkit.<br>- Pagpangita sa mga makaiikag nga tag / kategoriya sa mga artikulo, mga awtor. <br>- Pag-personalize sa imong profile.<br>- Daghang dugang nga bahin ang moabut.<br> <br><b>Security</b><br>1. Ang app dili gayud maka-access o maghupot sa mga pundo sa user. <br>2. Ang App nagtanyag sa modelo sa seguridad sa kliyente, nga adunay pribadong mga susi nga gidumala sa lokal ug wala ipadala ngadto sa bisan unsang mga server, responsable mo sa pagpaluyo sa imong mga password.<br>3. Ang app nagtanyag sa yano, madanihon nga mga interface sa gumagamit ug mga kasinatian<br>4. Ang App nagtanyag og dugang nga layer sa seguridad nga adunay pin-code<br><br>ang eSteem nagsuporta sa mga plataporma sa Steem ug Golos.<br>",
+	"ABOUT_11": "",
 	"FOUNDER": "Ang nagtukod ug ang nanguna na nagbuhat",
 	"ADD_ACCOUNT": "Pagdugang account",
 	"PLATFORM": "Plataporma",
@@ -251,6 +253,7 @@
 	"ESCROW_FEE": "Escrow fee",
 	"ESCROW_TERMS": "Escrow terms",
 	"NIGHT_MODE": "Night mode",
+	"NIGHT_MODE_TEXT": "",
 	"DAY_MODE": "Day mode",
 	"VIEW_CONTEXT": "Tan-awa ang tibuok nga konteksto",
 	"USER_NOTFOUND": "Ang User Wala Makit-an",
@@ -303,5 +306,6 @@
 	"TRANSLATE": "Paghubad",
 	"TYPE": "Isulat",
 	"SHOW": "Ipakita",
-	"HIDDEN_TEXT": "Kini nga post gitago tungod sa ubos nga rating"
+	"HIDDEN_TEXT": "Kini nga post gitago tungod sa ubos nga rating",
+	"FETCHCOMMENTS": ""
 }

@@ -91,6 +91,7 @@
 	"COMMENT": "Comentează",
 	"FOLLOW_TEXT": "Veţi primi notificare atunci când cineva urmează sau Unfollow tine!",
 	"MENTIONS": "Menționări",
+	"MENTION": "",
 	"MENTIONS_TEXT": "Veţi primi notificări când cineva menţionează-le în lor post/comentariu!",
 	"RESTEEM": "Reblog",
 	"RESTEEM_TEXT": "Vei primi notificări cand cineva iți dă resteem la post!",
@@ -116,6 +117,7 @@
 	"USERNAME": "Nume de utilizator",
 	"CARD_VIEW": "Vezi carte",
 	"COMPACT_VIEW": "Vezi compact",
+	"COMPACT_VIEW_TEXT": "",
 	"SEARCH": "Caută",
 	"SUBMIT_A_STORY": "Crează un post nou",
 	"REPLYTO": "Răspunde lui",
@@ -240,7 +242,7 @@
 	"CHAIN_TEXT": "Aici puteti schimba blockchainul sau platforma implicita.",
 	"CURRENCY": "Valuta",
 	"CURRENCY_TEXT": "Aici puteti schimba moneda implicita. Veţi vedea valoarea recompensei, posta/comenta în această valută.",
-	"ABOUT_11": "<br><b>Lista caracteristici</b> <br>-Acceseasa articole unice de subiecte diferite. <br>Intra in conversatie cu autori diferiti prin discutarea si cometarea topicurilor. <br>-Voteaza postari petru castiguri impartite intre autor si cititor. <br>-Publica articole, blog-uri, postari gratuit si castiga bani adunand urmaritori. <br>-Scrie articole sau salveaza-le ca ciorne petru a le publica mai tarziu. <br>-Marcheaza-ti diferite articole pentru a le citi mai tarziu. <br>-Schimba sau extrage-ti castigurile. <br>-Trimite fonduri altor autori urmaritori sau prieteni. <br>-Urmareste bloguri interesante. <br> -Cauta autori preferati si urmareste-le publicarile. <br>-Primeste notificari pentru a ramane in legatura cu prietenii sau autorii tai preferati si pentru a nu rata nici o conversatie <br>-Cauta categorii/autori interesanti sau articole interesante. <br> -Personaliza-portofoliul. <br>-Vor urma si mai multe facilitati. <br><br><b>Securitate</b> <br>1. Aplicatia nu acceseaza sau retine fondurile utilizatorilor. <br>2. aplicatia oferă un model de securitate clientilor, cu cheile private găzduite la nivel local care nu sunt trimise la un server, insemnand ca esti responsabil pentru contul/parola ta. <br>3. aplicatia oferă o interfata simpla si atractiva utilizatorului <br>4. Aplicatia oferă nivel suplimentar de securitate cu un cod pin <br><br>eSteem suporta platformele Steem şi Golos. <br>",
+	"ABOUT_11": "",
 	"FOUNDER": "Fondator si dezvoltator principal",
 	"ADD_ACCOUNT": "Adaugare Cont",
 	"PLATFORM": "Platforma",
@@ -251,6 +253,7 @@
 	"ESCROW_FEE": "Taxa Custodie",
 	"ESCROW_TERMS": "Termeni Custodie",
 	"NIGHT_MODE": "Mod Noapte",
+	"NIGHT_MODE_TEXT": "",
 	"DAY_MODE": "Modul de zi",
 	"VIEW_CONTEXT": "Vezi contextul complet",
 	"USER_NOTFOUND": "Utilizator negăsit",
@@ -303,5 +306,6 @@
 	"TRANSLATE": "",
 	"TYPE": "",
 	"SHOW": "",
-	"HIDDEN_TEXT": ""
+	"HIDDEN_TEXT": "",
+	"FETCHCOMMENTS": ""
 }
