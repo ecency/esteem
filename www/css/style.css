@@ -14,25 +14,24 @@
 
 .theme-dark .item, .theme-dark p, .theme-dark div, .theme-dark .item-content, .theme-dark span, .theme-dark .reputation, .theme-dark input:not([type="range"]), .theme-dark textarea, .theme-dark select {
   color: #aaa;
-  background: #444;
+  background: #121617;
 }
 
 .theme-dark .card {
-  background: #444;
+  background: #121617;
 }
 
 .theme-dark h2.postTitle {
-  background: #444;
+  background: #121617;
   color: #aaa;
 }
 
-
 .theme-dark .bar {
-  background-color: #444;
+  background-color: #121617;
 }
 
 .scroll-content.theme-dark {
-  background: #444;
+  background: #121617;
   color: #aaa; 
 }
 .theme-dark .tag {
@@ -40,7 +39,7 @@
   color: #000;
 }
 .theme-dark .tag::before {
-  background: #444;
+  background: #121617;
   border-radius: 10px;
   box-shadow: inset 0 1px rgba(0, 0, 0, 0.25);
   content: '';
@@ -52,7 +51,7 @@
 }
 
 .theme-dark .tag::after {
-  background: #444;
+  background: #121617;
   border-bottom: 13px solid transparent;
   border-left: 10px solid #aaa;
   border-top: 13px solid transparent;
@@ -902,10 +901,16 @@ select-input input {
 .settings i {
   font-size: 18px!important;
 }
-.settings .row .slabel {
-
+.settings .row .col.pull-right {
+ max-width: 100%;
+ padding-right: 0;
 }
-
+.settings select-input {
+  padding-bottom: 5px;
+}
+.transferTo {
+  padding-left: 15px;
+}
 #floating-button {
     bottom: 20px;
     position: fixed;
@@ -1284,7 +1289,9 @@ select-input input {
 .menuPopoverLog {
   height: 160px!important;
 }
-
+.extraMenu.popover{
+  height: 120px!important;
+}
 .detailedPost {
   width: 80%!important;
 }
@@ -1793,11 +1800,11 @@ img {
 }
 .postTitle {
   margin-top: 0;
-  padding-left: 18px;
   font-size: 11pt;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  margin-bottom: 5px!important;
 }
 .reBlogged {
   font-size: 9pt;
@@ -1806,9 +1813,6 @@ img {
   font-size: 20px;
 }
 .bar .button.button-icon .icon:before {
-  font-size: 20px;
-}
-.bar .button.back-button .icon:before {
   font-size: 20px;
 }
 .item.postList {
@@ -1823,9 +1827,47 @@ img {
    -webkit-line-clamp: 2; /* number of lines to show */
    line-height: 1.4em;        /* fallback */
    max-height: 3.6em;       /* fallback */
-   color: #666;
+   color: #333;
+}
+a.postNumbers {
+  padding-right: 10px;
+  color: #888;
+  text-decoration: none; }
+  a.postNumbers:hover {
+    text-decoration: none; }
+  a.postNumbers:last-child {
+    padding-right: 0; }
+
+.postNumbers {
+  color: #888;
+}
+.icon.ion-ios-more {
+  font-size: 24px;
 }
 .item-body .row {
   padding-left: 0;
   margin-left: 0;
+}
+.list.card {
+  padding-bottom: 0;
+  margin-bottom: 0!important;
+  margin-top: 10px;
+}
+.item-body.ibody {
+  padding-top: 0;
+}
+.mainMenu .icon {
+  color: #888;
+}
+.extra-menu .icon {
+  color: #888;
+}
+.mainMenu .item {
+  font-weight: 500;
+}
+.extra-menu .item {
+  font-weight: 500;
+}
+.bar .button {
+  font-size: 15px!important;
 }

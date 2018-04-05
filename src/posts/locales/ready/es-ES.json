@@ -283,5 +283,8 @@
 	"MOVE_TO_DRAFT": "Mover a borradores",
 	"POWER_DOWN_SCHEDULE": "La próxima disminución de poder es",
 	"LANGUAGE": "Idioma",
-	"INVITES": "Invita"
+	"INVITES": "Invita",
+	"POWER_DOWN": "Transferir a STEEM",
+	"POWER_UP": "Transferir a SP",
+	"HIDDEN_TEXT": "Esta publicación se ha ocultado debido sus bajas calificaciones"
 }

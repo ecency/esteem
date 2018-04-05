@@ -1357,7 +1357,7 @@ module.exports = function (app) {
         selectOptions: '='
       },
       require: '?^ngModel',
-      template: '<div class="item-input item-icon-right" style="width:100%;"><input ng-model="currentInput" type="text" ng-change="socketChange(currentInput)" ng-click="showOptions()"><i class="icon ion-android-arrow-dropdown" ng-click="showOptions()"></i></div>',
+      template: '<div class="item-input" style="width:100%;"><input ng-model="currentInput" type="text" ng-change="socketChange(currentInput)" on-hold="showOptions()"></div>',
       link: function(scope, element, attrs) {
         scope.options = {
           selected: ''

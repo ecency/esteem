@@ -70,38 +70,91 @@
     <div class="has-mysubheader" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
         <div class="box blue" ng-if="active!='wallet'||active!='permissions'">
           <p class="padding" ng-if="nonexist">{{::'NOTHING_HERE'|translate}}</p>
-          <ion-list>
-            <!--<div ng-repeat="(key, playlist) in profile" class="item wrap" on-tap="open(playlist)">
-            <h3 class="bold">{{playlist.root_title}}</h3>
-            <span ng-bind-html="playlist.body.substring(0,100)|parseUrl"></span>
-            </div>
-            https://imgp.golos.io/0x0/https://steemitimages.com/0x0/0x0/
 
-            next_vesting_withdrawal:"2017-06-27T03:50:12"
-            next_vesting_withdrawal:"1969-12-31T23:59:59"
-
-            -->
-            <div class="item" ng-repeat="playlist in data.profile | orderBy:'-created' track by $index" ng-class="{'item-thumbnail-left': playlist.json_metadata.indexOf('image')>-1}">
-              <!--ng-class="{'item-thumbnail-left': playlist.json_metadata.image}" <img check-image on-tap="open(playlist)" ng-if='playlist.json_metadata.indexOf("image")>-1' ng-src="{{playlist|catchimage}}" onerror="this.src='img/noimage.png'"/>-->
-              <img check-image on-tap="open(playlist)" ng-if='playlist.json_metadata.indexOf("image")>-1' ng-src="{{playlist|catchimage}}" onerror="this.src='img/noimage.png'"/>
-                <span class="item-myavatarsmall"><img ion-img-cache ng-src="https://steemitimages.com/u/{{playlist.author}}/avatar">&nbsp;<span>{{playlist.author}}&nbsp;<div class="reputation">{{playlist.author_reputation|reputation|number:0}}</div></span><span ng-if="playlist.author!==user.username && active!=='recent-replies'">&nbsp; <i class="icon ion-arrow-return-right"></i></span></span>
-                <div on-tap="open(playlist)">
-                <div class="wrap">
-                  <h2><i class="fa fa-money positive" ng-if="playlist.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="playlist.percent_steem_dollars === 0"></i>{{playlist.root_title}}</h2>
-                </div>
-                <p ng-bind-html="playlist|parseUrl|limitTo:20|ldots" ng-if="active!='blog'"></p>
-                <div class="postdetails"><i class="icon ion-android-time"></i>&nbsp;{{playlist.created|timeago}}</div>
-                </div>
-                <div class="row gray profile">
-                  <div class="col"><ion-spinner ng-if="playlist.invoting"></ion-spinner>
-                  <i class="fa fa-chevron-circle-up fa-lg" on-tap="upvotePost(playlist)" ng-if="!playlist.upvoted" on-hold="openSlider($event, playlist)"></i><i class="fa fa-chevron-circle-up fa-lg positive" on-tap="unvotePost(playlist)" ng-if="playlist.upvoted"></i>&nbsp;&nbsp;<span on-tap="$root.openInfo(playlist)">{{playlist.net_votes}}</span>&nbsp;&nbsp;
-                   <!--<i class="fa fa-chevron-circle-down fa-lg" on-tap="downvotePost(playlist)" ng-if="!playlist.downvoted"></i><i class="fa fa-chevron-circle-down fa-lg positive" on-tap="unvotePost(playlist)" ng-if="playlist.downvoted"></i>--></div>
-                  <div class="col" on-tap="openTooltip($event,playlist)">&nbsp; <b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="playlist.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{playlist | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="playlist.max_accepted_payout.split(' ')[0] !== '0.000'">{{playlist | sumPostTotal:$root.$storage.currencyRate | number}}</span></div>
-                  <div class="col">&nbsp; <i class="icon ion-chatbubbles"></i>&nbsp;{{playlist.children}}</div>
-                </div>
+          <div ng-if="$root.$storage.view=='compact' && data.profile.length>0">
+            <div ng-repeat="d in data.profile | orderBy:'-created' track by d.id">
+               <div class="list" >
+            <div class="item item-avatar postList" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
+                <img class="round-avatar-title" ng-src="https://steemitimages.com/u/{{d.author}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'" />
+                  <div class="row postdetails">
+                    <div class="col"><b><a href="#/app/profile/{{d.author}}">{{d.author}}</a></b>&nbsp;<div class="reputation">{{::d.author_reputation|reputation|number:0}}</div><span ng-if="d.author!==user.username && active!=='recent-replies'">&nbsp; 
+                    <i class="icon ion-arrow-return-right"></i>
+                  </span><span ng-if="d.author!==user.username && active!=='recent-replies'" class="reBlogged">
+                {{'REBLOG'|translate}}
+              </span><p>{{d.created|timeago}}&nbsp;&middot;&nbsp;<a href on-tap="openTag(d.category, 5)">#{{::d.category|detransliterate:false}}</a></p>
+                    </div>
+                  </div>
             </div>
-          </ion-list>
-          <ion-infinite-scroll on-infinite="loadmore()" ng-if="moreDataCanBeLoaded()" distance="1%"></ion-infinite-scroll>
+              <div class="item-body ibody">
+                <h2 class="postTitle" on-tap="open(d)">
+                  <i class="fa fa-money positive" ng-if="d.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="d.percent_steem_dollars === 0"></i> {{::d.title}}
+                </h2>
+                <div class="postSummary" on-tap="open(d)">{{d.body | postSummary}}</div>
+                <div class="row">
+                 <div class="col">
+                  <span ng-if="!$root.voiceOver">
+                  <a href="#" class="postNumbers" ng-if="!d.upvoted" on-tap="votePost(d)" on-hold="openSlider($event, d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!d.invoting"></i></a><a href="#" class="postNumbers" ng-if="d.upvoted" on-tap="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!d.invoting"></i></a> <span class="postNumbers" on-tap="openTooltip($event,d)"><b>{{::$root.$storage.currency|getCurrencySymbol}}</b>&nbsp;<span ng-if="d.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{d | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="d.max_accepted_payout.split(' ')[0] !== '0.000'">{{d | sumPostTotal:$root.$storage.currencyRate | number}}</span></span></span>
+                  <span ng-if="$root.voiceOver">
+                  <a href="#" class="postNumbers" ng-if="!d.upvoted" ng-click="votePost(d)" on-hold="openSlider($event, d)"><ion-spinner ng-if="d.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!d.invoting"></i>{{::translations.upvote}}</a><a href="#" class="postNumbers" ng-if="d.upvoted" on-tap="unvotePost(d)"><ion-spinner ng-if="d.invoting"></ion-spinner>
+                    <i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!d.invoting"></i>{{::translations.unvote}}</a>&nbsp;<span class="postNumbers" on-tap="openTooltip($event,d)"><b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="d.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{d | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="d.max_accepted_payout.split(' ')[0] !== '0.000'">{{d | sumPostTotal:$root.$storage.currencyRate | number}}</span></span></span>
+                  </div>
+                  <div class="col col-25 tright" on-tap="$root.openInfo(d)">
+                  <a href="#" class="postNumbers" on-tap="$root.openInfo(d)"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
+                  </div>
+                  <div class="col col-25 tright">
+                  <a href="#" class="postNumbers"><i class="icon ion-chatbubbles"></i>&nbsp;{{::d.children}}</a>
+                  </div>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div ng-if="$root.$storage.view=='card' && data.profile.length>0" class="">
+          <div ng-repeat="ds in data.profile | orderBy:'-created' track by ds.id" class="">
+               <div class="list card" ng-if="ds" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
+
+            <div class="item item-avatar postList" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
+              <img class="round-avatar-title" ng-src="https://steemitimages.com/u/{{ds.author}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"  />
+                <div class="row postdetails">
+                  <div class="col"><b><a href="#/app/profile/{{ds.author}}">{{ds.author}}</a></b>&nbsp;<div class="reputation">{{::ds.author_reputation|reputation|number:0}}</div><span ng-if="ds.author!==user.username && active!=='recent-replies'">&nbsp; 
+                    <i class="icon ion-arrow-return-right"></i>
+                  </span><span ng-if="ds.author!==user.username && active!=='recent-replies'" class="reBlogged">
+                {{'REBLOG'|translate}}
+              </span><p class="postNumbers">{{ds.created|timeago}}&nbsp;&middot;&nbsp;<a href on-tap="openTag(ds.category, 5)">#{{::ds.category|detransliterate:false}}</a></p></div></div>
+                  
+            </div>
+            <div class="item-body ibody"><!--ds.json_metadata.image[0]-->
+                <center><img class="full-image" check-image ng-src="{{ds|catchimage}}" ng-if="ds.json_metadata.indexOf('nsfw')==-1 && active=='blog'" on-tap="open(ds)" />
+                <img class="full-image" ng-src="img/nsfwimage.png" on-tap="open(ds)" ng-if="$root.$storage.nsfw && ds.json_metadata.indexOf('nsfw')>-1 && active=='blog'" /></center>
+                <h2 class="postTitle" on-tap="open(ds)">
+                <i class="fa fa-money positive" ng-if="ds.promoted.split(' ')[0] !== '0.000'"></i> <i class="fa fa-fire positive" ng-if="ds.percent_steem_dollars === 0"></i> {{::ds.title}}</h2>
+                <div class="postSummary" on-tap="open(ds)">{{ds.body | postSummary}}</div>
+                <div class="row">
+                  <div class="col">
+                    <span ng-if="!$root.voiceOver">
+                    <a href="#" class="postNumbers" ng-if="!ds.upvoted" ng-click="votePost(ds)" on-hold="openSlider($event, ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!ds.invoting"></i></a><a href="#" class="postNumbers" ng-if="ds.upvoted" on-tap="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!ds.invoting"></i></a>&nbsp;<span class="postNumbers" on-tap="openTooltip($event,ds)"><b>{{::$root.$storage.currency|getCurrencySymbol}}</b>&nbsp;<span ng-if="ds.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{ds | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="ds.max_accepted_payout.split(' ')[0] !== '0.000'">{{ds | sumPostTotal:$root.$storage.currencyRate | number}}</span></span>
+                    </span>
+                    <span ng-if="$root.voiceOver">
+                    <a href="#" class="postNumbers" ng-if="!ds.upvoted" on-tap="votePost(ds)" on-hold="openSlider($event, ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg" ng-if="!ds.invoting"></i>{{::translations.upvote}}</a>
+                    <a href="#" class="postNumbers" ng-if="ds.upvoted" on-tap="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!ds.invoting"></i>{{::translations.unvote}}</a>&nbsp;<span class="postNumbers" on-tap="openTooltip($event,ds)">
+                      <b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="ds.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{ds | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="ds.max_accepted_payout.split(' ')[0] !== '0.000'">{{ds | sumPostTotal:$root.$storage.currencyRate | number}}</span></span>
+                    </span>
+                    </div>
+                    <div class="col col-25 tright" on-tap="$root.openInfo(ds)">
+                    <a href="#" class="postNumbers" on-tap="$root.openInfo(ds)"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
+                    </div>
+                    <div class="col col-25 tright">
+                    <a href="#" class="postNumbers"><i class="icon ion-chatbubbles"></i>&nbsp;{{::ds.children}}</a>
+                    </div>
+                    <!--<div class="col col-10 tright">
+                    <a href="#" class="subdued" on-tap="$root.reBlog(ds.author, ds.permlink)"><i class="icon ion-arrow-return-right"></i>&nbsp;</a>
+                    </div>-->
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ion-infinite-scroll on-infinite="loadmore()" ng-if="moreDataCanBeLoaded()" distance="1%"></ion-infinite-scroll>
         </div>
         <div class="padding" ng-if="active=='transfers'">
           <p class="tcenter" ng-if="accounts.reward_steem_balance.split(' ')[0]>0 || accounts.reward_sbd_balance.split(' ')[0]>0 || accounts.reward_vesting_steem.split(' ')[0]>0"> {{::'UNCLAIMED_REWARDS'|translate}}: 
@@ -247,7 +300,7 @@
               <div class="col col-10"><button class="button button-icon fa fa-chevron-circle-up fa-lg" on-tap="votePostS()"></button></div>
               <div class="col">
                 <div class = "item range range-positive">
-             {{rangeValue}} <input type="range" name="range2" min="0.01" step="0.01" ng-model="rangeValue" ng-change="drag(rangeValue)">
+             {{rangeValue}} <input type="range" name="range2" min="0.1" step="0.1" ng-model="rangeValue" ng-change="drag(rangeValue)">
                 </div>
               </div>
               <div class="col col-10"><button class="button button-icon ion-close-round" ng-click="closeSlider()"></button></div>
@@ -258,12 +311,11 @@
   </ion-content>
   <div class="profile bar bar-footer">
     <div class="button-bar">
-      <!--<a class="button button-large button-positive icon ion-ios-heart" ng-class="{'active':active=='feed'}" on-tap="change('feed')">&nbsp;Feeds</a>-->
       <a class="button button-large button-royal icon ion-compose" ng-class="{'active':active=='blog'}" on-tap="change('blog')">&nbsp;{{::'BLOG'|translate}}</a>
       <a class="button button-royal icon ion-document-text" ng-class="{'active':active=='posts'}" on-tap="change('posts')">&nbsp;{{::'COMMENTS'|translate}}</a>
       <a class="button button-royal icon ion-chatbubbles" ng-class="{'active':active=='recent-replies'}" on-tap="change('recent-replies')">&nbsp;{{'REPLIES'|translate}}</a>
       <a class="button button-royal icon ion-card" ng-class="{'active':active=='transfers'}"  on-tap="change('transfers')">&nbsp;{{::'WALLET'|translate}}</a>
-      <a class="button button-royal icon ion-lock-combination" ng-class="{'active':active=='permissions'}" on-tap="change('permissions')" ng-if="$root.user && $root.user.username === user.username">Keys</a>
+      <!--<a class="button button-royal icon ion-lock-combination" ng-class="{'active':active=='permissions'}" on-tap="change('permissions')" ng-if="$root.user && $root.user.username === user.username">Keys</a>-->
     </div>
   </div>
   <script id="my-edit.html" type="text/ng-template">

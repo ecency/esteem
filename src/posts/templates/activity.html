@@ -1,63 +1,79 @@
 <ion-view>
-   <ion-nav-bar class="bar-positive">
-      <ion-nav-back-button>
+  <ion-nav-bar class="bar-positive">
+    <ion-nav-back-button>
       </ion-nav-back-button>
-      <ion-nav-buttons side='left'>
+      <ion-nav-buttons side="left">
         <button class="button button-icon button-clear" ng-if="!$root.voiceOver" menu-toggle="left">
-         <img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.user.username}}/avatar/small" class="headerAvatar" />
-          <i ng-if="!$root.user" class="icon ion-navicon"></i> 
+          <img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.user.username}}/avatar/small" class="headerAvatar" onerror="this.src=\'img/esteem_white.png\'" onabort="this.src=\'img/esteem_white.png\'"/>
+          <i ng-if="!$root.user" class="icon ion-navicon"></i>
         </button>
-        <a href class="button button-icon ion-more" ng-if="$root.voiceOver" menu-toggle="left">{{::translations.menu}}</a>
       </ion-nav-buttons>
-      <ion-nav-title>
-        <div class="page-title">{{'ACTIVITY' | translate}}</div>
+      <ion-nav-title on-tap="showActivityFilters()">
+          <div class="page-title">{{filter.activity | capitalize}} &emsp; <i class="icon ion-arrow-down-b"></i></div>
       </ion-nav-title>
   </ion-nav-bar>
-  <div class="bar bar-subheader">
-    <!--<h2 class="title">Sub Header</h2>-->
-    <div class="button-bar title">
-      <label class="item item-input filter item-select">
-        <div class="input-label">
-          {{filter.activity | capitalize}} 
-          <i class="fa fa-chevron-circle-up" ng-if="filter.activity == 'votes'"></i>
-          <i class="fa fa-bullhorn" ng-if="filter.activity == 'mentions'"></i>
-          <i class="fa fa-users" ng-if="filter.activity == 'follows'"></i>
-          <i class="fa fa-retweet" ng-if="filter.activity == 'reblogs'"></i>
-          <i class="fa fa-trophy" ng-if="filter.activity == 'leaderboard'"></i>
-          <i class="fa fa-star" ng-if="filter.activity == 'achievements'"></i>
-        </div>
-        <select class="button-subscribe" name="Activities" id="" ng-model="filter.activity" ng-change="changeType()">
-          <option value="{{a.value}}" ng-repeat="a in activities">{{a.name}}</option>
-        </select>
-      </label>
-    </div>
-  </div>
-  <ion-content class="has-header has-subheader">
+  <ion-content class="has-header">
     <center><ion-spinner ng-if="data.loading"></ion-spinner></center>
     <div class="list" ng-if="filter.activity =='votes'">
-      <div class="item" ng-repeat="xx in data.votes" ng-click="open(xx)">
-        {{xx.timestamp|timeago}}&nbsp;<b>{{xx.voter}}</b>&nbsp;({{xx.weight/100}}%)&nbsp;{{xx.permlink}}
+      <div ng-repeat="row in data.votes" class="">
+          <div class="item item-divider">{{ row.key }}</div>
+          <div ng-repeat="xx in row['records']" class="item item-avatar" ng-click="open(xx)">
+              <img src="https://steemitimages.com/u/{{xx.voter}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"/>
+              <h2>{{xx.voter}}&nbsp;&nbsp;{{xx.weight/100}}%</h2>
+              <p>{{xx.permlink}}</p>
+          </div>
       </div>
+      
+      <!--<div class="item" ng-repeat="xx in data.votes" ng-click="open(xx)">
+        {{xx.timestamp|timeago}}&nbsp;<b>{{xx.voter}}</b>&nbsp;({{xx.weight/100}}%)&nbsp;{{xx.permlink}}
+      </div>-->
     </div>
     <div class="list" ng-if="filter.activity =='mentions'">
-      <div class="item" ng-repeat="xx in data.mentions" ng-click="open(xx)">
-        {{xx.timestamp|timeago}}&nbsp;<b>{{xx.author}}</b>&nbsp;{{xx.permlink}}
+      <div ng-repeat="row in data.mentions" class="">
+          <div class="item item-divider">{{ row.key }}</div>
+          <div ng-repeat="xx in row['records']" class="item item-avatar" ng-click="open(xx)">
+              <img src="https://steemitimages.com/u/{{xx.author}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"/>
+              <h2>{{xx.author}}</h2>
+              <p>{{xx.permlink}}</p>
+          </div>
       </div>
+
+      <!--<div class="item" ng-repeat="xx in data.mentions" ng-click="open(xx)">
+        {{xx.timestamp|timeago}}&nbsp;<b>{{xx.author}}</b>&nbsp;{{xx.permlink}}
+      </div>-->
     </div>
     <div class="list" ng-if="filter.activity =='follows'">
-      <div class="item" ng-repeat="xx in data.follows">
-        {{xx.timestamp|timeago}}&nbsp;<b><a href="#/app/profile/{{xx.follower}}">{{xx.follower}}</a></b> <div ng-if="xx.blog">follows</div><div ng-if="!xx.blog">unfollows</div>
+      <div ng-repeat="row in data.follows" class="">
+          <div class="item item-divider">{{ row.key }}</div>
+          <div ng-repeat="xx in row['records']" class="item item-avatar">
+              <img src="https://steemitimages.com/u/{{xx.follower}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"/>
+              <h2><a href="#/app/profile/{{xx.follower}}">{{xx.follower}}</a></h2>
+              <p><div ng-if="xx.blog">following</div><div ng-if="!xx.blog">unfollowed</div></p>
+          </div>
       </div>
+      <!--<div class="item" ng-repeat="xx in data.follows">
+        {{xx.timestamp|timeago}}&nbsp;<b><a href="#/app/profile/{{xx.follower}}">{{xx.follower}}</a></b> <div ng-if="xx.blog">follows</div><div ng-if="!xx.blog">unfollows</div>
+      </div>-->
     </div>
     <div class="list" ng-if="filter.activity =='reblogs'">
-      <div class="item" ng-repeat="xx in data.reblogs">
-        {{xx.timestamp|timeago}}&nbsp;<b><a href="#/app/profile/{{xx.account}}">{{xx.account}}</a></b>&nbsp;<a href="#/app/post/tag/{{xx.json[1].author}}/{{xx.permlink}}">{{xx.permlink}}</a>
+      <div ng-repeat="row in data.reblogs" class="">
+          <div class="item item-divider">{{ row.key }}</div>
+          <div ng-repeat="xx in row['records']" class="item item-avatar">
+              <img src="https://steemitimages.com/u/{{xx.account}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"/>
+              <h2><a href="#/app/profile/{{xx.account}}">{{xx.account}}</a></h2>
+              <p><a href="#/app/post/tag/{{xx.json[1].author}}/{{xx.permlink}}">{{xx.permlink}}</a></p>
+          </div>
       </div>
+      <!--<div class="item" ng-repeat="xx in data.reblogs">
+        {{xx.timestamp|timeago}}&nbsp;<b><a href="#/app/profile/{{xx.account}}">{{xx.account}}</a></b>&nbsp;<a href="#/app/post/tag/{{xx.json[1].author}}/{{xx.permlink}}">{{xx.permlink}}</a>
+      </div>-->
     </div>
     <div class="list" ng-if="filter.activity =='leaderboard'">
       <center class="gray italic">last 30 days</center>
-      <div class="item" ng-repeat="xx in data.leaderboard" href="#/app/profile/{{xx._id}}">
-        {{$index+1}}.&nbsp;<b><a href="#/app/profile/{{xx._id}}">{{xx._id}}</a></b>&nbsp;<div class="pull-right">{{xx.count}}</div>
+      <div class="item item-avatar" ng-repeat="xx in data.leaderboard" href="#/app/profile/{{xx._id}}">
+        <img src="https://steemitimages.com/u/{{xx._id}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"/>
+        <h2>{{$index+1}}.&nbsp;<a href="#/app/profile/{{xx._id}}">{{xx._id}}</a></h2>
+        <p>{{xx.count}}</p>
       </div>
     </div>
     <div class="list" ng-if="filter.activity =='achievements'">

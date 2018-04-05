@@ -347,7 +347,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
 
     if (ionic.Platform.isIOS()){
       setTimeout(function () {
-        navigator.splashscreen.hide();
+        if (navigator.splashscreen)
+          navigator.splashscreen.hide();
       }, 3000 - 1000);
     }
 
