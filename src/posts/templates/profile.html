@@ -30,7 +30,7 @@
               </span>&nbsp;
               <span ng-if="$root.user.json_metadata.profile && $root.user.json_metadata.profile.website">
                 <i class="icon ion-link"></i>&nbsp;
-                <a on-tap="window.open('{{$root.user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</a>
+                <a href on-tap="window.open('{{$root.user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</a>
                 &nbsp;
               </span>
               <span ng-if="$root.user.created">
@@ -55,7 +55,7 @@
               </span>&nbsp;
               <span ng-if="user.json_metadata.profile && user.json_metadata.profile.website">
                 <i class="icon ion-link"></i>&nbsp;
-                <a on-tap="window.open('{{user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</a>
+                <a href on-tap="window.open('{{user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</a>
                 &nbsp;
               </span>
               <span ng-if="user.created">
@@ -102,7 +102,7 @@
                   <a href="#" class="postNumbers" on-tap="$root.openInfo(d)"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
                   </div>
                   <div class="col col-25 tright">
-                  <a href="#" class="postNumbers"><i class="icon ion-chatbubbles"></i>&nbsp;{{::d.children}}</a>
+                  <a href class="postNumbers" on-tap="open(d)"><i class="icon ion-chatbubbles"></i>&nbsp;{{::d.children}}</a>
                   </div>
               </div>
             </div>
@@ -144,7 +144,7 @@
                     <a href="#" class="postNumbers" on-tap="$root.openInfo(ds)"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
                     </div>
                     <div class="col col-25 tright">
-                    <a href="#" class="postNumbers"><i class="icon ion-chatbubbles"></i>&nbsp;{{::ds.children}}</a>
+                    <a class="postNumbers" on-tap="open(ds)"><i class="icon ion-chatbubbles"></i>&nbsp;{{::ds.children}}</a>
                     </div>
                     <!--<div class="col col-10 tright">
                     <a href="#" class="subdued" on-tap="$root.reBlog(ds.author, ds.permlink)"><i class="icon ion-arrow-return-right"></i>&nbsp;</a>
@@ -311,10 +311,10 @@
   </ion-content>
   <div class="profile bar bar-footer">
     <div class="button-bar">
-      <a class="button button-large button-royal icon ion-compose" ng-class="{'active':active=='blog'}" on-tap="change('blog')">&nbsp;{{::'BLOG'|translate}}</a>
-      <a class="button button-royal icon ion-document-text" ng-class="{'active':active=='posts'}" on-tap="change('posts')">&nbsp;{{::'COMMENTS'|translate}}</a>
-      <a class="button button-royal icon ion-chatbubbles" ng-class="{'active':active=='recent-replies'}" on-tap="change('recent-replies')">&nbsp;{{'REPLIES'|translate}}</a>
-      <a class="button button-royal icon ion-card" ng-class="{'active':active=='transfers'}"  on-tap="change('transfers')">&nbsp;{{::'WALLET'|translate}}</a>
+      <a class="button button-large button-royal icon ion-person" ng-class="{'active':active=='blog'}" on-tap="change('blog')"></a>
+      <a class="button button-royal icon ion-document-text" ng-class="{'active':active=='posts'}" on-tap="change('posts')"></a>
+      <a class="button button-royal icon ion-chatbubbles" ng-class="{'active':active=='recent-replies'}" on-tap="change('recent-replies')"></a>
+      <a class="button button-royal icon ion-card" ng-class="{'active':active=='transfers'}"  on-tap="change('transfers')"></a>
       <!--<a class="button button-royal icon ion-lock-combination" ng-class="{'active':active=='permissions'}" on-tap="change('permissions')" ng-if="$root.user && $root.user.username === user.username">Keys</a>-->
     </div>
   </div>

@@ -240,7 +240,6 @@
 	"CHAIN_TEXT": "Her kan du ændre blockchain eller standard platform.",
 	"CURRENCY": "Valuta",
 	"CURRENCY_TEXT": "Her kan du ændre din standardvaluta. Du vil se værdien af din post- og kommentar-belønning i denne valuta.",
-	"ABOUT_11": "<br><b>Feature liste</b><br>- Find unikke artikler om ethvert emne du er interesseret i.<br>- Kom i kontakt med forfatterne ved at kommentere og diskutere emnerne de skriver om.<br>- Stem på indlæg for at belønne forfatteren og tjen selv på din stemme.<br>- Udgiv dine artikler og blogindlæg gratis og tjen på det mens du involverer dig og får følgere.<br>- Skriv artikler mens du er på farten og gem indtil flere kladder til senere publikation.<br>- Læg dine favoritartikler ind som bogmærker til senere læsning.<br>- Veksl eller hæv dét du har tjent.<br>- Send midler til forfattere, brugere eller venner.<br>- Følg interessante forfattere og bloggere.<br>- Søg blandt dine følgere og folk du selv følger.<br>- Få notifikationer for at holde kontakten med dine følgere og de diskussioner du deltager i.<br>- Søg efter interessante kategorier med tags.<br>- Lav en personlig profil.<br>- Mange flere funktioner på vej.<br><br><b>Sikkerhed</b><br>1. Appen opbevarer aldrig brugerens midler.<br>2. Sikkerheden i appens er baseret på private nøgler opbevaret lokalt og aldrig på andre servere. Man er derfor ansvarlig for at have back-up af kodeord.<br>3. Appen tilbyder simple, lækre brugergrænseflader og -oplevelser.<br>4. Appen tilbyder et ekstra lag af sikkerhed med en pinkode<br><br>eSteem understøtter Steem og Golos platformene.<br>",
 	"FOUNDER": "Grundlægger og Ledende udvikler",
 	"ADD_ACCOUNT": "Tilføj konto",
 	"PLATFORM": "Platform",
@@ -303,5 +302,6 @@
 	"TRANSLATE": "Oversæt",
 	"TYPE": "Type",
 	"SHOW": "Vis",
-	"HIDDEN_TEXT": "Dette indlæg blev skjult pga. lav rating"
+	"HIDDEN_TEXT": "Dette indlæg blev skjult pga. lav rating",
+	"FETCHCOMMENTS": "Hent kommentarer"
 }

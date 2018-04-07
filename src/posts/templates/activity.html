@@ -12,7 +12,7 @@
           <div class="page-title">{{filter.activity | capitalize}} &emsp; <i class="icon ion-arrow-down-b"></i></div>
       </ion-nav-title>
   </ion-nav-bar>
-  <ion-content class="has-header">
+  <ion-content class="has-header" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
     <center><ion-spinner ng-if="data.loading"></ion-spinner></center>
     <div class="list" ng-if="filter.activity =='votes'">
       <div ng-repeat="row in data.votes" class="">

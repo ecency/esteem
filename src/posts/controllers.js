@@ -740,7 +740,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
           $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_IS_BOOKMARK'));
         });
       } else {
-        var oo = { author:$rootScope.sitem.author,permlink:$rootScope.sitem.permlink};
+        var oo = { author:$rootScope.sitem.author,permlink:$rootScope.sitem.permlink, timestamp: (new Date()).getTime()};
         $rootScope.$storage.bookmark = [oo];
 
         APIs.addBookmark($rootScope.user.username, oo ).then(function(res){
@@ -2197,8 +2197,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     {text: $filter('translate')('ACTIVE'), custom:'active'}, 
     {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, 
     {text: $filter('translate')('VOTES'), custom:'votes'}, 
-    {text: $filter('translate')('COMMENTS'), custom:'children'}, 
-    {text: $filter('translate')('PAYOUT'), custom: 'payout'}] : 
+    {text: $filter('translate')('COMMENTS'), custom:'children'}
+    ] : 
     [ 
     {text: $filter('translate')('TRENDING'), custom:'trending'}, 
     {text: $filter('translate')('HOT'), custom:'hot'}, 
@@ -2207,7 +2207,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     {text: $filter('translate')('PROMOTED'), custom: 'promoted'}, 
     {text: $filter('translate')('VOTES'), custom:'votes'}, 
     {text: $filter('translate')('COMMENTS'), custom:'children'}, 
-    {text: $filter('translate')('PAYOUT'), custom: 'payout'}];
+    ];
 
     if ($rootScope.$storage.tag && $scope.mymenu) {
       $scope.mymenu.unshift({text:$filter('translate')('REMOVE')+' #'+$rootScope.$storage.tag, custom:'tag'});
@@ -2956,7 +2956,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
   $scope.reply = function (xx) {
     //$rootScope.log(xx);
-    $scope.$applyAsync();
+    //$scope.$applyAsync();
     $rootScope.$broadcast('show:loading');
     if ($rootScope.user) {
       if ($scope.editreply) {
@@ -3001,7 +3001,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           }];
           operations_array.push(xx);
         }
-        window.steem.broadcast.sendAsync({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
+        window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
           //console.log(err, result);
           $rootScope.$broadcast('hide:loading');
           if (err) {
@@ -3045,7 +3045,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
             extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
           }]
           ];
-        window.steem.broadcast.sendAsync({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
+        window.steem.broadcast.send({ operations: operations_array, extensions: [] }, { posting: wif }, function(err, result) {
           //console.log(err, result);
           $rootScope.$broadcast('hide:loading');
           if (err) {
@@ -3285,8 +3285,12 @@ app.controller('BookmarkCtrl', function($scope, $stateParams, $rootScope, $state
 
   $scope.removeBookmark = function(index) {
     if ($rootScope.$storage.bookmark) {
-      APIs.removeBookmark($rootScope.$storage.bookmark[index]._id,$rootScope.user.username).then(function(res){
-        $rootScope.$storage.bookmark.splice(index,1);
+      APIs.removeBookmark(index,$rootScope.user.username).then(function(res){
+        for (var i = $rootScope.$storage.bookmark.length - 1; i >= 0; i--) {
+          if ($rootScope.$storage.bookmark[i]._id && $rootScope.$storage.bookmark[i]._id == index) {
+            $rootScope.$storage.bookmark.splice(i,1);
+          }
+        }
         $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_IS_UNBOOKMARK'));
       });
     }

@@ -204,7 +204,7 @@ hr {
 }
 .capital {
 	text-transform: uppercase;
-}
+}/*
 .profile.bar-footer .button-bar .button.icon {
 	display: block;
 	text-align: center;
@@ -215,28 +215,28 @@ hr {
 	margin: auto;
 	padding: auto;
 	margin-top: 3px;
-	/*font-size: 3.5vw;*/
 	width: 25px;
 	height: 25px;
 	line-height: 25px;
 }
-.profile.bar-footer .button-bar .button {
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
-  margin: 0;
-  padding: 0;
-}
-.profile.bar-footer {
-	height: 60px;
-	padding: 0;
-  bottom: 0;
-}/*
+
+*//*
 .button-small {
   width: 30px;
   height: 30px;
 }*/
+.profile.bar-footer {
+  padding: 0;
+  bottom: 0!important;
+}
+.profile.bar-footer .button-bar .button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  margin: 0;
+  padding: 0;
+}
 .has-footer {
 	bottom: 60px;
 }
@@ -366,9 +366,9 @@ img.round-avatar {
   margin: 0px 10px 0px 0px;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
-  box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+  /*box-shadow: 0 0 8px rgba(0, 0, 0, .8);
   -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
-  -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+  -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);*/
 }
 img.round-avatar-title {
   width: 40px;
@@ -1432,7 +1432,7 @@ div.text-left {
 }
 
 .full-image {
-  height: 250px;
+  /*height: 250px;*/
   width: auto;
   object-fit: cover;
   object-position: 50% 50%;
@@ -1789,14 +1789,17 @@ img {
   image-orientation: from-image!important;
 }
 .headerAvatar {
-  max-height: 28px;
+  width: 30px;
+  height: 30px;
+  max-height: 30px;
+  max-width: 30px;
   vertical-align:middle;
   border-radius: 50%;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
-  box-shadow: 0 0 8px rgba(255, 255, 255, .3);
+  /*box-shadow: 0 0 8px rgba(255, 255, 255, .3);
   -webkit-box-shadow: 0 0 8px rgba(255, 255, 255, .3);
-  -moz-box-shadow: 0 0 8px rgba(255, 255, 255, .3);
+  -moz-box-shadow: 0 0 8px rgba(255, 255, 255, .3);*/
 }
 .postTitle {
   margin-top: 0;
@@ -1813,6 +1816,9 @@ img {
   font-size: 20px;
 }
 .bar .button.button-icon .icon:before {
+  font-size: 20px;
+}
+.bar .button.back-button .icon:before {
   font-size: 20px;
 }
 .item.postList {
@@ -1867,7 +1873,4 @@ a.postNumbers {
 }
 .extra-menu .item {
   font-weight: 500;
-}
-.bar .button {
-  font-size: 15px!important;
 }

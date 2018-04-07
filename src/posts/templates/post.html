@@ -4,15 +4,16 @@
     	</ion-nav-back-button>
 	    <ion-nav-buttons side='left'>
 	      <button class="button button-icon button-clear" ng-if="!$root.voiceOver" menu-toggle="left">
-         <img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.user.username}}/avatar/small" class="headerAvatar" onerror="this.src=\'img/esteem_white.png\'" onabort="this.src=\'img/esteem_white.png\'" />
-          <i ng-if="!$root.user" class="icon ion-navicon"></i> 
+         <img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.sitem.author}}/avatar/small" class="headerAvatar" onerror="this.src=\'img/esteem_white.png\'" onabort="this.src=\'img/esteem_white.png\'" />
         </button>
         <a href class="button button-icon ion-more" ng-if="$root.voiceOver" menu-toggle="left">{{::translations.menu}}</a>
 	    </ion-nav-buttons>
       <ion-nav-title>
+        {{$root.sitem.author}}&nbsp;{{::translations.in}}&nbsp;{{$root.sitem.category|detransliterate:false}}
       </ion-nav-title>
 	    <ion-nav-buttons side='right'>
       <span ng-if="!$root.voiceOver">
+        <button class="button button-icon button-clear" on-tap="showImages(0)" ng-if="isImages()" ><i class="icon ion-image"></i></button> &nbsp; 
         <button class="button button-icon button-clear" on-tap="bookmark()"><i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i></button> &nbsp; 
 	      <button class="button button-icon button-clear ion-android-share-alt" on-tap="sharing()"></button>
       </span>
@@ -22,13 +23,15 @@
       </span>
 	    </ion-nav-buttons>
 	</ion-nav-bar>
-  <ion-floating-menu menu-color="#284b78" menu-open-color="#284b78" has-footer="true">
+  <ion-floating-button click="isreplying($root.sitem, true)" has-footer="false" button-color="#284b78" icon="ion-reply" icon-color="#fff" ng-if="$root.user">
+  </ion-floating-button>
+  
+  <!--<ion-floating-menu menu-color="#284b78" menu-open-color="#284b78" has-footer="true">
     <ion-floating-item icon="ion-chatbubbles" click="isreplying($root.sitem, true)" ng-if="$root.user.username" button-color="#284b78" icon-color="#fff" text="{{::translations.reply}}" text-class="text-class"></ion-floating-item>
     <ion-floating-item icon="ion-android-arrow-dropup-circle" click="upvotePost($root.sitem)" button-color="#284b78" icon-color="#fff" text="{{::translations.upvote}}" text-class="text-class"></ion-floating-item>
     <ion-floating-item icon="ion-edit" click="editPost($root.sitem)" button-color="#284b78" icon-color="#fff" text="{{::translations.edit}}" ng-if="$root.user.username==$root.sitem.author" text-class="text-class"></ion-floating-item>
     <ion-floating-item icon="ion-image" click="showImages(0)" ng-if="isImages()" button-color="#284b78" icon-color="#fff" text="{{::translations.gallery}}" text-class="text-class"></ion-floating-item>
-    <!--<ion-floating-item icon="ion-earth" click="translateMe($root.sitem, true)" button-color="#284b78" icon-color="#fff" text="{{::translations.translate}}" text-class="text-class"></ion-floating-item>-->
-  </ion-floating-menu>
+  </ion-floating-menu>-->
   <ion-content class="padding has-header" delegate-handle="mainScroll" overflow-scroll="true" ng-class="{'theme-dark':$root.$storage.theme == 'night'}"><!---->
     <div ng-if='$root.sitem'>
       <p class="title h3" ng-if="$root.sitem.root_title && $root.sitem.title==''"><a href="#/app/post{{$root.sitem.url.split('#')[0]}}">{{::translations.view}}</a></p>
@@ -50,8 +53,6 @@
       <center><ion-spinner ng-if="$root.sitem.body == ''"></ion-spinner></center>
       <div class="bodytext selectable" ng-bind-html="$root.sitem | parseUrl">
       </div>
-      
-      <div class="col" ng-if="$root.sitem.root_title && $root.sitem.title!=='' && $root.sitem.body != ''"><img class="round-avatar" ng-src="https://steemitimages.com/u/{{$root.sitem.author}}/avatar" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'" /> <b><a href="#/app/profile/{{$root.sitem.author}}">{{$root.sitem.author}}</a></b>&nbsp;<div class="reputation">{{$root.sitem.author_reputation|reputation|number:0}}</div>&middot;{{$root.sitem.created|timeago}} </div>
       <br/>
       <div ng-if='$root.sitem.parent_author == ""' class="tags">
         <div ng-repeat='tag in $root.sitem.json_metadata.tags track by $index'>
