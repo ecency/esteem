@@ -487,8 +487,8 @@ module.exports = function (app) {
             return match[0];
           else*/ 
         //}
-        if (inp.json_metadata.thumbnail) {
-          return inp.json_metadata.thumbnail
+        if (inp.json_metadata.indexOf('thumbnail')>-1) {
+          return JSON.parse(inp.json_metadata).thumbnail;
         }
         return 'img/noimage.png';
       }

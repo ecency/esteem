@@ -3,7 +3,7 @@
   color: #aaa;
 }
 
-.theme-dark h2, .theme-dark h1, .theme-dark h3, .theme-dark h4, .theme-dark h5, .theme-dark h6 {
+.theme-dark h2, .theme-dark h1, .theme-dark h3, .theme-dark h4, .theme-dark h5, .theme-dark h6, .theme-dark ion-infinite-scroll {
   /*color: #ddca7e;*/
   color: #ddc;
 }
@@ -14,24 +14,29 @@
 
 .theme-dark .item, .theme-dark p, .theme-dark div, .theme-dark .item-content, .theme-dark span, .theme-dark .reputation, .theme-dark input:not([type="range"]), .theme-dark textarea, .theme-dark select {
   color: #aaa;
-  background: #121617;
+  background: #1c252c;
 }
 
 .theme-dark .card {
-  background: #121617;
+  background: #1c252c;
 }
 
 .theme-dark h2.postTitle {
-  background: #121617;
+  background: #1c252c;
   color: #aaa;
 }
 
 .theme-dark .bar {
-  background-color: #121617;
+  background-color: #1c252c;
+}
+
+.theme-dark .spinner {
+    stroke: #efebea;
+    fill: #efebea;
 }
 
 .scroll-content.theme-dark {
-  background: #121617;
+  background: #1c252c;
   color: #aaa; 
 }
 .theme-dark .tag {
@@ -39,7 +44,7 @@
   color: #000;
 }
 .theme-dark .tag::before {
-  background: #121617;
+  background: #1c252c;
   border-radius: 10px;
   box-shadow: inset 0 1px rgba(0, 0, 0, 0.25);
   content: '';
@@ -51,7 +56,7 @@
 }
 
 .theme-dark .tag::after {
-  background: #121617;
+  background: #1c252c;
   border-bottom: 13px solid transparent;
   border-left: 10px solid #aaa;
   border-top: 13px solid transparent;
@@ -159,25 +164,25 @@ hr {
 }
 .platform-browser .has-mysubheader {
   position: relative;
-  top:1px;
+  top:-10px;
 }
 .platform-android .has-mysubheader {
   position: relative;
-  top:1px;
+  top:-10px;
 }
 .platform-ios .has-mysubheader {
   padding-top: 1px!important;
   position: relative;
-  top:1px;
+  top:0;
 }
 .platform-browser .footprofileinfo {
-  margin-top: 15px!important;
+  margin-top: 10px!important;
 }
 .platform-android .footprofileinfo {
-  margin-top: 15px!important;
+  margin-top: 10px!important;
 }
 .platform-ios .footprofileinfo {
-  margin-top: 15px!important;
+  margin-top: 10px!important;
 }
 .footprofileinfomenu div {
   color: #fff;
@@ -236,9 +241,10 @@ hr {
   border-bottom-right-radius: 0;
   margin: 0;
   padding: 0;
+  border-color: transparent;
 }
 .has-footer {
-	bottom: 60px;
+	bottom: 40px;
 }
 .exchange .header .col {
     background-color:lightgrey;

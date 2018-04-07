@@ -4,7 +4,6 @@
       <button class="button button-icon button-clear ion-ios-arrow-back profilebtn" on-tap="goBack()"></button>
       <button class="button button-outline button-light profilebtn_follow" on-tap="followUser(user.username)" ng-if="$root.user && $root.user.username != user.username && !isAmFollowing(user.username)"><!--<i class="fa fa-user-plus fa-lg"></i>-->{{::'FOLLOW'|translate}}</button>
       <button class="button button-outline button-light profilebtn_mute" on-tap="muteUser(user.username)" ng-if="$root.user && $root.user.username != user.username && !isAmMuting(user.username)"><!--<i class="fa fa-user-plus fa-lg"></i>-->{{::'MUTE'|translate}}</button>
-      <button class="button button-clear profilebtn_stats button-icon ion-stats-bars" ng-if="$root.user && $root.user.username == user.username" on-tap="showStats(user.username)"></button>
       <button class="button button-clear profilebtn_edit button-icon ion-ios-compose-outline" on-tap="showEdits()" ng-if="$root.user && $root.user.username === user.username"></button>
       <button class="button button-clear profilebtn_follow button-icon ion-camera" on-tap="showCover()" ng-if="$root.user && $root.user.username === user.username"></button>
       <button class="button button-outline button-light profilebtn_follow" on-tap="unfollowUser(user.username)" ng-if="$root.user && $root.user.username != user.username && isAmFollowing(user.username)"><!--button-icon button-clear<i class="fa fa-user-times fa-lg"></i>-->{{::'UNFOLLOW'|translate}}</button><button class="button button-outline button-light profilebtn_mute" on-tap="unmuteUser(user.username)" ng-if="$root.user && $root.user.username != user.username && isAmMuting(user.username)"><!--button-icon button-clear<i class="fa fa-user-times fa-lg"></i>-->{{::'UNMUTE'|translate}}</button>&nbsp;
@@ -30,7 +29,7 @@
               </span>&nbsp;
               <span ng-if="$root.user.json_metadata.profile && $root.user.json_metadata.profile.website">
                 <i class="icon ion-link"></i>&nbsp;
-                <a href on-tap="window.open('{{$root.user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</a>
+                <span on-tap="window.open('{{$root.user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</span>
                 &nbsp;
               </span>
               <span ng-if="$root.user.created">
@@ -55,7 +54,7 @@
               </span>&nbsp;
               <span ng-if="user.json_metadata.profile && user.json_metadata.profile.website">
                 <i class="icon ion-link"></i>&nbsp;
-                <a href on-tap="window.open('{{user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</a>
+                <span on-tap="window.open('{{user.json_metadata.profile.website}}', '_system');" style="color:white!important;text-decoration: underline;">WebSite</span>
                 &nbsp;
               </span>
               <span ng-if="user.created">

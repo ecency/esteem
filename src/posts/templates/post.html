@@ -4,12 +4,12 @@
     	</ion-nav-back-button>
 	    <ion-nav-buttons side='left'>
 	      <button class="button button-icon button-clear" ng-if="!$root.voiceOver" menu-toggle="left">
-         <img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.sitem.author}}/avatar/small" class="headerAvatar" onerror="this.src=\'img/esteem_white.png\'" onabort="this.src=\'img/esteem_white.png\'" />
+         <img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.user.username}}/avatar/small" class="headerAvatar" onerror="this.src=\'img/esteem_white.png\'" onabort="this.src=\'img/esteem_white.png\'" />
         </button>
         <a href class="button button-icon ion-more" ng-if="$root.voiceOver" menu-toggle="left">{{::translations.menu}}</a>
 	    </ion-nav-buttons>
       <ion-nav-title>
-        {{$root.sitem.author}}&nbsp;{{::translations.in}}&nbsp;{{$root.sitem.category|detransliterate:false}}
+        {{'POST'|translate}}
       </ion-nav-title>
 	    <ion-nav-buttons side='right'>
       <span ng-if="!$root.voiceOver">
