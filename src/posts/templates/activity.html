@@ -28,6 +28,16 @@
         {{xx.timestamp|timeago}}&nbsp;<b>{{xx.voter}}</b>&nbsp;({{xx.weight/100}}%)&nbsp;{{xx.permlink}}
       </div>-->
     </div>
+    <div class="list" ng-if="filter.activity =='replies'">
+      <div ng-repeat="row in data.replies" class="">
+          <div class="item item-divider">{{ row.key }}</div>
+          <div ng-repeat="xx in row['records']" class="item item-avatar" ng-click="open(xx)">
+              <img src="https://steemitimages.com/u/{{xx.author}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"/>
+              <h2>{{xx.author}}</h2>
+              <p>{{xx.body | postSummary}}</p>
+          </div>
+      </div>
+    </div>
     <div class="list" ng-if="filter.activity =='mentions'">
       <div ng-repeat="row in data.mentions" class="">
           <div class="item item-divider">{{ row.key }}</div>

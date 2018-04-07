@@ -4781,7 +4781,7 @@ app.controller('MarketCtrl', function($scope, $rootScope, $state, $ionicPopover,
 
 app.controller('ActivityCtrl', function($scope, $rootScope, APIs, $stateParams, $ionicNavBarDelegate, $ionicActionSheet, $filter){
   $scope.filter = {activity: 'votes'};
-  $scope.activities=[{text:'Votes', value:'votes' },{text:'Mentions',value:'mentions'},{text:'Follows',value:'follows'},{text:'Reblogs',value:'reblogs'},{text:'Leaderboard',value:'leaderboard'},{text:'Achievements',value:'achievements'}];
+  $scope.activities=[{text:'Votes', value:'votes' },{text:'Replies',value:'replies'},{text:'Mentions',value:'mentions'},{text:'Follows',value:'follows'},{text:'Reblogs',value:'reblogs'},{text:'Leaderboard',value:'leaderboard'},{text:'Achievements',value:'achievements'}];
   $scope.data = {loading:false};
 
   $scope.showActivityFilters = function() {
@@ -4815,6 +4815,22 @@ app.controller('ActivityCtrl', function($scope, $rootScope, APIs, $stateParams, 
             $scope.data.loading = false;
           } else {
             $scope.data.votes = build(res.data);  
+            $scope.data.loading = false;
+          }
+          if (!$scope.$$phase) {
+            $scope.$apply();
+          }
+        }
+      });
+    } else if ($scope.filter.activity == 'replies') {
+      APIs.getMyReplies($stateParams.username).then(function(res){
+        if (res) {
+          $rootScope.log(angular.toJson(res.data));
+          if (res.data.fatal) {
+            //$scope.showMentions();
+            $scope.data.loading = false;
+          } else {
+            $scope.data.replies = build(res.data);  
             $scope.data.loading = false;
           }
           if (!$scope.$$phase) {

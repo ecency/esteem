@@ -467,6 +467,7 @@ module.exports = function (app) {
 
   app.filter('catchimage', function(){
     return function(inp) {
+      var imgRegex = /(https?:\/\/.*\.(?:tiff?|jpe?g|gif|png|svg|ico))(.*)/gim;
       var rege = /\b(https?:\/\/\S*?\.(?:png|jpe?g|gif)(?:\?(?:(?:(?:[\w_-]+=[\w_-]+)(?:&[\w_-]+=[\w_-]+)*)|(?:[\w_-]+)))?)\b/igm;
       var regg = /((?:https?\:\/\/)(?:[a-zA-Z]{1}(?:[\w\-]+\.)+(?:[\w]{2,5}))(?:\:[\d]{1,5})?\/(?:[^\s\/]+\/)*(?:[^\s]+\.(?:jpe?g|gif|png))(?:\?\w+=\w+(?:&\w+=\w+)*)?)/gim;
 
@@ -485,8 +486,11 @@ module.exports = function (app) {
           if (match && match.length>0)
             return match[0];
           else*/ 
-          return 'img/noimage.png';
         //}
+        if (inp.json_metadata.thumbnail) {
+          return inp.json_metadata.thumbnail
+        }
+        return 'img/noimage.png';
       }
       
     }
@@ -691,7 +695,10 @@ module.exports = function (app) {
                     if (ind) {
                         mimgs.push(murls[i]);
                     } else {
-                        mlinks.push(murls[i]);
+                      if (murls[i].indexOf('ipfs')>-1){
+                        mimgs.push(murls[i]);
+                      }
+                      mlinks.push(murls[i]);
                     }
                 }
                 if (mlinks) {
