@@ -109,7 +109,7 @@
           </div>
         </div>
         <div ng-if="$root.$storage.view=='card' && data.profile.length>0" class="">
-          <div ng-repeat="ds in data.profile | orderBy:'-created' track by ds.id" class="">
+          <div ng-repeat="ds in data.profile | orderBy:'-created' track by $index" class="">
                <div class="list card" ng-if="ds" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 
             <div class="item item-avatar postList" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">

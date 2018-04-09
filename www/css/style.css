@@ -93,6 +93,8 @@
 .item.comments h5 {white-space: nowrap!important;}
 .ion-comment.item {
   border-top: solid 1px #ddd;
+  padding-bottom: 10px;
+  padding-top: 10px;
 }
 .ion-comment.item h1 {
   white-space: pre-wrap;
@@ -102,6 +104,9 @@
 }
 .ion-comment.item h3 {
   white-space: pre-wrap;
+}
+.ion-comment--author span {
+  color: gray;
 }
 
 .item-icon-left i.icon {
@@ -165,15 +170,17 @@ hr {
 .platform-browser .has-mysubheader {
   position: relative;
   top:-10px;
+  padding-top: 10px;
 }
 .platform-android .has-mysubheader {
   position: relative;
   top:-10px;
+  padding-top: 10px;
 }
 .platform-ios .has-mysubheader {
   padding-top: 1px!important;
   position: relative;
-  top:0;
+  top:0px;
 }
 .platform-browser .footprofileinfo {
   margin-top: 10px!important;
@@ -349,6 +356,12 @@ textarea.markdown-input {
 .ion-comment--text p {
   overflow: visible;
   white-space: normal;
+  color: #111;
+}
+.theme-dark .ion-comment--text p {
+  overflow: visible;
+  white-space: normal;
+  color: #ddc;
 }
 .ion-comment .item-content,
 .ion-comment .item-content p {
@@ -1699,7 +1712,8 @@ body { padding-top: constant(safe-area-inset-top); }
   height: 0;
 }
 .bar.bar-positive {
-  background-color: #284b78;
+  background-color: #284b78!important;
+  border-color: #284b78!important;
   /*#1f5398*/
 }
 .tabs-icon-top.tabs-positive .tabs {

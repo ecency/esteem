@@ -531,7 +531,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
         $rootScope.$storage.appversion = version;
       });
     } else {
-      $rootScope.$storage.appversion = '1.5.1';
+      $rootScope.$storage.appversion = '1.6.0';
     }
   });
 
@@ -3071,11 +3071,11 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     $rootScope.log("update:content");
     $rootScope.$broadcast('hide:loading');
     //console.log($scope.post);
-    setTimeout(function() {
-    //$scope.$evalAsync(function($scope) {
+    //setTimeout(function() {
+    $scope.$evalAsync(function($scope) {
       $scope.getContent($scope.post.author, $scope.post.permlink);    
-    //});
     });
+    //});
     
   });
   $ionicModal.fromTemplateUrl('templates/reply.html', {
@@ -3186,16 +3186,16 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     $rootScope.fetching = true;
     //console.log(author,permlink);
 
-    window.steem.api.getContentRepliesAsync(author, permlink, function(err, dd) {
+    window.steem.api.getContentReplies(author, permlink, function(err, dd) {
       //console.log(err, dd);
       if (dd) {
         $scope.comments = dd;
         //$rootScope.$storage.comments = dd;
         //console.log(dd.active_votes);
         $rootScope.fetching = false;
-        for (var i = 0, len = dd.length; i < len; i++) {
-          var v = dd[i];
-        }
+        //for (var i = 0, len = dd.length; i < len; i++) {
+        //var v = dd[i];
+        //}
         if (!$scope.$$phase){
           $scope.$apply();
         }
@@ -4438,15 +4438,17 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       if (type==="transfers" || type==="permissions") {
         //$scope.$evalAsync(function($scope){
           console.log(res);
-          for (var property in res.accounts) {
-            if (res.accounts.hasOwnProperty(property)) {
-              $scope.accounts = res.accounts[property];
-              //$rootScope.log(angular.toJson(res.accounts[property].transfer_history));
+          if (res) {
+            for (var property in res.accounts) {
+              if (res.accounts.hasOwnProperty(property)) {
+                $scope.accounts = res.accounts[property];
+                //$rootScope.log(angular.toJson(res.accounts[property].transfer_history));
 
-              $scope.transfers = res.accounts[property].transfer_history.slice(Math.max(res.accounts[property].transfer_history.length - 50, 0))//res.accounts[property].transfer_history;
-              //console.log(res.transfers);
-              $scope.nonexist = false;
-            }
+                $scope.transfers = res.accounts[property].transfer_history.slice(Math.max(res.accounts[property].transfer_history.length - 50, 0))//res.accounts[property].transfer_history;
+                //console.log(res.transfers);
+                $scope.nonexist = false;
+              }
+            }  
           }
         //});
         //$scope.$applyAsync();
@@ -5154,7 +5156,7 @@ app.controller('SettingsCtrl', function($scope, $stateParams, $rootScope, $ionic
       resteem: $scope.data.resteem,
       device: ionic.Platform.platform(),
       timestamp: $filter('date')(new Date(), 'medium'),
-      appversion: '1.5.1'
+      appversion: '1.6.0'
     }
     APIs.updateSubscription($rootScope.$storage.deviceid, $rootScope.user.username, $rootScope.$storage.subscription).then(function(res){
       //console.log(angular.toJson(res));
