@@ -7,7 +7,7 @@
     <button class="button button-positive button-primary" ng-if="spost.advanced && $root.$storage.chain !== 'golos'" ng-disabled="!spost.permission" ng-click="scheduleStory()">{{'SCHEDULE'|translate}}</button>
     </div>
   </ion-header-bar>
-  <ion-content class="padding posting" overflow-scroll="false">
+  <ion-content class="padding posting" overflow-scroll="false" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
     <input type="text" name="title" placeholder="{{'TITLE'|translate}}" ng-model="spost.title" style="width:100%;">
     <textarea ng-model='spost.body' rows="8" placeholder="{{'POST_CONTENT'|translate}}" class="width100" ng-focus='cfocus()'></textarea><!---->
       <input type="text" name="categories" placeholder="{{'TAGS'|translate}}" ng-model="spost.tags" ng-change="tagsChange()" style="width:100%;" autocapitalize="off">
