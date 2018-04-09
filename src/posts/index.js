@@ -11,7 +11,8 @@ var app = angular.module('esteem', [
   'ja.qr',
   'ion-datetime-picker',
   'highcharts-ng',
-  'ionicImgCache'
+  'ionicImgCache',
+  'ionicLazyLoad'
 ]);
 
 if (localStorage.getItem("socketUrl") === null) {

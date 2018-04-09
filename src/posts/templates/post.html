@@ -32,7 +32,7 @@
     <ion-floating-item icon="ion-edit" click="editPost($root.sitem)" button-color="#284b78" icon-color="#fff" text="{{::translations.edit}}" ng-if="$root.user.username==$root.sitem.author" text-class="text-class"></ion-floating-item>
     <ion-floating-item icon="ion-image" click="showImages(0)" ng-if="isImages()" button-color="#284b78" icon-color="#fff" text="{{::translations.gallery}}" text-class="text-class"></ion-floating-item>
   </ion-floating-menu>-->
-  <ion-content class="padding has-header" delegate-handle="mainScroll" overflow-scroll="true" ng-class="{'theme-dark':$root.$storage.theme == 'night'}"><!---->
+  <ion-content class="padding has-header" delegate-handle="mainScroll" overflow-scroll="true" ng-class="{'theme-dark':$root.$storage.theme == 'night'}" lazy-scroll><!---->
     <div ng-if='$root.sitem'>
       <p class="title h3" ng-if="$root.sitem.root_title && $root.sitem.title==''"><a href="#/app/post{{$root.sitem.url.split('#')[0]}}">{{::translations.view}}</a></p>
     	<p class="title h3">{{$root.sitem.title}}</p>

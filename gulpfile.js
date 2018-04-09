@@ -66,7 +66,8 @@ gulp.task('scripts', function(){
     './bower_components/ion-floating-menu/dist/ion-floating-menu.js',
     './bower_components/qrcode.js/lib/qrcode.js',
     './bower_components/angular-qr/src/angular-qr.js',
-    './bower_components/highcharts-ng/dist/highcharts-ng.js'
+    './bower_components/highcharts-ng/dist/highcharts-ng.js',
+    './bower_components/ionic-image-lazy-load/ionic-image-lazy-load.js'
     //'./bower_components/default-passive-events/default-passive-events.js'
   ])
   .pipe(concat('lib.js'))
