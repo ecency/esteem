@@ -308,5 +308,8 @@
 	"TYPE": "",
 	"SHOW": "",
 	"HIDDEN_TEXT": "",
-	"FETCHCOMMENTS": ""
+	"FETCHCOMMENTS": "",
+	"FAVORITES": "",
+	"FAVORITE_REMOVED": "",
+	"FAVORITE": ""
 }
