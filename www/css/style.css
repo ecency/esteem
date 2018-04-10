@@ -12,9 +12,22 @@
   color: #ddc;
 }
 
-.theme-dark .item, .theme-dark p, .theme-dark div, .theme-dark .item-content, .theme-dark span, .theme-dark .reputation, .theme-dark input:not([type="range"]), .theme-dark textarea, .theme-dark select {
+.theme-dark .item, .theme-dark p, .theme-dark div, .theme-dark .item-content, .theme-dark span, .theme-dark input:not([type="range"]), .theme-dark textarea, .theme-dark select {
   color: #aaa;
   background: #1c252c;
+}
+
+.theme-dark .reputation {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 0 3px;
+  margin-left: 2px;
+  margin-right: 2px;
+  background-color: #3b3b3b;
+  border-radius: 10px;
+  border: 0.5px solid #3b3b3b;
+  color: #aaa;
 }
 
 .theme-dark .card {
@@ -33,6 +46,12 @@
 .theme-dark .spinner {
     stroke: #efebea;
     fill: #efebea;
+}
+
+.theme-dark .ion-comment.item {
+  border-top: solid 0.1px #3b3b3b;
+  padding-bottom: 10px;
+  padding-top: 10px;
 }
 
 .scroll-content.theme-dark {
@@ -92,7 +111,7 @@
 .item.comments .nowrap {white-space: nowrap!important;}
 .item.comments h5 {white-space: nowrap!important;}
 .ion-comment.item {
-  border-top: solid 1px #ddd;
+  border-top: solid 0.1px #eee;
   padding-bottom: 10px;
   padding-top: 10px;
 }
@@ -447,7 +466,7 @@ img.round-avatar{
 .ion-comment--score {
   text-align: right;
   position: absolute;
-  top: 0;
+  top: 11px;
   right: 0;
   color: #8899a6;
 }
@@ -559,8 +578,8 @@ select-input input {
   margin-left: 2px;
   margin-right: 2px;
   background-color: #f8f8f8;
-  border-radius: 50%;
-  border: 1px solid #dadada;
+  border-radius: 10px;
+  border: 0.5px solid #dadada;
   color: #000;
 }
 .stitle.row, .stitle.row .col {
