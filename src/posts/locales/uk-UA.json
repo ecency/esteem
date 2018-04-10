@@ -308,5 +308,8 @@
 	"TYPE": "Тип",
 	"SHOW": "Показати",
 	"HIDDEN_TEXT": "Цей пост було приховано через низький рейтинг",
-	"FETCHCOMMENTS": ""
+	"FETCHCOMMENTS": "",
+	"FAVORITES": "",
+	"FAVORITE_REMOVED": "",
+	"FAVORITE": ""
 }
