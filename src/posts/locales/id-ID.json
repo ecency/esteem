@@ -311,5 +311,6 @@
 	"FETCHCOMMENTS": "Ambil Komentar",
 	"FAVORITES": "",
 	"FAVORITE_REMOVED": "",
-	"FAVORITE": ""
+	"FAVORITE": "",
+	"FAVORITE_ADDED": ""
 }
