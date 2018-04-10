@@ -308,5 +308,8 @@
 	"TYPE": "Tipe",
 	"SHOW": "Tampilkan",
 	"HIDDEN_TEXT": "Posting ini tersembunyi dikarenakan peringkat rendah",
-	"FETCHCOMMENTS": "Ambil Komentar"
+	"FETCHCOMMENTS": "Ambil Komentar",
+	"FAVORITES": "",
+	"FAVORITE_REMOVED": "",
+	"FAVORITE": ""
 }
