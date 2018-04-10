@@ -308,5 +308,8 @@
 	"TYPE": "Isulat",
 	"SHOW": "Ipakita",
 	"HIDDEN_TEXT": "Kini nga post gitago tungod sa ubos nga rating",
-	"FETCHCOMMENTS": ""
+	"FETCHCOMMENTS": "",
+	"FAVORITES": "",
+	"FAVORITE_REMOVED": "",
+	"FAVORITE": ""
 }
