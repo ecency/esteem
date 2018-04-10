@@ -308,5 +308,8 @@
 	"TYPE": "نوع",
 	"SHOW": "نمایش",
 	"HIDDEN_TEXT": "این پست با توجه به رتبه پایین مخفی بود",
-	"FETCHCOMMENTS": "دریافت نظرات"
+	"FETCHCOMMENTS": "دریافت نظرات",
+	"FAVORITES": "",
+	"FAVORITE_REMOVED": "",
+	"FAVORITE": ""
 }
