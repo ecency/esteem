@@ -308,5 +308,8 @@
 	"TYPE": "タイプ",
 	"SHOW": "表示",
 	"HIDDEN_TEXT": "この投稿は評価が低いため表示されません",
-	"FETCHCOMMENTS": "コメントをフェッチ"
+	"FETCHCOMMENTS": "コメントをフェッチ",
+	"FAVORITES": "",
+	"FAVORITE_REMOVED": "",
+	"FAVORITE": ""
 }
