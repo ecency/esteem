@@ -31,14 +31,20 @@ module.exports = function (app) {
 			removeBookmark: function(id, user) {
         return $http.delete(API_END_POINT+"/api/bookmarks/"+user+"/"+id);
       },
-      addFavorite: function(user, favorite) {
-        return $http.post(API_END_POINT+"/api/favorite", {username: user, account: favorite.account});
+      addFavorite: function(user, account) {
+        return $http.post(API_END_POINT+"/api/favorite", {username: user, account: account});
+      },
+      removeFavoriteUser: function(user, account) {
+        return $http.delete(API_END_POINT+"/api/favoriteUser/"+user+"/"+account);
       },
       getFavorites: function(user) {
         return $http.get(API_END_POINT+"/api/favorites/"+user);
       },
-      removeFavorite: function(id, user) {
+      removeFavorite: function(user, id) {
         return $http.delete(API_END_POINT+"/api/favorite/"+user+"/"+id);
+      },
+      isFavorite: function(user, account) {
+        return $http.get(API_END_POINT+"/api/isfavorite/"+user+"/"+account);
       },
 			addDraft: function(user, draft) {
         return $http.post(API_END_POINT+"/api/draft", {username: user, title: draft.title, body: draft.body, tags: draft.tags, post_type: draft.post_type, chain: $rootScope.$storage.chain});

@@ -294,17 +294,32 @@ textarea.markdown-input {
 .profilebtn {
   position: absolute!important;
 }
-.profilebtn_follow {
+.profilebtn_favorite {
   position: absolute!important;
   right: 0!important;
   margin-right: 5px!important;
   margin-bottom: 5px!important;
   top: 5px!important;
 }
-.platform-ios .profilebtn_follow {
+.platform-ios .profilebtn_favorite {
   position: absolute!important;
   top: 5px!important;
   margin-top: 15px!important;
+  right: 0!important;
+  margin-right: 5px!important;
+  margin-bottom: 5px!important;
+}
+.profilebtn_follow {
+  position: absolute!important;
+  right: 0!important;
+  margin-right: 5px!important;
+  margin-bottom: 5px!important;
+  top: 45px!important;
+}
+.platform-ios .profilebtn_follow {
+  position: absolute!important;
+  top: 5px!important;
+  margin-top: 55px!important;
   right: 0!important;
   margin-right: 5px!important;
   margin-bottom: 5px!important;
@@ -314,7 +329,7 @@ textarea.markdown-input {
   right: 0!important;
   margin-right: 5px!important;
   margin-bottom: 5px!important;
-  top: 45px!important;
+  top: 85px!important;
 }
 .platform-ios .profilebtn_mute {
   position: absolute!important;

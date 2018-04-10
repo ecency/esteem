@@ -1078,7 +1078,24 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
           }
         });
     };
-
+    $rootScope.favor = function(user) {
+      APIs.addFavorite($rootScope.user.username, user).then(function(res){
+        $rootScope.isfavor(user);
+        $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('FAVORITE_ADDED'));
+      });
+    }
+    $rootScope.unfavor = function(user) {
+      APIs.removeFavoriteUser($rootScope.user.username, user).then(function(res){
+        $rootScope.isfavor(user);
+        $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('FAVORITE_REMOVED'));
+      });
+    }
+    $rootScope.isfavor = function(account) {
+      APIs.isFavorite($rootScope.user.username, account).then(function(res){
+        console.log(res);
+        $rootScope.isfavorite = res.data;
+      });
+    }
     $rootScope.following = function(xx, mtype) {
       $rootScope.$broadcast('show:loading');
       $rootScope.log(xx);

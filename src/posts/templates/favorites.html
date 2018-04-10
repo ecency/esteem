@@ -1,0 +1,29 @@
+<ion-view>
+   <ion-nav-bar class="bar-positive">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+      <ion-nav-buttons side='left'>
+        <button class="button button-icon button-clear" menu-toggle="left">
+         <img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.user.username}}/avatar/small" class="headerAvatar" onerror="this.src=\'img/esteem_white.png\'" onabort="this.src=\'img/esteem_white.png\'"/>
+          <i ng-if="!$root.user" class="icon ion-navicon"></i> 
+        </button>
+      </ion-nav-buttons>
+      <ion-nav-title>
+        <div class="page-title">{{'FAVORITES' | translate}}</div>
+      </ion-nav-title>
+  </ion-nav-bar>
+  <ion-content class="has-header" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
+  <ion-list ng-if="favorites" can-swipe="true">
+      <ion-item ng-repeat="item in favorites | orderBy:'-timestamp' " ng-if="item" class='item-avatar'>
+        <img image-lazy-src="https://steemitimages.com/u/{{item.account}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"/>
+        <p><h2><a href="#/app/profile/{{item.account}}">{{item.account}}</a></h2></p>
+          <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{item.timestamp|timeago}}</div></div>
+        <ion-option-button class="button-assertive" ng-click="removeFavorite(item._id)">{{'REMOVE' | translate}}
+        </ion-option-button>
+      </ion-item>
+    </ion-list>
+    <p class="tcenter gray" ng-if="favorites.length>0">{{'SWIPE_LEFT'|translate}}</p>
+    <p class="tcenter gray" ng-if="favorites.length==0">{{'NOTHING_HERE'|translate}}</p>
+
+  </ion-content>
+</ion-view>

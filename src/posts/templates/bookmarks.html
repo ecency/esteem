@@ -15,7 +15,8 @@
   </ion-nav-bar>
   <ion-content class="has-header" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 	<ion-list ng-if="$root.$storage.bookmark" can-swipe="true">
-  		<ion-item ng-repeat="item in $root.$storage.bookmark | orderBy:'-timestamp'" ng-click="$root.getContentAndOpen(item)" ng-if="item">
+  		<ion-item ng-repeat="item in $root.$storage.bookmark | orderBy:'-timestamp'" ng-click="$root.getContentAndOpen(item)" ng-if="item" class='item-avatar'>
+        <img image-lazy-src="https://steemitimages.com/u/{{item.author}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"/>
 		    <p><h2>{{item.author}}</h2></p>
         <p>{{item.permlink}}</p>
 		    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{item.timestamp|timeago}}</div></div>

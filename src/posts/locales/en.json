@@ -310,6 +310,7 @@
 	"HIDDEN_TEXT": "This post was hidden due to low ratings",
 	"FETCHCOMMENTS": "Fetch comments",
 	"FAVORITES": "Favorites",
-	"FAVORITE_REMOVED": "Removed favorite account from list",
-	"FAVORITE": "Favorite"
+	"FAVORITE_REMOVED": "Removed account from favorite list",
+	"FAVORITE": "Favorite",
+	"FAVORITE_ADDED": "Added account to favorite list"
 }

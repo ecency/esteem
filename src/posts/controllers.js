@@ -3323,9 +3323,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 app.controller('FavoritesCtrl', function($scope, $stateParams, APIs, $rootScope){
   //JSON.stringify({
   $scope.removeFavorite = function(_id) {
-    APIs.removeFavorite(_id,$rootScope.user.username).then(function(res){
+    APIs.removeFavorite($rootScope.user.username,_id).then(function(res){
       APIs.getFavorites($rootScope.user.username).then(function(res){
-        //console.log(res);
+        console.log(res);
         angular.forEach(res.data, function(v,k){
           v.timestamp = new Date(v.timestamp);
         })
@@ -3337,7 +3337,7 @@ app.controller('FavoritesCtrl', function($scope, $stateParams, APIs, $rootScope)
 
   $scope.$on('$ionicView.beforeEnter', function(){
     APIs.getFavorites($rootScope.user.username).then(function(res){
-      //console.log(res);
+      console.log(res);
       angular.forEach(res.data, function(v,k){
         v.timestamp = new Date(v.timestamp);
       });
@@ -3642,6 +3642,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
     $rootScope.log(xx);
     $rootScope.following(xx, "unfollow");
   };
+  
   $scope.muteUser = function(xx){
     $rootScope.following(xx, "mute");
   };
@@ -4051,6 +4052,7 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
       return false;
     }
   };
+  
   $scope.isAmMuting = function(xx) {
     //console.log($scope.muting);
     if ($scope.muting && $scope.muting.indexOf(xx)!==-1) {
@@ -4444,7 +4446,9 @@ app.controller('ProfileCtrl', function($scope, $stateParams, $rootScope, $ionicA
         }
       });
     };
-    
+    if ($stateParams.username !== $rootScope.user.username) {
+       $rootScope.isfavor($stateParams.username);
+    }
     $scope.refresh();
   });
   $scope.openMenu = function() {
