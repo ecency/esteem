@@ -308,5 +308,8 @@
 	"TYPE": "Typ",
 	"SHOW": "Visa",
 	"HIDDEN_TEXT": "Detta inlägg gömdes på grund av lågt betyg",
-	"FETCHCOMMENTS": ""
+	"FETCHCOMMENTS": "",
+	"FAVORITES": "",
+	"FAVORITE_REMOVED": "",
+	"FAVORITE": ""
 }
