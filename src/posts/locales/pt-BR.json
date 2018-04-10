@@ -308,5 +308,8 @@
 	"TYPE": "Tipo",
 	"SHOW": "Mostrar",
 	"HIDDEN_TEXT": "Este post foi escondido devido à baixa audiência",
-	"FETCHCOMMENTS": ""
+	"FETCHCOMMENTS": "",
+	"FAVORITES": "",
+	"FAVORITE_REMOVED": "",
+	"FAVORITE": ""
 }
