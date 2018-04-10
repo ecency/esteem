@@ -308,5 +308,8 @@
 	"TYPE": "Type",
 	"SHOW": "Tonen",
 	"HIDDEN_TEXT": "Dit bericht was verborgen door lage beoordelingen",
-	"FETCHCOMMENTS": ""
+	"FETCHCOMMENTS": "",
+	"FAVORITES": "",
+	"FAVORITE_REMOVED": "",
+	"FAVORITE": ""
 }
