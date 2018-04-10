@@ -311,5 +311,6 @@
 	"FETCHCOMMENTS": "Fetch comments",
 	"FAVORITES": "",
 	"FAVORITE_REMOVED": "",
-	"FAVORITE": ""
+	"FAVORITE": "",
+	"FAVORITE_ADDED": ""
 }
