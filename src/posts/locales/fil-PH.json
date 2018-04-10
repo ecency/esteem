@@ -308,5 +308,8 @@
 	"TYPE": "Uri",
 	"SHOW": "Ipakita",
 	"HIDDEN_TEXT": "Ang post na ito ay itinago dahil sa mababang ratings",
-	"FETCHCOMMENTS": ""
+	"FETCHCOMMENTS": "",
+	"FAVORITES": "",
+	"FAVORITE_REMOVED": "",
+	"FAVORITE": ""
 }
