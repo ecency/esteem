@@ -56,6 +56,7 @@
         "ionic-plugin-keyboard": "^2.2.1",
         "limitless-google-translate": "^1.1.8",
         "lodash": "^3.10.1",
+        "marked": "^0.3.19",
         "node-google-translate-skidz": "^1.1.1",
         "object-assign": "^4.1.0",
         "path": "^0.12.7",

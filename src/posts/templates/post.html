@@ -79,6 +79,7 @@
       <div class="my-handle"></div>
       
       <ion-thread comments="comments"></ion-thread>
+      <ion-infinite-scroll immediate-check="false" ng-if="comments_loaded" on-infinite="addMoreComments($event)" distance="5%"></ion-infinite-scroll>
     </div>
     <script id = "popoverTr.html" type="text/ng-template">
       <ion-popover-view class="detailedPost">

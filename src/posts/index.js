@@ -161,6 +161,17 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
     }
   })
 
+  .state('app.favorites', {
+    url: '/favorites',
+    views: {
+      'menuContent': {
+        //templateUrl: 'templates/post.html',
+        template: fs.readFileSync(__dirname + '/templates/favorites.html', 'utf8'),
+        controller: 'FavoritesCtrl'
+      }
+    }
+  })
+
 	.state('app.drafts', {
     url: '/drafts',
     views: {

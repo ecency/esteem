@@ -85,6 +85,10 @@
           <i class="icon ion-compose"></i>
           {{'DRAFTS'|translate}}
         </ion-item>
+        <ion-item menu-close href="#/app/favorites" class="item-borderless item-icon-left" ng-if="$root.user">
+          <i class="icon ion-heart"></i>
+          {{'FAVORITES'|translate}}
+        </ion-item>
         <ion-item menu-close href="#/app/schedules" ng-if="$root.user" class="item-borderless item-icon-left">
           <i class="icon ion-clock"></i>
           {{'SCHEDULES'|translate}}

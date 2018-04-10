@@ -31,6 +31,15 @@ module.exports = function (app) {
 			removeBookmark: function(id, user) {
         return $http.delete(API_END_POINT+"/api/bookmarks/"+user+"/"+id);
       },
+      addFavorite: function(user, favorite) {
+        return $http.post(API_END_POINT+"/api/favorite", {username: user, account: favorite.account});
+      },
+      getFavorites: function(user) {
+        return $http.get(API_END_POINT+"/api/favorites/"+user);
+      },
+      removeFavorite: function(id, user) {
+        return $http.delete(API_END_POINT+"/api/favorite/"+user+"/"+id);
+      },
 			addDraft: function(user, draft) {
         return $http.post(API_END_POINT+"/api/draft", {username: user, title: draft.title, body: draft.body, tags: draft.tags, post_type: draft.post_type, chain: $rootScope.$storage.chain});
       },
@@ -638,19 +647,10 @@ module.exports = function (app) {
 			  };
         if (textu.body || textu.comment) {
           var s = textu.body||textu.comment;
-          var md = new window.remarkable({ html: true, linkify: false, breaks: true });
+          
           var texts = "";
           
-          texts = marked(s, options);
-          
-          //texts = md.render(s)
-          //image links to html
-          //texts = texts.replace(imgRegex, '<img check-image src="$1" class="postimg" />');
-          //texts = transformYoutubeLinks(texts);
-          //texts = transformVimeoLinks(texts);
-          //texts = transformInternalLinks(texts);
-          
-
+          texts = marked(s, options);          
 
           if (!$rootScope.$storage.download) {
             texts = texts.replace(imgd, 'src="img/isimage.png" onclick="this.src=\'$1\'"');  
@@ -1475,7 +1475,7 @@ module.exports = function (app) {
             template: '<ion-item ng-if="comment.author" class="ion-comment item">\
                         <div class="ion-comment--author"><img class="round-avatar" image-lazy-src="https://steemitimages.com/u/{{comment.author}}/avatar/small" onerror="this.src=\'img/user_profile.png\'" onabort="this.src=\'img/user_profile.png\'" /><b><a href="#/app/profile/{{::comment.author}}">{{::comment.author}}</a></b>&nbsp;<div class="reputation">{{::comment.author_reputation|reputation|number:0}}</div><span>&middot;{{::comment.created|timeago}}</span></div>\
                         <div class="ion-comment--score"><span on-tap="openTooltip($event,comment)"><b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="comment.max_accepted_payout.split(\' \')[0] === \'0.000\'"><del>{{::comment | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="comment.max_accepted_payout.split(\' \')[0] !== \'0.000\'">{{::comment | sumPostTotal:$root.$storage.currencyRate | number}}</span> </span> | <span on-tap="downvotePost(comment)"><span class="fa fa-flag" ng-class="{\'assertive\':comment.downvoted}"></span></span></div>\
-                        <div class="ion-comment--text bodytext selectable" ng-if="comment.net_rshares>-1" ng-bind-html="comment | parseUrl "></div>\
+                        <div class="ion-comment--text bodytext selectable" ng-if="comment.net_rshares>-1" ng-bind-html="comment | parseUrl"></div>\
                         <div class="ion-comment--text bodytext selectable" ng-if="comment.net_rshares<0">{{"HIDDEN_TEXT"|translate}}</div>\
                         <div class="ion-comment--replies"><ion-spinner ng-if="comment.invoting"></ion-spinner><span ng-click="upvotePost(comment)" ng-if="!comment.upvoted" on-hold="openSliderr($event, comment)"><span class="fa fa-md fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{::"UPVOTE"|translate}}</span><span ng-click="unvotePost(comment)" ng-if="comment.upvoted" on-hold="openSliderr($event, comment)"><span class="fa fa-md fa-chevron-circle-up" ng-class="{\'positive\':comment.upvoted}"></span> {{::"UNVOTE_UPVOTED"|translate}}</span> | <span on-tap="$root.openInfo(comment)">{{comment.net_votes || 0}} {{"VOTES"|translate}}</span> | <span on-tap="toggleComment(comment)">{{comment.children || 0}} {{::"REPLIES"|translate}}</span> | <span on-tap="replyToComment(comment)"><span class="fa fa-reply"></span> {{"REPLY"|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.cashout_time !== \'1969-12-31T23:59:59\'" on-tap="editComment(comment)"> | <span class="ion-ios-compose-outline"></span> {{::\'EDIT\'|translate}}</span> <span ng-if="comment.author == $root.user.username && comment.abs_rshares == 0" on-tap="deleteComment(comment)"> | <span class="ion-ios-trash-outline"></span> {{::\'REMOVE\'|translate}}</span> <span on-tap="comment.net_rshares=0" ng-if="comment.net_rshares<0"> | <span class="ion-ios-eye-outline"></span> {{::\'SHOW\'|translate}}</span></div>\
                     </ion-item>',
@@ -1969,13 +1969,13 @@ module.exports = function (app) {
                 comments: '='
             },
             //Replace ng-if="!comment.showChildren" with ng-if="comment.showChildren" to hide all child comments by default
-            //Replace comment.data.replies.data.children according to the API you are using | orderBy:\'-net_votes\'
+            //Replace comment.data.replies.data.children according to the API you are using | orderBy:\'-net_votes\'.... | orderBy:\'-pending_payout_value\'
             template: '<script type="text/ng-template" id="node.html">\
                             <ion-comment comment="comment">\
                             </ion-comment>\
                             <div class="reddit-post--comment--container">\
                                  <ul ng-if="comment.showChildren" class="animate-if ion-comment--children">\
-                                    <li ng-repeat="comment in comment.comments | orderBy:\'-pending_payout_value\' track by comment.id ">\
+                                    <li ng-repeat="comment in comment.comments track by comment.id ">\
                                         <ng-include src="\'node.html\'"/>\
                                     </li>\
                                 </ul>\
@@ -1983,7 +1983,7 @@ module.exports = function (app) {
                         </script>\
                         <ion-list ng-if="comments && comments.length > 0">\
                           <ul>\
-                            <li ng-repeat="comment in comments | orderBy:\'-pending_payout_value\' track by comment.id">\
+                            <li ng-repeat="comment in comments track by comment.id">\
                                 <ng-include src="\'node.html\'"/>\
                             </li>\
                           </ul>\
@@ -2078,8 +2078,9 @@ module.exports = function (app) {
         rotatedeg: '0'
     });
 
-    const Remarkable = require('remarkable');
-    const md = new Remarkable({html: true, breaks: true, linkify: false});
+    //const Remarkable = require('remarkable');
+
+    const md = new window.remarkable({html: true, breaks: true, linkify: false});
 
     const postSummary = (postBody, length) => {
       if (!postBody) {

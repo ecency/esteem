@@ -3182,27 +3182,65 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     }
     return post;
   }
+  var paginate = function (array, page_size, page_number) {
+    --page_number; // because pages logically start with 1, but technically with 0
+    console.log(array);
+    return array.slice(page_number * page_size, (page_number + 1) * page_size);
+  }
+  var Paginator = function (items, page, per_page) {
+    var page = page || 1,
+    per_page = per_page || 10,
+    offset = (page - 1) * per_page,
+   
+    paginatedItems = items.slice(offset).slice(0, per_page),
+    total_pages = Math.ceil(items.length / per_page);
+    return {
+    page: page,
+    per_page: per_page,
+    pre_page: page - 1 ? page - 1 : null,
+    next_page: (total_pages > page) ? page + 1 : null,
+    total: items.length,
+    total_pages: total_pages,
+    data: paginatedItems
+    };
+  }
+
   $scope.fetchComments = function(author, permlink){
     $rootScope.fetching = true;
     //console.log(author,permlink);
 
     window.steem.api.getContentReplies(author, permlink, function(err, dd) {
-      //console.log(err, dd);
+      console.log(err, dd);
       if (dd) {
-        $scope.comments = dd;
-        //$rootScope.$storage.comments = dd;
-        //console.log(dd.active_votes);
+        $scope.mycomments = dd;
+        $scope.comments = [];
+        $scope.page_number = 0;
+        $scope.comments_loaded = true;
         $rootScope.fetching = false;
-        //for (var i = 0, len = dd.length; i < len; i++) {
-        //var v = dd[i];
-        //}
         if (!$scope.$$phase){
           $scope.$apply();
         }
       }
     });
-    
   }
+  $scope.addMoreComments = function() {
+    console.log('addMoreComments', $scope.page_number);
+    if ($scope.comments_loaded) {
+      //var page = paginate($scope.mycomments, 5, $scope.page_number++)
+      var page = Paginator($scope.mycomments, ++$scope.page_number, 5);
+      console.log(page);
+      $scope.comments = $scope.comments.concat(page.data)
+      console.log($scope.comments);
+      if (!$scope.$$phase) {
+        $scope.$apply();
+      }
+    }
+    if ($scope.comments.length >= $scope.mycomments.length) {
+      $scope.comments_loaded = false;
+    }
+    $scope.$broadcast('scroll.infiniteScrollComplete');
+  }
+
   $scope.$on('postAccounts', function(event, data){
     console.log('postAccounts');
   });
@@ -3281,6 +3319,34 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
 })
 //epostctrl
+
+app.controller('FavoritesCtrl', function($scope, $stateParams, APIs, $rootScope){
+  //JSON.stringify({
+  $scope.removeFavorite = function(_id) {
+    APIs.removeFavorite(_id,$rootScope.user.username).then(function(res){
+      APIs.getFavorites($rootScope.user.username).then(function(res){
+        //console.log(res);
+        angular.forEach(res.data, function(v,k){
+          v.timestamp = new Date(v.timestamp);
+        })
+        $scope.favorites = res.data;
+      });
+      $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('FAVORITE_REMOVED'));
+    });
+  };
+
+  $scope.$on('$ionicView.beforeEnter', function(){
+    APIs.getFavorites($rootScope.user.username).then(function(res){
+      //console.log(res);
+      angular.forEach(res.data, function(v,k){
+        v.timestamp = new Date(v.timestamp);
+      });
+      $scope.favorites = res.data;
+    });
+  });
+
+})
+
 app.controller('BookmarkCtrl', function($scope, $stateParams, $rootScope, $state, APIs, $interval, $ionicScrollDelegate, $filter) {
 
   $scope.removeBookmark = function(index) {
