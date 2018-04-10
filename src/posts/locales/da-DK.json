@@ -308,5 +308,8 @@
 	"TYPE": "Type",
 	"SHOW": "Vis",
 	"HIDDEN_TEXT": "Dette indlæg blev skjult pga. lav rating",
-	"FETCHCOMMENTS": "Hent kommentarer"
+	"FETCHCOMMENTS": "Hent kommentarer",
+	"FAVORITES": "",
+	"FAVORITE_REMOVED": "",
+	"FAVORITE": ""
 }
