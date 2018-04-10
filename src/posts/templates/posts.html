@@ -144,6 +144,9 @@
         		<div class="item item-icon-left" on-tap="bookmark()">
 					<i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i> {{::translations.bookmark}}
 				</div>
+				<div class="item item-icon-left" on-tap="favor()">
+					<i class="icon" ng-class="{'ion-ios-heart':isfavor(), 'ion-ios-heart-outline':!isfavor()}"></i> {{::translations.favoriteAuthor}}
+				</div>
 				<div class="item item-icon-left" on-tap="sharing()">
 					<i class="icon ion-android-share-alt"></i>
 					{{::translations.share}}

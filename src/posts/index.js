@@ -261,7 +261,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
 
   $ionicConfigProvider.tabs.style("standard"); //Makes them all look the same across all OS
 
-
+  $translateProvider.translations('en', require('./locales/ready/en')); //English
   $translateProvider.translations('en-US', require('./locales/ready/en-US')); //English
   $translateProvider.translations('ru-RU', require('./locales/ready/ru-RU')); //Russian
   $translateProvider.translations('de-DE', require('./locales/ready/de-DE')); //German
@@ -325,7 +325,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
 
   $translateProvider.useSanitizeValueStrategy(null);
   $translateProvider.preferredLanguage('en-US');
-  $translateProvider.fallbackLanguage('en-US');
+  $translateProvider.fallbackLanguage('en');
 
 });
 
@@ -457,7 +457,8 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     $rootScope.$storage.currencyRate = 1;
 
     $rootScope.$storage.languages = [
-      {id:'en-US', name: 'English'},
+      {id:'en', name: 'English'},
+      {id:'en-US', name: 'English US'},
       {id:'en-GB', name: 'English GB'},
       {id:'en-CA', name: 'English CA'},
       {id:'en-AU', name: 'English AU'}, //English Australia

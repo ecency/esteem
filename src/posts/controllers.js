@@ -750,6 +750,54 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
       //$rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_IS_BOOKMARK'));
     }
   };
+  $scope.favor = function() {
+    var fav = $rootScope.$storage.fav;
+    if ($scope.isfavor()) {
+      var len = fav.length;
+      var id = undefined;
+      for (var i = 0; i < len; i++) {
+        if (fav[i].account === $rootScope.sitem.author) {
+          id = fav[i]._id;
+          fav.splice(i, 1);
+        }
+      }
+      if (id){
+        APIs.removeFavorite($rootScope.user.username,id).then(function(res){
+          $rootScope.$storage.fav = fav;
+          $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('FAVORITE_REMOVED'));
+        });
+      }
+    } else {
+      if (fav) {
+        var oo = { account:$rootScope.sitem.author};
+        $rootScope.$storage.fav.push(oo);
+        APIs.addFavorite($rootScope.user.username, oo.account ).then(function(res){
+          $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('FAVORITE_ADDED'));
+        });
+      } else {
+        var oo = { account:$rootScope.sitem.author};
+        $rootScope.$storage.fav = [oo];
+
+        APIs.addFavorite($rootScope.user.username, oo.account ).then(function(res){
+          $rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('FAVORITE_ADDED'));
+        });
+      }
+      //$rootScope.showMessage($filter('translate')('SUCCESS'), $filter('translate')('POST_IS_BOOKMARK'));
+    }
+  }
+  $scope.isfavor = function() {
+    var isfav = $rootScope.$storage.fav || undefined;
+    if (isfav && $rootScope.sitem) {
+      var len = isfav.length;
+      for (var i = 0; i < len; i++) {
+        if (isfav[i] && isfav[i].account === $rootScope.sitem.author) {
+          return true;
+        }
+      }
+    } else {
+      return false;
+    }
+  }
 
 })
 //eappctrl
@@ -1109,6 +1157,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   $scope.translations.upvote = $translate.instant('UPVOTE');
   $scope.translations.unvote = $translate.instant('UNVOTE');
   $scope.translations.bookmark = $translate.instant('BOOKMARK');
+  $scope.translations.favoriteAuthor = $translate.instant('FAVORITE_AUTHOR');
   $scope.translations.share = $translate.instant('SHARE');
 
 
@@ -3337,11 +3386,8 @@ app.controller('FavoritesCtrl', function($scope, $stateParams, APIs, $rootScope)
 
   $scope.$on('$ionicView.beforeEnter', function(){
     APIs.getFavorites($rootScope.user.username).then(function(res){
-      console.log(res);
-      angular.forEach(res.data, function(v,k){
-        v.timestamp = new Date(v.timestamp);
-      });
       $scope.favorites = res.data;
+      $rootScope.$storage.fav = res.data;
     });
   });
 

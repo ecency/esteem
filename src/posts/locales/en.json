@@ -312,5 +312,7 @@
 	"FAVORITES": "Favorites",
 	"FAVORITE_REMOVED": "Removed account from favorite list",
 	"FAVORITE": "Favorite",
-	"FAVORITE_ADDED": "Added account to favorite list"
+	"FAVORITE_ADDED": "Added account to favorite list",
+	"FAVORITE_AUTHOR": "Favorite author"
+	
 }
