@@ -308,5 +308,8 @@
 	"TYPE": "စာရိုက္မည္",
 	"SHOW": "ျပသမည္",
 	"HIDDEN_TEXT": "ဤပိုစ့္သည္ လူအမ်ားၾကည့္ရႈရန္ အရည္အေသြး ျပည့္မီွျခင္းမရိွပါ။",
-	"FETCHCOMMENTS": ""
+	"FETCHCOMMENTS": "",
+	"FAVORITES": "",
+	"FAVORITE_REMOVED": "",
+	"FAVORITE": ""
 }
