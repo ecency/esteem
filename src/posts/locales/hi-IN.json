@@ -308,5 +308,8 @@
 	"TYPE": "प्रकार",
 	"SHOW": "दिखाया / दिखाना",
 	"HIDDEN_TEXT": "यह पोस्ट गुप्त था निम्न मूल्यांकन के कारण",
-	"FETCHCOMMENTS": ""
+	"FETCHCOMMENTS": "",
+	"FAVORITES": "",
+	"FAVORITE_REMOVED": "",
+	"FAVORITE": ""
 }
