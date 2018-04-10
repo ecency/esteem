@@ -308,5 +308,8 @@
 	"TYPE": "Type",
 	"SHOW": "Show",
 	"HIDDEN_TEXT": "This post was hidden due to low ratings",
-	"FETCHCOMMENTS": "Fetch comments"
+	"FETCHCOMMENTS": "Fetch comments",
+	"FAVORITES": "",
+	"FAVORITE_REMOVED": "",
+	"FAVORITE": ""
 }
