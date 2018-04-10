@@ -308,10 +308,10 @@
 	"TYPE": "Тип",
 	"SHOW": "Показати",
 	"HIDDEN_TEXT": "Цей пост було приховано через низький рейтинг",
-	"FETCHCOMMENTS": "",
-	"FAVORITES": "",
-	"FAVORITE_REMOVED": "",
-	"FAVORITE": "",
-	"FAVORITE_ADDED": "",
-	"FAVORITE_AUTHOR": ""
+	"FETCHCOMMENTS": "Завантажувати коментарі",
+	"FAVORITES": "Улюблені",
+	"FAVORITE_REMOVED": "Акаунт видалено зі списку улюблених",
+	"FAVORITE": "Улюблений",
+	"FAVORITE_ADDED": "Акаунт додано до списку улюблених",
+	"FAVORITE_AUTHOR": "Улюблений автор"
 }
