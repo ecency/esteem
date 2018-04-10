@@ -308,5 +308,8 @@
 	"TYPE": "Tipo",
 	"SHOW": "Mostrar",
 	"HIDDEN_TEXT": "Esta publicación se ha ocultado debido sus bajas calificaciones",
-	"FETCHCOMMENTS": ""
+	"FETCHCOMMENTS": "",
+	"FAVORITES": "",
+	"FAVORITE_REMOVED": "",
+	"FAVORITE": ""
 }
