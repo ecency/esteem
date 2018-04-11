@@ -3432,7 +3432,9 @@ app.controller('WelcomeCtrl', function($scope, $http, $ionicSlideBoxDelegate, $i
     $scope.activeIndex = data.slider.activeIndex;
     $scope.previousIndex = data.slider.previousIndex;
     $scope.isEnd = data.slider.isEnd;
-
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
   });
 
   $scope.$on('$ionicView.afterEnter', function(event) { 
