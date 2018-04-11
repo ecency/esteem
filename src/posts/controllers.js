@@ -3413,7 +3413,7 @@ app.controller('WelcomeCtrl', function($scope, $http, $ionicSlideBoxDelegate, $i
     $scope.slider.slideNext();
   }
 
-  $http.get("/welcome.json",{headers:{'Cache-Control': 'no-cache'}}).then(function(res){
+  APIs.getWelcome().then(function(res){
     $scope.slides = res.data;
   });
 

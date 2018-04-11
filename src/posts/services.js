@@ -117,6 +117,9 @@ module.exports = function (app) {
       },
       getNodes: function() {
         return $http.get("https://storage.googleapis.com/esteem/public_nodes.json",{headers:{'Cache-Control': 'no-cache'}});
+      },
+      getWelcome: function() {
+        return $http.get(API_END_POINT+"/media/welcome.json",{headers:{'Cache-Control': 'no-cache'}});
       }
 		};
 	}])
