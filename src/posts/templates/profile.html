@@ -100,10 +100,10 @@
                     <i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!d.invoting"></i>{{::translations.unvote}}</a>&nbsp;<span class="postNumbers" on-tap="openTooltip($event,d)"><b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="d.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{d | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="d.max_accepted_payout.split(' ')[0] !== '0.000'">{{d | sumPostTotal:$root.$storage.currencyRate | number}}</span></span></span>
                   </div>
                   <div class="col col-25 tright" on-tap="$root.openInfo(d)">
-                  <a href="#" class="postNumbers" on-tap="$root.openInfo(d)"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</a>
+                  <div class="postNumbers" on-tap="$root.openInfo(d)"><i class="icon ion-person-stalker"></i>&nbsp;{{d.net_votes}}</div>
                   </div>
                   <div class="col col-25 tright">
-                  <a href class="postNumbers" on-tap="open(d)"><i class="icon ion-chatbubbles"></i>&nbsp;{{::d.children}}</a>
+                  <div class="postNumbers" on-tap="open(d)"><i class="icon ion-chatbubbles"></i>&nbsp;{{::d.children}}</div>
                   </div>
               </div>
             </div>
@@ -142,10 +142,10 @@
                     </span>
                     </div>
                     <div class="col col-25 tright" on-tap="$root.openInfo(ds)">
-                    <a href="#" class="postNumbers" on-tap="$root.openInfo(ds)"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
+                    <div class="postNumbers" on-tap="$root.openInfo(ds)"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</div>
                     </div>
                     <div class="col col-25 tright">
-                    <a class="postNumbers" on-tap="open(ds)"><i class="icon ion-chatbubbles"></i>&nbsp;{{::ds.children}}</a>
+                    <div class="postNumbers" on-tap="open(ds)"><i class="icon ion-chatbubbles"></i>&nbsp;{{::ds.children}}</div>
                     </div>
                     <!--<div class="col col-10 tright">
                     <a href="#" class="subdued" on-tap="$root.reBlog(ds.author, ds.permlink)"><i class="icon ion-arrow-return-right"></i>&nbsp;</a>

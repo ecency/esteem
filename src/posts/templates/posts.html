@@ -141,10 +141,10 @@
       <ion-popover-view class="extraMenu">
         <ion-content>
         	<div class="list">
-        		<div class="item item-icon-left" on-tap="bookmark()">
+        		<div class="item item-icon-left" on-tap="bookmark()" ng-if="$root.user">
 					<i class="icon" ng-class="{'ion-ios-bookmarks':isBookmarked(), 'ion-ios-bookmarks-outline':!isBookmarked()}"></i> {{::translations.bookmark}}
 				</div>
-				<div class="item item-icon-left" on-tap="favor()">
+				<div class="item item-icon-left" on-tap="favor()" ng-if="$root.user">
 					<i class="icon" ng-class="{'ion-ios-heart':isfavor(), 'ion-ios-heart-outline':!isfavor()}"></i> {{::translations.favoriteAuthor}}
 				</div>
 				<div class="item item-icon-left" on-tap="sharing()">
