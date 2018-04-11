@@ -1,5 +1,5 @@
 <ion-modal-view title="{{$root.pintitle}}" ng-init="$root.init()" class="mypinmodal">
-    <ion-content class="vcenter">
+    <ion-content class="vcenter" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
     <div>
         <div>
             <p style="text-align:center; text-transform: uppercase;">{{$root.pinsubtitle}}</p>

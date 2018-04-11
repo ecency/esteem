@@ -3,7 +3,7 @@
     <h1 class="title">{{'VOTERS_INFO'|translate}} ({{$root.voters.active_votes.length}})</h1>
     <button class="button button-positive button-primary" ng-click="$root.closeInfo()">{{'CLOSE'|translate}}</button>
   </ion-header-bar>
-  <ion-content class="padding" delegate-handle="modalContent">
+  <ion-content class="padding" delegate-handle="modalContent" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
     <div class="row" ng-repeat="v in $root.voters.active_votes | orderBy:'-time'">
       <div class="col col-50" ng-click="$root.openAccount(v.voter)">
       <a href>{{v.voter}}<div class="reputation">{{v.reputation|reputation}}</div></a>

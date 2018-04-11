@@ -17,7 +17,7 @@
     </div>
     &nbsp;
   </ion-header-bar><!--ng-class="{'fullmodal': data.searchResult.length>0, 'halfmodal': data.searchResult.length==0}"-->
-  <ion-content>
+  <ion-content ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
     <div class="list" ng-if="data.searchResult.length>0">
       <div ng-if="data.type=='tag'">
 	      <a class="item" ng-repeat="x in data.searchResult" ng-click="openTag(x.name, x.top_posts)">

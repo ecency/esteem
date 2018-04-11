@@ -72,6 +72,17 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $s
     }
   })
 
+  .state('app.welcome', {
+    url: '/welcome',
+    views: {
+      'menuContent': {
+        //templateUrl: 'templates/settings.html'
+        template: fs.readFileSync(__dirname + '/templates/welcome.html', 'utf8'),
+        controller: 'WelcomeCtrl'
+      }
+    }
+  })
+
 	.state('app.market', {
 		url: '/market',
 		views: {
@@ -408,6 +419,10 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
     
     if (!$rootScope.$storage.theme) {
       $rootScope.$storage.theme = 'day';
+    }
+
+    if (!$rootScope.$storage.welcome) {
+      $state.go('app.welcome');
     }
 
     if (!$rootScope.$storage.socketgolos) {

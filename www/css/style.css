@@ -14,7 +14,7 @@
 
 .theme-dark .item {
   border-color: #2c363e;
-  background: #1c252c
+  background: #1c252c;
   border-width: 0.1px;
   border-style: solid;
   border-right: none;
@@ -28,7 +28,7 @@
   color: #ddc;
   font-weight: 500; }
 
-.theme-dark p, .theme-dark div, .theme-dark .item-content, .theme-dark span, .theme-dark input:not([type="range"]), .theme-dark textarea, .theme-dark select {
+.theme-dark p, .theme-dark label, .theme-dark .modal, .theme-dark .profilepage, .theme-dark div, .theme-dark .item-content, .theme-dark span, .theme-dark input:not([type="range"]), .theme-dark textarea, .theme-dark select {
   color: #aaa;
   background: #1c252c;
 }
@@ -286,6 +286,7 @@ hr {
   padding: 0;
   border-color: transparent;
 }
+
 .has-footer {
 	bottom: 40px;
 }
@@ -1211,6 +1212,7 @@ select-input input {
   margin: 0!important;
   border: 0!important;
 }
+
 .mynav nav {
     background: #284b78;
     /*border-bottom: 8px solid #fff;
@@ -1766,6 +1768,7 @@ body { padding-top: constant(safe-area-inset-top); }
   background-color: #284b78!important;
   border-color: #284b78!important;
   /*#1f5398*/
+  background-image: linear-gradient(0deg, #284b78, #284b78 50%, transparent 50%);
 }
 .tabs-icon-top.tabs-positive .tabs {
   background-color: #284b78;
@@ -1944,4 +1947,40 @@ a.postNumbers {
 }
 .extra-menu .item {
   font-weight: 500;
+}
+.item.item-input.textarea textarea {
+  max-width: 60%;
+  padding-left: 5px;
+  padding-right: 10px;
+  margin-right: 10px;
+}
+.welcomeSlides {
+  max-height: auto;
+}
+.welcomeNextBtn {
+  background: #284b78!important;
+  color: #fff!important;
+  border-radius: 25px!important;
+  width: 100px!important;
+}
+.welcomeSkipBtn {
+  background: transparent!important;
+  color: #284b78!important;
+  width: 100px!important;
+  border-radius: 25px!important;
+}
+.welcomeBox {
+  padding-top: 50px;
+  max-width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.bottom {
+  position: absolute;
+  width: 100%;
+  z-index: 100;
+  bottom:20px;
+  height:120px;
+  margin-left: auto;
+  margin-right: auto;
 }

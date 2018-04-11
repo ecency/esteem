@@ -1,0 +1,21 @@
+<ion-view hide-nav-bar="true">
+  <ion-content scroll="false" >
+    <ion-slides  options="options" slider="data.slider" class="welcomeSlides">
+      <ion-slide-page ng-repeat="sl in slides" style="background-image: url({{sl.background}});background-repeat: no-repeat;background-size:cover;background-position: center;">
+        <div class="welcomeBox">
+          <center><h1>{{sl.name}}</h1></center>
+          <center><h5 ng-bind-html="sl.description"></h5></center>
+        </div>
+      </ion-slide-page>
+    </ion-slides>
+    <div class="bottom">
+      <center>
+        <button class="button welcomeNextBtn" ng-if="!isEnd" on-tap="nextSlide()">Next</button>
+        <button class="button welcomeNextBtn" ng-if="isEnd" on-tap="skipSlides()">Finish</button>
+      </center>
+      <center>
+        <button class="button welcomeSkipBtn" on-tap="skipSlides()">Skip</button>
+      </center>
+    </div>
+  </ion-content>
+</ion-view>

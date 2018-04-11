@@ -17,10 +17,10 @@
     <div class="list" ng-if="filter.activity =='votes'">
       <div ng-repeat="row in data.votes" class="">
           <div class="item item-divider">{{ row.key }}</div>
-          <div ng-repeat="xx in row['records']" class="item item-avatar" ng-click="open(xx)">
-              <img src="https://steemitimages.com/u/{{xx.voter}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"/>
-              <h2>{{xx.voter}}&nbsp;&nbsp;{{xx.weight/100}}%</h2>
-              <p>{{xx.permlink}}</p>
+          <div ng-repeat="xx in row['records']" class="item item-avatar">
+              <img src="https://steemitimages.com/u/{{xx.voter}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'" on-tap="$root.openAccount(xx.voter)"/>
+              <h2 ng-click="open(xx)">{{xx.voter}}&nbsp;&nbsp;{{xx.weight/100}}%</h2>
+              <p ng-click="open(xx)">{{xx.permlink}}</p>
           </div>
       </div>
       
@@ -31,20 +31,20 @@
     <div class="list" ng-if="filter.activity =='replies'">
       <div ng-repeat="row in data.replies" class="">
           <div class="item item-divider">{{ row.key }}</div>
-          <div ng-repeat="xx in row['records']" class="item item-avatar" ng-click="open(xx)">
-              <img src="https://steemitimages.com/u/{{xx.author}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"/>
-              <h2>{{xx.author}}</h2>
-              <p>{{xx.body | postSummary}}</p>
+          <div ng-repeat="xx in row['records']" class="item item-avatar">
+              <img src="https://steemitimages.com/u/{{xx.author}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'" on-tap="$root.openAccount(xx.author)"/>
+              <h2 ng-click="open(xx)">{{xx.author}}</h2>
+              <p ng-click="open(xx)">{{xx.body | postSummary}}</p>
           </div>
       </div>
     </div>
     <div class="list" ng-if="filter.activity =='mentions'">
       <div ng-repeat="row in data.mentions" class="">
           <div class="item item-divider">{{ row.key }}</div>
-          <div ng-repeat="xx in row['records']" class="item item-avatar" ng-click="open(xx)">
-              <img src="https://steemitimages.com/u/{{xx.author}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"/>
-              <h2>{{xx.author}}</h2>
-              <p>{{xx.permlink}}</p>
+          <div ng-repeat="xx in row['records']" class="item item-avatar">
+              <img src="https://steemitimages.com/u/{{xx.author}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'" on-tap="$root.openAccount(xx.author)"/>
+              <h2 ng-click="open(xx)">{{xx.author}}</h2>
+              <p ng-click="open(xx)">{{xx.permlink}}</p>
           </div>
       </div>
 
@@ -56,7 +56,7 @@
       <div ng-repeat="row in data.follows" class="">
           <div class="item item-divider">{{ row.key }}</div>
           <div ng-repeat="xx in row['records']" class="item item-avatar">
-              <img src="https://steemitimages.com/u/{{xx.follower}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"/>
+              <img src="https://steemitimages.com/u/{{xx.follower}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'" on-tap='$root.openAccount(xx.follower)'/>
               <h2><a href="#/app/profile/{{xx.follower}}">{{xx.follower}}</a></h2>
               <p><div ng-if="xx.blog">following</div><div ng-if="!xx.blog">unfollowed</div></p>
           </div>
@@ -69,7 +69,7 @@
       <div ng-repeat="row in data.reblogs" class="">
           <div class="item item-divider">{{ row.key }}</div>
           <div ng-repeat="xx in row['records']" class="item item-avatar">
-              <img src="https://steemitimages.com/u/{{xx.account}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"/>
+              <img src="https://steemitimages.com/u/{{xx.account}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'" on-tap="$root.openAccount(xx.account)"/>
               <h2><a href="#/app/profile/{{xx.account}}">{{xx.account}}</a></h2>
               <p><a href="#/app/post/tag/{{xx.json[1].author}}/{{xx.permlink}}">{{xx.permlink}}</a></p>
           </div>
@@ -81,7 +81,7 @@
     <div class="list" ng-if="filter.activity =='leaderboard'">
       <center class="gray italic">last 30 days</center>
       <div class="item item-avatar" ng-repeat="xx in data.leaderboard" href="#/app/profile/{{xx._id}}">
-        <img src="https://steemitimages.com/u/{{xx._id}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"/>
+        <img src="https://steemitimages.com/u/{{xx._id}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'" on-tap="$root.openAccount(xx._id)"/>
         <h2>{{$index+1}}.&nbsp;<a href="#/app/profile/{{xx._id}}">{{xx._id}}</a></h2>
         <p>{{xx.count}}</p>
       </div>

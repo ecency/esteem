@@ -1382,7 +1382,7 @@ module.exports = function (app) {
         selectOptions: '='
       },
       require: '?^ngModel',
-      template: '<div class="item-input" style="width:100%;"><input ng-model="currentInput" type="text" ng-change="socketChange(currentInput)" on-hold="showOptions()"></div>',
+      template: '<div class="item-input" style="width:100%;"><input ng-model="currentInput" type="text" ng-change="socketChange(currentInput)" on-tap="showOptions()"></div>',
       link: function(scope, element, attrs) {
         scope.options = {
           selected: ''

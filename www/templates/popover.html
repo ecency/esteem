@@ -1,5 +1,5 @@
 <ion-popover-view ng-class="{'menuPopover':$root.user,'menuPopoverLog':!$root.user}">
-<ion-content>
+<ion-content ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
   <div class="list">
     <!--<a class="item" href="#"  ng-click="showFilter()">
       <i class="icon ion-stats-bars"></i>

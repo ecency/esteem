@@ -83,7 +83,6 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $rootScope, $s
     //setTimeout(function() {
     $state.go('app.post', {category: $rootScope.sitem.category, author: $rootScope.sitem.author, permlink: $rootScope.sitem.permlink});  
     //}, 1);
-    
   };
 
   $rootScope.$on('openComments', function(e, args) {
@@ -1372,6 +1371,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
   });
 
   $rootScope.$on('closePostModal', function() {
+
     if ($scope.pmodal)
       $scope.pmodal.hide();
     if ($scope.modalp)
@@ -2846,7 +2846,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
   }
   $scope.edit = false;
   $scope.editPost = function(xx) {
-    //console.log(xx);
+    console.log(xx);
     $scope.edit = true;
     $scope.spost.advanced = false;
     if (xx.parent_author !== "") {
@@ -2854,8 +2854,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     } else {
       $scope.openPostModal();  
     }
-    
-    setTimeout(function() {
+    //$rootScope.sitem = xx;
+    $scope.$evalAsync(function(){
       if (!$scope.spost.body) {
         $scope.spost = xx;
         $scope.patchbody = xx.body;
@@ -2868,8 +2868,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $scope.spost.tags = ts;
       }
       $scope.tagsChange();
-    //});
-    }, 1);
+    })
     //console.log($scope.spost.operation_type);
   }
 
@@ -3143,6 +3142,10 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
 
   $scope.closeModal = function() {
     $scope.replying = false;
+    $rootScope.sitem.body = $scope.spost.comment;
+    $rootScope.sitem.category = $scope.spost.category[0];
+
+    console.log($rootScope.sitem, $scope.spost);
     $scope.modal.hide();
     $ionicBody.removeClass('modal-open');
   };
@@ -3266,6 +3269,7 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
         $scope.page_number = 0;
         $scope.comments_loaded = true;
         $rootScope.fetching = false;
+        $scope.addMoreComments();
         if (!$scope.$$phase){
           $scope.$apply();
         }
@@ -3390,6 +3394,66 @@ app.controller('FavoritesCtrl', function($scope, $stateParams, APIs, $rootScope)
       $rootScope.$storage.fav = res.data;
     });
   });
+
+})
+
+app.controller('WelcomeCtrl', function($scope, $http, $ionicSlideBoxDelegate, $ionicSideMenuDelegate, $stateParams, $rootScope, $state, APIs, $interval, $ionicScrollDelegate, $filter) {
+
+  $scope.options = {
+    loop: false,
+    //effect: 'fade',
+    speed: 500,
+  }
+
+  $scope.skipSlides = function(){
+    $rootScope.$storage.welcome = true;
+    $state.go('app.posts');
+  }
+  $scope.nextSlide = function(){
+    $scope.slider.slideNext();
+  }
+
+  $http.get("/welcome.json",{headers:{'Cache-Control': 'no-cache'}}).then(function(res){
+    $scope.slides = res.data;
+  });
+
+  $scope.$on("$ionicSlides.sliderInitialized", function(event, data){
+    // data.slider is the instance of Swiper
+    $scope.slider = data.slider;
+  });
+
+  $scope.$on("$ionicSlides.slideChangeStart", function(event, data){
+    console.log('Slide change is beginning');
+  });
+
+  $scope.$on("$ionicSlides.slideChangeEnd", function(event, data){
+    // note: the indexes are 0-based
+    console.log('Slide change is ended');
+    $scope.activeIndex = data.slider.activeIndex;
+    $scope.previousIndex = data.slider.previousIndex;
+    $scope.isEnd = data.slider.isEnd;
+
+  });
+
+  $scope.$on('$ionicView.afterEnter', function(event) { 
+    $ionicSideMenuDelegate.canDragContent(false); 
+  })
+
+
+  /*
+  $scope.$on("$ionicSlides.sliderInitialized", function(event, data){
+    // grab an instance of the slider
+    $scope.slider = data.slider;
+  });
+
+  function dataChangeHandler(){
+    // call this function when data changes, such as an HTTP request, etc
+    if ( $scope.slider ){
+      $scope.slider.updateLoop();
+    }
+  }
+  */
+
 
 })
 
