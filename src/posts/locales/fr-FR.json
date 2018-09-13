@@ -301,17 +301,17 @@
 	"PARTICIPATION_BADGES": "",
 	"FOLLOWER_BADGES": "",
 	"AUTHOR_REWARD_BADGES": "",
-	"OTHER": "",
+	"OTHER": "Autre",
 	"ACTIVITY": "",
 	"LEADERBOARD": "",
-	"TRANSLATE": "",
-	"TYPE": "",
+	"TRANSLATE": "Traduis",
+	"TYPE": "Type",
 	"SHOW": "",
 	"HIDDEN_TEXT": "",
 	"FETCHCOMMENTS": "",
-	"FAVORITES": "",
+	"FAVORITES": "Favoris",
 	"FAVORITE_REMOVED": "",
 	"FAVORITE": "",
 	"FAVORITE_ADDED": "",
-	"FAVORITE_AUTHOR": ""
+	"FAVORITE_AUTHOR": "Auteur préféré"
 }
