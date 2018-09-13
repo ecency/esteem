@@ -308,7 +308,7 @@
 	"TYPE": "Type",
 	"SHOW": "",
 	"HIDDEN_TEXT": "",
-	"FETCHCOMMENTS": "",
+	"FETCHCOMMENTS": "Charger les commentaires",
 	"FAVORITES": "Favoris",
 	"FAVORITE_REMOVED": "",
 	"FAVORITE": "",
