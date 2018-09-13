@@ -117,7 +117,7 @@
 	"USERNAME": "Nom d'utilisateur",
 	"CARD_VIEW": "Vue thuile",
 	"COMPACT_VIEW": "Vue compacte",
-	"COMPACT_VIEW_TEXT": "",
+	"COMPACT_VIEW_TEXT": "Vous permet de mieux contrôler l'utilisation de vos données réseau en modifiant la vue sans images.",
 	"SEARCH": "Rechercher",
 	"SUBMIT_A_STORY": "Proposer un post",
 	"REPLYTO": "Répondre à",
@@ -254,7 +254,7 @@
 	"ESCROW_FEE": "Frais engagés",
 	"ESCROW_TERMS": "Modalités tierces",
 	"NIGHT_MODE": "Mode Nuit",
-	"NIGHT_MODE_TEXT": "",
+	"NIGHT_MODE_TEXT": "Le mode nuit vous offre un thème de couleur sombre pour que vous profitiez de surfer pendant la nuit, ou dans un environnement de faible luminosité, sans faire mal à vos yeux.",
 	"DAY_MODE": "Mode jour",
 	"VIEW_CONTEXT": "Voir le contexte",
 	"USER_NOTFOUND": "Utilisateur non trouvé",
@@ -311,7 +311,7 @@
 	"FETCHCOMMENTS": "Charger les commentaires",
 	"FAVORITES": "Favoris",
 	"FAVORITE_REMOVED": "",
-	"FAVORITE": "",
+	"FAVORITE": "Préférée",
 	"FAVORITE_ADDED": "Le compte a été ajouté à la liste des favoris",
 	"FAVORITE_AUTHOR": "Auteur préféré"
 }
