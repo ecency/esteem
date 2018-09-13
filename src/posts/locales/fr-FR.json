@@ -296,7 +296,7 @@
 	"POWER_UP": "",
 	"FAQ": "",
 	"TRANSFER_TO_SAVINGS": "",
-	"CONVERT_TO_STEEM": "",
+	"CONVERT_TO_STEEM": "Convertir à {{platformname}}",
 	"WITHDRAW": "",
 	"PARTICIPATION_BADGES": "",
 	"FOLLOWER_BADGES": "",
@@ -312,6 +312,6 @@
 	"FAVORITES": "Favoris",
 	"FAVORITE_REMOVED": "",
 	"FAVORITE": "",
-	"FAVORITE_ADDED": "",
+	"FAVORITE_ADDED": "Le compte a été ajouté à la liste des favoris",
 	"FAVORITE_AUTHOR": "Auteur préféré"
 }
