@@ -876,14 +876,75 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       $rootScope.infomodal = modal;
     });
 
-    $rootScope.openInfo = function(xx) {
-      //console.log(xx);
-      if (xx && xx.active_votes.length==0) {
-        window.steem.api.getActiveVotesAsync(xx.author, xx.permlink, function(err, dd) {
-          //console.log(err, dd);
-          xx.active_votes = dd;    
-        }); 
+    // 보팅 내역 팝업 페이지 열기
+    $rootScope.openInfo = async function(xx) {
+      // console.log(xx);
+      // [수정] 보팅 금액 계산 로직 추가 - 2018.09.27
+      if (xx && xx.active_votes.length == 0) {
+        // 보팅 내역 조회
+        // window.steem.api.getActiveVotesAsync(xx.author, xx.permlink, function(err, dd) {
+        //   //console.log(err, dd);
+        //   xx.active_votes = dd;    
+        // }); 
+        xx.active_votes = window.steem.api.getActiveVotesAsync(xx.author, xx.permlink);
       }
+
+      let cashout_time = xx.cashout_time;
+      console.log('cashout_time', cashout_time)
+      console.log(' xx.active_votes.length',  xx.active_votes.length)
+      if ( cashout_time !== "1969-12-31T23:59:59" && xx.active_votes.length > 0 ) { 
+        // 페이아웃 이전인 경우     
+        console.log(1111111111);
+        // 보상 예정 금액
+        // let pending_payout_value = parseFloat(xx.pending_payout_value.split(' ')[0]);
+        let [rewardFund, priceInfo] = await Promise.all([
+          window.steem.api.getRewardFundAsync('post'),
+          window.steem.api.getCurrentMedianHistoryPriceAsync()
+        ]);
+
+        // let rewardFund = await window.steem.api.getRewardFundAsync('post');
+        let rewardBalance = parseFloat(rewardFund.reward_balance.split(' ')[0]);
+        let recentClaims = parseFloat(rewardFund.recent_claims);
+
+        // let priceInfo  = await  window.steem.api.getCurrentMedianHistoryPriceAsync();
+        let base =  parseFloat(priceInfo.base.split(' ')[0]);
+        let quote =  parseFloat(priceInfo.quote.split(' ')[0]);
+        let price = base / quote;
+        
+        // 보팅금액 계산
+        xx.active_votes.map(e => {
+          let rshares = Number(e.rshares);
+          e.value = (rshares * (rewardBalance / recentClaims) * price).toFixed(3);
+          return e;
+        });
+        // console.log('active_votes', xx.active_votes);
+        // value = (e.rshares * (rewardBalance / recentClaims) * price);
+        // curation = '≈$' + (e.weight / xx.total_vote_weight * pending_payout_value * 0.25 / price).toFixed(3);
+      } else { 
+        // 페이아웃 이후인 경우
+        
+        // 보상된 금액
+        let total_payout_value = parseFloat(xx.total_payout_value.split(' ')[0]);
+        let curator_payout_value = parseFloat(xx.curator_payout_value.split(' ')[0]);
+
+        let totalRshares = 0;
+        let totalWeight = 0;
+        xx.active_votes.forEach(e => {
+          // 해당 포스트에 보팅된 총 리워드 합산
+          totalRshares += parseFloat(e.rshares);
+          // 해당 포스트에 보팅된 총 가중치 합산
+          totalWeight += parseFloat(e.weight);
+        })
+        let o = total_payout_value / (total_payout_value + curator_payout_value);
+        // value = e.rshares / totalRshares * parseFloat(total_payout_value / o);
+        // curation = (e.weight / totalWeight * this.curator_payout_value).toFixed(3)
+        xx.active_votes.map(e => {
+          // 총 보상금액(저자+큐레이터)에서 각 가중치 비율별로 나누어 보팅금액을 계산한다.
+          e.value = (e.rshares / totalRshares * parseFloat(total_payout_value / o)).toFixed(3);
+          return e;
+        });
+      }
+
       $rootScope.voters = xx;
       $rootScope.infomodal.show(); 
       //$rootScope.$evalAsync(function($rootScope) {

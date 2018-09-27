@@ -42,12 +42,13 @@
 
 `bower install`
 
+###### 빌드하기
 `gulp scripts`
 
 ###### 브라우저에서 실행
-`ionic serve`
+`ionic serve dev`
 
-###### 안드로이드로 빌드
+###### 안드로이드로 실행
 `ionic cordova run android`
 
 Start developing with Ionic.

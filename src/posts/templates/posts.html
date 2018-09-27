@@ -96,9 +96,10 @@
 					      <a href="#" class="postNumbers" ng-if="ds.upvoted" on-tap="unvotePost(ds)"><ion-spinner ng-if="ds.invoting"></ion-spinner><i class="fa fa-chevron-circle-up fa-lg positive" ng-if="!ds.invoting"></i>{{::translations.unvote}}</a>&nbsp;<span class="postNumbers" on-tap="openTooltip($event,ds)">
 									<b>{{::$root.$storage.currency|getCurrencySymbol}}</b> <span ng-if="ds.max_accepted_payout.split(' ')[0] === '0.000'"><del>{{ds | sumPostTotal:$root.$storage.currencyRate | number}}</del></span><span ng-if="ds.max_accepted_payout.split(' ')[0] !== '0.000'">{{ds | sumPostTotal:$root.$storage.currencyRate | number}}</span></span>
 					      </span>
-					      </div>
+                </div>
+                <!-- 보팅 수 -->
 					      <div class="col col-25 tright" on-tap="$root.openInfo(ds)">
-					      <a href="#" class="postNumbers" on-tap="$root.openInfo(ds)"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
+					        <a href="#" class="postNumbers" on-tap="$root.openInfo(ds)"><i class="icon ion-person-stalker"></i>&nbsp;{{ds.net_votes}}</a>
 					      </div>
 					      <div class="col col-25 tright">
 					      <a href="#" class="postNumbers"><i class="icon ion-chatbubbles"></i>&nbsp;{{::ds.children}}</a>
