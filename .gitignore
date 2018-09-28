@@ -11,3 +11,5 @@ res/
 temp/
 config.js
 resources/*.xcf
+yarn.lock
+package-lock.json
