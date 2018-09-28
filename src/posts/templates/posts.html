@@ -4,7 +4,7 @@
   		</ion-nav-back-button>
 	    <ion-nav-buttons side="left">
 	      <button class="button button-icon button-clear" ng-if="!$root.voiceOver" menu-toggle="left">
-	      	<img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.user.username}}/avatar/small" class="headerAvatar" onerror="this.src='img/esteem_white.png'" onabort="this.src='img/esteem_white.png'"/>
+	      	<img ng-if="$root.user" ng-src="https://steemitimages.com/u/{{$root.user.username}}/avatar/small" class="headerAvatar" onerror="this.src='img/esteem_white.png'" onabort="this.src='img/esteem_white.png'"/>
 	      	<i ng-if="!$root.user" class="icon ion-navicon"></i>
 	      </button>
 	      <a href class="button button-icon button-clear ion-navicon" ng-if="$root.voiceOver" menu-toggle="left">{{::translations.menu}}</a>
@@ -29,7 +29,7 @@
 	    	<div ng-repeat="d in data track by d.id">
 	    	   <div class="list" >
 				<div class="item item-avatar postList item-icon-right" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
-						<img class="round-avatar-title" src="https://steemitimages.com/u/{{d.author}}/avatar/small" onerror="this.src='img/logo.png'" onabort="this.src='img/logo.png'" />
+						<img class="round-avatar-title" ng-src="https://steemitimages.com/u/{{d.author}}/avatar/small" onerror="this.src='img/logo.png'" onabort="this.src='img/logo.png'" />
 					    <div class="row postdetails">
 					    	<div class="col"><b><a href="#/app/profile/{{d.author}}">{{d.author}}</a></b>&nbsp;<div class="reputation">{{::d.author_reputation|reputation|number:0}}</div><p>{{d.created|timeago}}&nbsp;&middot;&nbsp;<a href on-tap="openTag(d.category, 5)">#{{::d.category|detransliterate:false}}</a></p>
 					    	</div>
@@ -72,7 +72,7 @@
 	    	   <div class="list card" ng-if="ds" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 
 				<div class="item item-avatar postList item-icon-right" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
-					<img class="round-avatar-title" src="https://steemitimages.com/u/{{ds.author}}/avatar/small" onerror="this.src='img/logo.png'" onabort="this.src='img/logo.png'"  />
+					<img class="round-avatar-title" ng-src="https://steemitimages.com/u/{{ds.author}}/avatar/small" onerror="this.src='img/logo.png'" onabort="this.src='img/logo.png'"  />
 				    <div class="row postdetails">
 				    	<div class="col"><b><a href="#/app/profile/{{ds.author}}">{{ds.author}}</a></b>&nbsp;<div class="reputation">{{::ds.author_reputation|reputation|number:0}}</div><p class="postNumbers">{{ds.created|timeago}}&nbsp;&middot;&nbsp;<a href on-tap="openTag(ds.category, 5)">#{{::ds.category|detransliterate:false}}</a></p></div></div>
 				    <i class="postNumbers icon ion-ios-more" on-tap="openExtraMenu($event,ds)"></i>

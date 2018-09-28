@@ -891,11 +891,11 @@ app.run(function($ionicPlatform, $rootScope, $localStorage, $interval, $ionicPop
       }
 
       let cashout_time = xx.cashout_time;
-      console.log('cashout_time', cashout_time)
-      console.log(' xx.active_votes.length',  xx.active_votes.length)
+      // console.log('cashout_time', cashout_time)
+      // console.log(' xx.active_votes.length',  xx.active_votes.length)
       if ( cashout_time !== "1969-12-31T23:59:59" && xx.active_votes.length > 0 ) { 
         // 페이아웃 이전인 경우     
-        console.log(1111111111);
+        // console.log(1111111111);
         // 보상 예정 금액
         // let pending_payout_value = parseFloat(xx.pending_payout_value.split(' ')[0]);
         let [rewardFund, priceInfo] = await Promise.all([

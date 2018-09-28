@@ -1984,3 +1984,54 @@ a.postNumbers {
   margin-left: auto;
   margin-right: auto;
 }
+
+/* 추가 - 2018.09.28 */
+.bodytext {
+  font-family: 'Noto Sans KR'!important; 
+}
+.bodytext p, .bodytext td, .bodytext th, .bodytext blockquote {
+  font-size: 1rem; /* rem: 최상위 요소의 폰트 크기 기준, em: 해당 스타일에 지정된 폰트 크기 기준 */
+}
+.bodytext code {
+  padding: 2px 4px;
+  font-size: 90%;
+  color: #c7254e;
+  background-color: #f9f2f4;
+  border-radius: 2px;
+  word-wrap: break-word;
+}
+.bodytext pre {
+  display: block;
+  font-family: monospace;
+  white-space: pre;
+  margin: 1em 0px;
+  overflow: auto;
+  font-size: 12px;
+  line-height: 1.5384616;
+  word-break: break-all;
+  word-wrap: break-word;
+  color: #333;
+  background-color: #fcfcfc;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 20px;
+  margin: 0;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+.bodytext pre, .bodytext code {
+  font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+}
+.bodytext pre code {
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+  white-space: pre-wrap;
+  background-color: transparent;
+  border-radius: 0;
+}

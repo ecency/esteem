@@ -2085,7 +2085,7 @@ module.exports = function (app) {
         fontWeight: 400, //
         charCount: 1,
         // [수정] fontFamily에 한글 폰트 추가 - 2018.09.27
-        fontFamily: '"Noto Sans KR", HelveticaNeue-Light,Helvetica Neue Light,Helvetica Neue,Helvetica, Arial,Lucida Grande, sans-serif',
+        fontFamily: 'Noto Sans KR, HelveticaNeue-Light,Helvetica Neue Light,Helvetica Neue,Helvetica, Arial,Lucida Grande, sans-serif',
         base: 'data:image/svg+xml;base64,',
         radius: 'border-radius:50%;',
         custombgcolor: '',
