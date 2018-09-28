@@ -74,7 +74,7 @@ Please use [issue tracker](https://github.com/feruzm/esteem/issues) for question
 
 Steem은 누구나 보상을 받을 수 있는 블록체인 기반의 소셜 미디어 플랫폼입니다. Steem 블록체인은 STEEM이라고하는 암호 토큰을 보유 할뿐만 아니라 사용자가 만든 콘텐츠, 해당 콘텐츠에 투표하는 시스템 및 인기 소셜 네트워킹 사이트에서 찾을 수 있는 많은 다른 기능을 보유하고 있습니다.
 
-개발 및 프로젝트에 대한 자세한 정보는 http://www.esteem.app를 방문하십시오.
+개발 및 프로젝트에 대한 자세한 정보는 [http://www.esteem.app](http://www.esteem.app)를 방문하십시오.
 
 
 # License

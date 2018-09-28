@@ -4,7 +4,7 @@
     	</ion-nav-back-button>
 	    <ion-nav-buttons side='left'>
 	      <button class="button button-icon button-clear" ng-if="!$root.voiceOver" menu-toggle="left">
-         <img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.user.username}}/avatar/small" class="headerAvatar" onerror="this.src=\'img/esteem_white.png\'" onabort="this.src=\'img/esteem_white.png\'" />
+         <img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.user.username}}/avatar/small" class="headerAvatar" onerror="this.src='img/esteem_white.png'" onabort="this.src='img/esteem_white.png'" />
         </button>
         <a href class="button button-icon ion-more" ng-if="$root.voiceOver" menu-toggle="left">{{::translations.menu}}</a>
 	    </ion-nav-buttons>
@@ -37,7 +37,7 @@
       <p class="title h3" ng-if="$root.sitem.root_title && $root.sitem.title==''"><a href="#/app/post{{$root.sitem.url.split('#')[0]}}">{{::translations.view}}</a></p>
     	<p class="title h3">{{$root.sitem.title}}</p>
     	<div class="stitle row gray"><div class="col">
-        <img class="round-avatar" ng-src="https://steemitimages.com/u/{{$root.sitem.author}}/avatar" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'" /> <b><a href="#/app/profile/{{$root.sitem.author}}">{{$root.sitem.author}}</a></b>&nbsp;<div class="reputation">{{$root.sitem.author_reputation|reputation|number:0}}</div>&middot;{{$root.sitem.created|timeago}} {{::translations.in}}&nbsp;{{$root.sitem.category|detransliterate:false}}</div>
+        <img class="round-avatar" ng-src="https://steemitimages.com/u/{{$root.sitem.author}}/avatar" onerror="this.src='img/logo.png'" onabort="this.src='img/logo.png'" /> <b><a href="#/app/profile/{{$root.sitem.author}}">{{$root.sitem.author}}</a></b>&nbsp;<div class="reputation">{{$root.sitem.author_reputation|reputation|number:0}}</div>&middot;{{$root.sitem.created|timeago}} {{::translations.in}}&nbsp;{{$root.sitem.category|detransliterate:false}}</div>
          <div class="pull-right">
           <span ng-if="$root.voiceOver">
             <i class="fa fa-flag" on-tap="downvotePost($root.sitem)" ng-if="!$root.sitem.downvoted">{{::translations.downvote}}</i>

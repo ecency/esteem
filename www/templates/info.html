@@ -7,7 +7,7 @@
   <ion-content class="padding" delegate-handle="modalContent" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
     <div class="row" ng-repeat="v in $root.voters.active_votes | orderBy:'-time'">
       <div class="col col-50" ng-click="$root.openAccount(v.voter)">
-        <img style="width:32px;height:32px" class="round-avatar-title" src="https://steemitimages.com/u/{{v.voter}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"  />
+        <img style="width:32px;height:32px" class="round-avatar-title" src="https://steemitimages.com/u/{{v.voter}}/avatar/small" onerror="this.src='img/logo.png'" onabort="this.src='img/logo.png'"  />
         <a href>{{v.voter}}<div class="reputation">{{v.reputation|reputation}}</div></a>
       </div>
       <div class="col">
