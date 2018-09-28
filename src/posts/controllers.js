@@ -3413,9 +3413,27 @@ app.controller('WelcomeCtrl', function($scope, $http, $ionicSlideBoxDelegate, $i
     $scope.slider.slideNext();
   }
 
-  APIs.getWelcome().then(function(res){
-    $scope.slides = res.data;
-  });
+  // [수정] Welcome 데이터 - 2018.09.28
+   $scope.slides = [
+    {
+      "name": "Welcome home",
+      "background": "https://img.esteem.ws//suebyo7vji.png",
+      "description": "We have been waiting you <br> Happy to have you with us, please come in..."
+    },
+    {
+      "name": "Start exploring",
+      "background": "https://img.esteem.ws//1rbl57vauq.png",
+      "description": "Share your moments, experiences and skills with community"
+    },
+    {
+      "name": "Get rewarded",
+      "background": "https://img.esteem.ws//iuvvfjn68m.png",
+      "description": "Each contribution is rewarded by community with tokens and of course with friendship"
+    }
+  ];
+  // APIs.getWelcome().then(function(res){
+  //   $scope.slides = res.data;
+  // });
 
   $scope.$on("$ionicSlides.sliderInitialized", function(event, data){
     // data.slider is the instance of Swiper

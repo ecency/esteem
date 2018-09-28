@@ -2,6 +2,14 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link rel="manifest" href="./manifest.json">
+    <!-- Add to home screen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="eSteem">
+    <link rel="apple-touch-icon" href="./img/logo.png">
+    <meta name="msapplication-TileImage" content="./img/logo.png">
+    <meta name="msapplication-TileColor" content="#2F3BA2">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR" rel="stylesheet">
     <!--<meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; style-src 'self' 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">-->
@@ -53,10 +61,11 @@
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
-
   </head>
 
   <body ng-app="esteem" dir="{{$root.$storage.dir}}">
+    <noscript>This is your fallback content in case JavaScript fails to load.</noscript>
     <ion-nav-view></ion-nav-view>
+    <script>!function(){"use strict";var o=Boolean("localhost"===window.location.hostname||"[::1]"===window.location.hostname||window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/));window.addEventListener("load",function(){"serviceWorker"in navigator&&("https:"===window.location.protocol||o)&&navigator.serviceWorker.register("service-worker.js").then(function(o){o.onupdatefound=function(){if(navigator.serviceWorker.controller){var n=o.installing;n.onstatechange=function(){switch(n.state){case"installed":break;case"redundant":throw new Error("The installing service worker became redundant.")}}}}}).catch(function(o){console.error("Error during service worker registration:",o)})})}();</script>
   </body>
 </html>

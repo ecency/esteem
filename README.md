@@ -35,8 +35,13 @@
 ~~`npm install -g cordova`~~
 
 ~~`npm install -g gulp`~~
+###### 모듈 설치
 
-`yarn global add gulp semver cordova ionic@latest`
+ionic 최신 버전에서는 빌드가 되지 않는다. 2.x.x 버전을 설치한다.
+
+`npm install -g ionic@2.3.0 cordova gulp semver`
+또는
+`yarn global add gulp semver cordova ionic@2.2.3`
 
 `npm install`
 
@@ -45,11 +50,20 @@
 ###### 빌드하기
 `gulp scripts`
 
+###### 각 플랫폼별 결과물 테스트
+`ionic serve --lab`
+
 ###### 브라우저에서 실행
 `ionic serve dev`
 
 ###### 안드로이드로 실행
 `ionic cordova run android`
+
+###### 플랫폼별 빌드
+```
+ionic cordova build android
+ionic cordova build ios
+```
 
 Start developing with Ionic.
 

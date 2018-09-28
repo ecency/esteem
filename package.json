@@ -3,7 +3,11 @@
     "version": "1.1.1",
     "description": "eSteem Mobile Application",
     "scripts": {
-      "dev": "gulp scripts && ionic serve dev"
+        "dev": "gulp scripts && ionic serve dev",
+        "android": "ionic cordova run android",
+        "ios": "ionic cordova run ios",
+        "build-debug": "ionic cordova build android",
+        "build": "ionic cordova build android --prod --release"
     },
     "dependencies": {
         "@steemit/steem-js": "^0.6.10",
@@ -25,7 +29,6 @@
         "cordova-plugin-crosswalk-webview": "^2.4.0",
         "cordova-plugin-customurlscheme": "^4.3.0",
         "cordova-plugin-device": "^1.1.7",
-        "cordova-plugin-fcm": "^2.1.2",
         "cordova-plugin-file": "^4.3.3",
         "cordova-plugin-file-transfer": "^1.7.1",
         "cordova-plugin-firebase-analytics": "^0.10.2",
@@ -98,17 +101,12 @@
             "id": "phonegap-plugin-barcodescanner"
         },
         "cordova-plugin-media",
-        "phonegap-plugin-push",
         {
             "locator": "https://github.com/apache/cordova-plugin-splashscreen.git",
             "id": "cordova-plugin-splashscreen"
         },
         "cordova-plugin-camera",
-        "cordova-plugin-app-version",
-        {
-            "locator": "https://github.com/looklookson/cordova-plugin-fcm",
-            "id": "cordova-plugin-fcm"
-        }
+        "cordova-plugin-app-version"
     ],
     "cordovaPlatforms": [
         "ios",
@@ -124,13 +122,6 @@
             },
             "cordova-plugin-compat": {},
             "cordova-plugin-device": {},
-            "cordova-plugin-fcm": {},
-            "cordova-plugin-firebase-dynamiclinks": {
-                "APP_DOMAIN": "esteem.ws",
-                "APP_PATH": "/",
-                "REVERSED_CLIENT_ID": "com.googleusercontent.apps.727329145824-csv1i34de9h95lgguot23rs4umg36g7d",
-                "CONTACTS_USAGE_DESCRIPTION": "Inviting friends"
-            },
             "cordova-plugin-globalization": {},
             "cordova-plugin-inappbrowser": {},
             "cordova-plugin-splashscreen": {},
