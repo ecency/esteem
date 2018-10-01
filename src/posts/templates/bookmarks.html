@@ -4,7 +4,7 @@
       </ion-nav-back-button>
       <ion-nav-buttons side='left'>
         <button class="button button-icon button-clear" ng-if="!$root.voiceOver" menu-toggle="left">
-         <img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.user.username}}/avatar/small" class="headerAvatar" onerror="this.src=\'img/esteem_white.png\'" onabort="this.src=\'img/esteem_white.png\'"/>
+         <img ng-if="$root.user" src="https://steemitimages.com/u/{{$root.user.username}}/avatar/small" class="headerAvatar" onerror="this.src='img/esteem_white.png'" onabort="this.src='img/esteem_white.png'"/>
           <i ng-if="!$root.user" class="icon ion-navicon"></i> 
         </button>
         <a href class="button button-icon ion-more" ng-if="$root.voiceOver" menu-toggle="left">{{::translations.menu}}</a>
@@ -16,7 +16,7 @@
   <ion-content class="has-header" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 	<ion-list ng-if="$root.$storage.bookmark" can-swipe="true">
   		<ion-item ng-repeat="item in $root.$storage.bookmark | orderBy:'-timestamp'" ng-click="$root.getContentAndOpen(item)" ng-if="item" class='item-avatar'>
-        <img ng-src="https://steemitimages.com/u/{{item.author}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"/>
+        <img ng-src="https://steemitimages.com/u/{{item.author}}/avatar/small" onerror="this.src='img/logo.png'" onabort="this.src='img/logo.png'"/>
 		    <p><h2>{{item.author}}</h2></p>
         <p>{{item.permlink}}</p>
 		    <div class="row postdetails twrap"><div class="col"><i class="icon ion-android-time"></i> {{item.timestamp|timeago}}</div></div>

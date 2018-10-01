@@ -497,9 +497,10 @@ module.exports = function (app) {
   })
   app.filter('catchimage', function(){
     return function(inp) {
-      var imgRegex = /(https?:\/\/.*\.(?:tiff?|jpe?g|gif|png|svg|ico))(.*)/gim;
-      var rege = /\b(https?:\/\/\S*?\.(?:png|jpe?g|gif)(?:\?(?:(?:(?:[\w_-]+=[\w_-]+)(?:&[\w_-]+=[\w_-]+)*)|(?:[\w_-]+)))?)\b/igm;
-      var regg = /((?:https?\:\/\/)(?:[a-zA-Z]{1}(?:[\w\-]+\.)+(?:[\w]{2,5}))(?:\:[\d]{1,5})?\/(?:[^\s\/]+\/)*(?:[^\s]+\.(?:jpe?g|gif|png))(?:\?\w+=\w+(?:&\w+=\w+)*)?)/gim;
+      // [수정] 사용하지 않는 정규식 주석 처리 - 2018.09.27
+      // var imgRegex = /(https?:\/\/.*\.(?:tiff?|jpe?g|gif|png|svg|ico))(.*)/gim;
+      // var rege = /\b(https?:\/\/\S*?\.(?:png|jpe?g|gif)(?:\?(?:(?:(?:[\w_-]+=[\w_-]+)(?:&[\w_-]+=[\w_-]+)*)|(?:[\w_-]+)))?)\b/igm;
+      // var regg = /((?:https?\:\/\/)(?:[a-zA-Z]{1}(?:[\w\-]+\.)+(?:[\w]{2,5}))(?:\:[\d]{1,5})?\/(?:[^\s\/]+\/)*(?:[^\s]+\.(?:jpe?g|gif|png))(?:\?\w+=\w+(?:&\w+=\w+)*)?)/gim;
 
       if ((typeof inp.json_metadata !== 'string' || !inp.json_metadata instanceof String) && inp.json_metadata) {
         return inp.json_metadata.image[0];
@@ -520,7 +521,10 @@ module.exports = function (app) {
         if (inp.json_metadata.indexOf('thumbnail')>-1) {
           return JSON.parse(inp.json_metadata).thumbnail;
         }
-        return 'img/noimage.png';
+
+        // [수정] 이미지 없으면 빈값 리턴 - 2018.09.27
+        // return 'img/noimage.png';
+         return '';
       }
       
     }
@@ -1437,7 +1441,8 @@ module.exports = function (app) {
                       } else if ($rootScope.chain && $rootScope.chain == 'golos') {
                         element.attr('ng-src', 'https://imgp.golos.io/0x0/'+ngSrc); // set default image  
                       } else {
-                        element.attr('ng-src', 'img/noimage.png'); // set default image 
+                        // [수정] 이미지 없으면 표시 않함 - 2018.09.27
+                        // element.attr('ng-src', 'img/noimage.png'); // set default image 
                       }
                   });
                 }
@@ -2079,7 +2084,8 @@ module.exports = function (app) {
         width: 50, // unit in pixels
         fontWeight: 400, //
         charCount: 1,
-        fontFamily: 'HelveticaNeue-Light,Helvetica Neue Light,Helvetica Neue,Helvetica, Arial,Lucida Grande, sans-serif',
+        // [수정] fontFamily에 한글 폰트 추가 - 2018.09.27
+        fontFamily: 'Noto Sans KR, HelveticaNeue-Light,Helvetica Neue Light,Helvetica Neue,Helvetica, Arial,Lucida Grande, sans-serif',
         base: 'data:image/svg+xml;base64,',
         radius: 'border-radius:50%;',
         custombgcolor: '',

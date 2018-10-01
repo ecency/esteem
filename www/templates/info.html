@@ -1,3 +1,4 @@
+<!-- 보팅 정보 팝업 페이지 -->
 <ion-modal-view>
   <ion-header-bar class="bar bar-header bar-positive">
     <h1 class="title">{{'VOTERS_INFO'|translate}} ({{$root.voters.active_votes.length}})</h1>
@@ -6,8 +7,12 @@
   <ion-content class="padding" delegate-handle="modalContent" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
     <div class="row" ng-repeat="v in $root.voters.active_votes | orderBy:'-time'">
       <div class="col col-50" ng-click="$root.openAccount(v.voter)">
-      <a href>{{v.voter}}<div class="reputation">{{v.reputation|reputation}}</div></a>
+        <img style="width:32px;height:32px" class="round-avatar-title" ng-src="https://steemitimages.com/u/{{v.voter}}/avatar/small" onerror="this.src='img/logo.png'" onabort="this.src='img/logo.png'"  />
+        <a href>{{v.voter}}<div class="reputation">{{v.reputation|reputation}}</div></a>
       </div>
+      <div class="col">
+        ${{v.value}}
+        </div>
       <div class="col">
       {{v.percent/100}}%
       </div>

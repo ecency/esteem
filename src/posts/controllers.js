@@ -1656,7 +1656,9 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
     //console.log($scope.spost);
   };
 
+  // 포스트 올리기 1 (글 올릴떄 호출됨)
   $scope.submitStory = function() {
+    $rootScope.log('submitStory 1');
     //console.log($scope.spost.body);
     if (!$scope.spost.title) {
       $rootScope.showAlert('Missing', 'Title');
@@ -1676,6 +1678,7 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       : $rootScope.user.privatePostingKey;
 
       var permlink = createPermlink($scope.spost.title);
+      if(permlink.length < 5) permlink = `${permlink}-${new Date().toISOString().replace(/[^0-9]/g,'')}`;
       var json = $filter("metadata")($scope.spost.body);
       angular.merge(json, {tags: $scope.spost.category, app: 'esteem/'+$rootScope.$storage.appversion, format: 'markdown+html', community: 'esteem' });
 
@@ -1732,7 +1735,8 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
             permlink: permlink,
             max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
             percent_steem_dollars: 10000,
-            extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
+            // [수정] beneficiaries 제거
+            // extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
           }]
           ];
           if ($scope.spost.upvote_this) {
@@ -1774,12 +1778,20 @@ app.controller('PostsCtrl', function($scope, $rootScope, $state, $ionicPopup, $i
       $rootScope.showAlert($filter('translate')('WARNING'), $filter('translate')('LOGIN_TO_X'));
     }
   }
+
+  // 포스트 Draft 저장
   $scope.savePost = function() {
     //console.log($scope.modalp);
     console.log('save post');
     $rootScope.$storage.spost = $scope.spost;
     //adddraft
-    var dr = {title:$scope.spost.title, body: $scope.spost.body, tags: $scope.spost.tags, post_type: $scope.spost.operation_type};
+    var dr = {
+      title:$scope.spost.title, 
+      body: $scope.spost.body, 
+      tags: $scope.spost.tags, 
+      post_type: $scope.spost.operation_type
+    };
+    // Draft에 추가
     APIs.addDraft($rootScope.user.username, dr).then(function(res){
       //console.log(res.data);
       //$scope.drafts = res.data;
@@ -2872,7 +2884,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     //console.log($scope.spost.operation_type);
   }
 
+  // 포스트 올리기 2 (아마도 댓글?)
   $scope.submitStory = function() {
+    $rootScope.log('submitStory 2');
     if (!$scope.spost.title) {
       $rootScope.showAlert('Missing', 'Title');
       return;
@@ -2957,7 +2971,9 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
           permlink: $scope.spost.permlink,
           max_accepted_payout: "1000000.000 "+$rootScope.$storage.platformdunit,
           percent_steem_dollars: 10000,
-          extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
+          // [수정] beneficiaries 제거
+          // extensions: $rootScope.$storage.chain == 'golos'?[]:[[0, { "beneficiaries": [{ "account":"esteemapp", "weight":1000 }] }]]
+          extensions: []
         }];
         operations_array.push(xx);
       }
@@ -3181,6 +3197,8 @@ app.controller('PostCtrl', function($scope, $stateParams, $rootScope, $interval,
     }
   };
   $scope.accounts = {};
+
+  // 포스트 내용 가져온다.
   $scope.getContent = function(author, permlink) {
     window.steem.api.setOptions({ url: localStorage.socketUrl });
 
@@ -3413,9 +3431,27 @@ app.controller('WelcomeCtrl', function($scope, $http, $ionicSlideBoxDelegate, $i
     $scope.slider.slideNext();
   }
 
-  APIs.getWelcome().then(function(res){
-    $scope.slides = res.data;
-  });
+  // [수정] Welcome 데이터 - 2018.09.28
+   $scope.slides = [
+    {
+      "name": "Welcome home",
+      "background": "https://img.esteem.ws//suebyo7vji.png",
+      "description": "We have been waiting you <br> Happy to have you with us, please come in..."
+    },
+    {
+      "name": "Start exploring",
+      "background": "https://img.esteem.ws//1rbl57vauq.png",
+      "description": "Share your moments, experiences and skills with community"
+    },
+    {
+      "name": "Get rewarded",
+      "background": "https://img.esteem.ws//iuvvfjn68m.png",
+      "description": "Each contribution is rewarded by community with tokens and of course with friendship"
+    }
+  ];
+  // APIs.getWelcome().then(function(res){
+  //   $scope.slides = res.data;
+  // });
 
   $scope.$on("$ionicSlides.sliderInitialized", function(event, data){
     // data.slider is the instance of Swiper

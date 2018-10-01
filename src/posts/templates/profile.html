@@ -76,7 +76,7 @@
             <div ng-repeat="d in data.profile | orderBy:'-created' track by d.id">
                <div class="list" >
             <div class="item item-avatar postList" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
-                <img class="round-avatar-title" ng-src="https://steemitimages.com/u/{{d.author}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'" />
+                <img class="round-avatar-title" ng-src="https://steemitimages.com/u/{{d.author}}/avatar/small" onerror="this.src='img/logo.png'" onabort="this.src='img/logo.png'" />
                   <div class="row postdetails">
                     <div class="col"><b><a href="#/app/profile/{{d.author}}">{{d.author}}</a></b>&nbsp;<div class="reputation">{{::d.author_reputation|reputation|number:0}}</div><span ng-if="d.author!==user.username && active!=='recent-replies'">&nbsp; 
                     <i class="icon ion-arrow-return-right"></i>
@@ -115,7 +115,7 @@
                <div class="list card" ng-if="ds" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
 
             <div class="item item-avatar postList" ng-class="{'theme-dark':$root.$storage.theme == 'night'}">
-              <img class="round-avatar-title" ng-src="https://steemitimages.com/u/{{ds.author}}/avatar/small" onerror="this.src=\'img/logo.png\'" onabort="this.src=\'img/logo.png\'"  />
+              <img class="round-avatar-title" ng-src="https://steemitimages.com/u/{{ds.author}}/avatar/small" onerror="this.src='img/logo.png'" onabort="this.src='img/logo.png'"  />
                 <div class="row postdetails">
                   <div class="col"><b><a href="#/app/profile/{{ds.author}}">{{ds.author}}</a></b>&nbsp;<div class="reputation">{{::ds.author_reputation|reputation|number:0}}</div><span ng-if="ds.author!==user.username && active!=='recent-replies'">&nbsp; 
                     <i class="icon ion-arrow-return-right"></i>

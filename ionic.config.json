@@ -1,6 +1,8 @@
 {
   "name": "iapp",
-  "app_id": "",
+  "integrations": {
+    "cordova": {}
+  },
   "type": "ionic1",
   "watchPatterns": [
     "scss/**/*",
@@ -8,9 +10,6 @@
     "!www/lib/**/*",
     "!www/**/*.map"
   ],
-  "integrations": {
-    "cordova": {}
-  },
   "proxies": [
     {
       "path": "/nodes",
