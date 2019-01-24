@@ -308,9 +308,9 @@
 	"TYPE": "Type",
 	"SHOW": "Tonen",
 	"HIDDEN_TEXT": "Dit bericht was verborgen door lage beoordelingen",
-	"FETCHCOMMENTS": "",
-	"FAVORITES": "",
-	"FAVORITE_REMOVED": "",
+	"FETCHCOMMENTS": "Reacties ophalen",
+	"FAVORITES": "Favorieten",
+	"FAVORITE_REMOVED": "Account uit de favorietenlijst verwijderd",
 	"FAVORITE": "",
 	"FAVORITE_ADDED": "",
 	"FAVORITE_AUTHOR": ""
