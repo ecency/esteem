@@ -1,6 +1,6 @@
 ﻿# [eSteem](https://esteem.app) Mobile
 
-DEPRECATED: Lastest version here: https://github.com/esteemapp/esteem-mobile
+DEPRECATED/NOT MAINTAINED: Lastest version here: https://github.com/esteemapp/esteem-mobile
 
 **eSteem Mobile** is a social application for Android and iOS where you get paid for blogging, commenting and curating founded by [Feruz Muradov](https://steemit.com/@good-karma) in 2016 and greatly supported by eSteem team and Steem community.
 
